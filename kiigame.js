@@ -75,8 +75,8 @@ var delayEnabled = false;
 var number_selected = false;
 
 // Music
-// NOTE: mp3 music works in iPad/Safari, but not on Firefox. ogg music would work in Firefox, but not in Safari.
-// TODO: figure out what platform/browser is being used, and use different files accordingly
+// Different browsers and different browser versions support different formats. MP3 should work with in all the major
+// browsers in current versions.
 var start_music = new Audio('audio/alku_musax_mono_20131213.mp3');
 var intro_music = new Audio('audio/intro_mono_20131213.mp3');
 var end_music = new Audio('audio/loppu_musax_mono_20131213.mp3');
