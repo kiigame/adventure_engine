@@ -914,7 +914,7 @@ function play_ending() {
 				inventoryRemove(shape);
 			}
 		});
-		// ilman tätä jää lopussa 1 ylimääräne random itemi inventoryyn. wiper ja analysaattori huomattu
+		// Without this, sometimes there's a random item left in the inventory. Wiper and dna-analyzer were spotted
 		inventory_layer.getChildren().each(function(shape, i) {
 			if (shape.getAttr('category') != 'reward') {
 				inventoryRemove(shape);
