@@ -17,18 +17,23 @@ var stage = Kinetic.Node.create(objects_json_text, 'container');
 var monologue = stage.get('#monologue')[0];
 var speech_bubble = stage.get('#speech_bubble')[0];
 var interaction_text = stage.get('#interaction_text')[0];
+
 var input_text = stage.get('#input_text')[0];
+
 var start_layer = stage.get("#start_layer")[0];
 var input_layer = stage.get('#input_layer')[0];
 var intro_layer = stage.get("#intro_layer")[0];
 var outro_layer = stage.get("#outro_layer")[0];
 var end_layer = stage.get("#end_layer")[0];
+
+// TODO: These to be dynamically handled
 var background_layer = stage.get("#background_layer")[0];
 var object_layer_locker_room_1 = stage.get('#object_layer_locker_room_1')[0];
 var object_layer_locker_room_2 = stage.get('#object_layer_locker_room_2')[0];
 var object_layer_shower_room = stage.get('#object_layer_shower_room')[0];
 var object_layer_wc_1 = stage.get('#object_layer_wc_1')[0];
 var object_layer_wc_2 = stage.get('#object_layer_wc_2')[0];
+
 var inventory_layer = stage.get('#inventory_layer')[0];
 var character_layer = stage.get('#character_layer')[0];
 var text_layer = stage.get('#text_layer')[0];
@@ -684,6 +689,8 @@ stage.get('Image').on('dragend', function(event) {
 			dragged_item.destroy();
 			target.destroy();
 			redrawInventory();
+			
+			// TODO: This needs to be dynamic
 			if (target.getName() == "Sieni") {
 				cieni_eyes_animation.destroy();
 				cieni_mouth_animation.destroy();
