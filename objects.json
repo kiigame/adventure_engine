@@ -61,7 +61,7 @@
 					"className": "Image"
 				}				
 			]
-		}, 
+		},
 		{
             "attrs": {
                 "id": "input_layer",

@@ -18,6 +18,7 @@ var monologue = stage.get('#monologue')[0];
 var speech_bubble = stage.get('#speech_bubble')[0];
 var interaction_text = stage.get('#interaction_text')[0];
 
+// TODO: Make this dynamic and the whole jersey input thing
 var input_text = stage.get('#input_text')[0];
 
 var start_layer = stage.get("#start_layer")[0];
@@ -26,16 +27,7 @@ var intro_layer = stage.get("#intro_layer")[0];
 var outro_layer = stage.get("#outro_layer")[0];
 var end_layer = stage.get("#end_layer")[0];
 
-// TODO: These to be dynamically handled
 var background_layer = stage.get("#background_layer")[0];
-
-/*
-var object_layer_locker_room_1 = stage.get('#object_layer_locker_room_1')[0];
-var object_layer_locker_room_2 = stage.get('#object_layer_locker_room_2')[0];
-var object_layer_shower_room = stage.get('#object_layer_shower_room')[0];
-var object_layer_wc_1 = stage.get('#object_layer_wc_1')[0];
-var object_layer_wc_2 = stage.get('#object_layer_wc_2')[0];
-*/
 
 var inventory_layer = stage.get('#inventory_layer')[0];
 var character_layer = stage.get('#character_layer')[0];
@@ -49,10 +41,13 @@ var idle_1 = stage.get('#character_idle_1')[0];
 var idle_2 = stage.get('#character_idle_2')[0];
 var panic = stage.get('#character_panic')[0];
 
+// TODO: Scenario-specific animations need to be dynamic
+//       Maybe add animation attribute to JSON cieni_x with the desired animation code
 // Decals of the cieni
 var cieni_eyes_decal = stage.get('#cieni_eyes')[0];
 var cieni_mouth_decal = stage.get('#cieni_mouth')[0];
 
+// TODO: locker_room1/2 need to be dynamic
 // Scale background and UI elements
 stage.get("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
@@ -64,7 +59,7 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 var objects_json = stage.toObject();
 
 // Variable for saving the current room (for changing backgrounds and object layers)
-var current_background = 'locker_room_1';
+var current_background; //= 'locker_room_1';
 
 // The amount of rewards found
 var rewards = 0;
@@ -82,6 +77,7 @@ var delayEnabled = false;
 // For checking whether player has selected their jersey number
 var number_selected = false;
 
+// TODO: Music needs to be defined dynamically
 // Music
 // Different browsers and different browser versions support different formats. MP3 should work with in all the major
 // browsers in current versions.
@@ -96,7 +92,7 @@ var dragged_item;
 // Intersection target (object below dragged item)
 var target;
 
-// TODO: Dynamize this
+// TODO: Make this dynamic with some fancy JSON attribute, maybe?
 // Current layer for hit region purposes in different rooms
 var current_layer = stage.get('#object_layer_locker_room_1')[0];
 
@@ -156,6 +152,7 @@ var idle_2_animation = new Kinetic.Tween({
 	}
 });
 
+// TODO: This should be defined somewhere else, maybe JSON or own latkazombit.js file
 // Cieni's eye animation
 var cieni_eyes_animation = new Kinetic.Tween({
 	node : cieni_eyes_decal,
@@ -168,6 +165,7 @@ var cieni_eyes_animation = new Kinetic.Tween({
 	}
 });
 
+// TODO: Same as above
 // Cieni's mouth animation
 var cieni_mouth_animation = new Kinetic.Tween({
 	node : cieni_mouth_decal,
@@ -194,21 +192,18 @@ for (var i = 0; i < objects_json.children.length; i++) {
 // On window load we create image hit regions for our items on object layers
 // Some items ended up being excluded from this
 window.onload = function() {
-    background_layer.getChildren().each(function(o) {
-        console.log("object", o.attrs.objects,"jea",'#'+o.attrs.objects);
-        
+    // Loop backgrounds to create item hit regions and register mouseup event
+    background_layer.getChildren().each(function(o) {        
         object_layer = stage.get('#'+o.attrs.objects)[0];
-        console.log(object_layer);
+        
         if (object_layer != undefined) {
-            
             object_layer.getChildren().each(function(shape, i) {
-                //if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'tactic_board_wiper') {
                 if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
                     shape.createImageHitRegion(function() {
                     });
                 }
             });
-        
+            
             object_layer.on('mouseup touchend', function(event) {
                 interact(event);
             });
@@ -267,6 +262,7 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	start_music.play();
 });
 
+// TODO: The jersey logic is for this scenario and should be dynamic (latkazombit.js?)
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
 	input_layer.show();
@@ -416,6 +412,9 @@ input_layer.on('tap click', function(event) {
 	input_layer.draw();
 
 });
+
+// TODO: This kind of sequences could be defined in JSON and run here dynamically
+//       JSON could describe the images in orded, some kind of timing notation and music
 // Play the hardcoded intro sequence
 function play_intro() {
 	// Current delay (ms) to manage the time pictures are visible
@@ -540,6 +539,8 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 	stage.draw();
 });
 */
+
+// TODO: This needs to be dynamic
 // Hidden feature, click the image on the start screen and get a funny reaction from the character
 stage.get('#start')[0].on('tap click', function(event) {
 	event = event.targetNode;
@@ -679,6 +680,7 @@ stage.get('Image').on('dragend', function(event) {
 	else if (dragged_item.getAttr(target.getId()) == undefined) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
+		// TODO: Default text possible to set dynamically?
 		setMonologue("Ei pysty, liian hapokasta.");
 	}
 	// Put something into a container
@@ -732,6 +734,8 @@ stage.get('Image').on('dragend', function(event) {
 		}
 		current_layer.draw();
 	}
+	
+    // TODO: This needs to be dynamic. Does removing this even effect anything?
 	// DNA analysis
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined) {
 		dragged_item.setX(x);
@@ -789,7 +793,8 @@ function interact(event) {
 	} else if (target.getAttr('category') == 'secret') {
 		setMonologue(target.getAttr('pickup'));
 		target.destroy();
-
+		
+		// TODO: Dynamic number of secrets
 		// Always give the rewards in the same order, despite what order the secrets are found in
 		switch (rewards) {
 			case 0:
@@ -849,7 +854,8 @@ function interact(event) {
 
 			stage.get('#' + target.getAttr('outcome'))[0].show();
 			stage.get('#object_layer_' + target.getAttr('outcome'))[0].show();
-
+			
+			// TODO: Dynamic implementation doesn't want cieni here
 			// Ensuring the cieni animations' playback only when it's safe, in the shower room
 			if (current_background == "shower_room") {
 				if (cieni_eyes_decal.isVisible()) {
@@ -857,7 +863,6 @@ function interact(event) {
 					cieni_mouth_animation.play();
 				}
 			}
-
 			// If the cieni hasn't been erased and the room changes, reset the animations
 			else {
 				if (cieni_eyes_decal.isVisible()) {
@@ -878,6 +883,7 @@ function interact(event) {
 	}
 }
 
+// TODO: Dynamic sequences + some sort of dynamic reward screen logic?
 // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
 function play_ending() {
 	/*
