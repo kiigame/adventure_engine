@@ -419,7 +419,7 @@ input_layer.on('tap click', function(event) {
 function play_intro() {
     // Current delay (ms) to manage the time pictures are visible
 	var delay = 700;
-	/*
+	
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
 	fade_layer.show();
@@ -488,7 +488,7 @@ function play_intro() {
 		intro_layer.draw();
 	}, delay);
 	delay = delay + 1000;
-	*/
+	
 	setTimeout(function() {
 		fade_layer.show();
 		wakeup.finish();
