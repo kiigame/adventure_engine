@@ -418,9 +418,9 @@ input_layer.on('tap click', function(event) {
 });
 // Play the hardcoded intro sequence
 function play_intro() {
-	// Current delay (ms) to manage the time pictures are visible
+    // Current delay (ms) to manage the time pictures are visible
 	var delay = 700;
-
+	/*
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
 	fade_layer.show();
@@ -489,7 +489,7 @@ function play_intro() {
 		intro_layer.draw();
 	}, delay);
 	delay = delay + 1000;
-
+	*/
 	setTimeout(function() {
 		fade_layer.show();
 		wakeup.finish();
@@ -686,7 +686,9 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			dragged_item.destroy();
+            if (dragged_item.getAttr('consume')){
+            	dragged_item.destroy();
+            }
 			target.hide();
 			redrawInventory();
 		} else {
@@ -700,8 +702,10 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			dragged_item.destroy();
-			target.destroy();
+			if (dragged_item.getAttr('consume')){
+            	dragged_item.destroy();
+            }
+			//target.destroy();
 			redrawInventory();
 			
 			// TODO: This needs to be dynamic
