@@ -58,8 +58,9 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 // Make a json object from the json string
 var objects_json = stage.toObject();
 
+// TODO: Dynamize this
 // Variable for saving the current room (for changing backgrounds and object layers)
-var current_background; //= 'locker_room_1';
+var current_background = 'locker_room_1';
 
 // The amount of rewards found
 var rewards = 0;
