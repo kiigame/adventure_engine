@@ -1482,7 +1482,8 @@
                                                 "shower_middle": "Nallella ei ole pyyhe mukana, joten suihku jää nyt hänen osaltaan väliin.",
                                                 "shower_right": "Nallella ei ole pyyhe mukana, joten suihku jää nyt hänen osaltaan väliin.",
 						"trigger": "garbagecan",
-						"outcome": "garbagecan_teddy"
+						"outcome": "garbagecan_teddy",
+                        "consume": true
 					},
 					"className": "Image"
 				}, {
@@ -1549,7 +1550,8 @@
                                                 "shower_right": "Nalle haluaisi käydä suihkussa. Nallella ei kuitenkaan ole pyyhettä mukanaan.",
 						"trigger": "locker_closed",
 						"outcome": "locker_open",
-						"visible": false
+						"visible": false,
+                        "consume": false
 					},
 					"className": "Image"
 				}
