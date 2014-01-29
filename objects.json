@@ -397,7 +397,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/locker_room_1.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_locker_room_1"
 					},
 					"className": "Image"
 				}, {
@@ -406,7 +407,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/locker_room_2.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_locker_room_2"
 					},
 					"className": "Image"
 				}, {
@@ -415,7 +417,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/shower_room.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_shower_room"
 					},
 					"className": "Image"
 				}, {
@@ -424,7 +427,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/wc_1.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_wc_1"
 					},
 					"className": "Image"
 				}, {
@@ -433,7 +437,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/wc_2.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_wc_2"
 					},
 					"className": "Image"
 				}, {

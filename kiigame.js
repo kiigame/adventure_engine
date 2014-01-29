@@ -28,11 +28,14 @@ var end_layer = stage.get("#end_layer")[0];
 
 // TODO: These to be dynamically handled
 var background_layer = stage.get("#background_layer")[0];
+
+/*
 var object_layer_locker_room_1 = stage.get('#object_layer_locker_room_1')[0];
 var object_layer_locker_room_2 = stage.get('#object_layer_locker_room_2')[0];
 var object_layer_shower_room = stage.get('#object_layer_shower_room')[0];
 var object_layer_wc_1 = stage.get('#object_layer_wc_1')[0];
 var object_layer_wc_2 = stage.get('#object_layer_wc_2')[0];
+*/
 
 var inventory_layer = stage.get('#inventory_layer')[0];
 var character_layer = stage.get('#character_layer')[0];
@@ -93,6 +96,7 @@ var dragged_item;
 // Intersection target (object below dragged item)
 var target;
 
+// TODO: Dynamize this
 // Current layer for hit region purposes in different rooms
 var current_layer = stage.get('#object_layer_locker_room_1')[0];
 
@@ -190,6 +194,30 @@ for (var i = 0; i < objects_json.children.length; i++) {
 // On window load we create image hit regions for our items on object layers
 // Some items ended up being excluded from this
 window.onload = function() {
+    background_layer.getChildren().each(function(o) {
+        console.log("object", o.attrs.objects,"jea",'#'+o.attrs.objects);
+        
+        object_layer = stage.get('#'+o.attrs.objects)[0];
+        console.log(object_layer);
+        if (object_layer != undefined) {
+            
+            object_layer.getChildren().each(function(shape, i) {
+                //if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'tactic_board_wiper') {
+                if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
+                    shape.createImageHitRegion(function() {
+                    });
+                }
+            });
+        
+            object_layer.on('mouseup touchend', function(event) {
+                interact(event);
+            });
+        }
+    })
+    
+    // TODO: Find out why these item exceptions such as 'tactic_board_wiper' exist
+    //       => Otherwise these comments can be removed
+    /*
 	object_layer_locker_room_1.getChildren().each(function(shape, i) {
 		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'tactic_board_wiper') {
 			shape.createImageHitRegion(function() {
@@ -226,9 +254,9 @@ window.onload = function() {
 			});
 		}
 	});
+	*/
 	stage.draw();
 	idle_1_animation.play();
-	//start_music.play();
 }
 
 stage.get('#begining')[0].on('tap click', function(event) {
@@ -471,7 +499,7 @@ function play_intro() {
 			intro_layer.hide();
 			stage.get("#locker_room_1")[0].show();
 			stage.get("#inventory_bar")[0].show();
-			object_layer_locker_room_1.show();
+			current_layer.show();
 			character_layer.show();
 			stage.draw();
 			setTimeout(function() {
@@ -530,21 +558,7 @@ start_layer.on('mouseup touchend', function(event) {
 	interact(event);
 });
 */
-object_layer_locker_room_1.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_locker_room_2.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_shower_room.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_wc_1.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_wc_2.on('mouseup touchend', function(event) {
-	interact(event);
-});
+
 // Mouse click and tap events (examine items in the inventory)
 inventory_layer.on('click tap', function(event) {
 	interact(event);
