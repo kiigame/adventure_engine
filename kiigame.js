@@ -93,10 +93,6 @@ var dragged_item;
 // Intersection target (object below dragged item)
 var target;
 
-// TODO: Make this dynamic with some fancy JSON attribute, maybe?
-// Current layer for hit region purposes in different rooms
-var current_layer = stage.get('#object_layer_locker_room_1')[0];
-
 // Animation for fading the screen
 var fade = new Kinetic.Tween({
 	node : fade_layer,
@@ -208,8 +204,13 @@ window.onload = function() {
             object_layer.on('mouseup touchend', function(event) {
                 interact(event);
             });
+            
+            // Current layer for hit region purposes in different rooms
+            if (object_layer.getAttr('start') == 'true') {
+                current_layer = object_layer;
+            }
         }
-    })
+    });
     
     // TODO: Find out why these item exceptions such as 'tactic_board_wiper' exist
     //       => Otherwise these comments can be removed

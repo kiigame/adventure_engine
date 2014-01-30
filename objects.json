@@ -453,7 +453,8 @@
 		}, {
 			"attrs": {
 				"id": "object_layer_locker_room_1",
-				"visible": false
+				"visible": false,
+                                "start": "true"
 			},
 			"className": "Layer",
 			"children": [
