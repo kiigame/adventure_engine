@@ -30,6 +30,7 @@ var end_layer = stage.get("#end_layer")[0];
 var background_layer = stage.get("#background_layer")[0];
 
 var inventory_layer = stage.get('#inventory_layer')[0];
+var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
 var character_layer = stage.get('#character_layer')[0];
 var text_layer = stage.get('#text_layer')[0];
 var fade_layer = stage.get("#fade_layer")[0];
@@ -258,6 +259,7 @@ window.onload = function() {
 
 stage.get('#begining')[0].on('tap click', function(event) {
 	stage.get('#begining')[0].hide();
+	inventory_bar_layer.show();
 	character_layer.show();
 	background_layer.show();
 	stage.draw();
@@ -422,6 +424,7 @@ function play_intro() {
     // Current delay (ms) to manage the time pictures are visible
 	var delay = 700;
 	
+	/*
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
 	fade_layer.show();
@@ -490,7 +493,7 @@ function play_intro() {
 		intro_layer.draw();
 	}, delay);
 	delay = delay + 1000;
-	
+	*/
 	setTimeout(function() {
 		fade_layer.show();
 		wakeup.finish();
@@ -499,7 +502,7 @@ function play_intro() {
 			wakeup.reverse();
 			intro_layer.hide();
 			stage.get("#locker_room_1")[0].show();
-			stage.get("#inventory_bar")[0].show();
+			inventory_bar_layer.show();
 			current_layer.show();
 			character_layer.show();
 			stage.draw();
@@ -956,7 +959,7 @@ function play_ending() {
 		redrawInventory();
 
 		character_layer.hide();
-		stage.get("#inventory_bar")[0].hide();
+		inventory_bar_layer.hide();
 		outro_layer.show();
 
 		fade.reverse();
@@ -987,7 +990,7 @@ function play_ending() {
 			end_layer.moveUp();	
 			stage.get('#rewards_text')[0].setText(rewards + stage.get('#rewards_text')[0].getText());
 			end_layer.show();
-			stage.get("#inventory_bar")[0].show();
+			inventory_bar_layer.show();
 			inventory_layer.show();
 			character_layer.show();
 			stage.draw();
