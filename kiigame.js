@@ -44,10 +44,7 @@ var panic = stage.get('#character_panic')[0];
 var cieni_eyes_decal = stage.get('#cieni_eyes')[0];
 var cieni_mouth_decal = stage.get('#cieni_mouth')[0];
 
-// TODO: locker_room1/2 need to be dynamic
 // Scale background and UI elements
-stage.get("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
 stage.get("#inventory_bar")[0].setY(stage.getHeight() - 100);
 stage.get("#inventory_bar")[0].setWidth(stage.getWidth());

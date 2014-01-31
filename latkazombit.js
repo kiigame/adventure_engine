@@ -1,9 +1,13 @@
 
+stage.get("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+
 var input_text = stage.get('#input_text')[0];
 var input_layer = stage.get('#input_layer')[0];
 
-// Remove default event handler to allow using jersey input
+// Dirty removing of default event handler to allow using jersey input
 stage.get('#start_game')[0].eventListeners.click = [];
+
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
 	input_layer.show();
