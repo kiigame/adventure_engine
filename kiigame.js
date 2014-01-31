@@ -18,11 +18,7 @@ var monologue = stage.get('#monologue')[0];
 var speech_bubble = stage.get('#speech_bubble')[0];
 var interaction_text = stage.get('#interaction_text')[0];
 
-// TODO: Make this dynamic and the whole jersey input thing
-var input_text = stage.get('#input_text')[0];
-
 var start_layer = stage.get("#start_layer")[0];
-var input_layer = stage.get('#input_layer')[0];
 var intro_layer = stage.get("#intro_layer")[0];
 var outro_layer = stage.get("#outro_layer")[0];
 var end_layer = stage.get("#end_layer")[0];
@@ -213,46 +209,6 @@ window.onload = function() {
         }
     });
     
-    // TODO: Find out why these item exceptions such as 'tactic_board_wiper' exist
-    //       => Otherwise these comments can be removed
-    /*
-	object_layer_locker_room_1.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'tactic_board_wiper') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_locker_room_2.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'tag_on_wall' && shape.getId() != 'marker') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_wc_1.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'library_receipt') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_wc_2.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'hairkeeper') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_shower_room.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'shower_left' && shape.getId() != 'shower_middle' && shape.getId() != 'shower_right' ) {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	character_layer.getChildren().each(function(shape, i) {
-		if (shape.className == 'Image') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	*/
 	stage.draw();
 	idle_1_animation.play();
 }
@@ -266,156 +222,7 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	start_music.play();
 });
 
-// TODO: The jersey logic is for this scenario and should be dynamic (latkazombit.js?)
-// On clicking the start game we open the choosing the jersey number
-stage.get('#start_game')[0].on('tap click', function(event) {
-	input_layer.show();
-	input_layer.draw();
-});
-// Listeners for the input screen buttons
-input_layer.on('tap click', function(event) {
-	target = event.targetNode;
-	selected = target.getName();
 
-	// Number buttons
-	if (parseInt(selected) >= 0 && parseInt(selected) <= 9) {
-		switch(parseInt(selected)) {
-			case 0:
-				if (input_text.getText() != 0 && input_text.getText().length < 2) {
-					input_text.setText(input_text.getText() + "0");
-				}
-				break;
-			case 1:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("1");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "1");
-					}
-				}
-				break;
-			case 2:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("2");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "2");
-					}
-				}
-				break;
-			case 3:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("3");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "3");
-					}
-				}
-				break;
-			case 4:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("4");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "4");
-					}
-				}
-				break;
-			case 5:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("5");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "5");
-					}
-				}
-				break;
-			case 6:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("6");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "6");
-					}
-				}
-				break;
-			case 7:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("7");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "7");
-					}
-				}
-				break;
-			case 8:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("8");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "8");
-					}
-				}
-				break;
-			case 9:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("9");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "9");
-					}
-				}
-				break;
-		}
-		// Backspace
-	} else if (selected == 'Pyyhi') {
-		if (input_text.getText().length > 0) {
-			input_text.setText(input_text.getText().slice(0, -1));
-		}
-		// OK
-	} else if (selected == 'OK' && input_text.getText().length > 0) {
-		stage.get('#jersey_number')[0].setText(input_text.getText());
-		stage.get('#jersey_number')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-		stage.get('#icehockey_jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-		play_intro();
-	}
-	// Test feature - show the legend text when clicking the jersey
-	/*
-	else if (selected == 'Pelipaita' || selected == 'Pelinumero') {
-		if (input_text.getText() > 0) {
-			stage.get('#input_text')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			stage.get('#jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			interact(event);
-		}
-	}*/
-	// If no number, grey out buttons that can't be used
-	if (input_text.getText().length == 0) {
-		stage.get('#button_ok').hide();
-		stage.get('#button_ok_gray').show();
-		stage.get('#button_back').hide();
-		stage.get('#button_back_gray').show();
-		stage.get('#button_0').hide();
-		stage.get('#button_0_gray').show();
-	} else {
-		stage.get('#button_ok').show();
-		stage.get('#button_ok_gray').hide();
-		stage.get('#button_back').show();
-		stage.get('#button_back_gray').hide();
-		stage.get('#button_0').show();
-		stage.get('#button_0_gray').hide();
-	}
-	input_layer.draw();
-
-});
 
 // TODO: This kind of sequences could be defined in JSON and run here dynamically
 //       JSON could describe the images in orded, some kind of timing notation and music
@@ -424,7 +231,6 @@ function play_intro() {
     // Current delay (ms) to manage the time pictures are visible
 	var delay = 700;
 	
-	/*
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
 	fade_layer.show();
@@ -435,7 +241,7 @@ function play_intro() {
 	setTimeout(function() {
 		start_layer.hide();
 		character_layer.hide();
-		stage.get("#inventory_bar")[0].hide();
+		stage.get("#inventory_bar_layer")[0].hide();
 		input_layer.hide();
 		intro_layer.show();
 
@@ -493,7 +299,7 @@ function play_intro() {
 		intro_layer.draw();
 	}, delay);
 	delay = delay + 1000;
-	*/
+	
 	setTimeout(function() {
 		fade_layer.show();
 		wakeup.finish();
