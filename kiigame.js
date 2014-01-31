@@ -222,7 +222,11 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	start_music.play();
 });
 
-
+// On clicking the start game we open the choosing the jersey number
+stage.get('#start_game')[0].on('tap click', function(event) {
+    // TODO: Default game launch logic
+    play_intro()
+});
 
 // TODO: This kind of sequences could be defined in JSON and run here dynamically
 //       JSON could describe the images in orded, some kind of timing notation and music
