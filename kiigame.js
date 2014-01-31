@@ -52,7 +52,8 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 // Make a json object from the json string
 var objects_json = stage.toObject();
 
-// TODO: Dynamize this
+// TODO: Dynamize this, maybe combine object_layer and background layers?
+//       We have the "start": true there already
 // Variable for saving the current room (for changing backgrounds and object layers)
 var current_background = 'locker_room_1';
 
@@ -76,9 +77,9 @@ var number_selected = false;
 // Music
 // Different browsers and different browser versions support different formats. MP3 should work with in all the major
 // browsers in current versions.
-var start_music = new Audio('audio/alku_musax_mono_20131213.mp3');
-var intro_music = new Audio('audio/intro_mono_20131213.mp3');
-var end_music = new Audio('audio/loppu_musax_mono_20131213.mp3');
+var start_music = new Audio(stage.get('#start_layer')[0].attrs.music);
+var intro_music = new Audio(stage.get('#intro_layer')[0].attrs.music);
+var end_music = new Audio(stage.get('#end_layer')[0].attrs.music);
 start_music.loop = true;
 
 // The item dragged from the inventory

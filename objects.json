@@ -9,7 +9,8 @@
 		{
 			"attrs": {
 				"id": "start_layer",
-				"type": "start"
+				"type": "start",
+				"music": "audio/alku_musax_mono_20131213.mp3"
 			},
 			"className": "Layer",
 			"children": [
@@ -271,7 +272,8 @@
 				"id": "intro_layer",
 				"visible": false,
 				"waking_text": "Missäköhän hitossa minä olen... Ja miten täältä pääsee pois.",
-				"type": "sequence"
+				"type": "sequence",
+				"music": "audio/intro_mono_20131213.mp3"
 			},
 			"className": "Layer",
 			"children": [
@@ -322,7 +324,8 @@
 			"attrs": {
 				"id": "outro_layer",
 				"visible": false,
-				"type": "sequence"
+				"type": "sequence",
+				"music": "audio/loppu_musax_mono_20131213.mp3"
 			},
 			"className": "Layer",
 			"children": [
@@ -338,7 +341,8 @@
 			"attrs": {
 				"id": "end_layer",
 				"visible": false,
-				"type": "end"
+				"type": "end",
+				"music": "audio/loppu_musax_mono_20131213.mp3"
 				
 			},
 			"className": "Layer",
