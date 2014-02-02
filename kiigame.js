@@ -55,7 +55,7 @@ var objects_json = stage.toObject();
 // TODO: Dynamize this, maybe combine object_layer and background layers?
 //       We have the "start": true there already
 // Variable for saving the current room (for changing backgrounds and object layers)
-var current_background = 'locker_room_1';
+var current_background = 'start_layer';
 
 // The amount of rewards found
 var rewards = 0;
@@ -229,6 +229,11 @@ stage.get('#start_game')[0].on('tap click', function(event) {
     play_sequence("intro_layer", "locker_room_1");
 });
 
+/*
+Plays a sequence defined in JSON
+string sequence - the sequence ID from JSON
+string post_sequence_image - the image displayed after sequence
+*/
 function play_sequence(sequence, post_sequence_image) {
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
@@ -254,14 +259,6 @@ function play_sequence(sequence, post_sequence_image) {
 		    if (sequence_counter == 0)
 		        sequence_music.play();
 		        
-		    // TODO: Bad to keep these hides here but looks ugly
-		    //       in-game if put above the loop
-            // TODO: Keep track of the current layer dynamically
-            start_layer.hide();
-    
-            // TODO: Handle this kind of special layers
-            input_layer.hide();
-    
             character_layer.hide();
             inventory_bar_layer.hide();
                     
@@ -286,8 +283,6 @@ function play_sequence(sequence, post_sequence_image) {
             
             // Last image in the sequence
 		    if (sequence_counter == sequence_layer[0].children.length) {
-		        console.log("END");
-		        
                 fade_layer.show();
                 wakeup.finish();
                 
@@ -320,106 +315,6 @@ function play_sequence(sequence, post_sequence_image) {
         delay = delay + image.attrs.show_time;
 	});
 }
-
-/*
-// TODO: This kind of sequences could be defined in JSON and run here dynamically
-//       JSON could describe the images in orded, some kind of timing notation and music
-// Play the hardcoded intro sequence
-function play_intro() {
-    // Current delay (ms) to manage the time pictures are visible
-	var delay = 700;
-	
-	// Animation cycle for proper fading and drawing order
-	fade_layer.moveUp();
-	fade_layer.show();
-	fade.play();
-
-	start_music.pause();
-
-	setTimeout(function() {
-		start_layer.hide();
-		character_layer.hide();
-		inventory_bar_layer.hide();
-		input_layer.hide();
-		intro_layer.show();
-				
-		intro_music.play();
-
-		fade.reverse();
-		stage.draw();
-		setTimeout('fade_layer.hide();', 700);
-	}, delay);
-	delay = delay + 4000;
-
-	setTimeout(function() {
-		fade_layer.show();
-		fade.play();
-		setTimeout(function() {
-			stage.get("#intro_1")[0].hide();
-			stage.get("#intro_2")[0].show();
-			fade.reverse();
-			stage.draw();
-			setTimeout('fade_layer.hide();', 700);
-		}, 700);
-	}, delay);
-	delay = delay + 5000;
-
-	setTimeout(function() {
-		fade_layer.show();
-		fade.play();
-		setTimeout(function() {
-			stage.get("#intro_2")[0].hide();
-			stage.get("#intro_3")[0].show();
-			fade.reverse();
-			stage.draw();
-			setTimeout('fade_layer.hide();', 700);
-		}, 700);
-	}, delay);
-	delay = delay + 4500;
-
-	setTimeout(function() {
-		stage.get("#intro_3")[0].hide();
-		stage.get("#intro_4")[0].show();
-		intro_layer.draw();
-	}, delay);
-	delay = delay + 1000;
-
-	setTimeout(function() {
-		stage.get("#intro_4")[0].hide();
-		stage.get("#intro_5")[0].show();
-		intro_layer.draw();
-	}, delay);
-	delay = delay + 1000;
-
-	setTimeout(function() {
-		stage.get("#intro_5")[0].hide();
-		stage.get("#intro_6")[0].show();
-		intro_layer.draw();
-	}, delay);
-	delay = delay + 1000;
-	
-	setTimeout(function() {
-		fade_layer.show();
-		wakeup.finish();
-
-		setTimeout(function() {
-			wakeup.reverse();
-			intro_layer.hide();
-			stage.get("#locker_room_1")[0].show();
-			inventory_bar_layer.show();
-			current_layer.show();
-			character_layer.show();
-			stage.draw();
-			setTimeout(function() {
-				fade_layer.hide();
-				stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-				fade_layer.moveDown();
-				setMonologue(intro_layer.getAttr('waking_text'));
-			}, 3000);
-		}, 1500);
-	}, delay);
-}
-*/
 
 // Listener and showing of credits on the start screen
 stage.get('#start_credits')[0].on('tap click', function(event) {
