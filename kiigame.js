@@ -73,10 +73,10 @@ var delayEnabled = false;
 // For checking whether player has selected their jersey number
 var number_selected = false;
 
-// TODO: Music needs to be defined dynamically
 // Music
 // Different browsers and different browser versions support different formats. MP3 should work with in all the major
 // browsers in current versions.
+var current_music;
 var start_music = new Audio(stage.get('#start_layer')[0].attrs.music);
 var intro_music = new Audio(stage.get('#intro_layer')[0].attrs.music);
 var end_music = new Audio(stage.get('#end_layer')[0].attrs.music);
@@ -217,15 +217,111 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	character_layer.show();
 	background_layer.show();
 	stage.draw();
+	
+	current_music = start_music;
 	start_music.play();
 });
 
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
-    // TODO: Default game launch logic
-    play_intro()
+    // TODO: Default game launch logic, after doing dynamic sequences
+    //play_intro()
+    play_sequence("intro_layer", "locker_room_1");
 });
 
+function play_sequence(sequence, post_sequence_image) {
+	// Animation cycle for proper fading and drawing order
+	fade_layer.moveUp();
+	fade_layer.show();
+	fade.play();
+	
+	current_music.pause();
+	
+	var sequence_layer = stage.get("#"+sequence);
+    sequence_layer.show();
+    
+    sequence_music = new Audio(sequence_layer[0].attrs.music);
+    current_music = sequence_music;
+    
+    var delay = 700;
+    var sequence_counter = 0;
+	sequence_layer[0].children.each(function(image) {
+	    
+        setTimeout(function() {
+		    fade_layer.show();
+		    fade.play();
+		    
+		    if (sequence_counter == 0)
+		        sequence_music.play();
+		        
+		    // TODO: Bad to keep these hides here but looks ugly
+		    //       in-game if put above the loop
+            // TODO: Keep track of the current layer dynamically
+            start_layer.hide();
+    
+            // TODO: Handle this kind of special layers
+            input_layer.hide();
+    
+            character_layer.hide();
+            inventory_bar_layer.hide();
+                    
+            image.show();
+            
+            var image_fade = image.attrs.do_fade;
+            if (image_fade === true) {
+                setTimeout(function() {
+                    fade.reverse();
+                    stage.draw();
+                    setTimeout('fade_layer.hide();', 700);
+                }, 700);
+            }
+            // Immediately revert fade layer
+            else {
+                fade.reverse();
+                stage.draw();
+                fade_layer.hide();
+            }
+            
+            sequence_counter += 1;
+            
+            // Last image in the sequence
+		    if (sequence_counter == sequence_layer[0].children.length) {
+		        console.log("END");
+		        
+                fade_layer.show();
+                wakeup.finish();
+                
+                setTimeout(function() {
+                    current_music.pause();
+                    wakeup.reverse();
+                    intro_layer.hide();
+                    
+                    stage.get("#"+post_sequence_image)[0].show();
+                    current_layer.show();
+                    inventory_bar_layer.show();
+                    character_layer.show();
+                    
+                    stage.draw();
+                    setTimeout(function() {
+                        fade_layer.hide();
+                        stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+                        fade_layer.moveDown();
+                        
+                        var end_text = sequence_layer[0].attrs.end_text;
+                        if (end_text && end_text.length != 0)
+                            setMonologue(end_text);
+                    }, 3000);
+                }, 1500);
+                
+                return;
+		    }
+            
+        }, delay);
+        delay = delay + image.attrs.show_time;
+	});
+}
+
+/*
 // TODO: This kind of sequences could be defined in JSON and run here dynamically
 //       JSON could describe the images in orded, some kind of timing notation and music
 // Play the hardcoded intro sequence
@@ -243,10 +339,10 @@ function play_intro() {
 	setTimeout(function() {
 		start_layer.hide();
 		character_layer.hide();
-		stage.get("#inventory_bar_layer")[0].hide();
+		inventory_bar_layer.hide();
 		input_layer.hide();
 		intro_layer.show();
-
+				
 		intro_music.play();
 
 		fade.reverse();
@@ -323,6 +419,7 @@ function play_intro() {
 		}, 1500);
 	}, delay);
 }
+*/
 
 // Listener and showing of credits on the start screen
 stage.get('#start_credits')[0].on('tap click', function(event) {
@@ -353,18 +450,6 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 });
 */
 
-// TODO: This needs to be dynamic
-// Hidden feature, click the image on the start screen and get a funny reaction from the character
-stage.get('#start')[0].on('tap click', function(event) {
-	event = event.targetNode;
-
-	setMonologue(panic.getAttr('text'));
-	setTimeout(function() {
-		idle_1.hide();
-		panic.show();
-		setTimeout('panic.hide(); idle_1.show();', 2000);
-	}, 1000);
-});
 // Mouse up and touch end events (picking up items from the environment
 // Start layer for the shortcut developer menu
 /*
@@ -747,6 +832,8 @@ function play_ending() {
 	stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
 	fade_layer.show();
 	fade.play();
+	
+	current_music = end_music;
 	end_music.play();
 
 	setTimeout(function() {
