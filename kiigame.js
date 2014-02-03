@@ -322,7 +322,6 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 	setMonologue(event.getAttr('credits'));
 });
 // Developer feature - shortcut menu from the empty menu button for testing purposes
-/*
 	stage.get('#start_empty')[0].on('tap click', function(event) {
 	event = event.targetNode;
 	var clone;
@@ -343,15 +342,12 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 
 	stage.draw();
 });
-*/
 
 // Mouse up and touch end events (picking up items from the environment
 // Start layer for the shortcut developer menu
-/*
 start_layer.on('mouseup touchend', function(event) {
 	interact(event);
 });
-*/
 
 // Mouse click and tap events (examine items in the inventory)
 inventory_layer.on('click tap', function(event) {
@@ -477,11 +473,11 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue("Ei pysty, liian hapokasta.");
 	}
 	// Put something into a container
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && stage.get('#' + dragged_item.getAttr('outcome'))[0].getAttr('category') == 'container') {
+	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && stage.get('#' + target.getAttr("category")) == 'container') {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-            if (dragged_item.getAttr('consume')){
+            if (dragged_item.getAttr('consume') === true){
             	dragged_item.destroy();
             }
 			target.hide();
@@ -497,7 +493,7 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			if (dragged_item.getAttr('consume')){
+			if (dragged_item.getAttr('consume') === true){
             	dragged_item.destroy();
             }
 			//target.destroy();
@@ -522,7 +518,9 @@ stage.get('Image').on('dragend', function(event) {
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
-			dragged_item.destroy();
+			if (dragged_item.getAttr('consume') === true){
+            	dragged_item.destroy();
+            }
 			target.destroy();
 			redrawInventory();
 		} else {
