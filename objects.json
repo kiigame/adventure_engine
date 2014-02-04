@@ -8,7 +8,9 @@
 	"children": [
 		{
 			"attrs": {
-				"id": "start_layer"
+				"id": "start_layer",
+				"type": "start",
+				"music": "audio/alku_musax_mono_20131213.mp3"
 			},
 			"className": "Layer",
 			"children": [
@@ -61,7 +63,7 @@
 					"className": "Image"
 				}				
 			]
-		}, 
+		},
 		{
             "attrs": {
                 "id": "input_layer",
@@ -269,20 +271,26 @@
 			"attrs": {
 				"id": "intro_layer",
 				"visible": false,
-				"waking_text": "Missäköhän hitossa minä olen... Ja miten täältä pääsee pois."
+				"type": "sequence",
+				"music": "audio/intro_mono_20131213.mp3",
+				"end_text": "Missäköhän hitossa minä olen... Ja miten täältä pääsee pois."
 			},
 			"className": "Layer",
 			"children": [
 				{
 					"attrs": {
 						"id": "intro_1",
-						"src": "images/intro_1.png"
+						"src": "images/intro_1.png",
+						"show_time": 4000,
+						"do_fade": true
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_2",
 						"src": "images/intro_2.png",
+						"do_fade": true,
+						"show_time": 5000,
 						"visible": false
 					},
 					"className": "Image"
@@ -290,6 +298,8 @@
 					"attrs": {
 						"id": "intro_3",
 						"src": "images/intro_3.png",
+						"do_fade": true,
+						"show_time": 4500,
 						"visible": false
 					},
 					"className": "Image"
@@ -297,6 +307,8 @@
 					"attrs": {
 						"id": "intro_4",
 						"src": "images/intro_4.png",
+						"do_fade": false,
+						"show_time": 1000,
 						"visible": false
 					},
 					"className": "Image"
@@ -304,6 +316,8 @@
 					"attrs": {
 						"id": "intro_5",
 						"src": "images/intro_5.png",
+						"do_fade": false,
+						"show_time": 1000,
 						"visible": false
 					},
 					"className": "Image"
@@ -311,6 +325,17 @@
 					"attrs": {
 						"id": "intro_6",
 						"src": "images/intro_6.png",
+						"do_fade": false,
+						"show_time": 1000,
+						"visible": false
+					},
+					"className": "Image"
+				}, {
+					"attrs": {
+						"id": "intro_7",
+						"src": "images/black.png",
+						"do_fade": false,
+						"show_time": 1000,
 						"visible": false
 					},
 					"className": "Image"
@@ -319,7 +344,9 @@
 		}, {
 			"attrs": {
 				"id": "outro_layer",
-				"visible": false
+				"visible": false,
+				"type": "sequence",
+				"music": "audio/loppu_musax_mono_20131213.mp3"
 			},
 			"className": "Layer",
 			"children": [
@@ -334,7 +361,9 @@
 		}, {
 			"attrs": {
 				"id": "end_layer",
-				"visible": false
+				"visible": false,
+				"type": "end",
+				"music": "audio/loppu_musax_mono_20131213.mp3"
 				
 			},
 			"className": "Layer",
@@ -397,7 +426,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/locker_room_1.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_locker_room_1"
 					},
 					"className": "Image"
 				}, {
@@ -406,7 +436,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/locker_room_2.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_locker_room_2"
 					},
 					"className": "Image"
 				}, {
@@ -415,7 +446,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/shower_room.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_shower_room"
 					},
 					"className": "Image"
 				}, {
@@ -424,7 +456,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/wc_1.png",
-						"visible": false
+						"visible": false,
+						"objects": "object_layer_wc_1"
 					},
 					"className": "Image"
 				}, {
@@ -433,14 +466,8 @@
 						"width": 981,
 						"height": 543,
 						"src": "images/wc_2.png",
-						"visible": false
-					},
-					"className": "Image"
-				}, {
-					"attrs": {
-						"id": "inventory_bar",
-						"y": 543,
-						"src": "images/inventory_bar.png"
+						"visible": false,
+						"objects": "object_layer_wc_2"
 					},
 					"className": "Image"
 				}
@@ -448,7 +475,9 @@
 		}, {
 			"attrs": {
 				"id": "object_layer_locker_room_1",
-				"visible": false
+				"visible": false,
+				"type": "room",
+                "start": "true"
 			},
 			"className": "Layer",
 			"children": [
@@ -1083,7 +1112,8 @@
 		}, {
 			"attrs": {
 				"id": "object_layer_locker_room_2",
-				"visible": false
+				"visible": false,
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -1293,7 +1323,8 @@
 		}, {
 			"attrs": {
 				"id": "object_layer_shower_room",
-				"visible": false
+				"visible": false,
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -1388,7 +1419,8 @@
 						"y": 380,
 						"category": "object",
 						"src": "images/cieni_1.png",
-						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin..."
+						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin...",
+                        "related": ["cieni_eyes", "cieni_mouth"]
 					},
 					"className": "Image"
 				}, {
@@ -1398,7 +1430,9 @@
 						"y": 415,
 						"category": "object",
 						"src": "images/cieni_eyes.png",
-						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin..."
+						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin...",
+                    	"object_type": "animation",
+                        "animation": {"x": -10, "duration": 1.4}
 					},
 					"className": "Image"
 				},
@@ -1410,7 +1444,9 @@
 						"width": 73,
 						"category": "object",
 						"src": "images/cieni_mouth.png",
-						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin..."
+						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin...",
+                        "object_type": "animation",
+                        "animation": {"x": 9, "y": -3, "width": -15, "duration": 1.9}
 					},
 					"className": "Image"
 				},
@@ -1477,7 +1513,8 @@
                                                 "shower_middle": "Nallella ei ole pyyhe mukana, joten suihku jää nyt hänen osaltaan väliin.",
                                                 "shower_right": "Nallella ei ole pyyhe mukana, joten suihku jää nyt hänen osaltaan väliin.",
 						"trigger": "garbagecan",
-						"outcome": "garbagecan_teddy"
+						"outcome": "garbagecan_teddy",
+                        "consume": true
 					},
 					"className": "Image"
 				}, {
@@ -1544,7 +1581,8 @@
                                                 "shower_right": "Nalle haluaisi käydä suihkussa. Nallella ei kuitenkaan ole pyyhettä mukanaan.",
 						"trigger": "locker_closed",
 						"outcome": "locker_open",
-						"visible": false
+						"visible": false,
+                        "consume": false
 					},
 					"className": "Image"
 				}
@@ -1552,7 +1590,8 @@
 		}, {
 			"attrs": {
 				"id": "object_layer_wc_1",
-				"visible": false
+				"visible": false,
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -1811,7 +1850,8 @@
 		}, {
 			"attrs": {
 				"id": "object_layer_wc_2",
-				"visible": false
+				"visible": false,
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -1921,7 +1961,28 @@
 					"className": "Image"
 				}
 			]
-		}, {
+		}, 
+		
+		
+		
+		{
+			"attrs": {
+				"id": "inventory_bar_layer",
+				"visible": false
+			},
+			"className": "Layer",
+			"children": [
+                {
+					"attrs": {
+						"id": "inventory_bar",
+						"y": 543,
+						"src": "images/inventory_bar.png"
+					},
+					"className": "Image"
+				}
+			]
+		},
+		{
 			"attrs": {
 				"id": "inventory_layer"
 			},
@@ -1945,14 +2006,15 @@
 					"className": "Image"
 				}
 			]
-		}, {
+		},
+		{
 			"attrs": {
 				"id": "character_layer",
 				"visible": false
 			},
 			"className": "Layer",
 			"children": [
-				{
+                {
 					"attrs": {
 						"id": "character_idle_1",
 						"x": 764,
@@ -1999,7 +2061,8 @@
 					"className": "Image"
 				}
 			]
-		}, {
+		},
+		{
 			"attrs": {
 				"id": "text_layer"
 			},

@@ -17,19 +17,16 @@ var stage = Kinetic.Node.create(objects_json_text, 'container');
 var monologue = stage.get('#monologue')[0];
 var speech_bubble = stage.get('#speech_bubble')[0];
 var interaction_text = stage.get('#interaction_text')[0];
-var input_text = stage.get('#input_text')[0];
+
 var start_layer = stage.get("#start_layer")[0];
-var input_layer = stage.get('#input_layer')[0];
 var intro_layer = stage.get("#intro_layer")[0];
 var outro_layer = stage.get("#outro_layer")[0];
 var end_layer = stage.get("#end_layer")[0];
+
 var background_layer = stage.get("#background_layer")[0];
-var object_layer_locker_room_1 = stage.get('#object_layer_locker_room_1')[0];
-var object_layer_locker_room_2 = stage.get('#object_layer_locker_room_2')[0];
-var object_layer_shower_room = stage.get('#object_layer_shower_room')[0];
-var object_layer_wc_1 = stage.get('#object_layer_wc_1')[0];
-var object_layer_wc_2 = stage.get('#object_layer_wc_2')[0];
+
 var inventory_layer = stage.get('#inventory_layer')[0];
+var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
 var character_layer = stage.get('#character_layer')[0];
 var text_layer = stage.get('#text_layer')[0];
 var fade_layer = stage.get("#fade_layer")[0];
@@ -41,13 +38,7 @@ var idle_1 = stage.get('#character_idle_1')[0];
 var idle_2 = stage.get('#character_idle_2')[0];
 var panic = stage.get('#character_panic')[0];
 
-// Decals of the cieni
-var cieni_eyes_decal = stage.get('#cieni_eyes')[0];
-var cieni_mouth_decal = stage.get('#cieni_mouth')[0];
-
 // Scale background and UI elements
-stage.get("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
 stage.get("#inventory_bar")[0].setY(stage.getHeight() - 100);
 stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
@@ -55,8 +46,10 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 // Make a json object from the json string
 var objects_json = stage.toObject();
 
+// TODO: Dynamize this, maybe combine object_layer and background layers?
+//       We have the "start": true there already
 // Variable for saving the current room (for changing backgrounds and object layers)
-var current_background = 'locker_room_1';
+var current_background = 'start_layer';
 
 // The amount of rewards found
 var rewards = 0;
@@ -77,9 +70,10 @@ var number_selected = false;
 // Music
 // Different browsers and different browser versions support different formats. MP3 should work with in all the major
 // browsers in current versions.
-var start_music = new Audio('audio/alku_musax_mono_20131213.mp3');
-var intro_music = new Audio('audio/intro_mono_20131213.mp3');
-var end_music = new Audio('audio/loppu_musax_mono_20131213.mp3');
+var current_music;
+var start_music = new Audio(stage.get('#start_layer')[0].attrs.music);
+var intro_music = new Audio(stage.get('#intro_layer')[0].attrs.music);
+var end_music = new Audio(stage.get('#end_layer')[0].attrs.music);
 start_music.loop = true;
 
 // The item dragged from the inventory
@@ -87,9 +81,6 @@ var dragged_item;
 
 // Intersection target (object below dragged item)
 var target;
-
-// Current layer for hit region purposes in different rooms
-var current_layer = stage.get('#object_layer_locker_room_1')[0];
 
 // Animation for fading the screen
 var fade = new Kinetic.Tween({
@@ -147,37 +138,36 @@ var idle_2_animation = new Kinetic.Tween({
 	}
 });
 
-// Cieni's eye animation
-var cieni_eyes_animation = new Kinetic.Tween({
-	node : cieni_eyes_decal,
-	x : cieni_eyes_decal.getX() - 10,
-	easing : Kinetic.Easings.EaseInOut,
-	duration : 1.4,
-	onFinish : function() {
-		cieni_eyes_animation.reverse();
-		setTimeout('cieni_eyes_animation.play();', 1400);
-	}
-});
-
-// Cieni's mouth animation
-var cieni_mouth_animation = new Kinetic.Tween({
-	node : cieni_mouth_decal,
-	x : cieni_mouth_decal.getX() + 9,
-	y : cieni_mouth_decal.getY() - 3,
-	width : cieni_mouth_decal.getWidth() - 15,
-	easing : Kinetic.Easings.EaseInOut,
-	duration : 1.9,
-	onFinish : function() {
-		cieni_mouth_animation.reverse();
-		setTimeout('cieni_mouth_animation.play();', 1900);
-	}
-});
+function create_animation (object) {
+	var attrs = object.getAttr("animation");
+	var animation = new Kinetic.Tween({
+    	node: object,
+        x: attrs.x ? object.getX() + attrs.x : object.getX(),
+        y: attrs.y ? object.getY() + attrs.y : object.getY(),
+        width: attrs.width ? object.getWidth() - 15 : object.getWidth(),
+        easing: Kinetic.Easings.EaseInOut,
+        duration: attrs.duration,
+        
+		onFinish: function() {
+			animation.reverse();
+			setTimeout(function() {
+            	animation.play();
+            }, attrs.duration * 1000);
+		}
+    });
+    
+    // TODO: Playing everything at once can end up being laggy
+    animation.play();
+}
 
 // Creating all image objects from json file based on their attributes
 for (var i = 0; i < objects_json.children.length; i++) {
 	for (var j = 0; j < objects_json.children[i].children.length; j++) {
 		if (objects_json.children[i].children[j].className == 'Image') {
 			createObject(objects_json.children[i].children[j].attrs);
+            
+            if (objects_json.children[i].children[j].attrs.object_type == "animation")
+            	create_animation(stage.get('#'+objects_json.children[i].children[j].attrs.id)[0]);
 		}
 	}
 }
@@ -185,298 +175,136 @@ for (var i = 0; i < objects_json.children.length; i++) {
 // On window load we create image hit regions for our items on object layers
 // Some items ended up being excluded from this
 window.onload = function() {
-	object_layer_locker_room_1.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'tactic_board_wiper') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_locker_room_2.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'tag_on_wall' && shape.getId() != 'marker') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_wc_1.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'library_receipt') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_wc_2.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'hairkeeper') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	object_layer_shower_room.getChildren().each(function(shape, i) {
-		if (shape.getAttr('category') != 'secret' && shape.className == 'Image' && shape.getId() != 'shower_left' && shape.getId() != 'shower_middle' && shape.getId() != 'shower_right' ) {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
-	character_layer.getChildren().each(function(shape, i) {
-		if (shape.className == 'Image') {
-			shape.createImageHitRegion(function() {
-			});
-		}
-	});
+    // Loop backgrounds to create item hit regions and register mouseup event
+    background_layer.getChildren().each(function(o) {        
+        object_layer = stage.get('#'+o.attrs.objects)[0];
+        
+        if (object_layer != undefined) {
+            object_layer.getChildren().each(function(shape, i) {
+                if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
+                    shape.createImageHitRegion(function() {
+                    });
+                }
+            });
+            
+            object_layer.on('mouseup touchend', function(event) {
+                interact(event);
+            });
+            
+            // Current layer for hit region purposes in different rooms
+            if (object_layer.getAttr('start') == 'true') {
+                current_layer = object_layer;
+            }
+        }
+    });
+    
 	stage.draw();
 	idle_1_animation.play();
-	//start_music.play();
 }
 
 stage.get('#begining')[0].on('tap click', function(event) {
 	stage.get('#begining')[0].hide();
+	inventory_bar_layer.show();
 	character_layer.show();
 	background_layer.show();
 	stage.draw();
+	
+	current_music = start_music;
 	start_music.play();
 });
 
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
-	input_layer.show();
-	input_layer.draw();
+    // TODO: Default game launch logic, after doing dynamic sequences
+    //play_intro()
+    play_sequence("intro_layer", "locker_room_1");
 });
-// Listeners for the input screen buttons
-input_layer.on('tap click', function(event) {
-	target = event.targetNode;
-	selected = target.getName();
 
-	// Number buttons
-	if (parseInt(selected) >= 0 && parseInt(selected) <= 9) {
-		switch(parseInt(selected)) {
-			case 0:
-				if (input_text.getText() != 0 && input_text.getText().length < 2) {
-					input_text.setText(input_text.getText() + "0");
-				}
-				break;
-			case 1:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("1");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "1");
-					}
-				}
-				break;
-			case 2:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("2");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "2");
-					}
-				}
-				break;
-			case 3:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("3");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "3");
-					}
-				}
-				break;
-			case 4:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("4");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "4");
-					}
-				}
-				break;
-			case 5:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("5");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "5");
-					}
-				}
-				break;
-			case 6:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("6");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "6");
-					}
-				}
-				break;
-			case 7:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("7");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "7");
-					}
-				}
-				break;
-			case 8:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("8");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "8");
-					}
-				}
-				break;
-			case 9:
-				if (input_text.getText().length < 2) {
-					if (number_selected == false) {
-						input_text.setText("9");
-						number_selected = true;
-					} else {
-						input_text.setText(input_text.getText() + "9");
-					}
-				}
-				break;
-		}
-		// Backspace
-	} else if (selected == 'Pyyhi') {
-		if (input_text.getText().length > 0) {
-			input_text.setText(input_text.getText().slice(0, -1));
-		}
-		// OK
-	} else if (selected == 'OK' && input_text.getText().length > 0) {
-		stage.get('#jersey_number')[0].setText(input_text.getText());
-		stage.get('#jersey_number')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-		stage.get('#icehockey_jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-		play_intro();
-	}
-	// Test feature - show the legend text when clicking the jersey
-	/*
-	else if (selected == 'Pelipaita' || selected == 'Pelinumero') {
-		if (input_text.getText() > 0) {
-			stage.get('#input_text')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			stage.get('#jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			interact(event);
-		}
-	}*/
-	// If no number, grey out buttons that can't be used
-	if (input_text.getText().length == 0) {
-		stage.get('#button_ok').hide();
-		stage.get('#button_ok_gray').show();
-		stage.get('#button_back').hide();
-		stage.get('#button_back_gray').show();
-		stage.get('#button_0').hide();
-		stage.get('#button_0_gray').show();
-	} else {
-		stage.get('#button_ok').show();
-		stage.get('#button_ok_gray').hide();
-		stage.get('#button_back').show();
-		stage.get('#button_back_gray').hide();
-		stage.get('#button_0').show();
-		stage.get('#button_0_gray').hide();
-	}
-	input_layer.draw();
-
-});
-// Play the hardcoded intro sequence
-function play_intro() {
-	// Current delay (ms) to manage the time pictures are visible
-	var delay = 700;
-
+/*
+Plays a sequence defined in JSON
+string sequence - the sequence ID from JSON
+string post_sequence_image - the image displayed after sequence
+*/
+function play_sequence(sequence, post_sequence_image) {
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
 	fade_layer.show();
 	fade.play();
-
-	start_music.pause();
-
-	setTimeout(function() {
-		start_layer.hide();
-		character_layer.hide();
-		stage.get("#inventory_bar")[0].hide();
-		input_layer.hide();
-		intro_layer.show();
-
-		intro_music.play();
-
-		fade.reverse();
-		stage.draw();
-		setTimeout('fade_layer.hide();', 700);
-	}, delay);
-	delay = delay + 4000;
-
-	setTimeout(function() {
-		fade_layer.show();
-		fade.play();
-		setTimeout(function() {
-			stage.get("#intro_1")[0].hide();
-			stage.get("#intro_2")[0].show();
-			fade.reverse();
-			stage.draw();
-			setTimeout('fade_layer.hide();', 700);
-		}, 700);
-	}, delay);
-	delay = delay + 5000;
-
-	setTimeout(function() {
-		fade_layer.show();
-		fade.play();
-		setTimeout(function() {
-			stage.get("#intro_2")[0].hide();
-			stage.get("#intro_3")[0].show();
-			fade.reverse();
-			stage.draw();
-			setTimeout('fade_layer.hide();', 700);
-		}, 700);
-	}, delay);
-	delay = delay + 4500;
-
-	setTimeout(function() {
-		stage.get("#intro_3")[0].hide();
-		stage.get("#intro_4")[0].show();
-		intro_layer.draw();
-	}, delay);
-	delay = delay + 1000;
-
-	setTimeout(function() {
-		stage.get("#intro_4")[0].hide();
-		stage.get("#intro_5")[0].show();
-		intro_layer.draw();
-	}, delay);
-	delay = delay + 1000;
-
-	setTimeout(function() {
-		stage.get("#intro_5")[0].hide();
-		stage.get("#intro_6")[0].show();
-		intro_layer.draw();
-	}, delay);
-	delay = delay + 1000;
-
-	setTimeout(function() {
-		fade_layer.show();
-		wakeup.finish();
-
-		setTimeout(function() {
-			wakeup.reverse();
-			intro_layer.hide();
-			stage.get("#locker_room_1")[0].show();
-			stage.get("#inventory_bar")[0].show();
-			object_layer_locker_room_1.show();
-			character_layer.show();
-			stage.draw();
-			setTimeout(function() {
-				fade_layer.hide();
-				stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-				fade_layer.moveDown();
-				setMonologue(intro_layer.getAttr('waking_text'));
-			}, 3000);
-		}, 1500);
-	}, delay);
+	
+	current_music.pause();
+	
+	var sequence_layer = stage.get("#"+sequence);
+    sequence_layer.show();
+    
+    sequence_music = new Audio(sequence_layer[0].attrs.music);
+    current_music = sequence_music;
+    
+    var delay = 700;
+    var sequence_counter = 0;
+	sequence_layer[0].children.each(function(image) {
+	    
+        setTimeout(function() {
+		    fade_layer.show();
+		    fade.play();
+		    
+		    if (sequence_counter == 0)
+		        sequence_music.play();
+		        
+            character_layer.hide();
+            inventory_bar_layer.hide();
+                    
+            image.show();
+            
+            var image_fade = image.attrs.do_fade;
+            if (image_fade === true) {
+                setTimeout(function() {
+                    fade.reverse();
+                    stage.draw();
+                    setTimeout('fade_layer.hide();', 700);
+                }, 700);
+            }
+            // Immediately revert fade layer
+            else {
+                fade.reverse();
+                stage.draw();
+                fade_layer.hide();
+            }
+            
+            sequence_counter += 1;
+            
+            // Last image in the sequence
+		    if (sequence_counter == sequence_layer[0].children.length) {
+                fade_layer.show();
+                wakeup.finish();
+                
+                setTimeout(function() {
+                    current_music.pause();
+                    wakeup.reverse();
+                    intro_layer.hide();
+                    
+                    stage.get("#"+post_sequence_image)[0].show();
+                    current_layer.show();
+                    inventory_bar_layer.show();
+                    character_layer.show();
+                    
+                    stage.draw();
+                    setTimeout(function() {
+                        fade_layer.hide();
+                        stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+                        fade_layer.moveDown();
+                        
+                        var end_text = sequence_layer[0].attrs.end_text;
+                        if (end_text && end_text.length != 0)
+                            setMonologue(end_text);
+                    }, 3000);
+                }, 1500);
+                
+                return;
+		    }
+            
+        }, delay);
+        delay = delay + image.attrs.show_time;
+	});
 }
 
 // Listener and showing of credits on the start screen
@@ -485,7 +313,6 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 	setMonologue(event.getAttr('credits'));
 });
 // Developer feature - shortcut menu from the empty menu button for testing purposes
-/*
 	stage.get('#start_empty')[0].on('tap click', function(event) {
 	event = event.targetNode;
 	var clone;
@@ -506,40 +333,13 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 
 	stage.draw();
 });
-*/
-// Hidden feature, click the image on the start screen and get a funny reaction from the character
-stage.get('#start')[0].on('tap click', function(event) {
-	event = event.targetNode;
 
-	setMonologue(panic.getAttr('text'));
-	setTimeout(function() {
-		idle_1.hide();
-		panic.show();
-		setTimeout('panic.hide(); idle_1.show();', 2000);
-	}, 1000);
-});
 // Mouse up and touch end events (picking up items from the environment
 // Start layer for the shortcut developer menu
-/*
 start_layer.on('mouseup touchend', function(event) {
 	interact(event);
 });
-*/
-object_layer_locker_room_1.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_locker_room_2.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_shower_room.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_wc_1.on('mouseup touchend', function(event) {
-	interact(event);
-});
-object_layer_wc_2.on('mouseup touchend', function(event) {
-	interact(event);
-});
+
 // Mouse click and tap events (examine items in the inventory)
 inventory_layer.on('click tap', function(event) {
 	interact(event);
@@ -683,12 +483,18 @@ stage.get('Image').on('dragend', function(event) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			dragged_item.destroy();
 			target.destroy();
-			redrawInventory();
-			if (target.getName() == "Sieni") {
+            var related = target.getAttr("related");
+			if (related && related.size != 0) {
+            	for (var i in related)
+            		stage.get("#" + related[i])[0].hide();
+                /*
 				cieni_eyes_animation.destroy();
 				cieni_mouth_animation.destroy();
 				cieni_eyes_decal.hide();
 				cieni_mouth_decal.hide();
+                */
+                
+                redrawInventory();
 			}
 		} else {
 			dragged_item.setX(x);
@@ -768,7 +574,8 @@ function interact(event) {
 	} else if (target.getAttr('category') == 'secret') {
 		setMonologue(target.getAttr('pickup'));
 		target.destroy();
-
+		
+		// TODO: Dynamic number of secrets
 		// Always give the rewards in the same order, despite what order the secrets are found in
 		switch (rewards) {
 			case 0:
@@ -828,15 +635,27 @@ function interact(event) {
 
 			stage.get('#' + target.getAttr('outcome'))[0].show();
 			stage.get('#object_layer_' + target.getAttr('outcome'))[0].show();
-
+			
+			// TODO: Dynamic implementation doesn't want cieni here
 			// Ensuring the cieni animations' playback only when it's safe, in the shower room
+            /*
+			current_layer.getChildren().each(function(shape, i) {
+            	if (shape.getAttr("object_type") == "animation") {
+                	if (shape.isVisible()) {
+                    	cieni_eyes_animation.play();
+						cieni_mouth_animation.play();
+                    }
+                }
+                
+			});
+			*/
+			/*
 			if (current_background == "shower_room") {
 				if (cieni_eyes_decal.isVisible()) {
 					cieni_eyes_animation.play();
 					cieni_mouth_animation.play();
 				}
 			}
-
 			// If the cieni hasn't been erased and the room changes, reset the animations
 			else {
 				if (cieni_eyes_decal.isVisible()) {
@@ -844,7 +663,7 @@ function interact(event) {
 					cieni_mouth_animation.reset();
 				}
 			}
-
+			*/
 			fade.reverse();
 			stage.draw();
 			setTimeout('fade_layer.hide();', 700);
@@ -857,6 +676,7 @@ function interact(event) {
 	}
 }
 
+// TODO: Dynamic sequences + some sort of dynamic reward screen logic?
 // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
 function play_ending() {
 	/*
@@ -903,6 +723,8 @@ function play_ending() {
 	stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
 	fade_layer.show();
 	fade.play();
+	
+	current_music = end_music;
 	end_music.play();
 
 	setTimeout(function() {
@@ -923,7 +745,7 @@ function play_ending() {
 		redrawInventory();
 
 		character_layer.hide();
-		stage.get("#inventory_bar")[0].hide();
+		inventory_bar_layer.hide();
 		outro_layer.show();
 
 		fade.reverse();
@@ -954,7 +776,7 @@ function play_ending() {
 			end_layer.moveUp();	
 			stage.get('#rewards_text')[0].setText(rewards + stage.get('#rewards_text')[0].getText());
 			end_layer.show();
-			stage.get("#inventory_bar")[0].show();
+			inventory_bar_layer.show();
 			inventory_layer.show();
 			character_layer.show();
 			stage.draw();
