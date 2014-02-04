@@ -492,12 +492,18 @@ stage.get('Image').on('dragend', function(event) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			dragged_item.destroy();
 			target.destroy();
-			redrawInventory();
-			if (target.getName() == "Sieni") {
+            var related = target.getAttr("related");
+			if (related && related.size != 0) {
+            	for (var i in related)
+            		stage.get("#" + related[i])[0].hide();
+                /*
 				cieni_eyes_animation.destroy();
 				cieni_mouth_animation.destroy();
 				cieni_eyes_decal.hide();
 				cieni_mouth_decal.hide();
+                */
+                
+                redrawInventory();
 			}
 		} else {
 			dragged_item.setX(x);

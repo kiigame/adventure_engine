@@ -1419,7 +1419,8 @@
 						"y": 380,
 						"category": "object",
 						"src": "images/cieni_1.png",
-						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin..."
+						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin...",
+                        "related": ["cieni_eyes", "cieni_mouth"]
 					},
 					"className": "Image"
 				}, {
