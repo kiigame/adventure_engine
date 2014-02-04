@@ -469,17 +469,14 @@ stage.get('Image').on('dragend', function(event) {
 	else if (dragged_item.getAttr(target.getId()) == undefined) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
-		// TODO: Default text possible to set dynamically?
 		setMonologue("Ei pysty, liian hapokasta.");
 	}
 	// Put something into a container
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && stage.get('#' + target.getAttr("category")) == 'container') {
+	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && stage.get('#' + dragged_item.getAttr('outcome'))[0].getAttr('category') == 'container') {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-            if (dragged_item.getAttr('consume') === true){
-            	dragged_item.destroy();
-            }
+			dragged_item.destroy();
 			target.hide();
 			redrawInventory();
 		} else {
@@ -493,13 +490,9 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			if (dragged_item.getAttr('consume') === true){
-            	dragged_item.destroy();
-            }
-			//target.destroy();
+			dragged_item.destroy();
+			target.destroy();
 			redrawInventory();
-			
-			// TODO: This needs to be dynamic
 			if (target.getName() == "Sieni") {
 				cieni_eyes_animation.destroy();
 				cieni_mouth_animation.destroy();
@@ -518,9 +511,7 @@ stage.get('Image').on('dragend', function(event) {
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
-			if (dragged_item.getAttr('consume') === true){
-            	dragged_item.destroy();
-            }
+			dragged_item.destroy();
 			target.destroy();
 			redrawInventory();
 		} else {
@@ -529,8 +520,6 @@ stage.get('Image').on('dragend', function(event) {
 		}
 		current_layer.draw();
 	}
-	
-    // TODO: This needs to be dynamic. Does removing this even effect anything?
 	// DNA analysis
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined) {
 		dragged_item.setX(x);
