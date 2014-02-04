@@ -38,12 +38,6 @@ var idle_1 = stage.get('#character_idle_1')[0];
 var idle_2 = stage.get('#character_idle_2')[0];
 var panic = stage.get('#character_panic')[0];
 
-// TODO: Scenario-specific animations need to be dynamic
-//       Maybe add animation attribute to JSON cieni_x with the desired animation code
-// Decals of the cieni
-var cieni_eyes_decal = stage.get('#cieni_eyes')[0];
-var cieni_mouth_decal = stage.get('#cieni_mouth')[0];
-
 // Scale background and UI elements
 stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
 stage.get("#inventory_bar")[0].setY(stage.getHeight() - 100);
@@ -144,39 +138,36 @@ var idle_2_animation = new Kinetic.Tween({
 	}
 });
 
-// TODO: This should be defined somewhere else, maybe JSON or own latkazombit.js file
-// Cieni's eye animation
-var cieni_eyes_animation = new Kinetic.Tween({
-	node : cieni_eyes_decal,
-	x : cieni_eyes_decal.getX() - 10,
-	easing : Kinetic.Easings.EaseInOut,
-	duration : 1.4,
-	onFinish : function() {
-		cieni_eyes_animation.reverse();
-		setTimeout('cieni_eyes_animation.play();', 1400);
-	}
-});
-
-// TODO: Same as above
-// Cieni's mouth animation
-var cieni_mouth_animation = new Kinetic.Tween({
-	node : cieni_mouth_decal,
-	x : cieni_mouth_decal.getX() + 9,
-	y : cieni_mouth_decal.getY() - 3,
-	width : cieni_mouth_decal.getWidth() - 15,
-	easing : Kinetic.Easings.EaseInOut,
-	duration : 1.9,
-	onFinish : function() {
-		cieni_mouth_animation.reverse();
-		setTimeout('cieni_mouth_animation.play();', 1900);
-	}
-});
+function create_animation (object) {
+	var attrs = object.getAttr("animation");
+	var animation = new Kinetic.Tween({
+    	node: object,
+        x: attrs.x ? object.getX() + attrs.x : object.getX(),
+        y: attrs.y ? object.getY() + attrs.y : object.getY(),
+        width: attrs.width ? object.getWidth() - 15 : object.getWidth(),
+        easing: Kinetic.Easings.EaseInOut,
+        duration: attrs.duration,
+        
+		onFinish: function() {
+			animation.reverse();
+			setTimeout(function() {
+            	animation.play();
+            }, attrs.duration * 1000);
+		}
+    });
+    
+    // TODO: Playing everything at once can end up being laggy
+    animation.play();
+}
 
 // Creating all image objects from json file based on their attributes
 for (var i = 0; i < objects_json.children.length; i++) {
 	for (var j = 0; j < objects_json.children[i].children.length; j++) {
 		if (objects_json.children[i].children[j].className == 'Image') {
 			createObject(objects_json.children[i].children[j].attrs);
+            
+            if (objects_json.children[i].children[j].attrs.object_type == "animation")
+            	create_animation(stage.get('#'+objects_json.children[i].children[j].attrs.id)[0]);
 		}
 	}
 }
@@ -647,6 +638,18 @@ function interact(event) {
 			
 			// TODO: Dynamic implementation doesn't want cieni here
 			// Ensuring the cieni animations' playback only when it's safe, in the shower room
+            /*
+			current_layer.getChildren().each(function(shape, i) {
+            	if (shape.getAttr("object_type") == "animation") {
+                	if (shape.isVisible()) {
+                    	cieni_eyes_animation.play();
+						cieni_mouth_animation.play();
+                    }
+                }
+                
+			});
+			*/
+			/*
 			if (current_background == "shower_room") {
 				if (cieni_eyes_decal.isVisible()) {
 					cieni_eyes_animation.play();
@@ -660,7 +663,7 @@ function interact(event) {
 					cieni_mouth_animation.reset();
 				}
 			}
-
+			*/
 			fade.reverse();
 			stage.draw();
 			setTimeout('fade_layer.hide();', 700);
