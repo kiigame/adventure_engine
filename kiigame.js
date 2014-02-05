@@ -54,6 +54,12 @@ var current_background = 'start_layer';
 // The amount of rewards found
 var rewards = 0;
 
+// The amount of items in the inventory
+var inventory_items = 0;
+// The item number where the shown items start from
+// (how many items from the beginning are not shown)
+var inventory_index = 0;
+
 // Timeout event for showing monologue animation for certain duration
 var monologue_timeout;
 
@@ -344,6 +350,12 @@ start_layer.on('mouseup touchend', function(event) {
 inventory_layer.on('click tap', function(event) {
 	interact(event);
 });
+
+// Inventory arrow clicking events
+inventory_bar_layer.on('click tap', function(event) {
+	interact(event);
+});
+
 // Drag start events
 stage.get('Image').on('dragstart', function(event) {
 	dragged_item = event.targetNode;
@@ -467,9 +479,13 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			dragged_item.destroy();
 			target.hide();
+                        inventoryRemove(dragged_item);
+                        /*
+                         * Why were these being used when there's the method "inventoryRemove()"?
+                        dragged_item.destroy();
 			redrawInventory();
+                        */
 		} else {
 			dragged_item.setX(x);
 			dragged_item.setY(y);
@@ -481,7 +497,10 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			dragged_item.destroy();
+			//dragged_item.destroy();
+                        // Item's not destroyed, so return it to inventory
+                        dragged_item.setX(x);
+                        dragged_item.setY(y);
 			target.destroy();
             var related = target.getAttr("related");
 			if (related && related.size != 0) {
@@ -518,6 +537,7 @@ stage.get('Image').on('dragend', function(event) {
 		current_layer.draw();
 	}
 	// DNA analysis
+        // TODO: This should be in latkazombit.js
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
@@ -670,6 +690,19 @@ function interact(event) {
 			setMonologue(target.getAttr("use"));
 		}, 700);
 	}
+        // Inventory arrow buttons
+        else if (target.getAttr('id') == 'inventory_left_arrow') {
+            if (target.getAttr('visible') == true) {
+                inventory_index--;
+                redrawInventory();
+            }
+        }
+        else if (target.getAttr('id') == 'inventory_right_arrow') {
+            if (target.getAttr('visible') == true) {
+                inventory_index++;
+                redrawInventory();
+            }
+        }
 	// Initiate ending
 	else if (target.getAttr('category') == 'ending') {
 		play_ending();
@@ -859,18 +892,22 @@ function inventoryAdd(item) {
 	item.clearImageHitRegion();
 	item.setScale(1);
 	item.setSize(80, 80);
-	if (item.getAttr('category') != 'reward') {
+        
+        /* Moved to redrawInventory()
+	item.setDraggable(true);
+    	if (item.getAttr('category') != 'reward') {
 		item.setAttr('category', 'usable');
 	}
-	item.setDraggable(true);
+        */
 
+        inventory_items++;
 	redrawInventory();
 }
 
 // Removing an item from the inventory
 function inventoryRemove(item) {
 	item.destroy();
-
+        inventory_items--;
 	redrawInventory();
 }
 
@@ -878,17 +915,38 @@ function inventoryRemove(item) {
 function redrawInventory() {
 	// Offset from left for drawing inventory items starting from proper position
 	var offsetFromLeft = 30;
-
-	inventory_layer.getChildren().each(function(shape, i) {
-		shape.setX(offsetFromLeft + i * 100);
-		shape.setY(stage.getHeight() - 90);
+        // How many items the inventory can show at a time (7 with current settings)
+        var inventory_max = 7;
+        
+        inventory_layer.getChildren().each(function(shape, i) {
+            shape.setAttr('visible', false);
+            shape.setDraggable(false);
 	});
-
-	/*
-	 for(var i = 0; i < inventory_layer.getChildren().length; i++) {
-	 inventory_layer.getChildren()[i].setX(offsetFromLeft + i * 100);
-	 inventory_layer.getChildren()[i].setY(stage.getHeight() - 90);
-	 }*/
+        
+        for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_items); i++) {
+            shape = inventory_layer.getChildren()[i];
+            if (shape.getAttr('category') != 'reward') {
+		shape.setAttr('category', 'usable');
+            }
+            shape.setDraggable(true);
+            shape.setX(offsetFromLeft + (i - inventory_index) * 100);
+            shape.setY(stage.getHeight() - 90);
+            shape.setAttr('visible', true);
+        }
+        
+        if(inventory_index > 0) {
+            stage.get('#inventory_left_arrow').show();
+        } else {
+            stage.get('#inventory_left_arrow').hide();
+        }
+        
+        if(inventory_index + inventory_max < inventory_items) {
+            stage.get('#inventory_right_arrow').show();
+        } else {
+            stage.get('#inventory_right_arrow').hide();
+        }
+        
+        inventory_bar_layer.draw();
 	inventory_layer.draw();
 }
 
