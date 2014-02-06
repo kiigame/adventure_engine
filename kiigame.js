@@ -465,7 +465,7 @@ stage.get('Image').on('dragend', function(event) {
 	// Put something into a container
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && stage.get('#' + dragged_item.getAttr('outcome'))[0].getAttr('category') == 'container') {
 		setMonologue(dragged_item.getAttr(target.getId()));
-		if (dragged_item.getAttr('trigger') == target.getId()) {
+		if (target.getAttr('in') == dragged_item.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			dragged_item.destroy();
 			target.hide();
@@ -607,11 +607,16 @@ function interact(event) {
 	// Take an item out of a container
 	else if (target.getAttr('category') == 'container') {
 		setMonologue(target.getAttr('use'));
-		stage.get('#' + target.getAttr('original'))[0].show();
-		stage.get('#' + target.getAttr('outcome'))[0].show();
-		inventoryAdd(stage.get('#' + target.getAttr('outcome'))[0]);
-		target.destroy();
-		current_layer.draw();
+		//stage.get('#' + target.getAttr('original'))[0].show();
+        
+        console.log("jea", target);
+        target.setAttr('src', target.getAttr('empty_image'));
+		//stage.get('#' + target.getAttr('out'))[0].show();
+		inventoryAdd(stage.get('#' + target.getAttr('out'))[0]);
+        
+		//target.destroy();
+		
+        current_layer.draw();
 	}
 	// Open a door
 	else if (target.getAttr('category') == 'door') {

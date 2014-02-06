@@ -594,19 +594,6 @@
 					"className": "Image"
 				}, {
 					"attrs": {
-						"id": "jacket_full",
-						"name": "Japen takki",
-						"x": 435,
-						"y": 130,
-						"category": "container",
-						"src": "images/jacket_full.png",
-						"use": "Onpas Japella hieno takki. Takin taskussa näyttäisi olevan jotain. Lainaanpa tätä Japelta.",
-						"original": "jacket_empty",
-						"outcome": "dnaanalyzer"
-					},
-					"className": "Image"
-				}, {
-					"attrs": {
 						"id": "tactic_board_1",
 						"name": "Taktiikkataulu",
 						"x": 565,
@@ -643,11 +630,29 @@
 					"className": "Image"
 				}, {
 					"attrs": {
+						"id": "jacket_full",
+						"name": "Japen takki",
+						"x": 435,
+						"y": 130,
+						"category": "container",
+						"src": "images/jacket_full.png",
+                        "full_image": "images/jacket_full.png",
+                        "empty_image": "images/jacket_empty.png",
+						"use": "Onpas Japella hieno takki. Takin taskussa näyttäisi olevan jotain. Lainaanpa tätä Japelta.",
+						"original": "jacket_empty",
+                        "in": "dnaanalyzer",
+                        "out": "dnaanalyzer",
+                        "state": "full",
+                        "locked": false
+					},
+					"className": "Image"
+				}, {
+					"attrs": {
 						"id": "jacket_empty",
 						"name": "Tyhjä takki",
 						"x": 435,
 						"y": 130,
-						"category": "object",
+						"category": "container",
 						"src": "images/jacket_empty.png",
 						"examine": "On muuten hieno tuo Japen takki. Taskuissa ei näytä olevan enää mitään.",
 						"visible": false
