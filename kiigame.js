@@ -1,11 +1,12 @@
 // KineticJS JavaScript Framework http://www.kineticjs.com/ Copyright 2013, Eric Rowell. Licensed under the MIT license.
 
 // Get jsons from the server
-var objects_json_text = getJSON('objects.json');
+var images_json_text = getJSON('images.json');
+var objects_json = JSON.parse(getJSON('objects.json'));
 var legends_json = JSON.parse(getJSON('legends.json'));
 
 // Create stage and everything in it from json
-var stage = Kinetic.Node.create(objects_json_text, 'container');
+var stage = Kinetic.Node.create(images_json_text, 'container');
 
 // Scale stage to window size
 //stage.setWidth(window.innerWidth);
@@ -44,7 +45,7 @@ stage.get("#inventory_bar")[0].setY(stage.getHeight() - 100);
 stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 
 // Make a json object from the json string
-var objects_json = stage.toObject();
+var images_json = stage.toObject();
 
 // TODO: Dynamize this, maybe combine object_layer and background layers?
 //       We have the "start": true there already
@@ -161,13 +162,13 @@ function create_animation (object) {
 }
 
 // Creating all image objects from json file based on their attributes
-for (var i = 0; i < objects_json.children.length; i++) {
-	for (var j = 0; j < objects_json.children[i].children.length; j++) {
-		if (objects_json.children[i].children[j].className == 'Image') {
-			createObject(objects_json.children[i].children[j].attrs);
+for (var i = 0; i < images_json.children.length; i++) {
+	for (var j = 0; j < images_json.children[i].children.length; j++) {
+		if (images_json.children[i].children[j].className == 'Image') {
+			createObject(images_json.children[i].children[j].attrs);
             
-            if (objects_json.children[i].children[j].attrs.object_type == "animation")
-            	create_animation(stage.get('#'+objects_json.children[i].children[j].attrs.id)[0]);
+            if (images_json.children[i].children[j].attrs.object_type == "animation")
+            	create_animation(stage.get('#'+images_json.children[i].children[j].attrs.id)[0]);
 		}
 	}
 }
@@ -450,7 +451,6 @@ function checkIntersection(dragged_item, target) {
 // Drag end events
 stage.get('Image').on('dragend', function(event) {
 	dragged_item = event.targetNode;
-
 	// If nothing's under the dragged item
 	if (target == null) {
 		dragged_item.setX(x);
@@ -463,14 +463,25 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue("Ei pysty, liian hapokasta.");
 	}
 	// Put something into a container
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && stage.get('#' + dragged_item.getAttr('outcome'))[0].getAttr('category') == 'container') {
-		setMonologue(dragged_item.getAttr(target.getId()));
-		if (target.getAttr('in') == dragged_item.getId()) {
-			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			dragged_item.destroy();
-			target.hide();
-			redrawInventory();
-		} else {
+	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'container') {
+    	var object = objects_json[target.getAttr('object_name')];
+        
+        if (object.state == 'empty') {
+        	object.state = 'full';
+            
+			setMonologue(dragged_item.getAttr(target.getId()));
+            
+			if (object.in == dragged_item.getId()) {
+     	   		stage.get('#' + objects_json[target.getAttr('object_name')]['empty'])[0].hide();
+        		stage.get('#' + objects_json[target.getAttr('object_name')]['full'])[0].show();
+        
+            	// Remove dragged item
+				inventoryRemove(dragged_item);
+       	 
+       	 		current_layer.draw();
+        	}
+        }
+		else {
 			dragged_item.setX(x);
 			dragged_item.setY(y);
 		}
@@ -606,17 +617,23 @@ function interact(event) {
 	}
 	// Take an item out of a container
 	else if (target.getAttr('category') == 'container') {
-		setMonologue(target.getAttr('use'));
-		//stage.get('#' + target.getAttr('original'))[0].show();
+		var object = objects_json[target.getAttr('object_name')];
         
-        console.log("jea", target);
-        target.setAttr('src', target.getAttr('empty_image'));
-		//stage.get('#' + target.getAttr('out'))[0].show();
-		inventoryAdd(stage.get('#' + target.getAttr('out'))[0]);
+        if (object.state == 'full') {
+        	object.state = 'empty';
         
-		//target.destroy();
-		
-        current_layer.draw();
+        	stage.get('#' + objects_json[target.getAttr('object_name')]['full'])[0].hide();
+        	stage.get('#' + objects_json[target.getAttr('object_name')]['empty'])[0].show();
+        
+        	// Show and add the added inventory item
+        	var new_item = stage.get('#' + object.out)[0];
+			new_item.show();
+			inventoryAdd(new_item);
+        
+        	current_layer.draw();
+        }
+        
+        setMonologue(target.getAttr('use'));
 	}
 	// Open a door
 	else if (target.getAttr('category') == 'door') {
@@ -874,8 +891,9 @@ function inventoryAdd(item) {
 
 // Removing an item from the inventory
 function inventoryRemove(item) {
-	item.destroy();
-
+	item.hide();
+	item.moveTo(current_layer);
+	item.setDraggable(false);
 	redrawInventory();
 }
 
