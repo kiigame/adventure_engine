@@ -323,7 +323,14 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 	stage.get('#start_empty')[0].on('tap click', function(event) {
 	event = event.targetNode;
 	var clone;
-	
+    
+	clone = stage.get('#oikotie')[0].clone({
+		visible : true,
+		x : 50
+	});
+	clone.moveTo(start_layer);
+    
+	/*
 	clone = stage.get('#locker_room_1_door_to_wc_open')[0].clone({
 		visible : true,
 		x : 600
@@ -337,7 +344,7 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 		x : 330
 	});
 	clone.moveTo(start_layer);
-
+	*/
 	stage.draw();
 });
 
@@ -503,6 +510,26 @@ stage.get('Image').on('dragend', function(event) {
         
 		current_layer.draw();
 	}
+    // Unlock a door
+	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'door') {
+    	console.log("dörr");
+        var object = objects_json[target.getAttr('object_name')];
+        
+        if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
+        	object.state = 'open';
+            object.locked = false;
+            
+            stage.get('#' + object.locked_image)[0].hide();
+            stage.get('#' + object.open_image)[0].show();
+        }
+        
+        setMonologue(dragged_item.getAttr(target.getId()));
+        
+        dragged_item.setX(x);
+        dragged_item.setY(y);
+        
+		current_layer.draw();
+    }
 	// Use item on object
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'object') {
 		setMonologue(dragged_item.getAttr(target.getId()));
@@ -650,15 +677,26 @@ function interact(event) {
         
         setMonologue(target.getAttr('use'));
 	}
-	// Open a door
+	// Open a door or do a transition
 	else if (target.getAttr('category') == 'door') {
 		setMonologue(target.getAttr('use'));
-		stage.get('#' + target.getAttr('outcome'))[0].show();
-		target.destroy();
-		current_layer.draw();
-	}
-	// Use a transition (move between areas)
-	else if (target.getAttr('category') == 'transition') {
+        
+        var object = objects_json[target.getAttr('object_name')];
+        console.log(object);
+        if (object.state == 'closed') {
+        	if (object.locked === true) {
+            	object.state = 'locked';
+        		stage.get('#' + object.locked_image)[0].show();
+            }
+            else {
+            	object.state = 'open';
+                stage.get('#' + object.open_image)[0].show();
+            }
+        	target.hide();
+			current_layer.draw();
+        }
+        else if (object.state == 'open') {
+        console.log('#' + target.getAttr(object.transition));
 		// Fading a black screen during the transition
 		fade_layer.show();
 		fade.play();
@@ -667,45 +705,18 @@ function interact(event) {
 		setTimeout(function() {
 			stage.get('#' + current_background)[0].hide();
 			target.getParent().hide();
-			current_background = target.getAttr('outcome');
+			current_background = object.transition; //target.getAttr('outcome');
 			current_layer = stage.get('#object_layer_' + current_background)[0];
 
-			stage.get('#' + target.getAttr('outcome'))[0].show();
-			stage.get('#object_layer_' + target.getAttr('outcome'))[0].show();
-			
-			// TODO: Dynamic implementation doesn't want cieni here
-			// Ensuring the cieni animations' playback only when it's safe, in the shower room
-            /*
-			current_layer.getChildren().each(function(shape, i) {
-            	if (shape.getAttr("object_type") == "animation") {
-                	if (shape.isVisible()) {
-                    	cieni_eyes_animation.play();
-						cieni_mouth_animation.play();
-                    }
-                }
-                
-			});
-			*/
-			/*
-			if (current_background == "shower_room") {
-				if (cieni_eyes_decal.isVisible()) {
-					cieni_eyes_animation.play();
-					cieni_mouth_animation.play();
-				}
-			}
-			// If the cieni hasn't been erased and the room changes, reset the animations
-			else {
-				if (cieni_eyes_decal.isVisible()) {
-					cieni_eyes_animation.reset();
-					cieni_mouth_animation.reset();
-				}
-			}
-			*/
+			stage.get('#' + object.transition)[0].show();
+			stage.get('#object_layer_' + object.transition)[0].show();
+            
 			fade.reverse();
 			stage.draw();
 			setTimeout('fade_layer.hide();', 700);
 			setMonologue(target.getAttr("use"));
 		}, 700);
+        }
 	}
     // Inventory arrow buttons
     else if (target.getAttr('id') == 'inventory_left_arrow') {
@@ -776,7 +787,7 @@ function play_ending() {
 	
 	current_music = end_music;
 	end_music.play();
-
+    
 	setTimeout(function() {
 		stage.get('#' + current_background)[0].hide();
 		stage.get('#object_layer_' + current_background)[0].hide();
