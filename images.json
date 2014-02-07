@@ -836,7 +836,8 @@
                                                 "shower_left": "\"Liian monta eri DNA:ta tunnistettu.\" Näitä suihkuja tosiaan käyttää aika moni henkilö päivän aikana.",
                                                 "shower_middle": "\"Liian monta eri DNA:ta tunnistettu.\" Näitä suihkuja tosiaan käyttää aika moni henkilö päivän aikana.",
                                                 "shower_right": "\"Liian monta eri DNA:ta tunnistettu.\" Näitä suihkuja tosiaan käyttää aika moni henkilö päivän aikana.",
-						"visible": false
+						"visible": false,
+                        "outcome": ""
 					},
 					"className": "Image"
 				}, {

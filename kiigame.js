@@ -528,12 +528,6 @@ stage.get('Image').on('dragend', function(event) {
 		}
 		current_layer.draw();
 	}
-	// DNA analysis
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined) {
-		dragged_item.setX(x);
-		dragged_item.setY(y);
-		setMonologue(dragged_item.getAttr(target.getId()));
-	}
 
 	// Clearing the glow effects
 	current_layer.getChildren().each(function(shape, i) {
