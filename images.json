@@ -572,9 +572,10 @@
 						"name": "Roskakori",
 						"x": 5,
 						"y": 428,
-						"category": "object",
+						"category": "container",
+                        "object_name": "garbagecan",
 						"src": "images/garbagecan.png",
-						"examine": "Sehän on roska-astia. Täynnä pureskeltua purkkaa ja muuta roskaa. En poimi täältä mitään paljain käsin."
+						"use": "Sehän on roska-astia. Täynnä pureskeltua purkkaa ja muuta roskaa. En poimi täältä mitään paljain käsin."
 					},
 					"className": "Image"
 				}, {
@@ -584,11 +585,9 @@
 						"x": 5,
 						"y": 428,
 						"category": "container",
+                        "object_name": "garbagecan",
 						"src": "images/garbagecan_teddy.png",
-						"examine": "ERROR: garbagecan_teddy.examine -tekstiä ei pitäisi tulla näkyviin",
 						"use": "En kestänyt nähdä nallea yksin roska-astiassa! Se tuijotti niin kutsuvasti noilla nappisilmillään... Voi kuinka hyvä mieli minulle tulikaan, kun pelastin nallen! Mutta kamala kuinka likainen se onkaan.",
-						"original": "garbagecan",
-						"outcome": "teddybear_chewinggum",
 						"visible": false
 					},
 					"className": "Image"
@@ -741,9 +740,10 @@
 						"name": "Legendan kaappi",
 						"x": 150,
 						"y": 50,
-						"category": "object",
+						"category": "container",
+                        "object_name": "locker",
 						"src": "images/locker_closed.png",
-						"examine": "*huokaus* kunpa minäkin olisin joskus suuri jääkiekkotähti niin saisin oman lukittavan kaapin pukuhuoneeseen. Mitähän kaapissa on? Tässä kaapissa näyttäisi olevan DNA-tunnisteella toimiva lukko. Aika hifiä!"
+						"use": "*huokaus* kunpa minäkin olisin joskus suuri jääkiekkotähti niin saisin oman lukittavan kaapin pukuhuoneeseen. Mitähän kaapissa on? Tässä kaapissa näyttäisi olevan DNA-tunnisteella toimiva lukko. Aika hifiä!"
 					},
 					"className": "Image"
 				}, {
@@ -753,6 +753,7 @@
 						"x": 150,
 						"y": 50,
 						"category": "container",
+                        "object_name": "locker",
 						"src": "images/locker_open.png",
 						"use": "Mitäs täältä löytyykään, sehän on ilmanraikastin!",
 						"original": "locker_empty",
@@ -766,9 +767,10 @@
 						"name": "Legendan kaappi",
 						"x": 150,
 						"y": 50,
-						"category": "object",
+						"category": "container",
+                        "object_name": "locker",
 						"src": "images/locker_open.png",
-						"examine": "En kehtaa kajota legendan kamoihin enempää.",
+						"use": "En kehtaa kajota legendan kamoihin enempää.",
 						"visible": false
 					},
 					"className": "Image"

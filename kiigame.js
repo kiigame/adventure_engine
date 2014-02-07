@@ -466,14 +466,23 @@ stage.get('Image').on('dragend', function(event) {
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'container') {
     	var object = objects_json[target.getAttr('object_name')];
         
+        if (object.locked === true && object.key == dragged_item.getId()) {
+        	object.locked = false;
+            stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
+            
+            if (object.state == "empty")
+            	var unlocked = "empty_image";
+            else
+            	var unlocked = "full_image";
+                
+            stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
+        }
         if (object.state == 'empty') {
         	object.state = 'full';
             
-			setMonologue(dragged_item.getAttr(target.getId()));
-            
 			if (object.in == dragged_item.getId()) {
-     	   		stage.get('#' + objects_json[target.getAttr('object_name')]['empty'])[0].hide();
-        		stage.get('#' + objects_json[target.getAttr('object_name')]['full'])[0].show();
+     	   		stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
+        		stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
         
             	// Remove dragged item
 				inventoryRemove(dragged_item);
@@ -481,10 +490,11 @@ stage.get('Image').on('dragend', function(event) {
        	 		current_layer.draw();
         	}
         }
-		else {
-			dragged_item.setX(x);
-			dragged_item.setY(y);
-		}
+        setMonologue(dragged_item.getAttr(target.getId()));
+        
+        dragged_item.setX(x);
+        dragged_item.setY(y);
+        
 		current_layer.draw();
 	}
 	// Use item on object
@@ -609,22 +619,24 @@ function interact(event) {
 	else if (target.getAttr('category') == 'object' || target.getAttr('category') == 'usable' || target.getAttr('category') == 'reward') {
 		setMonologue(target.getAttr('examine'));
 	}
-	// Take an item out of a container
+    // Take an item out of a container
 	else if (target.getAttr('category') == 'container') {
 		var object = objects_json[target.getAttr('object_name')];
         
-        if (object.state == 'full') {
-        	object.state = 'empty';
+        if (object.locked === false) {
+        	if (object.state == 'full') {
+        		object.state = 'empty';
         
-        	stage.get('#' + objects_json[target.getAttr('object_name')]['full'])[0].hide();
-        	stage.get('#' + objects_json[target.getAttr('object_name')]['empty'])[0].show();
+        		stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].hide();
+        		stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].show();
         
-        	// Show and add the added inventory item
-        	var new_item = stage.get('#' + object.out)[0];
-			new_item.show();
-			inventoryAdd(new_item);
+                // Show and add the added inventory item
+        		var new_item = stage.get('#' + object.out)[0];
+				new_item.show();
+				inventoryAdd(new_item);
         
-        	current_layer.draw();
+        		current_layer.draw();
+            }
         }
         
         setMonologue(target.getAttr('use'));

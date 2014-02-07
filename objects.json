@@ -1,14 +1,33 @@
 {
 	"jacket": {
         "category": "container",
-        "full": "jacket_full",
-        "empty": "jacket_empty",
+        "full_image": "jacket_full",
+        "empty_image": "jacket_empty",
         "in": "dnaanalyzer",
         "out": "dnaanalyzer",
-        "full": "jacket_full",
         "state": "full",
         "locked": false,
         "blocked": false
+    },
+    "locker": {
+        "category": "container",
+        "full_image": "locker_open",
+        "empty_image": "locker_empty",
+        "locked_image": "locker_closed",
+        "out": "airfreshener",
+        "state": "full",
+        "key": "teddybear_chewinggum",
+        "locked": true,
+        "blocked": false
+    },
+    "garbagecan": {
+        "category": "container",
+        "full_image": "garbagecan_teddy",
+        "empty_image": "garbagecan",
+        "in": "teddybear",
+        "out": "teddybear_chewinggum",
+        "state": "empty",
+        "locked": false,
+        "blocked": false
     }
-    
 }
