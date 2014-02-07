@@ -76,6 +76,7 @@
 		"transition": "locker_room_1"
     },
 	"shower_door_to_locker_room_2":	{
+    	"blocked_image": "shower_door_to_locker_room_2_blocked",
 		"closed_image": "shower_door_to_locker_room_2_closed",
 		"open_image": "shower_door_to_locker_room_2_open",
 		"type": "door",
@@ -107,6 +108,26 @@
         "blocked": false,
         "state": "open",
         "transition": "locker_room_1"
+    },
+    "cieni": {
+    	"type": "obstacle",
+		"blocking": true,
+		"target": "shower_door_to_locker_room_2",
+		"trigger": "cienibang",
+		"blocking_image": "cieni_1"
+    },
+    "cieni_eyes": {
+    	"type": "obstacle",
+		"blocking": true,
+		"target": "shower_door_to_locker_room_2",
+		"trigger": "cienibang",
+		"blocking_image": "cieni_1"
+    },
+    "cieni_mouth": {
+    	"type": "obstacle",
+		"blocking": true,
+		"target": "shower_door_to_locker_room_2",
+		"trigger": "cienibang",
+		"blocking_image": "cieni_1"
     }
-    
 }

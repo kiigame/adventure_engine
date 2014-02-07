@@ -512,7 +512,6 @@ stage.get('Image').on('dragend', function(event) {
 	}
     // Unlock a door
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'door') {
-    	console.log("dörr");
         var object = objects_json[target.getAttr('object_name')];
         
         if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
@@ -521,6 +520,38 @@ stage.get('Image').on('dragend', function(event) {
             
             stage.get('#' + object.locked_image)[0].hide();
             stage.get('#' + object.open_image)[0].show();
+        }
+        
+        setMonologue(dragged_item.getAttr(target.getId()));
+        
+        dragged_item.setX(x);
+        dragged_item.setY(y);
+        
+		current_layer.draw();
+    }
+    // Unblock an obstacle
+	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'obstacle') {
+    	var object = objects_json[target.getAttr('object_name')];
+        
+        if (object.blocking === true && object.trigger == dragged_item.getId()) {
+        	var blocked_object = objects_json[object.target];
+            
+            object.blocking = false;
+            blocked_object.blocked = false;
+            
+            // TODO: What about other objects than door?
+            stage.get('#' + blocked_object.blocked_image)[0].hide();
+            stage.get('#' + blocked_object.closed_image)[0].show();
+            
+            // TODO: unblocking_image, merge this with "use item on object"?
+            target.destroy();
+            var related = target.getAttr("related");
+			if (related && related.size != 0) {
+            	for (var i in related)
+            		stage.get("#" + related[i])[0].hide();
+                      
+                redrawInventory();
+			}
         }
         
         setMonologue(dragged_item.getAttr(target.getId()));
@@ -540,17 +571,12 @@ stage.get('Image').on('dragend', function(event) {
 			dragged_item.setX(x);
 			dragged_item.setY(y);
 			target.destroy();
+            
             var related = target.getAttr("related");
 			if (related && related.size != 0) {
             	for (var i in related)
             		stage.get("#" + related[i])[0].hide();
-                /*
-				cieni_eyes_animation.destroy();
-				cieni_mouth_animation.destroy();
-				cieni_eyes_decal.hide();
-				cieni_mouth_decal.hide();
-                */
-                
+                      
                 redrawInventory();
 			}
 		} else {
@@ -682,8 +708,10 @@ function interact(event) {
 		setMonologue(target.getAttr('use'));
         
         var object = objects_json[target.getAttr('object_name')];
-        console.log(object);
-        if (object.state == 'closed') {
+        
+        if (object.blocked === true)
+        	setMonologue(target.getAttr("use"));
+        else if (object.state == 'closed') {
         	if (object.locked === true) {
             	object.state = 'locked';
         		stage.get('#' + object.locked_image)[0].show();
@@ -696,26 +724,25 @@ function interact(event) {
 			current_layer.draw();
         }
         else if (object.state == 'open') {
-        console.log('#' + target.getAttr(object.transition));
-		// Fading a black screen during the transition
-		fade_layer.show();
-		fade.play();
+			// Fading a black screen during the transition
+			fade_layer.show();
+			fade.play();
 
-		// Animation cycle for proper fading and drawing order
-		setTimeout(function() {
-			stage.get('#' + current_background)[0].hide();
-			target.getParent().hide();
-			current_background = object.transition; //target.getAttr('outcome');
-			current_layer = stage.get('#object_layer_' + current_background)[0];
-
-			stage.get('#' + object.transition)[0].show();
-			stage.get('#object_layer_' + object.transition)[0].show();
-            
-			fade.reverse();
-			stage.draw();
-			setTimeout('fade_layer.hide();', 700);
-			setMonologue(target.getAttr("use"));
-		}, 700);
+			// Animation cycle for proper fading and drawing order
+			setTimeout(function() {
+				stage.get('#' + current_background)[0].hide();
+				target.getParent().hide();
+				current_background = object.transition; //target.getAttr('outcome');
+				current_layer = stage.get('#object_layer_' + current_background)[0];
+                
+				stage.get('#' + object.transition)[0].show();
+				stage.get('#object_layer_' + object.transition)[0].show();
+            	
+				fade.reverse();
+				stage.draw();
+				setTimeout('fade_layer.hide();', 700);
+				setMonologue(target.getAttr("use"));
+			}, 700);
         }
 	}
     // Inventory arrow buttons
