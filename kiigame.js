@@ -327,6 +327,7 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 		x : 50
 	});
 	clone.moveTo(start_layer);
+	clone.on('click', function() {current_music.pause();});
     
 	/*
 	clone = stage.get('#locker_room_1_door_to_wc_open')[0].clone({
@@ -550,12 +551,12 @@ stage.get('Image').on('dragend', function(event) {
                 redrawInventory();
 			}
         }
-        
+        else {
+            dragged_item.setX(x);
+            dragged_item.setY(y);
+        }
         setMonologue(dragged_item.getAttr(target.getId()));
-        
-        dragged_item.setX(x);
-        dragged_item.setY(y);
-        
+                
 		current_layer.draw();
     }
 	// Use item on object
@@ -572,8 +573,7 @@ stage.get('Image').on('dragend', function(event) {
 			    dragged_item.setY(y);
 			    target.destroy();
 			}
-			
-			            
+			console.log("item on object",inventory_layer);
             var related = target.getAttr("related");
 			if (related && related.size != 0) {
             	for (var i in related)
@@ -594,8 +594,12 @@ stage.get('Image').on('dragend', function(event) {
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
-                        inventoryRemove(dragged_item);
+            
+            
+            
+            inventoryRemove(dragged_item);
 			inventoryRemove(target);
+			console.log("item on item", inventory_layer);
 			redrawInventory();
 		} else {
 			dragged_item.setX(x);
@@ -762,7 +766,7 @@ function interact(event) {
 	}
 }
 
-// TODO: Dynamic sequences + some sort of dynamic reward screen logic?
+// TODO: Some sort of dynamic reward screen logic?
 // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
 function play_ending() {
 
@@ -775,24 +779,22 @@ function play_ending() {
 	fade_layer.show();
 	fade.play();
 	
+	current_music.pause();
 	current_music = end_music;
-	end_music.play();
+	current_music.play();
     
 	setTimeout(function() {
 		stage.get('#' + current_background)[0].hide();
 		stage.get('#object_layer_' + current_background)[0].hide();
 		inventory_layer.hide();
-		inventory_layer.getChildren().each(function(shape, i) {
-			if (shape.getAttr('category') != 'reward') {
+		
+		// Clear inventory except rewards
+		for (var i = inventory_layer.children.length-1; i >= 0; i--) {
+		    var shape = inventory_layer.children[i];
+			if (shape.getAttr('category') != 'reward')
 				inventoryRemove(shape);
-			}
-		});
-		// Without this, sometimes there's a random item left in the inventory. Wiper and dna-analyzer were spotted
-		inventory_layer.getChildren().each(function(shape, i) {
-			if (shape.getAttr('category') != 'reward') {
-				inventoryRemove(shape);
-			}
-		});
+		}
+		
         inventory_index = 0;
 		redrawInventory();
 
@@ -811,20 +813,8 @@ function play_ending() {
 		fade.play();
 		setTimeout(function() {
 			outro_layer.hide();
-			switch (rewards) {
-				case 0:
-					stage.get('#end_picture_0')[0].show();
-					break;
-				case 1:
-					stage.get('#end_picture_1')[0].show();
-					break;
-				case 2:
-					stage.get('#end_picture_2')[0].show();
-					break;
-				case 3:
-					stage.get('#end_picture_3')[0].show();
-					break;
-			}
+			stage.get('#end_picture_' + rewards)[0].show();
+			
 			end_layer.moveUp();	
 			stage.get('#rewards_text')[0].setText(rewards + stage.get('#rewards_text')[0].getText());
 			end_layer.show();
