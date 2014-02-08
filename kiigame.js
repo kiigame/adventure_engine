@@ -491,8 +491,7 @@ stage.get('Image').on('dragend', function(event) {
                             stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
 
                     // Remove dragged item
-                                    inventoryRemove(dragged_item);
-
+                            inventoryRemove(dragged_item);
                             current_layer.draw();
                     }
             }
@@ -540,6 +539,14 @@ stage.get('Image').on('dragend', function(event) {
 		}
 		current_layer.draw();
 	}
+        // Default for all others (these should probably still be covered above)
+        // Using rewards on items is bugged without this, needs fixing
+        else {
+            dragged_item.setX(x);
+            dragged_item.setY(y);
+            setMonologue("Ei pysty, liian hapokasta.");
+        }
+        
 
 	// Clearing the glow effects
 	current_layer.getChildren().each(function(shape, i) {
@@ -594,29 +601,12 @@ function interact(event) {
 		// Pick up a secret item
 	} else if (target.getAttr('category') == 'secret') {
 		setMonologue(target.getAttr('pickup'));
-		target.destroy();
-		
-		// TODO: Dynamic number of secrets
-		// Always give the rewards in the same order, despite what order the secrets are found in
-		switch (rewards) {
-			case 0:
-				inventoryAdd(stage.get('#book_reward_1')[0]);
-				rewards++;
-				stage.get('#book_reward_1')[0].show();
-				break;
-			case 1:
-				inventoryAdd(stage.get('#book_reward_2')[0]);
-				rewards++;
-				stage.get('#book_reward_2')[0].show();
-				break;
-			case 2:
-				inventoryAdd(stage.get('#book_reward_3')[0]);
-				rewards++;
-				stage.get('#book_reward_3')[0].show();
-				break;
-		}
+                var rewardID = target.getAttr('reward');
+                inventoryAdd(stage.get('#'+rewardID)[0]);
+                stage.get('#'+rewardID)[0].show();
+                rewards++;
+                target.destroy();
 		current_layer.draw();
-		inventory_layer.draw();
 
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
@@ -726,41 +716,6 @@ function interact(event) {
 // TODO: Dynamic sequences + some sort of dynamic reward screen logic?
 // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
 function play_ending() {
-	/*
-	fade_layer.show();
-	fade_layer.moveDown();
-	fade.play();
-	setMonologue(stage.get("#poster_onthewall")[0].getAttr("use"));
-	setTimeout(function() {
-	stage.get('#' + current_background)[0].hide();
-	object_layer_locker_room_2.hide();
-	inventory_layer.getChildren().each(function(shape, i) {
-	if(shape.getAttr('category') != 'reward') {
-	inventoryRemove(shape);
-	}
-	});
-	inventory_layer.getChildren().each(function(shape, i) {
-	if(shape.getAttr('category') != 'reward') {
-	inventoryRemove(shape);
-	}
-	});
-	redrawInventory();
-	end_music.play();
-
-	stage.draw();
-	setTimeout(function() {
-	interaction_text.setX(stage.getWidth() / 2);
-	interaction_text.setOffset({
-	x : 300
-	});
-	interaction_text.setY(stage.getHeight() / 2 - 100);
-	interaction_text.setFontSize(40);
-	interaction_text.setStrokeWidth(0);
-	interaction_text.setText("Pako onnistui!\n\n" + rewards + end_layer.getAttr('text'));
-	stage.draw();
-	}, 700);
-	}, 700);
-	*/
 
 	var delay = 700;
 
@@ -789,6 +744,7 @@ function play_ending() {
 				inventoryRemove(shape);
 			}
 		});
+                inventory_index = 0;
 		redrawInventory();
 
 		character_layer.hide();

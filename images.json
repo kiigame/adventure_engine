@@ -918,7 +918,8 @@
 						"y": 61,
 						"category": "secret",
 						"src": "images/reward_1.png",
-						"pickup": "Täällähän oli kirja piilossa!"
+						"pickup": "Täällähän oli kirja piilossa!",
+                                                "reward": "book_reward_1"
 					},
 					"className": "Image"
 				}, {
@@ -1201,7 +1202,8 @@
 						"y": 345,
 						"category": "secret",
 						"src": "images/reward_3.png",
-						"pickup": "Löysin naulakon alle piilotetun kirjan!"
+						"pickup": "Löysin naulakon alle piilotetun kirjan!",
+                                                "reward": "book_reward_3"
 					},
 					"className": "Image"
 				}, {
@@ -1848,7 +1850,8 @@
 						"y": 233,
 						"category": "secret",
 						"src": "images/reward_2.png",
-						"pickup": "Löysin paperimasiinaan piilotetun kirjan!"
+						"pickup": "Löysin paperimasiinaan piilotetun kirjan!",
+                                                "reward": "book_reward_2"
 					},
 					"className": "Image"
 				}
