@@ -297,9 +297,7 @@ function play_sequence(sequence, post_sequence_image) {
                         stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
                         fade_layer.moveDown();
                         
-                        var end_text = texts_json[sequence_layer[0].attrs.id].end_text;
-                        if (end_text && end_text.length != 0)
-                            setMonologue(end_text);
+                        setMonologue(sequence_layer[0].getAttr('id'), 'end_text');
                     }, 3000);
                 }, 1500);
                 
@@ -314,7 +312,7 @@ function play_sequence(sequence, post_sequence_image) {
 // Listener and showing of credits on the start screen
 stage.get('#start_credits')[0].on('tap click', function(event) {
 	event = event.targetNode;
-	setMonologue(texts_json[event.getAttr('id')].credits);
+	setMonologue(event.getAttr('id'));
 });
 // Developer feature - shortcut menu from the empty menu button for testing purposes
 	stage.get('#start_empty')[0].on('tap click', function(event) {
@@ -472,7 +470,7 @@ stage.get('Image').on('dragend', function(event) {
 	else if (dragged_item.getAttr(target.getId()) == undefined) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
-		setMonologue("Ei pysty, liian hapokasta.");
+		setMonologue("default");
 	}
 	// Put something into a container
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'container') {
@@ -501,7 +499,7 @@ stage.get('Image').on('dragend', function(event) {
                             current_layer.draw();
                     }
             }
-            setMonologue(dragged_item.getAttr(target.getId()));
+            setMonologue(dragged_item.getAttr(), target.getId());
 	}
     // Unlock a door
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'door') {
@@ -515,7 +513,7 @@ stage.get('Image').on('dragend', function(event) {
             stage.get('#' + object.open_image)[0].show();
         }
         
-        setMonologue(dragged_item.getAttr(target.getId()));
+        setMonologue(dragged_item.getAttr(), target.getId());
     }
     // Unblock an obstacle
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'obstacle') {
@@ -539,11 +537,11 @@ stage.get('Image').on('dragend', function(event) {
             		stage.get("#" + related[i])[0].hide();
 			}
         }
-        setMonologue(dragged_item.getAttr(target.getId()));
+        setMonologue(dragged_item.getAttr(), target.getId());
     }
 	// Use item on object
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'object') {
-		setMonologue(dragged_item.getAttr(target.getId()));
+		setMonologue(dragged_item.getAttr(), target.getId());
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			
@@ -563,7 +561,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on item
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'usable') {
-		setMonologue(dragged_item.getAttr(target.getId()));
+		setMonologue(dragged_item.getAttr(), target.getId());
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			
@@ -574,7 +572,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
     // Default for all others
     else {
-        setMonologue(dragged_item.getAttr(target.getId()));
+        setMonologue(dragged_item.getAttr(), target.getId());
     }
         
     dragged_item.setX(x);
@@ -620,7 +618,7 @@ function interact(event) {
 
 	// Pick up an item
 	if (target.getAttr('category') == 'item') {
-		setMonologue(target.getAttr('pickup'));
+		setMonologue(target.getAttr('id'), 'pickup');
 		if (target.getAttr('src2') != undefined) {
 			stage.get('#' + target.getAttr('src2'))[0].show();
 			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
@@ -634,7 +632,7 @@ function interact(event) {
 		event.cancelBubble = true;
 		// Pick up a secret item
 	} else if (target.getAttr('category') == 'secret') {
-		setMonologue(target.getAttr('pickup'));
+		setMonologue(target.getAttr('id'), 'pickup');
                 var rewardID = target.getAttr('reward');
                 inventoryAdd(stage.get('#'+rewardID)[0]);
                 stage.get('#'+rewardID)[0].show();
@@ -647,7 +645,7 @@ function interact(event) {
 	}
 	// Print examine texts for items, rewards and objects
 	else if (target.getAttr('category') == 'object' || target.getAttr('category') == 'usable' || target.getAttr('category') == 'reward') {
-		setMonologue(target.getAttr('examine'));
+		setMonologue(target.getAttr('id'));
 	}
     // Take an item out of a container
 	else if (target.getAttr('category') == 'container') {
@@ -669,16 +667,16 @@ function interact(event) {
             }
         }
         
-        setMonologue(target.getAttr('use'));
+        setMonologue(target.getAttr('id'));
 	}
 	// Open a door or do a transition
 	else if (target.getAttr('category') == 'door') {
-		setMonologue(target.getAttr('use'));
+		setMonologue(target.getAttr('id'));
         
         var object = objects_json[target.getAttr('object_name')];
         
         if (object.blocked === true)
-        	setMonologue(target.getAttr("use"));
+        	setMonologue(target.getAttr('id'));
         else if (object.state == 'closed') {
         	if (object.locked === true) {
             	object.state = 'locked';
@@ -709,7 +707,7 @@ function interact(event) {
 				fade.reverse();
 				stage.draw();
 				setTimeout('fade_layer.hide();', 700);
-				setMonologue(target.getAttr("use"));
+				setMonologue(target.getAttr('id'));
 			}, 700);
         }
 	}
@@ -795,7 +793,14 @@ function play_ending() {
 }
 
 // Set monologue text
-function setMonologue(text) {
+function setMonologue(id, name) {
+    if (!name)
+        name = 'examine';
+        
+    var text = texts_json[id][name];
+    if (!text || text.length == 0)
+        return;
+        
 	monologue.setWidth('auto');
 	speech_bubble.show();
 	monologue.setText(text);
