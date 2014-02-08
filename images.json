@@ -499,9 +499,9 @@
 						"x": 776,
 						"y": 72,
 						"category": "door",
+                        "object_name": "stinking_wc_door",
 						"src": "images/locker_room_1_door_to_wc_closed.png",
-						"use": "WC:n ovi näyttäisi aukeavan kutsuvasti, mutta..",
-						"outcome": "locker_room_1_door_to_wc_stinking"
+						"use": "WC:n ovi näyttäisi aukeavan kutsuvasti, mutta.."
 					},
 					"className": "Image"
 				}, {
@@ -510,10 +510,10 @@
 						"name": "Hieman haiskahtava vessan ovi",
 						"x": 776,
 						"y": 72,
-						"category": "object",
+						"category": "door",
+                        "object_name": "stinking_wc_door",
 						"src": "images/locker_room_1_door_to_wc_stinking.png",
-						"examine": "Hyh! Tuolta tuleva ilma on kyllä tätä miestä väkevämpää, vaikken kyllä muista jättäneeni sukkiani sinne. En pysty, en kykene, en kyllä mene tuonne jos tuo haju ei hälvene.",
-						"outcome": "locker_room_1_door_to_wc_open",
+						"use": "Hyh! Tuolta tuleva ilma on kyllä tätä miestä väkevämpää, vaikken kyllä muista jättäneeni sukkiani sinne. En pysty, en kykene, en kyllä mene tuonne jos tuo haju ei hälvene.",
 						"visible": false
 					},
 					"className": "Image"
@@ -523,7 +523,8 @@
 						"name": "Vessan ovi",
 						"x": 776,
 						"y": 72,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "stinking_wc_door",
 						"src": "images/locker_room_1_door_to_wc_open.png",
 						"use": "Onpas yllättävän siisti WC. Joku näyttää siivonneen täällä äskettäin.",
 						"outcome": "wc_1",
@@ -537,9 +538,9 @@
 						"x": 865,
 						"y": 33,
 						"category": "door",
+                        "object_name": "locker_room_1_shower_door",
 						"src": "images/locker_room_1_door_to_shower_closed.png",
-						"use": "Voisin vilkaista mitä suihkun puolella on meneillään. Suihkutilahan on kahden kopin yhteinen.",
-						"outcome": "locker_room_1_door_to_shower_open"
+						"use": "Voisin vilkaista mitä suihkun puolella on meneillään. Suihkutilahan on kahden kopin yhteinen."
 					},
 					"className": "Image"
 				}, {
@@ -548,7 +549,8 @@
 						"name": "Suihkun ovi",
 						"x": 865,
 						"y": 17,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "locker_room_1_shower_door",
 						"src": "images/locker_room_1_door_to_shower_open.png",
 						"use": "Suihkuunhan ei normaalioloissa sitten kannata mennä ilman sandaaleja..",
 						"outcome": "shower_room",
@@ -1142,6 +1144,7 @@
 						"x": 117,
 						"y": 60,
 						"category": "door",
+                        "object_name": "locker_room_2_wc_door",
 						"src": "images/locker_room_2_door_to_wc_closed.png",
 						"use": "No niin, täällä ei haise samalla tavalla kuin edellisessä vessassa..",
 						"outcome": "locker_room_2_door_to_wc_open"
@@ -1153,7 +1156,8 @@
 						"name": "Vessan ovi",
 						"x": 117,
 						"y": 60,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "locker_room_2_wc_door",
 						"src": "images/locker_room_2_door_to_wc_open.png",
 						"use": "Tämäkin on ihan tavallinen WC. Täällä on ikkuna, josta näkee ulos.",
 						"outcome": "wc_2",
@@ -1166,7 +1170,8 @@
 						"name": "Suihkun ovi",
 						"x": 16,
 						"y": 8,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "locker_room_2_shower_door",
 						"src": "images/locker_room_2_door_to_shower.png",
 						"use": "Suihkuunhan ei normaalioloissa sitten kannata mennä ilman sandaaleja..",
 						"outcome": "shower_room"
@@ -1342,10 +1347,10 @@
 						"name": "Pukuhuoneen ovi",
 						"x": 691,
 						"y": 136,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "shower_door_to_locker_room_1",
 						"src": "images/shower_door_to_locker_room_1.png",
-						"use": "Tästä pukuhuoneesta havahduin.",
-						"outcome": "locker_room_1"
+						"use": "Tästä pukuhuoneesta havahduin."
 					},
 					"className": "Image"
 				}, {
@@ -1354,9 +1359,10 @@
 						"name": "Pukuhuoneen ovi",
 						"x": 155,
 						"y": 132,
-						"category": "object",
+						"category": "door",
+                        "object_name": "shower_door_to_locker_room_2",
 						"src": "images/shower_door_to_locker_room_2_closed.png",
-						"examine": "Tuo kammottava sieni tukkii tieni! Oho, riimi."
+						"use": "Tuo kammottava sieni tukkii tieni! Oho, riimi."
 					},
 					"className": "Image"
 				}, {
@@ -1366,9 +1372,9 @@
 						"x": 155,
 						"y": 132,
 						"category": "door",
+                        "object_name": "shower_door_to_locker_room_2",
 						"src": "images/shower_door_to_locker_room_2_closed.png",
 						"use": "Kun pääsin sienestä eroon, pystyn avaamaan tämän oven.",
-						"outcome": "shower_door_to_locker_room_2_open",
 						"visible": false
 					},
 					"className": "Image"
@@ -1378,10 +1384,10 @@
 						"name": "Pukuhuoneen ovi",
 						"x": 155,
 						"y": 132,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "shower_door_to_locker_room_2",
 						"src": "images/shower_door_to_locker_room_2_open.png",
 						"use": "Mistähän minä oikein pääsisin ulos?",
-						"outcome": "locker_room_2",
 						"visible": false
 					},
 					"className": "Image"
@@ -1425,7 +1431,8 @@
 						"name": "Sieni",
 						"x": 100,
 						"y": 380,
-						"category": "object",
+						"category": "obstacle",
+                        "object_name": "cieni",
 						"src": "images/cieni_1.png",
 						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin...",
                         "related": ["cieni_eyes", "cieni_mouth"]
@@ -1436,7 +1443,8 @@
 						"id": "cieni_eyes",
 						"x": 220,
 						"y": 415,
-						"category": "object",
+						"category": "obstacle",
+                        "object_name": "cieni",
 						"src": "images/cieni_eyes.png",
 						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin...",
                     	"object_type": "animation",
@@ -1450,7 +1458,8 @@
 						"x": 215,
 						"y": 453,
 						"width": 73,
-						"category": "object",
+						"category": "obstacle",
+                        "object_name": "cieni",
 						"src": "images/cieni_mouth.png",
 						"examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin...",
                         "object_type": "animation",
@@ -1609,10 +1618,10 @@
 						"name": "Vessan ovi",
 						"x": 281,
 						"y": 125,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "wc_1_door_to_locker_room_1",
 						"src": "images/wc_1_door_to_locker_room_1.png",
-						"use": "Mistähän minä oikein pääsisin ulos?",
-						"outcome": "locker_room_1"
+						"use": "Mistähän minä oikein pääsisin ulos?"
 					},
 					"className": "Image"
 				}, {
@@ -1649,7 +1658,7 @@
 						"wc_1_door_to_locker_room_1": "Tuon tilan puhdistaminen ja siivoaminen veisi enemmän aikaa kuin minulla on nyt käytettävissä.",
 						"shower_door_to_locker_room_1": "Tuon tilan puhdistaminen ja siivoaminen veisi enemmän aikaa kuin minulla on nyt käytettävissä.",
 						"shower_door_to_locker_room_2_blocked": "Luulen, että minun on parempi käyttää tätä ainetta tuohon sieneen.",
-						"shower_door_to_locker_room_2_closed": "Olisihan se hienoa jos ovet olisivat putipuhtaita. Ovien puhdistamiseen on kuitenkin eri aineet olemassa.",
+						"shower_door_to_locker_room_2_closed": "Olisihan se hienoa j1os ovet olisivat putipuhtaita. Ovien puhdistamiseen on kuitenkin eri aineet olemassa.",
 						"shower_door_to_locker_room_2_open": "Tuon tilan puhdistaminen ja siivoaminen veisi enemmän aikaa kuin minulla on nyt käytettävissä.",
 						"cieni_1": "Jes! CieniBang suorastaan räjäytti sienikasvuston oven edestä. Mitähän oven takana on?",
 						"locker_room_2_door_to_out": "Ovi ja etenkin tuo lammikko olisi syytä puhdistaa. Säästän puhdistusaineen kuitenkin tuonnemmaksi.",
@@ -1870,7 +1879,8 @@
 						"name": "Vessan ovi",
 						"x": 555,
 						"y": 127,
-						"category": "transition",
+						"category": "door",
+                        "object_name": "wc_2_door_to_locker_room_2",
 						"src": "images/wc_2_door_to_locker_room_2.png",
 						"use": "Mistähän minä oikein pääsisin ulos?",
 						"outcome": "locker_room_2"
@@ -1970,11 +1980,7 @@
 					"className": "Image"
 				}
 			]
-		}, 
-		
-		
-		
-		{
+		}, {
 			"attrs": {
 				"id": "inventory_bar_layer",
 				"visible": false
@@ -2143,6 +2149,27 @@
 							"className": "Text"
 						}
 					]
+				}
+			]
+		}, {
+			"attrs": {
+				"id": "oikotiet",
+				"visible": false
+			},
+			"className": "Layer",
+			"children": [
+                {
+					"attrs": {
+						"id": "oikotie",
+						"name": "Oikotieovi",
+						"x": 691,
+						"y": 136,
+						"category": "door",
+                        "object_name": "oikotie_onneen",
+						"src": "images/shower_door_to_locker_room_1.png",
+						"use": "Oikotie"
+					},
+					"className": "Image"
 				}
 			]
 		}
