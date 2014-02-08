@@ -4,6 +4,7 @@
 var images_json_text = getJSON('images.json');
 var objects_json = JSON.parse(getJSON('objects.json'));
 var legends_json = JSON.parse(getJSON('legends.json'));
+var texts_json = JSON.parse(getJSON('texts.json'));
 
 // Create stage and everything in it from json
 var stage = Kinetic.Node.create(images_json_text, 'container');
