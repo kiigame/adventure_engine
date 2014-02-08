@@ -222,8 +222,6 @@ stage.get('#begining')[0].on('tap click', function(event) {
 
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
-    // TODO: Default game launch logic, after doing dynamic sequences
-    //play_intro()
     play_sequence("intro_layer", "locker_room_1");
 });
 
@@ -565,11 +563,16 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
-			//dragged_item.destroy();
-                        // Item's not destroyed, so return it to inventory
-			dragged_item.setX(x);
-			dragged_item.setY(y);
-			target.destroy();
+			
+            // Items may be consumed when used
+            if (dragged_item.getAttr('consume') === true)
+                inventoryRemove(dragged_item);
+            else {
+			    dragged_item.setX(x);
+			    dragged_item.setY(y);
+			    target.destroy();
+			}
+			
 			            
             var related = target.getAttr("related");
 			if (related && related.size != 0) {
@@ -580,8 +583,8 @@ stage.get('Image').on('dragend', function(event) {
 			}
 			
 		} else {
-                    dragged_item.setX(x);
-                    dragged_item.setY(y);
+            dragged_item.setX(x);
+            dragged_item.setY(y);
 		}
 		current_layer.draw();
 	}
@@ -790,7 +793,7 @@ function play_ending() {
 				inventoryRemove(shape);
 			}
 		});
-                inventory_index = 0;
+        inventory_index = 0;
 		redrawInventory();
 
 		character_layer.hide();
@@ -917,7 +920,7 @@ function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
 	item.setDraggable(false);
-        inventory_items--;
+    inventory_items--;
 	redrawInventory();
 }
 

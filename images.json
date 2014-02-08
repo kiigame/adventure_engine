@@ -910,7 +910,8 @@
                                                 "shower_middle": "Tällä on pyyhitty monia huonoja ideoita tauluista. Sieni ei kuitenkaan ole vesipestävä.",
                                                 "shower_right": "Tällä on pyyhitty monia huonoja ideoita tauluista. Sieni ei kuitenkaan ole vesipestävä.",
 						"trigger": "tactic_board_1",
-						"outcome": "tactic_board_2"
+						"outcome": "tactic_board_2",
+						"consume": true
 					},
 					"className": "Image"
 				}, {
