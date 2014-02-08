@@ -297,7 +297,7 @@ function play_sequence(sequence, post_sequence_image) {
                         stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
                         fade_layer.moveDown();
                         
-                        var end_text = sequence_layer[0].attrs.end_text;
+                        var end_text = texts_json[sequence_layer[0].attrs.id].end_text;
                         if (end_text && end_text.length != 0)
                             setMonologue(end_text);
                     }, 3000);
@@ -314,7 +314,7 @@ function play_sequence(sequence, post_sequence_image) {
 // Listener and showing of credits on the start screen
 stage.get('#start_credits')[0].on('tap click', function(event) {
 	event = event.targetNode;
-	setMonologue(event.getAttr('credits'));
+	setMonologue(texts_json[event.getAttr('id')].credits);
 });
 // Developer feature - shortcut menu from the empty menu button for testing purposes
 	stage.get('#start_empty')[0].on('tap click', function(event) {
