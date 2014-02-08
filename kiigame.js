@@ -47,8 +47,6 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 // Make a json object from the json string
 var images_json = stage.toObject();
 
-// TODO: Dynamize this, maybe combine object_layer and background layers?
-//       We have the "start": true there already
 // Variable for saving the current room (for changing backgrounds and object layers)
 var current_background = 'start_layer';
 
@@ -463,6 +461,7 @@ function checkIntersection(dragged_item, target) {
 // Drag end events
 stage.get('Image').on('dragend', function(event) {
 	dragged_item = event.targetNode;
+	
 	// If nothing's under the dragged item
 	if (target == null) {
 		dragged_item.setX(x);
@@ -502,11 +501,6 @@ stage.get('Image').on('dragend', function(event) {
                     }
             }
             setMonologue(dragged_item.getAttr(target.getId()));
-
-            dragged_item.setX(x);
-            dragged_item.setY(y);
-
-            current_layer.draw();
 	}
     // Unlock a door
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'door') {
@@ -521,11 +515,6 @@ stage.get('Image').on('dragend', function(event) {
         }
         
         setMonologue(dragged_item.getAttr(target.getId()));
-        
-        dragged_item.setX(x);
-        dragged_item.setY(y);
-        
-		current_layer.draw();
     }
     // Unblock an obstacle
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'obstacle') {
@@ -547,17 +536,9 @@ stage.get('Image').on('dragend', function(event) {
 			if (related && related.size != 0) {
             	for (var i in related)
             		stage.get("#" + related[i])[0].hide();
-                      
-                redrawInventory();
 			}
         }
-        else {
-            dragged_item.setX(x);
-            dragged_item.setY(y);
-        }
         setMonologue(dragged_item.getAttr(target.getId()));
-                
-		current_layer.draw();
     }
 	// Use item on object
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'object') {
@@ -569,53 +550,37 @@ stage.get('Image').on('dragend', function(event) {
             if (dragged_item.getAttr('consume') === true)
                 inventoryRemove(dragged_item);
             else {
-			    dragged_item.setX(x);
-			    dragged_item.setY(y);
 			    target.destroy();
 			}
-			console.log("item on object",inventory_layer);
+			
             var related = target.getAttr("related");
 			if (related && related.size != 0) {
             	for (var i in related)
             		stage.get("#" + related[i])[0].hide();
-                      
-                redrawInventory();
 			}
-			
-		} else {
-            dragged_item.setX(x);
-            dragged_item.setY(y);
 		}
-		current_layer.draw();
 	}
 	// Use item on item
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'usable') {
 		setMonologue(dragged_item.getAttr(target.getId()));
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
+			
 			inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
-            
-            
-            
             inventoryRemove(dragged_item);
 			inventoryRemove(target);
-			console.log("item on item", inventory_layer);
-			redrawInventory();
-		} else {
-			dragged_item.setX(x);
-			dragged_item.setY(y);
 		}
-		current_layer.draw();
 	}
-        // Default for all others (these should probably still be covered above)
-        // Using rewards on items is bugged without this, needs fixing
-        else {
-            dragged_item.setX(x);
-            dragged_item.setY(y);
-            setMonologue("Ei pysty, liian hapokasta.");
-        }
+    // Default for all others
+    else {
+        setMonologue(dragged_item.getAttr(target.getId()));
+    }
         
-
+    dragged_item.setX(x);
+    dragged_item.setY(y);
+            
+    current_layer.draw();
+            
 	// Clearing the glow effects
 	current_layer.getChildren().each(function(shape, i) {
 		shape.setShadowBlur(0);
@@ -766,7 +731,6 @@ function interact(event) {
 	}
 }
 
-// TODO: Some sort of dynamic reward screen logic?
 // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
 function play_ending() {
 
