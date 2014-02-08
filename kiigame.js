@@ -470,38 +470,38 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Put something into a container
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'container') {
-    	var object = objects_json[target.getAttr('object_name')];
+            var object = objects_json[target.getAttr('object_name')];
         
-        if (object.locked === true && object.key == dragged_item.getId()) {
-        	object.locked = false;
-            stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
-            
-            if (object.state == "empty")
-            	var unlocked = "empty_image";
-            else
-            	var unlocked = "full_image";
-                
-            stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
-        }
-        if (object.state == 'empty') {
-        	object.state = 'full';
-            
-			if (object.in == dragged_item.getId()) {
-     	   		stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
-        		stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
-        
-            	// Remove dragged item
-				inventoryRemove(dragged_item);
-       	 
-       	 		current_layer.draw();
-        	}
-        }
-        setMonologue(dragged_item.getAttr(target.getId()));
-        
-        dragged_item.setX(x);
-        dragged_item.setY(y);
-        
-		current_layer.draw();
+            if (object.locked === true && object.key == dragged_item.getId()) {
+                    object.locked = false;
+                stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
+
+                if (object.state == "empty")
+                    var unlocked = "empty_image";
+                else
+                    var unlocked = "full_image";
+
+                stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
+            }
+            if (object.state == 'empty') {
+                    object.state = 'full';
+
+                            if (object.in == dragged_item.getId()) {
+                            stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
+                            stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
+
+                    // Remove dragged item
+                                    inventoryRemove(dragged_item);
+
+                            current_layer.draw();
+                    }
+            }
+            setMonologue(dragged_item.getAttr(target.getId()));
+
+            dragged_item.setX(x);
+            dragged_item.setY(y);
+
+            current_layer.draw();
 	}
 	// Use item on object
 	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'object') {
@@ -509,26 +509,19 @@ stage.get('Image').on('dragend', function(event) {
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			//dragged_item.destroy();
-    		// Item's not destroyed, so return it to inventory
+                        // Item's not destroyed, so return it to inventory
 			dragged_item.setX(x);
 			dragged_item.setY(y);
 			target.destroy();
-            var related = target.getAttr("related");
-			if (related && related.size != 0) {
-            	for (var i in related)
-            		stage.get("#" + related[i])[0].hide();
-                /*
-				cieni_eyes_animation.destroy();
-				cieni_mouth_animation.destroy();
-				cieni_eyes_decal.hide();
-				cieni_mouth_decal.hide();
-                */
-                
-                redrawInventory();
-			}
+                var related = target.getAttr("related");
+		if (related && related.size != 0) {
+                    for (var i in related)
+                    stage.get("#" + related[i])[0].hide();
+                    redrawInventory();
+		}
 		} else {
-			dragged_item.setX(x);
-			dragged_item.setY(y);
+                    dragged_item.setX(x);
+                    dragged_item.setY(y);
 		}
 		current_layer.draw();
 	}
@@ -538,8 +531,8 @@ stage.get('Image').on('dragend', function(event) {
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
-			dragged_item.destroy();
-			target.destroy();
+                        inventoryRemove(dragged_item);
+			inventoryRemove(target);
 			redrawInventory();
 		} else {
 			dragged_item.setX(x);
@@ -575,6 +568,10 @@ inventory_layer.on('touchstart mousedown', function(event) {
 	x = event.targetNode.getX();
 	y = event.targetNode.getY();
 	//clearText(monologue);
+});
+// Inventory arrow clicking events
+inventory_bar_layer.on('click tap', function(event) {
+	interact(event);
 });
 // Interaction between items based on their category
 function interact(event) {
@@ -909,14 +906,6 @@ function inventoryAdd(item) {
 	item.clearImageHitRegion();
 	item.setScale(1);
 	item.setSize(80, 80);
-    
-    /* Moved to redrawInventory()
-	if (item.getAttr('category') != 'reward') {
-		item.setAttr('category', 'usable');
-	}
-	item.setDraggable(true);
-    */
-    
 	inventory_items++;
 	redrawInventory();
 }
@@ -926,7 +915,7 @@ function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
 	item.setDraggable(false);
-    inventory_items--;
+        inventory_items--;
 	redrawInventory();
 }
 
@@ -945,7 +934,7 @@ function redrawInventory() {
         for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_items); i++) {
             shape = inventory_layer.getChildren()[i];
             if (shape.getAttr('category') != 'reward') {
-				shape.setAttr('category', 'usable');
+                shape.setAttr('category', 'usable');
             }
             shape.setDraggable(true);
             shape.setX(offsetFromLeft + (i - inventory_index) * 100);
