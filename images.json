@@ -39,7 +39,6 @@
 						"height": 93,
 						"x": 724,
 						"y": 300,
-						"credits": "Tiesitkö muuten että tämän huikean pelin tekivät:\n- Eino Keskitalo\n- Toni Käkelä\n- Topi Leinonen\n- Eetu Mansikkamäki\n- Martti Similä",
 						"src": "images/start_credits.png"
 					},
 					"className": "Image"
@@ -122,7 +121,7 @@
 						"x": 220,
 						"y": 363,
                         "src": "images/button_0_gray.png",
-						"visible": false
+						"visible": true
                     },
                     "className": "Image"
                 },
@@ -222,7 +221,7 @@
 						"x": 500,
 						"y": 277,
                         "src": "images/button_ok_gray.png",
-						"visible": false
+						"visible": true
                     },
                     "className": "Image"
                 },
@@ -241,7 +240,7 @@
 						"x": 305,
 						"y": 363,
                         "src": "images/button_back_gray.png",
-						"visible": false
+						"visible": true
                     },
                     "className": "Image"
                 }

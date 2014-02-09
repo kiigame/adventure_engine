@@ -29,7 +29,12 @@ stage.get('#start')[0].on('tap click', function(event) {
 // Listeners for the input screen buttons
 input_layer.on('tap click', function(event) {
 	target = event.targetNode;
-	selected = texts_json[target.getAttr('id')].name;
+	
+	selected = texts_json[target.getAttr('id')]
+	if (selected)
+	    selected = selected.name;
+	else
+	    return;
 	
 	// Number buttons
 	if (parseInt(selected) >= 0 && parseInt(selected) <= 9) {
