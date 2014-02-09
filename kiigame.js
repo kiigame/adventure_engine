@@ -223,8 +223,8 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 Play music
 string id - object ID from JSON with "music":"file name" attribute
 */
-// TODO: Add attribute to force replay from beginning?
-// TODO: Can music be faded, the change is rather sharp now
+// TODO: 
+// TODO: Music should loop without JSON attribute, explicit denial stops it?
 function play_music(id) {
     var data = objects_json[id];
     
@@ -243,6 +243,8 @@ function play_music(id) {
             current_music.pause();
         
         current_music = new Audio(data.music);
+        data.music_loop === false ? current_music.loop = false : current_music.loop = true;
+        
 	    current_music.play();
 	    
         current_music_source = data.music;
