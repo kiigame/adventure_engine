@@ -1,4 +1,13 @@
 {
+	"start_layer": {
+	    "music": "audio/alku_musax_mono_20131213.mp3"
+    },
+	"intro_layer": {
+		"music": "audio/intro_mono_20131213.mp3"
+	},
+	"outro_layer": {
+	    "music": "audio/loppu_musax_mono_20131213.mp3"
+	},
 	"jacket": {
         "category": "container",
         "full_image": "jacket_full",

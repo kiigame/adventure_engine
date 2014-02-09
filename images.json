@@ -8,9 +8,7 @@
 	"children": [
 		{
 			"attrs": {
-				"id": "start_layer",
-				"type": "start",
-				"music": "audio/alku_musax_mono_20131213.mp3"
+				"id": "start_layer"
 			},
 			"className": "Layer",
 			"children": [
@@ -250,8 +248,7 @@
 			"attrs": {
 				"id": "intro_layer",
 				"visible": false,
-				"type": "sequence",
-				"music": "audio/intro_mono_20131213.mp3"
+				"type": "sequence"
 			},
 			"className": "Layer",
 			"children": [

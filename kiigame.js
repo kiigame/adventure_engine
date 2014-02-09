@@ -77,10 +77,6 @@ var number_selected = false;
 // Different browsers and different browser versions support different formats. MP3 should work with in all the major
 // browsers in current versions.
 var current_music;
-var start_music = new Audio(stage.get('#start_layer')[0].attrs.music);
-var intro_music = new Audio(stage.get('#intro_layer')[0].attrs.music);
-var end_music = new Audio(stage.get('#end_layer')[0].attrs.music);
-start_music.loop = true;
 
 // The item dragged from the inventory
 var dragged_item;
@@ -214,10 +210,20 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	character_layer.show();
 	background_layer.show();
 	stage.draw();
-	
-	current_music = start_music;
-	start_music.play();
+	play_music('start_layer');
 });
+
+function play_music(id) {
+    if (current_music)
+        current_music.pause();
+    // TODO: If same music through areas
+    
+    var data = objects_json[id];
+	current_music = new Audio(data.music);
+	data.music_loop === true ? current_music.loop = false : current_music.loop = true;
+	
+    current_music.play();
+}
 
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
@@ -240,9 +246,6 @@ function play_sequence(sequence, post_sequence_image) {
 	var sequence_layer = stage.get("#"+sequence);
     sequence_layer.show();
     
-    sequence_music = new Audio(sequence_layer[0].attrs.music);
-    current_music = sequence_music;
-    
     var delay = 700;
     var sequence_counter = 0;
 	sequence_layer[0].children.each(function(image) {
@@ -252,7 +255,7 @@ function play_sequence(sequence, post_sequence_image) {
 		    fade.play();
 		    
 		    if (sequence_counter == 0)
-		        sequence_music.play();
+		        play_music(sequence_layer[0].getAttr('id'));
 		        
             character_layer.hide();
             inventory_bar_layer.hide();
@@ -420,7 +423,7 @@ stage.on('dragmove', function(event) {
 			target.setShadowOffset(0);
 			target.setShadowBlur(20);
 
-			interaction_text.setText(target.getName());
+			interaction_text.setText(texts_json[target.getAttr('id')].name);
 			interaction_text.setX(dragged_item.getX() + (dragged_item.getWidth() / 2));
 			interaction_text.setY(dragged_item.getY() - 30);
 			interaction_text.setOffset({
@@ -461,23 +464,30 @@ function checkIntersection(dragged_item, target) {
 stage.get('Image').on('dragend', function(event) {
 	dragged_item = event.targetNode;
 	
+	try {
+    	var say_text = texts_json[dragged_item.getId()][target.getId()];
+	}
+	catch (e) {
+	    say_text = undefined;
+	}
+	
 	// If nothing's under the dragged item
 	if (target == null) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 	}
 	// Default text for unassigned item combinations + return item to inventory
-	else if (dragged_item.getAttr(target.getId()) == undefined) {
+	else if (say_text == undefined) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 		setMonologue("default");
 	}
 	// Put something into a container
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'container') {
+	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
             var object = objects_json[target.getAttr('object_name')];
-        
+            
             if (object.locked === true && object.key == dragged_item.getId()) {
-                    object.locked = false;
+                object.locked = false;
                 stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
 
                 if (object.state == "empty")
@@ -487,22 +497,22 @@ stage.get('Image').on('dragend', function(event) {
 
                 stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
             }
-            if (object.state == 'empty') {
+            else if (object.state == 'empty') {
                     object.state = 'full';
+                    
+                    if (object.in == dragged_item.getId()) {
+                        stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
+                        stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
 
-                            if (object.in == dragged_item.getId()) {
-                            stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
-                            stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
-
-                    // Remove dragged item
-                            inventoryRemove(dragged_item);
-                            current_layer.draw();
+                        // Remove dragged item
+                        inventoryRemove(dragged_item);
+                        current_layer.draw();
                     }
             }
-            setMonologue(dragged_item.getAttr(), target.getId());
+            setMonologue(dragged_item.getId(), target.getId());
 	}
     // Unlock a door
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'door') {
+	else if (target != null && say_text != undefined && target.getAttr('category') == 'door') {
         var object = objects_json[target.getAttr('object_name')];
         
         if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
@@ -513,10 +523,10 @@ stage.get('Image').on('dragend', function(event) {
             stage.get('#' + object.open_image)[0].show();
         }
         
-        setMonologue(dragged_item.getAttr(), target.getId());
+        setMonologue(dragged_item.getId(), target.getId());
     }
     // Unblock an obstacle
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && target.getAttr('category') == 'obstacle') {
+	else if (target != null && say_text != undefined && target.getAttr('category') == 'obstacle') {
     	var object = objects_json[target.getAttr('object_name')];
         
         if (object.blocking === true && object.trigger == dragged_item.getId()) {
@@ -537,11 +547,11 @@ stage.get('Image').on('dragend', function(event) {
             		stage.get("#" + related[i])[0].hide();
 			}
         }
-        setMonologue(dragged_item.getAttr(), target.getId());
+        setMonologue(dragged_item.getId(), target.getId());
     }
 	// Use item on object
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'object') {
-		setMonologue(dragged_item.getAttr(), target.getId());
+	else if (target != null && say_text != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'object') {
+		setMonologue(dragged_item.getId(), target.getId());
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			
@@ -560,8 +570,8 @@ stage.get('Image').on('dragend', function(event) {
 		}
 	}
 	// Use item on item
-	else if (target != null && dragged_item.getAttr(target.getId()) != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'usable') {
-		setMonologue(dragged_item.getAttr(), target.getId());
+	else if (target != null && say_text != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'usable') {
+		setMonologue(dragged_item.getId(), target.getId());
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			
@@ -572,7 +582,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
     // Default for all others
     else {
-        setMonologue(dragged_item.getAttr(), target.getId());
+        setMonologue(dragged_item.getId(), target.getId());
     }
         
     dragged_item.setX(x);
@@ -742,9 +752,7 @@ function play_ending() {
 	fade_layer.show();
 	fade.play();
 	
-	current_music.pause();
-	current_music = end_music;
-	current_music.play();
+	play_music('end_layer');
     
 	setTimeout(function() {
 		stage.get('#' + current_background)[0].hide();
