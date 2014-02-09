@@ -77,6 +77,7 @@ var number_selected = false;
 // Different browsers and different browser versions support different formats. MP3 should work with in all the major
 // browsers in current versions.
 var current_music;
+var current_music_source;
 
 // The item dragged from the inventory
 var dragged_item;
@@ -213,22 +214,40 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	play_music('start_layer');
 });
 
-function play_music(id) {
-    if (current_music)
-        current_music.pause();
-        
-    var data = objects_json[id];
-	current_music = new Audio(data.music);
-	
-	data.music_loop === true ? current_music.loop = true : current_music.loop = false;
-	
-    current_music.play();
-}
-
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
     play_sequence("intro_layer", "locker_room_1");
 });
+
+/*
+Play music
+string id - object ID from JSON with "music":"file name" attribute
+*/
+// TODO: Add attribute to force replay from beginning?
+// TODO: Can music be faded, the change is rather sharp now
+function play_music(id) {
+    var data = objects_json[id];
+    
+    // ID and music found from JSON?
+    if (!data || !data.music) {
+        if (current_music) {
+            current_music.pause();
+            current_music = null;
+        }
+        return;
+    }
+    
+    // If not already playing music or old/new songs are different
+    if (!current_music || current_music_source != data.music) {
+        if (current_music)
+            current_music.pause();
+        
+        current_music = new Audio(data.music);
+	    current_music.play();
+	    
+        current_music_source = data.music;
+	}
+}
 
 /*
 Plays a sequence defined in JSON
@@ -336,8 +355,10 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 	clone.moveTo(start_layer);
 	clone.on('click', function() {
 	    current_music.pause();
-	    inventoryAdd(stage.get('#poster_withglue')[0])}
-	);
+	    inventoryAdd(stage.get('#poster_withglue')[0]);
+	    inventoryAdd(stage.get('#airfreshener')[0]);
+	    inventoryAdd(stage.get('#cienibang')[0]);
+	});
     
     
 	/*
@@ -715,7 +736,7 @@ function interact(event) {
 			setTimeout(function() {
 				stage.get('#' + current_background)[0].hide();
 				target.getParent().hide();
-				current_background = object.transition; //target.getAttr('outcome');
+				current_background = object.transition;
 				current_layer = stage.get('#object_layer_' + current_background)[0];
                 
 				stage.get('#' + object.transition)[0].show();
@@ -725,6 +746,8 @@ function interact(event) {
 				stage.draw();
 				setTimeout('fade_layer.hide();', 700);
 				setMonologue(target.getAttr('id'));
+				
+				play_music(current_background);
 			}, 700);
         }
 	}

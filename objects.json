@@ -9,6 +9,15 @@
 	"outro_layer": {
 	    "music": "audio/loppu_musax_mono_20131213.mp3"
 	},
+	"locker_room_1": {
+	    "music": "audio/alku_musax_mono_20131213.mp3"
+	},
+	"locker_room_2": {
+	    "music": "audio/loppu_musax_mono_20131213.mp3"
+	},
+	"shower_room": {
+	    "music": "audio/alku_musax_mono_20131213.mp3"
+	},
 	"jacket": {
         "category": "container",
         "full_image": "jacket_full",
