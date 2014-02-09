@@ -216,11 +216,11 @@ stage.get('#begining')[0].on('tap click', function(event) {
 function play_music(id) {
     if (current_music)
         current_music.pause();
-    // TODO: If same music through areas
-    
+        
     var data = objects_json[id];
 	current_music = new Audio(data.music);
-	data.music_loop === true ? current_music.loop = false : current_music.loop = true;
+	
+	data.music_loop === true ? current_music.loop = true : current_music.loop = false;
 	
     current_music.play();
 }
@@ -328,6 +328,17 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 	});
 	clone.moveTo(start_layer);
 	clone.on('click', function() {current_music.pause();});
+    
+	clone = stage.get('#oikotie_locker_room2')[0].clone({
+		visible : true,
+		x : 200
+	});
+	clone.moveTo(start_layer);
+	clone.on('click', function() {
+	    current_music.pause();
+	    inventoryAdd(stage.get('#poster_withglue')[0])}
+	);
+    
     
 	/*
 	clone = stage.get('#locker_room_1_door_to_wc_open')[0].clone({
@@ -464,13 +475,9 @@ function checkIntersection(dragged_item, target) {
 stage.get('Image').on('dragend', function(event) {
 	dragged_item = event.targetNode;
 	
-	try {
+	if (target != null)
     	var say_text = texts_json[dragged_item.getId()][target.getId()];
-	}
-	catch (e) {
-	    say_text = undefined;
-	}
-	
+    		
 	// If nothing's under the dragged item
 	if (target == null) {
 		dragged_item.setX(x);
@@ -752,7 +759,7 @@ function play_ending() {
 	fade_layer.show();
 	fade.play();
 	
-	play_music('end_layer');
+	play_music('outro_layer');
     
 	setTimeout(function() {
 		stage.get('#' + current_background)[0].hide();
@@ -805,7 +812,14 @@ function setMonologue(id, name) {
     if (!name)
         name = 'examine';
         
-    var text = texts_json[id][name];
+    // Is there such an ID in JSON?
+    var text = texts_json[id];
+    if (!text)
+        return;
+        
+    text = text[name];
+    
+    // Is there such a text?
     if (!text || text.length == 0)
         return;
         

@@ -1,6 +1,7 @@
 {
 	"start_layer": {
-	    "music": "audio/alku_musax_mono_20131213.mp3"
+	    "music": "audio/alku_musax_mono_20131213.mp3",
+	    "music_loop": true
     },
 	"intro_layer": {
 		"music": "audio/intro_mono_20131213.mp3"
@@ -117,6 +118,14 @@
         "blocked": false,
         "state": "open",
         "transition": "locker_room_1"
+    },
+    "oikotie_locker_room2": {
+    	"open_image": "oikotie_locker_room2",
+        "type": "door",
+        "locked": false,
+        "blocked": false,
+        "state": "open",
+        "transition": "locker_room_2"
     },
     "cieni": {
     	"type": "obstacle",

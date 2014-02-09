@@ -320,8 +320,7 @@
 			"attrs": {
 				"id": "outro_layer",
 				"visible": false,
-				"type": "sequence",
-				"music": "audio/loppu_musax_mono_20131213.mp3"
+				"type": "sequence"
 			},
 			"className": "Layer",
 			"children": [
@@ -337,9 +336,7 @@
 			"attrs": {
 				"id": "end_layer",
 				"visible": false,
-				"type": "end",
-				"music": "audio/loppu_musax_mono_20131213.mp3"
-				
+				"type": "end"
 			},
 			"className": "Layer",
 			"children": [
@@ -1328,6 +1325,16 @@
 						"y": 136,
 						"category": "door",
                         "object_name": "oikotie_onneen",
+						"src": "images/shower_door_to_locker_room_1.png"
+					},
+					"className": "Image"
+				}, {
+					"attrs": {
+						"id": "oikotie_locker_room2",
+						"x": 691,
+						"y": 136,
+						"category": "door",
+                        "object_name": "oikotie_locker_room2",
 						"src": "images/shower_door_to_locker_room_1.png"
 					},
 					"className": "Image"
