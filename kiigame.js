@@ -420,7 +420,7 @@ stage.on('dragmove', function(event) {
 			target.setShadowOffset(0);
 			target.setShadowBlur(20);
 
-			interaction_text.setText(target.getName());
+			interaction_text.setText(texts_json[target.getAttr('id')].name);
 			interaction_text.setX(dragged_item.getX() + (dragged_item.getWidth() / 2));
 			interaction_text.setY(dragged_item.getY() - 30);
 			interaction_text.setOffset({
@@ -460,7 +460,8 @@ function checkIntersection(dragged_item, target) {
 // Drag end events
 stage.get('Image').on('dragend', function(event) {
 	dragged_item = event.targetNode;
-	
+    var target_text = texts_json[target.getAttr('id')];
+    // TODO: dragged_item doesn't have target id anymore, change them here
 	// If nothing's under the dragged item
 	if (target == null) {
 		dragged_item.setX(x);
