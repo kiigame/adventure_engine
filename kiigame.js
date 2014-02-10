@@ -375,7 +375,7 @@ stage.get('#start_credits')[0].on('tap click', function(event) {
 	clone.moveTo(start_layer);
 	clone.on('click', function() {
 	    current_music.pause();
-	    inventoryAdd(stage.get('#poster_withglue')[0]);
+	    inventoryAdd(stage.get('#poster_withoutglue')[0]);
 	    inventoryAdd(stage.get('#airfreshener')[0]);
 	    inventoryAdd(stage.get('#cienibang')[0]);
 	});
@@ -532,7 +532,8 @@ function checkIntersection(dragged_item, target) {
 
 // Drag end events
 stage.get('Image').on('dragend', function(event) {
-	dragged_item = event.targetNode;
+	var dragged_item = event.targetNode;
+    var object = objects_json[dragged_item.getId()]
         
         // Variable for whether the dragged item is destroyed or not
         var destroy = false;
@@ -621,10 +622,11 @@ stage.get('Image').on('dragend', function(event) {
         setMonologue(dragged_item.getId(), target.getId());
     }
 	// Use item on object
-	else if (target != null && say_text != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'object') {
+	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'object') {
 		setMonologue(dragged_item.getId(), target.getId());
-		if (dragged_item.getAttr('trigger') == target.getId()) {
-			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
+        
+		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
+			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
 			
             // Items may be consumed when used
             if (dragged_item.getAttr('consume') === true)
@@ -641,12 +643,13 @@ stage.get('Image').on('dragend', function(event) {
 		}
 	}
 	// Use item on item
-	else if (target != null && say_text != undefined && dragged_item.getAttr('outcome') != undefined && target.getAttr('category') == 'usable') {
+	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
 		setMonologue(dragged_item.getId(), target.getId());
-		if (dragged_item.getAttr('trigger') == target.getId()) {
-			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
+		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
+        	
+			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
 			
-                    inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
+                    inventoryAdd(stage.get('#' + objects_json[dragged_item.getId()].outcome)[0]);
                     destroy = true;
                     inventoryRemove(target);
 		}

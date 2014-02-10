@@ -156,6 +156,30 @@
 		"trigger": "cienibang",
 		"blocking_image": "cieni_1"
     },
+    "tactic_board_wiper": {
+        "trigger": "tactic_board_1",
+        "outcome": "tactic_board_2"
+    },
+    "marker": {
+    	"type": "item",
+    	"trigger": "tactic_board_2",
+        "outcome": "tactic_board_3"
+    },
+    "cienibang": {
+        "type": "item",
+        "trigger": "cieni_1",
+		"outcome": "shower_door_to_locker_room_2_closed"
+    },
+    "poster_withglue": {
+        "type": "item",
+		"trigger": "wall",
+		"outcome": "poster_onthewall"
+    },
+    "hairkeeper": {
+        "type": "item",
+    	"trigger": "poster_withoutglue",
+        "outcome": "poster_withglue"
+    },
     "intro": {
     	"type": "sequence",
         "transition": "locker_room_1",
