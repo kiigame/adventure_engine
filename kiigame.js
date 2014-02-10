@@ -536,6 +536,7 @@ stage.get('Image').on('dragend', function(event) {
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
             var object = objects_json[target.getAttr('object_name')];
             
+            // Can dragged object unlock locked container?
             if (object.locked === true && object.key == dragged_item.getId()) {
                 object.locked = false;
                 stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
@@ -547,7 +548,8 @@ stage.get('Image').on('dragend', function(event) {
 
                 stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
             }
-            else if (object.state == 'empty') {
+            // Can dragged object be put into the container
+            else if (object.state == 'empty' && object.in == dragged_item.getId()) {
                     object.state = 'full';
                     
                     if (object.in == dragged_item.getId()) {
