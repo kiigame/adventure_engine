@@ -1,6 +1,6 @@
 {
 	"start_layer": {
-	    "music": "audio/alku_musax_mono_20131213.mp3",
+	    "music": "audio/alku_musax_mono_20131213.mp3"
     },
 	"intro_layer": {
 		"music": "audio/intro_mono_20131213.mp3"
