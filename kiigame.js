@@ -224,7 +224,7 @@ stage.get('#begining')[0].on('tap click', function(event) {
 
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
-    play_sequence("intro_layer", "locker_room_1");
+    play_sequence("intro");
 });
 
 /*
@@ -264,7 +264,7 @@ Plays a sequence defined in JSON
 string sequence - the sequence ID from JSON
 string post_sequence_image - the image displayed after sequence
 */
-function play_sequence(sequence, post_sequence_image) {
+function play_sequence(sequence) {
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
 	fade_layer.show();
@@ -272,73 +272,83 @@ function play_sequence(sequence, post_sequence_image) {
 	
 	current_music.pause();
 	
-	var sequence_layer = stage.get("#"+sequence);
+	var sequence_layer = stage.get("#"+sequence)[0];
+    var object = objects_json[sequence_layer.getAttr('object_name')];
+    
     sequence_layer.show();
     
     var delay = 700;
     var sequence_counter = 0;
-	sequence_layer[0].children.each(function(image) {
-	    
-        setTimeout(function() {
-		    fade_layer.show();
-		    fade.play();
-		    
-		    if (sequence_counter == 0)
-		        play_music(sequence_layer[0].getAttr('id'));
-		        
-            character_layer.hide();
-            inventory_bar_layer.hide();
+    var images_total = 0;
+    
+    for (var i in object.images) {
+    	images_total++;
+        var image = stage.get('#' + object.images[i].id)[0];
+        
+    	(function(i, image) {
+            setTimeout(function() {
+                fade_layer.show();
+                fade.play();
+                
+                if (sequence_counter == 0)
+                    play_music(sequence);
                     
-            image.show();
-            
-            var image_fade = image.attrs.do_fade;
-            if (image_fade === true) {
-                setTimeout(function() {
+                character_layer.hide();
+                inventory_bar_layer.hide();
+                
+                image.show();
+                
+                var image_fade = object.images[i].do_fade;
+                if (image_fade === true) {
+                    setTimeout(function() {
+                        fade.reverse();
+                        stage.draw();
+                        setTimeout('fade_layer.hide();', 700);
+                    }, 700);
+                }
+                // Immediately revert fade layer
+                else {
                     fade.reverse();
                     stage.draw();
-                    setTimeout('fade_layer.hide();', 700);
-                }, 700);
-            }
-            // Immediately revert fade layer
-            else {
-                fade.reverse();
-                stage.draw();
-                fade_layer.hide();
-            }
-            
-            sequence_counter += 1;
-            
-            // Last image in the sequence
-		    if (sequence_counter == sequence_layer[0].children.length) {
-                fade_layer.show();
-                wakeup.finish();
+                    fade_layer.hide();
+                }
                 
-                setTimeout(function() {
-                    current_music.pause();
-                    wakeup.reverse();
-                    intro_layer.hide();
+                sequence_counter += 1;
+                
+                // Last image in the sequence
+                if (images_total == sequence_counter) {
+                    fade_layer.show();
+                    wakeup.finish();
                     
-                    stage.get("#"+post_sequence_image)[0].show();
-                    current_layer.show();
-                    inventory_bar_layer.show();
-                    character_layer.show();
-                    
-                    stage.draw();
                     setTimeout(function() {
-                        fade_layer.hide();
-                        stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-                        fade_layer.moveDown();
+                        current_music.pause();
+                        wakeup.reverse();
+                        intro_layer.hide();
                         
-                        setMonologue(sequence_layer[0].getAttr('id'), 'end_text');
-                    }, 3000);
-                }, 1500);
+                        stage.get("#"+object.transition)[0].show();
+                        current_layer.show();
+                        inventory_bar_layer.show();
+                        character_layer.show();
+                        
+                        stage.draw();
+                        setTimeout(function() {
+                            fade_layer.hide();
+                            stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+                            fade_layer.moveDown();
+                            
+                            setMonologue(sequence, 'end_text');
+                            play_music(object.transition);
+                        }, 3000);
+                    }, 1500);
+                    
+                    return;
+                }
                 
-                return;
-		    }
-            
-        }, delay);
-        delay = delay + image.attrs.show_time;
-	});
+            }, delay);
+        })(i, image);
+        
+        delay = delay + object.images[i].show_time;
+	};
 }
 
 // Listener and showing of credits on the start screen

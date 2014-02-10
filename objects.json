@@ -155,5 +155,57 @@
 		"target": "shower_door_to_locker_room_2",
 		"trigger": "cienibang",
 		"blocking_image": "cieni_1"
+    },
+    "intro": {
+    	"type": "sequence",
+        "transition": "locker_room_1",
+        "music": "audio/intro_mono_20131213.mp3",
+        "images": {
+        	"1": {
+            	"id": "intro_1",
+                "show_time": 4000,
+                "do_fade": true
+            },
+            "2": {
+            	"id": "intro_2",
+                "show_time": 5000,
+                "do_fade": true
+            },
+            "3": {
+            	"id": "intro_3",
+                "show_time": 4500,
+                "do_fade": true
+            },
+            "4": {
+            	"id": "intro_4",
+                "show_time": 1000,
+                "do_fade": false
+            },
+            "5": {
+            	"id": "intro_5",
+                "show_time": 1000,
+                "do_fade": false
+            },
+            "6": {
+            	"id": "intro_6",
+                "show_time": 1000,
+                "do_fade": false
+            },
+            "7": {
+            	"id": "intro_7",
+                "show_time": 1000,
+                "do_fade": false
+            }
+        }
+    },
+    "outro": {
+    	"type": "sequence",
+        "images": {
+        	"1": {
+            	"id": "outro_1",
+                "show_time": 4000,
+                "do_fade": true
+            }
+        }
     }
 }
