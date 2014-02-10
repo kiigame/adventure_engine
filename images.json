@@ -676,7 +676,7 @@
 						"src": "images/tactic_board_wiper.png",
 						"trigger": "tactic_board_1",
 						"outcome": "tactic_board_2",
-						"consume": true
+						"consume": false
 					},
 					"className": "Image"
 				}, {
@@ -1148,33 +1148,35 @@
 			},
 			"className": "Layer",
 			"children": [
-                {
-					"attrs": {
-						"id": "inventory_bar",
-						"y": 543,
-						"src": "images/inventory_bar.png"
-					},
-					"className": "Image"
-				}, {
-					"attrs": {
-						"id": "inventory_left_arrow",
-						"y": 550,
-						"x": 15,
-						"src": "images/inventory_left_arrow.png",
-						"visible": false
-                    },
-                    "className": "Image"
-				}, {
-                    "attrs": {
-                    	"id": "inventory_right_arrow",
-                    	"y": 550,
-                    	"x": 730,
-                    	"src": "images/inventory_right_arrow.png",
-                    	"visible": false
-                	},
-                	"className": "Image"
-				}
-			]
+                        {
+			"attrs": {
+				"id": "inventory_bar",
+				"y": 543,
+				"src": "images/inventory_bar.png"
+			},
+				"className": "Image"
+			}, {
+                            "attrs": {
+                                    "id": "inventory_left_arrow",
+                                    "y": 550,
+                                    "x": 30,
+                                    "src": "images/inventory_left_arrow.png",
+                                    "visible": false,
+                                    "category": "invArrow"
+                            },
+                            "className": "Image"
+                        }, {
+                            "attrs": {
+                                "id": "inventory_right_arrow",
+                                "y": 550,
+                                "x": 750,
+                                "src": "images/inventory_right_arrow.png",
+                                "visible": false,
+                                "category": "invArrow"
+                            },
+                            "className": "Image"
+                            }
+                        ]
 		},
 		{
 			"attrs": {

@@ -56,6 +56,10 @@ var rewards = 0;
 
 // The amount of items in the inventory
 var inventory_items = 0;
+// Offset from left for drawing inventory items starting from proper position
+var offsetFromLeft = 50;
+// How many items the inventory can show at a time (7 with current settings)
+var inventory_max = 7;
 // The item number where the shown items start from
 // (how many items from the beginning are not shown)
 var inventory_index = 0;
@@ -394,10 +398,7 @@ inventory_layer.on('click tap', function(event) {
 // Drag start events
 stage.get('Image').on('dragstart', function(event) {
 	dragged_item = event.targetNode;
-	dragged_item.moveToTop();
-	clearText(monologue);
-	stopTalking();
-	inventory_layer.draw();
+	inventoryDrag(dragged_item);
 });
 // While dragging events (use item on item or object)
 stage.on('dragmove', function(event) {
@@ -445,6 +446,21 @@ stage.on('dragmove', function(event) {
 				}
 			}
 		}
+                // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
+                if (target == null) {
+                    var leftArrow = stage.get("#inventory_left_arrow")[0];
+                    var rightArrow = stage.get("#inventory_right_arrow")[0];
+                    
+                    if (checkIntersection(dragged_item, leftArrow)) {
+                        inventory_index--;
+                        redrawInventory();
+                    } else if (checkIntersection(dragged_item, rightArrow)) {
+                        inventory_index++;
+                        redrawInventory();
+                    } else {
+                        target = null;
+                    }
+                }
 		// If target is found, highlight it and show the interaction text
 		if (target != null) {
 			current_layer.getChildren().each(function(shape, i) {
@@ -463,6 +479,7 @@ stage.on('dragmove', function(event) {
 			interaction_text.setOffset({
 				x : interaction_text.getWidth() / 2
 			});
+                        
 			current_layer.draw();
 			text_layer.draw();
 
@@ -497,6 +514,9 @@ function checkIntersection(dragged_item, target) {
 // Drag end events
 stage.get('Image').on('dragend', function(event) {
 	dragged_item = event.targetNode;
+        
+        // Variable for whether the dragged item is destroyed or not
+        var destroy = false;
 	
 	if (target != null)
     	var say_text = texts_json[dragged_item.getId()][target.getId()];
@@ -535,7 +555,7 @@ stage.get('Image').on('dragend', function(event) {
                         stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
 
                         // Remove dragged item
-                        inventoryRemove(dragged_item);
+                        destroy = true;
                         current_layer.draw();
                     }
             }
@@ -572,10 +592,10 @@ stage.get('Image').on('dragend', function(event) {
             // TODO: unblocking_image, merge this with "use item on object"?
             target.destroy();
             var related = target.getAttr("related");
-			if (related && related.size != 0) {
-            	for (var i in related)
-            		stage.get("#" + related[i])[0].hide();
-			}
+            if (related && related.size != 0) {
+                for (var i in related)
+                stage.get("#" + related[i])[0].hide();
+            }
         }
         setMonologue(dragged_item.getId(), target.getId());
     }
@@ -587,10 +607,10 @@ stage.get('Image').on('dragend', function(event) {
 			
             // Items may be consumed when used
             if (dragged_item.getAttr('consume') === true)
-                inventoryRemove(dragged_item);
+                destroy = true;
             else {
-			    target.destroy();
-			}
+                target.destroy();
+            }
 			
             var related = target.getAttr("related");
 			if (related && related.size != 0) {
@@ -605,37 +625,40 @@ stage.get('Image').on('dragend', function(event) {
 		if (dragged_item.getAttr('trigger') == target.getId()) {
 			stage.get('#' + dragged_item.getAttr('outcome'))[0].show();
 			
-			inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
-            inventoryRemove(dragged_item);
-			inventoryRemove(target);
+                    inventoryAdd(stage.get('#' + dragged_item.getAttr('outcome'))[0]);
+                    destroy = true;
+                    inventoryRemove(target);
 		}
 	}
     // Default for all others
     else {
         setMonologue(dragged_item.getId(), target.getId());
     }
-        
-    dragged_item.setX(x);
-    dragged_item.setY(y);
+    // Check if dragged item's destroyed, if not, add it to inventory
+    if (destroy == false) {
+        inventoryAdd(dragged_item);
+        redrawInventory();
+    } else {
+        dragged_item.hide();
+	dragged_item.setDraggable(false);
+        dragged_item.destroy;
+    }
             
+    // Clearing the glow effects
+    current_layer.getChildren().each(function(shape, i) {
+        shape.setShadowBlur(0);
+    });
+    inventory_layer.getChildren().each(function(shape, i) {
+        shape.setShadowBlur(0);
+    });
+    // Clearing the texts
+    clearText(interaction_text);
+
+    // Stopping the talking animation after certain period of time
+    clearTimeout(monologue_timeout);
+    monologue_timeout = setTimeout('stopTalking()', 3000);
+
     current_layer.draw();
-            
-	// Clearing the glow effects
-	current_layer.getChildren().each(function(shape, i) {
-		shape.setShadowBlur(0);
-	});
-	inventory_layer.getChildren().each(function(shape, i) {
-		shape.setShadowBlur(0);
-	});
-	// Clearing the texts
-	clearText(interaction_text);
-
-	// Stopping the talking animation after certain period of time
-	clearTimeout(monologue_timeout);
-	monologue_timeout = setTimeout('stopTalking()', 3000);
-
-	current_layer.draw();
-	inventory_layer.draw();
 });
 // Stop talking and clear monologue when clicked or touched anywhere on the screen
 stage.on('touchstart mousedown', function(event) {
@@ -927,17 +950,24 @@ function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
 	item.setDraggable(false);
-    inventory_items--;
+        inventory_items--;
 	redrawInventory();
+}
+
+// Dragging an item from the inventory
+function inventoryDrag(item) {
+	item.moveTo(current_layer);
+	clearText(monologue);
+	stopTalking();
+	inventory_layer.draw();
+        inventory_items--;
+	redrawInventory();
+        item.moveToTop();
+        current_layer.draw();
 }
 
 // Redrawing inventory
 function redrawInventory() {
-	// Offset from left for drawing inventory items starting from proper position
-	var offsetFromLeft = 30;
-        // How many items the inventory can show at a time (7 with current settings)
-        var inventory_max = 7;
-        
         inventory_layer.getChildren().each(function(shape, i) {
             shape.setAttr('visible', false);
             shape.setDraggable(false);
