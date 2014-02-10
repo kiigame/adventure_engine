@@ -74,6 +74,10 @@ var y;
 // For limiting the amount of intersection checks
 var delayEnabled = false;
 
+// For limiting the speed of inventory browsing when dragging an item
+var dragDelay = 500;
+var dragDelayEnabled = false;
+
 // For checking whether player has selected their jersey number
 var number_selected = false;
 
@@ -450,15 +454,20 @@ stage.on('dragmove', function(event) {
                 if (target == null) {
                     var leftArrow = stage.get("#inventory_left_arrow")[0];
                     var rightArrow = stage.get("#inventory_right_arrow")[0];
-                    
-                    if (checkIntersection(dragged_item, leftArrow)) {
-                        inventory_index--;
-                        redrawInventory();
-                    } else if (checkIntersection(dragged_item, rightArrow)) {
-                        inventory_index++;
-                        redrawInventory();
-                    } else {
-                        target = null;
+                    if (!dragDelayEnabled) {
+                        if (checkIntersection(dragged_item, leftArrow)) {
+                            dragDelayEnabled = true;
+                            inventory_index--;
+                            redrawInventory();
+                            setTimeout('dragDelayEnabled = false;', dragDelay);
+                        } else if (checkIntersection(dragged_item, rightArrow)) {
+                            dragDelayEnabled = true;
+                            inventory_index++;
+                            redrawInventory();
+                            setTimeout('dragDelayEnabled = false;', dragDelay);
+                        } else {
+                            target = null;
+                        }
                     }
                 }
 		// If target is found, highlight it and show the interaction text
