@@ -60,7 +60,7 @@
     "button_back_gray": {
         "name": "Pyyhi"
     },
-    "intro_layer": {
+    "intro": {
         "end_text": "Missäköhän hitossa minä olen... Ja miten täältä pääsee pois."
     },
     "rewards_text": {

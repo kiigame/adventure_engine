@@ -248,24 +248,21 @@
 			"attrs": {
 				"id": "intro_layer",
 				"visible": false,
-				"type": "sequence"
+				"type": "sequence",
+                "object_name": "intro"
 			},
 			"className": "Layer",
 			"children": [
 				{
 					"attrs": {
 						"id": "intro_1",
-						"src": "images/intro_1.png",
-						"show_time": 4000,
-						"do_fade": true
+						"src": "images/intro_1.png"
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_2",
 						"src": "images/intro_2.png",
-						"do_fade": true,
-						"show_time": 5000,
 						"visible": false
 					},
 					"className": "Image"
@@ -273,8 +270,6 @@
 					"attrs": {
 						"id": "intro_3",
 						"src": "images/intro_3.png",
-						"do_fade": true,
-						"show_time": 4500,
 						"visible": false
 					},
 					"className": "Image"
@@ -282,8 +277,6 @@
 					"attrs": {
 						"id": "intro_4",
 						"src": "images/intro_4.png",
-						"do_fade": false,
-						"show_time": 1000,
 						"visible": false
 					},
 					"className": "Image"
@@ -291,8 +284,6 @@
 					"attrs": {
 						"id": "intro_5",
 						"src": "images/intro_5.png",
-						"do_fade": false,
-						"show_time": 1000,
 						"visible": false
 					},
 					"className": "Image"
@@ -300,8 +291,6 @@
 					"attrs": {
 						"id": "intro_6",
 						"src": "images/intro_6.png",
-						"do_fade": false,
-						"show_time": 1000,
 						"visible": false
 					},
 					"className": "Image"
@@ -309,8 +298,6 @@
 					"attrs": {
 						"id": "intro_7",
 						"src": "images/black.png",
-						"do_fade": false,
-						"show_time": 1000,
 						"visible": false
 					},
 					"className": "Image"
@@ -320,7 +307,8 @@
 			"attrs": {
 				"id": "outro_layer",
 				"visible": false,
-				"type": "sequence"
+				"type": "sequence",
+                "object_name": "outro"
 			},
 			"className": "Layer",
 			"children": [
@@ -513,7 +501,6 @@
 						"category": "door",
                         "object_name": "locker_room_1_shower_door",
 						"src": "images/locker_room_1_door_to_shower_open.png",
-						"outcome": "shower_room",
 						"visible": false
 					},
 					"className": "Image"
@@ -585,7 +572,6 @@
 						"category": "container",
                         "object_name": "jacket",
 						"src": "images/jacket_full.png",
-                        "empty": "jacket_empty",
                         "visible": true
 					},
 					"className": "Image"
@@ -607,8 +593,6 @@
 						"y": 300,
 						"category": "item",
 						"src": "images/airfreshener.png",
-						"trigger": "locker_room_1_door_to_wc_stinking",
-						"outcome": "locker_room_1_door_to_wc_open",
 						"visible": false
 					},
 					"className": "Image"
@@ -639,8 +623,6 @@
 						"category": "container",
                         "object_name": "locker",
 						"src": "images/locker_open.png",
-						"original": "locker_empty",
-						"outcome": "airfreshener",
 						"visible": false
 					},
 					"className": "Image"
@@ -674,8 +656,6 @@
 						"scale": 0.6,
 						"category": "item",
 						"src": "images/tactic_board_wiper.png",
-						"trigger": "tactic_board_1",
-						"outcome": "tactic_board_2",
 						"consume": false
 					},
 					"className": "Image"
@@ -739,8 +719,7 @@
 						"y": 60,
 						"category": "door",
                         "object_name": "locker_room_2_wc_door",
-						"src": "images/locker_room_2_door_to_wc_closed.png",
-						"outcome": "locker_room_2_door_to_wc_open"
+						"src": "images/locker_room_2_door_to_wc_closed.png"
 					},
 					"className": "Image"
 				}, {
@@ -751,7 +730,6 @@
 						"category": "door",
                         "object_name": "locker_room_2_wc_door",
 						"src": "images/locker_room_2_door_to_wc_open.png",
-						"outcome": "wc_2",
 						"visible": false
 					},
 					"className": "Image"
@@ -762,8 +740,7 @@
 						"y": 8,
 						"category": "door",
                         "object_name": "locker_room_2_shower_door",
-						"src": "images/locker_room_2_door_to_shower.png",
-						"outcome": "shower_room"
+						"src": "images/locker_room_2_door_to_shower.png"
 					},
 					"className": "Image"
 				}, {
@@ -801,9 +778,7 @@
 						"x": 230,
 						"y": 445,
 						"category": "item",
-						"src": "images/marker.png",
-						"trigger": "tactic_board_2",
-						"outcome": "tactic_board_3"
+						"src": "images/marker.png"
 					},
 					"className": "Image"
 				}, {
@@ -975,8 +950,6 @@
 						"y": 360,
 						"category": "item",
 						"src": "images/teddybear.png",
-						"trigger": "garbagecan",
-						"outcome": "garbagecan_teddy",
                         "consume": true
 					},
 					"className": "Image"
@@ -987,8 +960,6 @@
 						"y": 165,
 						"category": "item",
 						"src": "images/teddybear_chewinggum.png",
-						"trigger": "locker_closed",
-						"outcome": "locker_open",
 						"visible": false,
                         "consume": false
 					},
@@ -1020,9 +991,7 @@
 						"y": 325,
 						"scale": 0.8,
 						"category": "item",
-						"src": "images/cienibang.png",
-						"trigger": "cieni_1",
-						"outcome": "shower_door_to_locker_room_2_closed"
+						"src": "images/cienibang.png"
 					},
 					"className": "Image"
 				}, {
@@ -1064,8 +1033,6 @@
 						"y": 300,
 						"category": "item",
 						"src": "images/poster_withglue.png",
-						"trigger": "wall",
-						"outcome": "poster_onthewall",
 						"visible": false
 					},
 					"className": "Image"
@@ -1134,9 +1101,7 @@
 						"y": 209,
 						"scale": 0.7,
 						"category": "item",
-						"src": "images/hairkeeper.png",
-						"trigger": "poster_withoutglue",
-						"outcome": "poster_withglue"
+						"src": "images/hairkeeper.png"
 					},
 					"className": "Image"
 				}
