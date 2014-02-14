@@ -249,7 +249,7 @@
 				"id": "intro_layer",
 				"visible": false,
 				"type": "sequence",
-                "object_name": "intro"
+                                "object_name": "intro"
 			},
 			"className": "Layer",
 			"children": [
