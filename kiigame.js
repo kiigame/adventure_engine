@@ -729,8 +729,8 @@ function interact(event) {
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
 	}
-	// Print examine texts for items, rewards and objects
-	else if (target.getAttr('category') == 'object' || target.getAttr('category') == 'usable' || target.getAttr('category') == 'reward') {
+	// Print examine texts for items, rewards, obstacles and objects
+	else if (target.getAttr('category') == 'object' || target.getAttr('category') == 'usable' || target.getAttr('category') == 'reward' || target.getAttr('category') == 'obstacle') {
 		setMonologue(target.getAttr('id'));
 	}
     // Take an item out of a container
