@@ -907,12 +907,12 @@
 					"className": "Image"
 				}, {
 					"attrs": {
-						"id": "cieni_1",
+						"id": "cieni",
 						"x": 100,
 						"y": 380,
 						"category": "obstacle",
                         "object_name": "cieni",
-						"src": "images/cieni_1.png",
+						"src": "images/cieni.png",
                         "related": ["cieni_eyes", "cieni_mouth"]
 					},
 					"className": "Image"
