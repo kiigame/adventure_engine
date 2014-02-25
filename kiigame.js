@@ -339,7 +339,6 @@ function play_sequence(sequence) {
                             fade_layer.hide();
                             stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
                             fade_layer.moveDown();
-                            
                             setMonologue(sequence, 'end_text');
                             play_music(object.transition);
                         }, 3000);

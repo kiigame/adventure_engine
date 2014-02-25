@@ -5,12 +5,22 @@ stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100
 var input_text = stage.get('#input_text')[0];
 var input_layer = stage.get('#input_layer')[0];
 
+// Default player number
+input_text.setText(input_text.getText() + "8");
+
 // Dirty removing of default event handler to allow using jersey input
 stage.get('#start_game')[0].eventListeners.click = [];
 
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
 	input_layer.show();
+        // When default number is on, buttons shouldn't be grey when starting
+        stage.get('#button_ok').show();
+	stage.get('#button_ok_gray').hide();
+	stage.get('#button_back').show();
+	stage.get('#button_back_gray').hide();
+	stage.get('#button_0').show();
+	stage.get('#button_0_gray').hide();
 	input_layer.draw();
 });
 
