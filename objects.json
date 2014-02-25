@@ -228,7 +228,7 @@
         	"1": {
             	"id": "outro_1",
                 "show_time": 4000,
-                "do_fade": true
+                "do_fade": false
             }
         }
     }

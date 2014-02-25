@@ -8,7 +8,8 @@
 	"children": [
 		{
 			"attrs": {
-				"id": "start_layer"
+				"id": "start_layer",
+				"category": "start"
 			},
 			"className": "Layer",
 			"children": [
@@ -248,7 +249,7 @@
 			"attrs": {
 				"id": "intro_layer",
 				"visible": false,
-				"type": "sequence",
+				"category": "sequence",
                 "object_name": "intro"
 			},
 			"className": "Layer",
@@ -307,7 +308,7 @@
 			"attrs": {
 				"id": "outro_layer",
 				"visible": false,
-				"type": "sequence",
+				"category": "sequence",
                 "object_name": "outro"
 			},
 			"className": "Layer",
@@ -324,7 +325,7 @@
 			"attrs": {
 				"id": "end_layer",
 				"visible": false,
-				"type": "end"
+				"category": "end"
 			},
 			"className": "Layer",
 			"children": [
@@ -436,7 +437,7 @@
 			"attrs": {
 				"id": "object_layer_locker_room_1",
 				"visible": false,
-				"type": "room",
+				"category": "room",
                 "start": "true"
 			},
 			"className": "Layer",
@@ -699,7 +700,7 @@
 			"attrs": {
 				"id": "object_layer_locker_room_2",
 				"visible": false,
-				"type": "room"
+				"category": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -831,7 +832,7 @@
 			"attrs": {
 				"id": "object_layer_shower_room",
 				"visible": false,
-				"type": "room"
+				"category": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -924,7 +925,7 @@
 						"category": "obstacle",
                         "object_name": "cieni",
 						"src": "images/cieni_eyes.png",
-                    	"object_type": "animation",
+                    	"animated": true,
                         "animation": {"x": -10, "duration": 1.4}
 					},
 					"className": "Image"
@@ -938,7 +939,7 @@
 						"category": "obstacle",
                         "object_name": "cieni",
 						"src": "images/cieni_mouth.png",
-                        "object_type": "animation",
+                    	"animated": true,
                         "animation": {"x": 9, "y": -3, "width": -15, "duration": 1.9}
 					},
 					"className": "Image"
@@ -970,7 +971,7 @@
 			"attrs": {
 				"id": "object_layer_wc_1",
 				"visible": false,
-				"type": "room"
+				"category": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -1061,7 +1062,7 @@
 			"attrs": {
 				"id": "object_layer_wc_2",
 				"visible": false,
-				"type": "room"
+				"category": "room"
 			},
 			"className": "Layer",
 			"children": [
