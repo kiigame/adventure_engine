@@ -222,7 +222,6 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	play_music('start_layer');
 });
 
-// On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
     play_sequence("intro");
 });
