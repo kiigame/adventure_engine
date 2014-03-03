@@ -8,8 +8,7 @@
 	"children": [
 		{
 			"attrs": {
-				"id": "start_layer",
-				"category": "start"
+				"id": "start_layer"
 			},
 			"className": "Layer",
 			"children": [
@@ -65,8 +64,7 @@
 		{
             "attrs": {
                 "id": "input_layer",
-				"visible": false,
-				"category": "custom"
+				"visible": false
             },
             "className": "Layer",
             "children": [
@@ -250,71 +248,57 @@
 			"attrs": {
 				"id": "intro_layer",
 				"visible": false,
-				"category": "sequence",
-				"object_name": "intro"
+				"type": "sequence",
+                                "object_name": "intro"
 			},
 			"className": "Layer",
 			"children": [
 				{
 					"attrs": {
 						"id": "intro_1",
-						"src": "images/intro_1.png",
-						"object_name": "intro",
-						"category": "sequence"
+						"src": "images/intro_1.png"
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_2",
 						"src": "images/intro_2.png",
-						"visible": false,
-						"object_name": "intro",
-						"category": "sequence"
+						"visible": false
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_3",
 						"src": "images/intro_3.png",
-						"visible": false,
-						"object_name": "intro",
-						"category": "sequence"
+						"visible": false
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_4",
 						"src": "images/intro_4.png",
-						"visible": false,
-						"object_name": "intro",
-						"category": "sequence"
+						"visible": false
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_5",
 						"src": "images/intro_5.png",
-						"visible": false,
-						"object_name": "intro",
-						"category": "sequence"
+						"visible": false
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_6",
 						"src": "images/intro_6.png",
-						"visible": false,
-						"object_name": "intro",
-						"category": "sequence"
+						"visible": false
 					},
 					"className": "Image"
 				}, {
 					"attrs": {
 						"id": "intro_7",
 						"src": "images/black.png",
-						"visible": false,
-						"object_name": "intro",
-						"category": "sequence"
+						"visible": false
 					},
 					"className": "Image"
 				}
@@ -323,7 +307,7 @@
 			"attrs": {
 				"id": "outro_layer",
 				"visible": false,
-				"category": "sequence",
+				"type": "sequence",
                 "object_name": "outro"
 			},
 			"className": "Layer",
@@ -331,9 +315,7 @@
 				{
 					"attrs": {
 						"id": "outro_1",
-						"src": "images/outro_1.png",
-						"object_name": "outro",
-						"category": "sequence"
+						"src": "images/outro_1.png"
 					},
 					"className": "Image"
 				}
@@ -342,7 +324,7 @@
 			"attrs": {
 				"id": "end_layer",
 				"visible": false,
-				"category": "end"
+				"type": "end"
 			},
 			"className": "Layer",
 			"children": [
@@ -378,7 +360,7 @@
 				{
 					"attrs": {
 						"id": "rewards_text",
-						"text": "/3 piilotettua kirjaa loydetty",
+						"text": "/3 piilotettua kirjaa löydetty",
 						"x": 340,
 						"y": 580,
 						"fontSize": 26,
@@ -394,14 +376,12 @@
 		}, {
 			"attrs": {
 				"id": "background_layer",
-				"visible": false,
-				"category": "room_background"
+				"visible": false
 			},
 			"className": "Layer",
 			"children": [
 				{
 					"attrs": {
-						"category": "room_background",
 						"id": "locker_room_1",
 						"width": 981,
 						"height": 543,
@@ -412,7 +392,6 @@
 					"className": "Image"
 				}, {
 					"attrs": {
-						"category": "room_background",
 						"id": "locker_room_2",
 						"width": 981,
 						"height": 543,
@@ -423,7 +402,6 @@
 					"className": "Image"
 				}, {
 					"attrs": {
-						"category": "room_background",
 						"id": "shower_room",
 						"width": 981,
 						"height": 543,
@@ -434,7 +412,6 @@
 					"className": "Image"
 				}, {
 					"attrs": {
-						"category": "room_background",
 						"id": "wc_1",
 						"width": 981,
 						"height": 543,
@@ -445,7 +422,6 @@
 					"className": "Image"
 				}, {
 					"attrs": {
-						"category": "room_background",
 						"id": "wc_2",
 						"width": 981,
 						"height": 543,
@@ -460,7 +436,7 @@
 			"attrs": {
 				"id": "object_layer_locker_room_1",
 				"visible": false,
-				"category": "room",
+				"type": "room",
                 "start": "true"
 			},
 			"className": "Layer",
@@ -723,7 +699,7 @@
 			"attrs": {
 				"id": "object_layer_locker_room_2",
 				"visible": false,
-				"category": "room"
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -855,7 +831,7 @@
 			"attrs": {
 				"id": "object_layer_shower_room",
 				"visible": false,
-				"category": "room"
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -931,7 +907,7 @@
 					"className": "Image"
 				}, {
 					"attrs": {
-						"id": "cieni",
+						"id": "cieni_1",
 						"x": 100,
 						"y": 380,
 						"category": "obstacle",
@@ -948,7 +924,7 @@
 						"category": "obstacle",
                         "object_name": "cieni",
 						"src": "images/cieni_eyes.png",
-                    	"animated": true,
+                    	"object_type": "animation",
                         "animation": {"x": -10, "duration": 1.4}
 					},
 					"className": "Image"
@@ -962,7 +938,7 @@
 						"category": "obstacle",
                         "object_name": "cieni",
 						"src": "images/cieni_mouth.png",
-                    	"animated": true,
+                        "object_type": "animation",
                         "animation": {"x": 9, "y": -3, "width": -15, "duration": 1.9}
 					},
 					"className": "Image"
@@ -994,7 +970,7 @@
 			"attrs": {
 				"id": "object_layer_wc_1",
 				"visible": false,
-				"category": "room"
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -1085,7 +1061,7 @@
 			"attrs": {
 				"id": "object_layer_wc_2",
 				"visible": false,
-				"category": "room"
+				"type": "room"
 			},
 			"className": "Layer",
 			"children": [
@@ -1133,8 +1109,7 @@
 		}, {
 			"attrs": {
 				"id": "inventory_bar_layer",
-				"visible": false,
-				"category": "misc"
+				"visible": false
 			},
 			"className": "Layer",
 			"children": [
@@ -1170,8 +1145,7 @@
 		},
 		{
 			"attrs": {
-				"id": "inventory_layer",
-				"category": "misc"
+				"id": "inventory_layer"
 			},
 			"className": "Layer",
 			"children": []
@@ -1179,8 +1153,7 @@
 			"attrs": {
 				"id": "fade_layer",
 				"opacity": 0,
-				"visible": false,
-				"category": "misc"
+				"visible": false
 			},
 			"className": "Layer",
 			"children": [
@@ -1198,8 +1171,7 @@
 		{
 			"attrs": {
 				"id": "character_layer",
-				"visible": false,
-				"category": "misc"
+				"visible": false
 			},
 			"className": "Layer",
 			"children": [
@@ -1252,8 +1224,7 @@
 		},
 		{
 			"attrs": {
-				"id": "text_layer",
-				"category": "misc"
+				"id": "text_layer"
 			},
 			"className": "Layer",
 			"children": [
@@ -1310,8 +1281,7 @@
 		}, {
 			"attrs": {
 				"id": "oikotiet",
-				"visible": false,
-				"category": "misc"
+				"visible": false
 			},
 			"className": "Layer",
 			"children": [
