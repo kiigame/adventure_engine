@@ -251,11 +251,7 @@
 				"id": "intro_layer",
 				"visible": false,
 				"category": "sequence",
-<<<<<<< HEAD
 				"object_name": "intro"
-=======
-                "object_name": "intro"
->>>>>>> 8a2e5767cf9b943ebed6fade66de552eb911db58
 			},
 			"className": "Layer",
 			"children": [
@@ -940,7 +936,7 @@
 						"y": 380,
 						"category": "obstacle",
                         "object_name": "cieni",
-						"src": "images/cieni.png",
+						"src": "images/cieni_1.png",
                         "related": ["cieni_eyes", "cieni_mouth"]
 					},
 					"className": "Image"

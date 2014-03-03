@@ -134,25 +134,7 @@
         "transition": "locker_room_2"
     },
     "cieni": {
-<<<<<<< HEAD
     	"category": "obstacle",
-=======
-    	"type": "obstacle",
-		"blocking": true,
-		"target": "shower_door_to_locker_room_2",
-		"trigger": "cienibang",
-		"blocking_image": "cieni"
-    },
-    "cieni_eyes": {
-    	"type": "obstacle",
-		"blocking": true,
-		"target": "shower_door_to_locker_room_2",
-		"trigger": "cienibang",
-		"blocking_image": "cieni"
-    },
-    "cieni_mouth": {
-    	"type": "obstacle",
->>>>>>> 8a2e5767cf9b943ebed6fade66de552eb911db58
 		"blocking": true,
 		"target": "shower_door_to_locker_room_2",
 		"trigger": "cienibang",
@@ -169,11 +151,7 @@
         "outcome": "tactic_board_3"
     },
     "cienibang": {
-<<<<<<< HEAD
         "category": "item",
-=======
-        "type": "item",
->>>>>>> 8a2e5767cf9b943ebed6fade66de552eb911db58
         "trigger": "cieni",
 		"outcome": "shower_door_to_locker_room_2_closed"
     },
@@ -236,7 +214,7 @@
         	"1": {
             	"id": "outro_1",
                 "show_time": 4000,
-                "do_fade": false
+                "do_fade": true
             }
         }
     }
