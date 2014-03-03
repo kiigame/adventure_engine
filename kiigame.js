@@ -177,7 +177,7 @@ for (var i = 0; i < images_json.children.length; i++) {
 		if (images_json.children[i].children[j].className == 'Image') {
 			createObject(images_json.children[i].children[j].attrs);
             
-            if (images_json.children[i].children[j].attrs.object_type == "animation")
+            if (images_json.children[i].children[j].attrs.animated === true)
             	create_animation(stage.get('#'+images_json.children[i].children[j].attrs.id)[0]);
 		}
 	}
@@ -222,17 +222,20 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	play_music('start_layer');
 });
 
-// On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
     play_sequence("intro");
+});
+
+// Listener and showing of credits on the start screen
+stage.get('#start_credits')[0].on('tap click', function(event) {
+	event = event.targetNode;
+	setMonologue(event.getAttr('id'));
 });
 
 /*
 Play music
 string id - object ID from JSON with "music":"file name" attribute
 */
-// TODO: 
-// TODO: Music should loop without JSON attribute, explicit denial stops it?
 function play_music(id) {
     var data = objects_json[id];
     
@@ -350,11 +353,6 @@ function play_sequence(sequence) {
 	};
 }
 
-// Listener and showing of credits on the start screen
-stage.get('#start_credits')[0].on('tap click', function(event) {
-	event = event.targetNode;
-	setMonologue(event.getAttr('id'));
-});
 // Developer feature - shortcut menu from the empty menu button for testing purposes
 	stage.get('#start_empty')[0].on('tap click', function(event) {
 	event = event.targetNode;
@@ -729,8 +727,8 @@ function interact(event) {
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
 	}
-	// Print examine texts for items, rewards and objects
-	else if (target.getAttr('category') == 'object' || target.getAttr('category') == 'usable' || target.getAttr('category') == 'reward') {
+	// Print examine texts for items, rewards, obstacles and objects
+	else if (target.getAttr('category') == 'object' || target.getAttr('category') == 'usable' || target.getAttr('category') == 'reward' || target.getAttr('category') == 'obstacle') {
 		setMonologue(target.getAttr('id'));
 	}
     // Take an item out of a container
@@ -824,7 +822,6 @@ function play_ending() {
 	var delay = 700;
 
 	// Animation cycle for proper fading and drawing order
-
 	fade_layer.moveToTop();
 	stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
 	fade_layer.show();
