@@ -154,17 +154,17 @@ function create_animation (object) {
 	var animation = new Kinetic.Tween({
 		node: object,
 		x: attrs.x ? object.getX() + attrs.x : object.getX(),
-				y: attrs.y ? object.getY() + attrs.y : object.getY(),
-						width: attrs.width ? object.getWidth() - 15 : object.getWidth(),
-								easing: Kinetic.Easings.EaseInOut,
-								duration: attrs.duration,
+		y: attrs.y ? object.getY() + attrs.y : object.getY(),
+		width: attrs.width ? object.getWidth() - 15 : object.getWidth(),
+		easing: Kinetic.Easings.EaseInOut,
+		duration: attrs.duration,
 
-								onFinish: function() {
-									animation.reverse();
-									setTimeout(function() {
-										animation.play();
-									}, attrs.duration * 1000);
-								}
+		onFinish: function() {
+			this.reverse();
+			setTimeout(function() {
+				this.play();
+			}, attrs.duration * 1000);
+		}
 	});
 
 	// TODO: Playing everything at once can end up being laggy
@@ -185,9 +185,9 @@ for (var i = 0; i < images_json.children.length; i++) {
 
 //On window load we create image hit regions for our items on object layers
 //Some items ended up being excluded from this
+//Loop backgrounds to create item hit regions and register mouseup event
 window.onload = function() {
-	// Loop backgrounds to create item hit regions and register mouseup event
-	background_layer.getChildren().each(function(o) {        
+	background_layer.getChildren().each(function(o) {   
 		object_layer = stage.get('#'+o.attrs.objects)[0];
 
 		if (object_layer != undefined) {
@@ -211,7 +211,7 @@ window.onload = function() {
 
 	stage.draw();
 	idle_1_animation.play();
-}
+};
 
 stage.get('#begining')[0].on('tap click', function(event) {
 	stage.get('#begining')[0].hide();
@@ -498,6 +498,7 @@ stage.on('dragmove', function(event) {
 				x : interaction_text.getWidth() / 2
 			});
 
+			dragged_item.moveToTop();
 			current_layer.draw();
 			text_layer.draw();
 
@@ -541,6 +542,7 @@ stage.get('Image').on('dragend', function(event) {
 		say_text = texts_json[dragged_item.getId()][target.getId()];
 
 	// If nothing's under the dragged item
+	//TODO: Why does the examine monologue still come when there's nothing under the dragged item?
 	if (target == null) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
@@ -555,9 +557,6 @@ stage.get('Image').on('dragend', function(event) {
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
 		var object = objects_json[target.getAttr('object_name')];
 		var unlocked = undefined;
-		// "in" was already some sort of javascript syntax, eclipse threw an error from it
-		// so we need to do this:
-		var objectIn = objects_json[object.getAttr('in')];
 
 		// Can dragged object unlock locked container?
 		if (object.locked === true && object.key == dragged_item.getId()) {
@@ -572,10 +571,10 @@ stage.get('Image').on('dragend', function(event) {
 			stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
 		}
 		// Can dragged object be put into the container
-		else if (object.state == 'empty' && objectIn == dragged_item.getId()) {
+		else if (object.state == 'empty' && object.in == dragged_item.getId()) {
 			object.state = 'full';
 
-			if (objectIn == dragged_item.getId()) {
+			if (object.in == dragged_item.getId()) {
 				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
 				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
 
@@ -986,11 +985,11 @@ function inventoryDrag(item) {
 	item.moveTo(current_layer);
 	clearText(monologue);
 	stopTalking();
-	inventory_layer.draw();
 	inventory_items--;
 	redrawInventory();
-	item.moveToTop();
-	current_layer.draw();
+	current_layer.moveToTop();
+	character_layer.moveToTop();
+	text_layer.moveToTop();
 }
 
 //Redrawing inventory
@@ -1022,9 +1021,10 @@ function redrawInventory() {
 	} else {
 		stage.get('#inventory_right_arrow').hide();
 	}
-
+	
 	inventory_bar_layer.draw();
 	inventory_layer.draw();
+	current_layer.draw();
 }
 
 //Delay to be set after each intersection check

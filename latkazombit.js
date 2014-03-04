@@ -14,8 +14,8 @@ stage.get('#start_game')[0].eventListeners.click = [];
 // On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
 	input_layer.show();
-        // When default number is on, buttons shouldn't be grey when starting
-        stage.get('#button_ok').show();
+    // When default number is on, buttons shouldn't be grey when starting
+    stage.get('#button_ok').show();
 	stage.get('#button_ok_gray').hide();
 	stage.get('#button_back').show();
 	stage.get('#button_back_gray').hide();
@@ -40,7 +40,7 @@ stage.get('#start')[0].on('tap click', function(event) {
 input_layer.on('tap click', function(event) {
 	target = event.targetNode;
 	
-	selected = texts_json[target.getAttr('id')]
+	selected = texts_json[target.getAttr('id')];
 	if (selected)
 	    selected = selected.name;
 	else
