@@ -532,13 +532,13 @@ function checkIntersection(dragged_item, target) {
 // Drag end events
 stage.get('Image').on('dragend', function(event) {
 	var dragged_item = event.targetNode;
-    var object = objects_json[dragged_item.getId()]
+	var say_text = undefined;
         
         // Variable for whether the dragged item is destroyed or not
         var destroy = false;
 	
 	if (target != null)
-    	var say_text = texts_json[dragged_item.getId()][target.getId()];
+    	say_text = texts_json[dragged_item.getId()][target.getId()];
     		
 	// If nothing's under the dragged item
 	if (target == null) {
@@ -554,6 +554,10 @@ stage.get('Image').on('dragend', function(event) {
 	// Put something into a container
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
             var object = objects_json[target.getAttr('object_name')];
+            var unlocked = undefined;
+            // "in" was already some sort of javascript syntax, eclipse threw an error from it
+            // so we need to do this:
+            var objectIn = objects_json[object.getAttr('in')];
             
             // Can dragged object unlock locked container?
             if (object.locked === true && object.key == dragged_item.getId()) {
@@ -561,17 +565,17 @@ stage.get('Image').on('dragend', function(event) {
                 stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
 
                 if (object.state == "empty")
-                    var unlocked = "empty_image";
+                    unlocked = "empty_image";
                 else
-                    var unlocked = "full_image";
+                    unlocked = "full_image";
 
                 stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
             }
             // Can dragged object be put into the container
-            else if (object.state == 'empty' && object.in == dragged_item.getId()) {
+            else if (object.state == 'empty' && objectIn == dragged_item.getId()) {
                     object.state = 'full';
                     
-                    if (object.in == dragged_item.getId()) {
+                    if (objectIn == dragged_item.getId()) {
                         stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
                         stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
 
@@ -944,7 +948,7 @@ function stopTalking() {
 function getJSON(json_file) {
 	var request = new XMLHttpRequest();
 	request.open("GET", json_file, false);
-	request.send(null)
+	request.send(null);
 	var json = request.responseText;
 	return json;
 }
