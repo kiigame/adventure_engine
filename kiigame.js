@@ -49,7 +49,7 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 var images_json = stage.toObject();
 
 //Variable for saving the current room (for changing backgrounds and object layers)
-var current_background = 'locker_room_1';
+var current_background = 'start_layer';
 
 //The amount of rewards found
 var rewards = 0;
@@ -544,17 +544,20 @@ stage.get('Image').on('dragend', function(event) {
 	// If nothing's under the dragged item
 	//TODO: Why does the examine monologue still come when there's nothing under the dragged item?
 	if (target == null) {
+		console.log("Nothings under the dragged item");
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 	}
 	// Default text for unassigned item combinations + return item to inventory
 	else if (say_text == undefined) {
+		console.log("Unassigned item combination");
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 		setMonologue("default");
 	}
 	// Put something into a container
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
+		console.log("Put something into a container");
 		var object = objects_json[target.getAttr('object_name')];
 		var unlocked = undefined;
 
@@ -587,6 +590,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Unlock a door
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'door') {
+		console.log("Unlock a door");
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
@@ -601,6 +605,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Unblock an obstacle
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'obstacle') {
+		console.log("Unblock an obstacle");
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.blocking === true && object.trigger == dragged_item.getId()) {
@@ -625,6 +630,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on object
 	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'object') {
+		console.log("Use item on object");
 		setMonologue(dragged_item.getId(), target.getId());
 
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
@@ -646,6 +652,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on item
 	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
+		console.log("Use item on item");
 		setMonologue(dragged_item.getId(), target.getId());
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
 
@@ -658,6 +665,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Default for all others
 	else {
+		console.log("Default use for all others");
 		setMonologue(dragged_item.getId(), target.getId());
 	}
 	// Check if dragged item's destroyed, if not, add it to inventory
