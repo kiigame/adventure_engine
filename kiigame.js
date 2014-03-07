@@ -685,6 +685,7 @@ stage.get('Image').on('dragend', function(event) {
 	monologue_timeout = setTimeout('stopTalking()', 3000);
 
 	current_layer.draw();
+	inventory_layer.draw();
 });
 //Stop talking and clear monologue when clicked or touched anywhere on the screen
 stage.on('touchstart mousedown', function(event) {
