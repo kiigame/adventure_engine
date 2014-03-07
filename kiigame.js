@@ -49,7 +49,7 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 var images_json = stage.toObject();
 
 //Variable for saving the current room (for changing backgrounds and object layers)
-var current_background = 'start_layer';
+var current_background = 'locker_room_1';
 
 //The amount of rewards found
 var rewards = 0;
@@ -160,9 +160,9 @@ function create_animation (object) {
 		duration: attrs.duration,
 
 		onFinish: function() {
-			this.reverse();
+			animation.reverse();
 			setTimeout(function() {
-				this.play();
+				animation.play();
 			}, attrs.duration * 1000);
 		}
 	});
