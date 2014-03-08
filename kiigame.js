@@ -186,27 +186,22 @@ for (var i = 0; i < images_json.children.length; i++) {
 //On window load we create image hit regions for our items on object layers
 //Loop backgrounds to create item hit regions and register mouseup event
 window.onload = function() {
-	//console.log(stage.getChildren())
 	stage.getChildren().each(function(o) {
-		console.log(o.getAttr('category'))
 		if (o.getAttr('category') == 'room') {
-			
-			object_layer = o; //stage.get('#'+o.attrs.objects)[0];
-
-			object_layer.getChildren().each(function(shape, i) {
+			o.getChildren().each(function(shape, i) {
 				if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
 					shape.createImageHitRegion(function() {
 					});
 				}
 			});
 
-			object_layer.on('mouseup touchend', function(event) {
+			o.on('mouseup touchend', function(event) {
 				interact(event);
 			});
 
 			// Current layer for hit region purposes in different rooms
-			if (object_layer.getAttr('start') == 'true') {
-				current_layer = object_layer;
+			if (o.getAttr('start') == 'true') {
+				current_layer = o;
 			}
 		}
 	});
@@ -219,7 +214,6 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	stage.get('#begining')[0].hide();
 	inventory_bar_layer.show();
 	character_layer.show();
-	//background_layer.show();
 	stage.draw();
 	play_music('start_layer');
 });
@@ -259,6 +253,11 @@ function play_music(id) {
 
 		current_music_source = data.music;
 	}
+}
+
+function stop_music() {
+	if (current_music)
+		current_music.pause()
 }
 
 /*
@@ -323,7 +322,7 @@ function play_sequence(sequence) {
 					wakeup.finish();
 
 					setTimeout(function() {
-						current_music.pause();
+						stop_music();
 						wakeup.reverse();
 						intro_layer.hide();
 
@@ -367,7 +366,7 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 		x : 50
 	});
 	clone.moveTo(start_layer);
-	clone.on('click', function() {current_music.pause();});
+	clone.on('click', function() {stop_music();});
 
 	clone = stage.get('#oikotie_locker_room2')[0].clone({
 		visible : true,
@@ -375,7 +374,7 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 	});
 	clone.moveTo(start_layer);
 	clone.on('click', function() {
-		current_music.pause();
+		stop_music();
 		inventoryAdd(stage.get('#poster_withoutglue')[0]);
 		inventoryAdd(stage.get('#airfreshener')[0]);
 		inventoryAdd(stage.get('#cienibang')[0]);
