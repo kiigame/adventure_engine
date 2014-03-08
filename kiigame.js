@@ -200,7 +200,7 @@ window.onload = function() {
 			});
 
 			// Current layer for hit region purposes in different rooms
-			if (o.getAttr('start') == 'true') {
+			if (o.getAttr('start') === true) {
 				current_layer = o;
 			}
 		}

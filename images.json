@@ -398,7 +398,7 @@
 				"id": "object_layer_locker_room_1",
 				"visible": false,
 				"category": "room",
-                "start": "true",
+                "start": true,
                 "object_name": "locker_room_1"
 			},
 			"className": "Layer",
