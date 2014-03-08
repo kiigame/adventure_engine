@@ -25,8 +25,6 @@ var intro_layer = stage.get("#intro_layer")[0];
 var outro_layer = stage.get("#outro_layer")[0];
 var end_layer = stage.get("#end_layer")[0];
 
-//var background_layer = stage.get("#background_layer")[0];
-
 var inventory_layer = stage.get('#inventory_layer')[0];
 var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
 var character_layer = stage.get('#character_layer')[0];
@@ -184,6 +182,7 @@ for (var i = 0; i < images_json.children.length; i++) {
 }
 
 //On window load we create image hit regions for our items on object layers
+//Some items ended up being excluded from this
 //Loop backgrounds to create item hit regions and register mouseup event
 window.onload = function() {
 	stage.getChildren().each(function(o) {
@@ -200,7 +199,7 @@ window.onload = function() {
 			});
 
 			// Current layer for hit region purposes in different rooms
-			if (o.getAttr('start') === true) {
+			if (o.getAttr('start') == 'true') {
 				current_layer = o;
 			}
 		}
@@ -257,7 +256,7 @@ function play_music(id) {
 
 function stop_music() {
 	if (current_music)
-		current_music.pause()
+		current_music.pause();
 }
 
 /*
