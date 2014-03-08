@@ -405,7 +405,7 @@
 			"children": [
 				{
 					"attrs": {
-						"category": "room_background",
+						"category": "object",
 						"id": "locker_room_1",
 						"width": 981,
 						"height": 543,
@@ -679,7 +679,7 @@
 			"children": [
 				{
 					"attrs": {
-						"category": "room_background",
+						"category": "object",
 						"id": "locker_room_2",
 						"width": 981,
 						"height": 543,
@@ -824,7 +824,7 @@
 			"children": [
 				{
 					"attrs": {
-						"category": "room_background",
+						"category": "object",
 						"id": "shower_room",
 						"width": 981,
 						"height": 543,
@@ -975,18 +975,6 @@
 			"children": [
 				{
 					"attrs": {
-						"category": "room_background",
-						"id": "wc_1",
-						"width": 981,
-						"height": 543,
-						"src": "images/wc_1.png",
-						"visible": false,
-						"objects": "object_layer_wc_1"
-					},
-					"className": "Image"
-				},
-				{
-					"attrs": {
 						"id": "wc_1_door_to_locker_room_1",
 						"x": 281,
 						"y": 125,
@@ -1078,7 +1066,7 @@
 			"children": [
 			      {
 					"attrs": {
-						"category": "room_background",
+						"category": "object",
 						"id": "wc_2",
 						"width": 981,
 						"height": 543,
@@ -1087,8 +1075,7 @@
 						"objects": "object_layer_wc_2"
 					},
 					"className": "Image"
-				},
-				{
+				}, {
 					"attrs": {
 						"id": "wc_2_door_to_locker_room_2",
 						"x": 555,
