@@ -188,6 +188,7 @@ window.onload = function() {
 	stage.getChildren().each(function(o) {
 		if (o.getAttr('category') == 'room') {
 			o.getChildren().each(function(shape, i) {
+				shapeCategory = shape.getAttr('category')
 				if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
 					shape.createImageHitRegion(function() {
 					});
@@ -424,7 +425,8 @@ stage.on('dragmove', function(event) {
 		// Loop through all the items on the current object layer
 		for (var i = 0; i < current_layer.children.length; i++) {
 			var object = (current_layer.getChildren())[i];
-			if (object != undefined) {
+			
+			if (object != undefined && object.getAttr('category') != 'room_background') {
 				// Break if still intersecting with the same target
 				if (target != null && checkIntersection(dragged_item, target)) {
 					break;
@@ -441,6 +443,7 @@ stage.on('dragmove', function(event) {
 				}
 			}
 		}
+		
 		// If no intersecting targets were found on object layer, check the inventory
 		if (target == null) {
 			// Loop through all the items on the inventory layer
@@ -458,9 +461,7 @@ stage.on('dragmove', function(event) {
 					}
 				}
 			}
-		}
-		// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
-		if (target == null) {
+			// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
 			var leftArrow = stage.get("#inventory_left_arrow")[0];
 			var rightArrow = stage.get("#inventory_right_arrow")[0];
 			if (!dragDelayEnabled) {
@@ -479,8 +480,9 @@ stage.on('dragmove', function(event) {
 				}
 			}
 		}
+		
 		// If target is found, highlight it and show the interaction text
-		if (target != null) {
+		else if (target != null) {
 			current_layer.getChildren().each(function(shape, i) {
 				shape.setShadowBlur(0);
 			});
@@ -490,8 +492,12 @@ stage.on('dragmove', function(event) {
 			target.setShadowColor('purple');
 			target.setShadowOffset(0);
 			target.setShadowBlur(20);
-
-			interaction_text.setText(texts_json[target.getAttr('id')].name);
+			
+			try {
+				interaction_text.setText(texts_json[target.getAttr('id')].name);
+			}
+			catch (e) {
+			}
 			interaction_text.setX(dragged_item.getX() + (dragged_item.getWidth() / 2));
 			interaction_text.setY(dragged_item.getY() - 30);
 			interaction_text.setOffset({
@@ -499,7 +505,6 @@ stage.on('dragmove', function(event) {
 			});
 
 			dragged_item.moveToTop();
-			current_layer.draw();
 			text_layer.draw();
 
 			// If no target, clear the texts and highlights
@@ -511,8 +516,9 @@ stage.on('dragmove', function(event) {
 				shape.setShadowBlur(0);
 			});
 			clearText(interaction_text);
-			current_layer.draw();
 		}
+		
+		current_layer.draw();
 	}
 });
 //Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
@@ -543,7 +549,6 @@ stage.get('Image').on('dragend', function(event) {
 		say_text = texts_json[dragged_item.getId()][target.getId()];
 
 	// If nothing's under the dragged item
-	//TODO: Why does the examine monologue still come when there's nothing under the dragged item?
 	if (target == null) {
 		console.log("Nothings under the dragged item");
 		dragged_item.setX(x);

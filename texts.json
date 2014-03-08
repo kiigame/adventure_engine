@@ -95,7 +95,7 @@
         "name": "Verilammikko",
         "examine": "Oven alta valuva verilammikko. Ehkä on parempi pysyä kauempana tuosta."
     },
-    "garbagecan": {
+    "garbagecan_empty": {
         "name": "Roskakori",
         "examine": "Sehän on roska-astia. Täynnä pureskeltua purkkaa ja muuta roskaa. En poimi täältä mitään paljain käsin."
     },

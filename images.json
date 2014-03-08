@@ -405,13 +405,11 @@
 			"children": [
 				{
 					"attrs": {
-						"category": "object",
+						"category": "room_background",
 						"id": "locker_room_1",
 						"width": 981,
 						"height": 543,
-						"src": "images/locker_room_1.png",
-						"visible": false,
-						"objects": "object_layer_locker_room_1"
+						"src": "images/locker_room_1.png"
 					},
 					"className": "Image"
 				}, {
@@ -679,13 +677,11 @@
 			"children": [
 				{
 					"attrs": {
-						"category": "object",
+						"category": "room_background",
 						"id": "locker_room_2",
 						"width": 981,
 						"height": 543,
-						"src": "images/locker_room_2.png",
-						"visible": false,
-						"objects": "object_layer_locker_room_2"
+						"src": "images/locker_room_2.png"
 					},
 					"className": "Image"
 				}, {
@@ -824,13 +820,11 @@
 			"children": [
 				{
 					"attrs": {
-						"category": "object",
+						"category": "room_background",
 						"id": "shower_room",
 						"width": 981,
 						"height": 543,
-						"src": "images/shower_room.png",
-						"visible": false,
-						"objects": "object_layer_shower_room"
+						"src": "images/shower_room.png"
 					},
 					"className": "Image"
 				},
@@ -975,6 +969,17 @@
 			"children": [
 				{
 					"attrs": {
+						"category": "room_background",
+						"id": "wc_1",
+						"width": 981,
+						"height": 543,
+						"src": "images/wc_1.png",
+						"visible": false,
+						"objects": "object_layer_wc_1"
+					},
+					"className": "Image"
+				}, {
+					"attrs": {
 						"id": "wc_1_door_to_locker_room_1",
 						"x": 281,
 						"y": 125,
@@ -1067,13 +1072,11 @@
 			"children": [
 			      {
 					"attrs": {
-						"category": "object",
+						"category": "room_background",
 						"id": "wc_2",
 						"width": 981,
 						"height": 543,
-						"src": "images/wc_2.png",
-						"visible": false,
-						"objects": "object_layer_wc_2"
+						"src": "images/wc_2.png"
 					},
 					"className": "Image"
 				}, {
