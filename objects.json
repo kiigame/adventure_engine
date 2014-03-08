@@ -173,7 +173,8 @@
     "poster_withglue": {
         "type": "item",
 		"trigger": "wall",
-		"outcome": "poster_onthewall"
+		"outcome": "poster_onthewall",
+		"consume": true
     },
     "hairkeeper": {
         "type": "item",

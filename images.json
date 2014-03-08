@@ -1033,7 +1033,8 @@
 						"y": 300,
 						"category": "item",
 						"src": "images/poster_withglue.png",
-						"visible": false
+						"visible": false,
+						"consume": true
 					},
 					"className": "Image"
 				}, {
