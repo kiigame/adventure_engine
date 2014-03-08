@@ -733,8 +733,8 @@ function interact(event) {
 	} else if (target.getAttr('category') == 'secret') {
 		setMonologue(target.getAttr('id'), 'pickup');
 		var rewardID = target.getAttr('reward');
-		inventoryAdd(stage.get('#'+rewardID)[0]);
 		stage.get('#'+rewardID)[0].show();
+		inventoryAdd(stage.get('#'+rewardID)[0]);
 		rewards++;
 		target.destroy();
 		current_layer.draw();
