@@ -25,7 +25,7 @@ var intro_layer = stage.get("#intro_layer")[0];
 var outro_layer = stage.get("#outro_layer")[0];
 var end_layer = stage.get("#end_layer")[0];
 
-var background_layer = stage.get("#background_layer")[0];
+//var background_layer = stage.get("#background_layer")[0];
 
 var inventory_layer = stage.get('#inventory_layer')[0];
 var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
@@ -184,13 +184,15 @@ for (var i = 0; i < images_json.children.length; i++) {
 }
 
 //On window load we create image hit regions for our items on object layers
-//Some items ended up being excluded from this
 //Loop backgrounds to create item hit regions and register mouseup event
 window.onload = function() {
-	background_layer.getChildren().each(function(o) {   
-		object_layer = stage.get('#'+o.attrs.objects)[0];
+	//console.log(stage.getChildren())
+	stage.getChildren().each(function(o) {
+		console.log(o.getAttr('category'))
+		if (o.getAttr('category') == 'room') {
+			
+			object_layer = o; //stage.get('#'+o.attrs.objects)[0];
 
-		if (object_layer != undefined) {
 			object_layer.getChildren().each(function(shape, i) {
 				if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
 					shape.createImageHitRegion(function() {
@@ -217,7 +219,7 @@ stage.get('#begining')[0].on('tap click', function(event) {
 	stage.get('#begining')[0].hide();
 	inventory_bar_layer.show();
 	character_layer.show();
-	background_layer.show();
+	//background_layer.show();
 	stage.draw();
 	play_music('start_layer');
 });
