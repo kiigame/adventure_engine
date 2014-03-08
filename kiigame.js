@@ -534,6 +534,7 @@ function checkIntersection(dragged_item, target) {
 stage.get('Image').on('dragend', function(event) {
 	var dragged_item = event.targetNode;
 	var say_text = undefined;
+	var object = objects_json[dragged_item.getId()];
 
 	// Variable for whether the dragged item is destroyed or not
 	var destroy = false;
