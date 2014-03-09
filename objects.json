@@ -1,7 +1,7 @@
 {
     "cieni": {
         "blocking": true,
-        "blocking_image": "cieni_1",
+        "blocking_image": "cieni",
         "target": "shower_door_to_locker_room_2",
         "trigger": "cienibang",
         "type": "obstacle"

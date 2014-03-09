@@ -175,7 +175,7 @@ for (var i = 0; i < images_json.children.length; i++) {
 		if (images_json.children[i].children[j].className == 'Image') {
 			createObject(images_json.children[i].children[j].attrs);
 
-			if (images_json.children[i].children[j].attrs.object_type == "animation")
+			if (images_json.children[i].children[j].attrs.animated === true)
 				create_animation(stage.get('#'+images_json.children[i].children[j].attrs.id)[0]);
 		}
 	}
@@ -721,9 +721,10 @@ inventory_bar_layer.on('click tap', function(event) {
 //Interaction between items based on their category
 function interact(event) {
 	var target = event.targetNode;
-
+	var target_category = target.getAttr('category');
+	
 	// Pick up an item
-	if (target.getAttr('category') == 'item') {
+	if (target_category == 'item') {
 		setMonologue(target.getAttr('id'), 'pickup');
 		if (target.getAttr('src2') != undefined) {
 			stage.get('#' + target.getAttr('src2'))[0].show();
@@ -737,7 +738,7 @@ function interact(event) {
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
 		// Pick up a secret item
-	} else if (target.getAttr('category') == 'secret') {
+	} else if (target_category == 'secret') {
 		setMonologue(target.getAttr('id'), 'pickup');
 		var rewardID = target.getAttr('reward');
 		stage.get('#'+rewardID)[0].show();
@@ -750,11 +751,11 @@ function interact(event) {
 		event.cancelBubble = true;
 	}
 	// Print examine texts for items, rewards and objects
-	else if (target.getAttr('category') == 'object' || target.getAttr('category') == 'usable' || target.getAttr('category') == 'reward') {
+	else if (target_category == 'object' || target_category == 'usable' || target_category == 'reward' || target_category == 'obstacle') {
 		setMonologue(target.getAttr('id'));
 	}
 	// Take an item out of a container
-	else if (target.getAttr('category') == 'container') {
+	else if (target_category == 'container') {
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.locked === false) {
@@ -776,7 +777,7 @@ function interact(event) {
 		setMonologue(target.getAttr('id'));
 	}
 	// Open a door or do a transition
-	else if (target.getAttr('category') == 'door') {
+	else if (target_category == 'door') {
 		setMonologue(target.getAttr('id'));
 
 		var object = objects_json[target.getAttr('object_name')];
@@ -833,7 +834,7 @@ function interact(event) {
 		}
 	}
 	// Initiate ending
-	else if (target.getAttr('category') == 'ending') {
+	else if (target_category == 'ending') {
 		play_ending();
 	}
 }
