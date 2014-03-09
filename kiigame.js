@@ -13,7 +13,7 @@ var stage = Kinetic.Node.create(images_json_text, 'container');
 //stage.setWidth(window.innerWidth);
 //stage.setHeight(window.innerHeight);
 
-//Define variables from stage for easier use
+//Define variables from stage for easier use"
 
 //Texts & layers
 var monologue = stage.get('#monologue')[0];
@@ -479,6 +479,7 @@ stage.on('dragmove', function(event) {
 					target = null;
 				}
 			}
+			clearText(interaction_text);
 		}
 		
 		// If target is found, highlight it and show the interaction text
@@ -493,6 +494,7 @@ stage.on('dragmove', function(event) {
 			target.setShadowOffset(0);
 			target.setShadowBlur(20);
 			
+			// Don't cause a mass of errors if no text found
 			try {
 				interaction_text.setText(texts_json[target.getAttr('id')].name);
 			}
