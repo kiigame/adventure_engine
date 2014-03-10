@@ -344,7 +344,6 @@
                         "category": "door",
                         "id": "locker_room_1_door_to_wc_open",
                         "object_name": "stinking_wc_door",
-                        "outcome": "wc_1",
                         "src": "images/locker_room_1_door_to_wc_open.png",
                         "visible": false,
                         "x": 776,
@@ -501,7 +500,6 @@
                         "category": "door",
                         "id": "wc_2_door_to_locker_room_2",
                         "object_name": "wc_2_door_to_locker_room_2",
-                        "outcome": "locker_room_2",
                         "src": "images/wc_2_door_to_locker_room_2.png",
                         "x": 555,
                         "y": 127
