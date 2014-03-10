@@ -48,6 +48,8 @@ var images_json = stage.toObject();
 
 //Variable for saving the current room (for changing backgrounds and object layers)
 var current_background = 'start_layer';
+var game_start_layer;
+var current_layer = start_layer;
 
 //The amount of rewards found
 var rewards = 0;
@@ -201,7 +203,7 @@ window.onload = function() {
 
 			// Current layer for hit region purposes in different rooms
 			if (o.getAttr('start') === true) {
-				current_layer = o;
+				game_start_layer = o;
 			}
 		}
 	});
@@ -247,17 +249,61 @@ function play_music(id) {
 			current_music.pause();
 
 		current_music = new Audio(data.music);
+		current_music.volume = 0;
+		console.log("music", current_music, current_music.volume);
 		data.music_loop === false ? current_music.loop = false : current_music.loop = true;
 
 		current_music.play();
-
+		
+		console.log("data", data)
+		
+		// Fade music volume if set so
+		if (data.music_fade === true) {
+		    current_music.faded = true;
+            volume = current_music.volume
+            fade_interval = setInterval(function() {
+                console.log("volume", current_music.volume)
+                
+                // Audio API will throw exception when volume is maxed
+                try {
+                    current_music.volume += 0.05
+                }
+                catch (e) {
+                    current_music.volume = 1;
+                    clearInterval(fade_interval);
+                }
+            }, 10)
+        }
+        else {
+            current_music.faded = false;
+            current_music.volume = 1;
+        }
 		current_music_source = data.music;
 	}
 }
 
 function stop_music() {
-	if (current_music)
-		current_music.pause();
+    console.log("faded?",current_music.faded);
+	if (current_music == null)
+	    return;
+	    
+    // Fade music volume if set so
+    if (current_music.faded === true) {
+        fade_interval = setInterval(function() {
+            console.log("volume", current_music.volume)
+            
+            // Audio API will throw exception when volume is maxed
+            try {
+                current_music.volume -= 0.05
+            }
+            catch (e) {
+                current_music.pause();
+                clearInterval(fade_interval);
+            }
+        }, 10)
+    }
+    else
+        current_music.pause();
 }
 
 /*
@@ -271,6 +317,7 @@ function play_sequence(sequence) {
 	fade_layer.show();
 	fade.play();
 
+	current_layer.hide();
 	current_music.pause();
 
 	var sequence_layer = stage.get("#"+sequence)[0];
@@ -281,24 +328,32 @@ function play_sequence(sequence) {
 	var delay = 700;
 	var sequence_counter = 0;
 	var images_total = 0;
-
+	var image = null;
+	
+	play_music(sequence);
+	
 	for (var i in object.images) {
 		images_total++;
-		var image = stage.get('#' + object.images[i].id)[0];
-
-		(function(i, image) {
+		
+		var last_image = image;
+		image = stage.get('#' + object.images[i].id)[0];
+		//console.log("LASTO", last_image)
+		(function(i, image, last_image) {
 			setTimeout(function() {
 				fade_layer.show();
 				fade.play();
 
-				if (sequence_counter == 0)
-					play_music(sequence);
+				//if (sequence_counter == 0)
+				//	play_music(sequence);
 
 				character_layer.hide();
 				inventory_bar_layer.hide();
 
+				if (last_image)
+					last_image.hide();
 				image.show();
 
+				// Fade-in the image
 				var image_fade = object.images[i].do_fade;
 				if (image_fade === true) {
 					setTimeout(function() {
@@ -307,7 +362,7 @@ function play_sequence(sequence) {
 						setTimeout('fade_layer.hide();', 700);
 					}, 700);
 				}
-				// Immediately revert fade layer
+				// Immediately display the image
 				else {
 					fade.reverse();
 					stage.draw();
@@ -315,28 +370,29 @@ function play_sequence(sequence) {
 				}
 
 				sequence_counter += 1;
-
+console.log("show",image)
 				// Last image in the sequence
 				if (images_total == sequence_counter) {
 					fade_layer.show();
 					wakeup.finish();
-
+console.log("hello")
 					setTimeout(function() {
 						stop_music();
 						wakeup.reverse();
-						intro_layer.hide();
-
-						stage.get("#"+object.transition)[0].show();
-						current_layer.show();
+						sequence_layer.hide();
+						
+						current_layer = stage.get("#"+object.transition)[0]
+						current_layer.show()
+						
 						inventory_bar_layer.show();
 						character_layer.show();
-
+						
 						stage.draw();
 						setTimeout(function() {
 							fade_layer.hide();
 							stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 							fade_layer.moveDown();
-							setMonologue(sequence, 'end_text');
+							setMonologue(sequence, 'endtext');
 							play_music(object.transition);
 						}, 3000);
 					}, 1500);
@@ -345,7 +401,7 @@ function play_sequence(sequence) {
 				}
 
 			}, delay);
-		})(i, image);
+		})(i, image, last_image);
 
 		delay = delay + object.images[i].show_time;
 	};

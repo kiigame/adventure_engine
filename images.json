@@ -344,7 +344,6 @@
                         "category": "door",
                         "id": "locker_room_1_door_to_wc_open",
                         "object_name": "stinking_wc_door",
-                        "outcome": "wc_1",
                         "src": "images/locker_room_1_door_to_wc_open.png",
                         "visible": false,
                         "x": 776,
@@ -501,7 +500,6 @@
                         "category": "door",
                         "id": "wc_2_door_to_locker_room_2",
                         "object_name": "wc_2_door_to_locker_room_2",
-                        "outcome": "locker_room_2",
                         "src": "images/wc_2_door_to_locker_room_2.png",
                         "x": 555,
                         "y": 127
@@ -802,99 +800,6 @@
         },
         {
             "attrs": {
-                "category": "sequence",
-                "id": "intro",
-                "object_name": "intro",
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "intro_6",
-                        "src": "images/intro_6.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "intro_7",
-                        "src": "images/black.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "intro_4",
-                        "src": "images/intro_4.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "intro_5",
-                        "src": "images/intro_5.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "intro_2",
-                        "src": "images/intro_2.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "intro_3",
-                        "src": "images/intro_3.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "intro_1",
-                        "src": "images/intro_1.png"
-                    },
-                    "className": "Image"
-                }
-            ],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
-                "category": "sequence",
-                "id": "outro_layer",
-                "object_name": "outro",
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "category": "sequence",
-                        "id": "outro_1",
-                        "object_name": "outro",
-                        "src": "images/outro_1.png"
-                    },
-                    "className": "Image"
-                }
-            ],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
                 "category": "start",
                 "id": "start_layer",
                 "object_name": "start_layer"
@@ -1008,6 +913,99 @@
                         "y": 580
                     },
                     "className": "Text"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "sequence",
+                "id": "outro_layer",
+                "object_name": "outro",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "outro_1",
+                        "object_name": "outro",
+                        "src": "images/outro_1.png"
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "sequence",
+                "id": "intro",
+                "object_name": "intro",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "intro_6",
+                        "src": "images/intro_6.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "intro_7",
+                        "src": "images/black.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "intro_4",
+                        "src": "images/intro_4.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "intro_5",
+                        "src": "images/intro_5.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "intro_2",
+                        "src": "images/intro_2.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "intro_3",
+                        "src": "images/intro_3.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "intro_1",
+                        "src": "images/intro_1.png"
+                    },
+                    "className": "Image"
                 }
             ],
             "className": "Layer"
