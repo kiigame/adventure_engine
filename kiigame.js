@@ -252,12 +252,12 @@ function play_music(id) {
 			old_music = current_music
 			current_music = new Audio(data.music);
 			current_music.volume = 0;
-			console.log("music", current_music, current_music.volume);
+			//console.log("music", current_music, current_music.volume);
 			//data.music_loop === false ? old_music.loop = false : old_music.loop = true;
 		} else {
 			current_music = new Audio(data.music);
 			current_music.volume = 1;
-			console.log("music", current_music, current_music.volume);
+			//console.log("music", current_music, current_music.volume);
 			data.music_loop === false ? current_music.loop = false : current_music.loop = true;
 		}
 
@@ -268,8 +268,6 @@ function play_music(id) {
 
 		current_music.play();
 		
-		console.log("data", data)
-		
 		// Fade music volume if set so
 		if (data.music_fade === true) {
 		    current_music.faded = true;
@@ -277,7 +275,7 @@ function play_music(id) {
 			
 			if (old_music){
 				fade_interval_2 = setInterval(function() {
-                	console.log("volume2", old_music.volume)
+                	//console.log("volume2", old_music.volume)
                 
               	  // Audio API will throw exception when volume is maxed
                 	try {
@@ -298,7 +296,7 @@ function play_music(id) {
 			} else {
 			
             	fade_interval = setInterval(function() {
-                	console.log("volume", current_music.volume)
+                	//console.log("volume", current_music.volume)
                 
                 	// Audio API will throw exception when volume is maxed
                 	try {
@@ -320,21 +318,22 @@ function play_music(id) {
 }
 
 function stop_music() {
-    console.log("faded?",current_music.faded);
+    //console.log("faded?",current_music.faded);
 	if (current_music == null)
 	    return;
 	    
     // Fade music volume if set so
     if (current_music.faded === true) {
         fade_interval = setInterval(function() {
-            console.log("volume", current_music.volume)
+            //console.log("volume", current_music.volume)
             
             // Audio API will throw exception when volume is maxed
+            // or an crossfade interval may still be running
             try {
                 current_music.volume -= 0.05
+                current_music.pause();
             }
             catch (e) {
-                current_music.pause();
                 clearInterval(fade_interval);
             }
         }, 100)
@@ -482,6 +481,7 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 	clone.on('click', function() {
 		stop_music();
 		inventoryAdd(stage.get('#poster_withoutglue')[0]);
+		inventoryAdd(stage.get('#poster_withglue')[0]);
 		inventoryAdd(stage.get('#airfreshener')[0]);
 		inventoryAdd(stage.get('#cienibang')[0]);
 	});
@@ -560,17 +560,15 @@ stage.on('dragmove', function(event) {
 					if (checkIntersection(dragged_item, object)) {
 						if (target != object) {
 							target = object;
-							console.log("FOUND!",target);
 						}
 						break;
 					} else {
 						target = null;
-						console.log("TARGET NULL!")
 					}
 				}
 			}
-			// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
 		}
+		// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
 		if (target == null) {
 			var leftArrow = stage.get("#inventory_left_arrow")[0];
 			var rightArrow = stage.get("#inventory_right_arrow")[0];
@@ -659,8 +657,8 @@ stage.get('Image').on('dragend', function(event) {
 
 	if (target != null)
 		say_text = texts_json[dragged_item.getId()][target.getId()];
-	console.log("TARGET??",target, dragged_item.getId())
-	//console.log("SAY", texts_json[dragged_item.getId()], target.getId());
+	console.log(target != null,say_text != undefined,object && object.outcome != undefined,target.getAttr('category') == 'usable')
+	console.log("JEA",object);
 	// If nothing's under the dragged item
 	if (target == null) {
 		console.log("Nothings under the dragged item");
@@ -911,6 +909,7 @@ function interact(event) {
 			current_layer.draw();
 		}
 		else if (object.state == 'open') {
+			console.log("TRANSITION", object.transition)
 			do_transition(object.transition);
 		}
 	}
