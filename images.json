@@ -204,7 +204,6 @@
                     "attrs": {
                         "category": "item",
                         "id": "dnaanalyzer",
-                        "outcome": "",
                         "src": "images/dnaanalyzer.png",
                         "visible": false,
                         "x": 500,

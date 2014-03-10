@@ -231,8 +231,7 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 Play music
 string id - object ID from JSON with "music":"file name" attribute
  */
-//TODO: 
-//TODO: Music should loop without JSON attribute, explicit denial stops it?
+
 function play_music(id) {
 	var data = objects_json[id];
 
@@ -665,7 +664,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Default text for unassigned item combinations + return item to inventory
 	else if (say_text == undefined) {
-		console.log("Unassigned item combination");
+		console.warn("Unassigned item combination");
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 		setMonologue("default");
