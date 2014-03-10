@@ -25,41 +25,41 @@
             "1": {
                 "do_fade": true,
                 "id": "intro_1",
-                "show_time": 4000
+                "show_time": 400
             },
             "2": {
                 "do_fade": true,
                 "id": "intro_2",
-                "show_time": 5000
+                "show_time": 500
             },
             "3": {
                 "do_fade": true,
                 "id": "intro_3",
-                "show_time": 4500
+                "show_time": 450
             },
             "4": {
                 "do_fade": false,
                 "id": "intro_4",
-                "show_time": 1000
+                "show_time": 100
             },
             "5": {
                 "do_fade": false,
                 "id": "intro_5",
-                "show_time": 1000
+                "show_time": 100
             },
             "6": {
                 "do_fade": false,
                 "id": "intro_6",
-                "show_time": 1000
+                "show_time": 100
             },
             "7": {
                 "do_fade": false,
                 "id": "intro_7",
-                "show_time": 1000
+                "show_time": 100
             }
         },
         "music": "audio/intro_mono_20131213.mp3",
-        "transition": "locker_room_1",
+        "transition": "object_layer_locker_room_1",
         "type": "sequence"
     },
     "jacket": {

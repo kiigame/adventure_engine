@@ -48,6 +48,8 @@ var images_json = stage.toObject();
 
 //Variable for saving the current room (for changing backgrounds and object layers)
 var current_background = 'start_layer';
+var game_start_layer;
+var current_layer = start_layer;
 
 //The amount of rewards found
 var rewards = 0;
@@ -201,7 +203,7 @@ window.onload = function() {
 
 			// Current layer for hit region purposes in different rooms
 			if (o.getAttr('start') === true) {
-				current_layer = o;
+				game_start_layer = o;
 			}
 		}
 	});
@@ -315,6 +317,7 @@ function play_sequence(sequence) {
 	fade_layer.show();
 	fade.play();
 
+	current_layer.hide();
 	current_music.pause();
 
 	var sequence_layer = stage.get("#"+sequence)[0];
@@ -344,7 +347,6 @@ function play_sequence(sequence) {
 				//	play_music(sequence);
 
 				character_layer.hide();
-				console.log("last iameg",last_image);
 				inventory_bar_layer.hide();
 
 				if (last_image)
@@ -378,20 +380,18 @@ console.log("hello")
 						stop_music();
 						wakeup.reverse();
 						sequence_layer.hide();
-
-						stage.get("#"+object.transition)[0].show();
-						current_layer.show();
+						
+						current_layer = stage.get("#"+object.transition)[0]
+						current_layer.show()
+						
 						inventory_bar_layer.show();
 						character_layer.show();
-						console.log("cyre",current_layer)
-						current_layer.moveUp();
+						
 						stage.draw();
 						setTimeout(function() {
-							console.log("ND",fade_layer)
 							fade_layer.hide();
 							stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 							fade_layer.moveDown();
-							console.log("seq",sequence)
 							setMonologue(sequence, 'endtext');
 							play_music(object.transition);
 						}, 3000);
