@@ -247,13 +247,25 @@ function play_music(id) {
 
 	// If not already playing music or old/new songs are different
 	if (!current_music || current_music_source != data.music) {
-		if (current_music)
-			current_music.pause();
+		var old_music;
+		if (current_music){
+		//	current_music.pause();
+			old_music = current_music
+			current_music = new Audio(data.music);
+			current_music.volume = 0;
+			console.log("music", current_music, current_music.volume);
+			//data.music_loop === false ? old_music.loop = false : old_music.loop = true;
+		} else {
+			current_music = new Audio(data.music);
+			current_music.volume = 1;
+			console.log("music", current_music, current_music.volume);
+			data.music_loop === false ? current_music.loop = false : current_music.loop = true;
+		}
 
-		current_music = new Audio(data.music);
-		current_music.volume = 0;
-		console.log("music", current_music, current_music.volume);
-		data.music_loop === false ? current_music.loop = false : current_music.loop = true;
+		//current_music = new Audio(data.music);
+		//current_music.volume = 0;
+		//console.log("music", current_music, current_music.volume);
+		//data.music_loop === false ? current_music.loop = false : current_music.loop = true;
 
 		current_music.play();
 		
@@ -262,19 +274,43 @@ function play_music(id) {
 		// Fade music volume if set so
 		if (data.music_fade === true) {
 		    current_music.faded = true;
-            volume = current_music.volume
-            fade_interval = setInterval(function() {
-                console.log("volume", current_music.volume)
+            //volume = current_music.volume
+			
+			if (old_music){
+				fade_interval_2 = setInterval(function() {
+                	console.log("volume2", old_music.volume)
                 
-                // Audio API will throw exception when volume is maxed
-                try {
-                    current_music.volume += 0.05
-                }
-                catch (e) {
-                    current_music.volume = 1;
-                    clearInterval(fade_interval);
-                }
-            }, 10)
+              	  // Audio API will throw exception when volume is maxed
+                	try {
+                    	old_music.volume -= 0.05;
+                	}
+                	catch (e) {
+						old_music.pause();
+						clearInterval(fade_interval_2);
+                	}
+					
+					try {
+						current_music.volume += 0.05;
+                	}
+                	catch (e) {
+						old_music.volume = 1;
+                	}
+            	}, 200)
+			} else {
+			
+            	fade_interval = setInterval(function() {
+                	console.log("volume", current_music.volume)
+                
+                	// Audio API will throw exception when volume is maxed
+                	try {
+                    	current_music.volume += 0.05
+                	}
+                	catch (e) {
+                    	current_music.volume = 1;
+                    	clearInterval(fade_interval);
+                	}
+            	}, 200)
+			}
         }
         else {
             current_music.faded = false;
@@ -302,7 +338,7 @@ function stop_music() {
                 current_music.pause();
                 clearInterval(fade_interval);
             }
-        }, 10)
+        }, 100)
     }
     else
         current_music.pause();
@@ -320,7 +356,7 @@ function play_sequence(sequence) {
 	fade.play();
 
 	current_layer.hide();
-	current_music.pause();
+	//current_music.pause(); // Why pause here?
 
 	current_layer = stage.get("#"+sequence)[0];
 	var object = objects_json[current_layer.getAttr('object_name')];
