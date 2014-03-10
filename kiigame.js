@@ -433,6 +433,8 @@ function do_transition(layerId, slow_fade) {
 	fade_layer.show();
 	fade.play();
 	
+	var textId = current_layer.getAttr('id')
+	
 	setTimeout(function() {
 		stop_music();
 		fade.reverse();
@@ -445,11 +447,12 @@ function do_transition(layerId, slow_fade) {
 		character_layer.show();
 		stage.draw();
 		
+		setMonologue(textId);
+		
 		setTimeout(function() {
 			fade_layer.hide();
 			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 			fade_layer.moveDown();
-			//setMonologue(current_layer, 'transition');
 			play_music(current_layer.getAttr("object_name"));
 		}, fade_time*2);
 	}, fade_time);
@@ -985,20 +988,29 @@ function play_ending() {
 
 //Set monologue text
 function setMonologue(id, name) {
-	if (!name)
+	if (name == null)
 		name = 'examine';
 
 	// Is there such an ID in JSON?
 	var text = texts_json[id];
-	if (!text)
+	if (!text) {
+		console.warn("No JSON text entry found for", id);
 		return;
-
+	}
 	text = text[name];
 
-	// Is there such a text?
-	if (!text || text.length == 0)
-		return;
-
+	// If no text found, use default text
+	if (!text || text.length == 0) {
+		// Item's own default
+		console.warn("No text" ,name, "found for", id);
+		text = texts_json[id]["default"];
+		if (!text) {
+			// Master default
+			console.warn("Default text not found for", id, ". Using master default.");
+			text = texts_json["default"]["examine"];
+		}
+	}
+	
 	monologue.setWidth('auto');
 	speech_bubble.show();
 	monologue.setText(text);
