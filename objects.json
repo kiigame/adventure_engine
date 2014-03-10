@@ -197,5 +197,11 @@
         "state": "open",
         "transition": "locker_room_2",
         "type": "door"
-    }
+    },
+	"hairkeeper": {
+        "category": "item",
+	   	"trigger": "poster_withoutglue",
+        "outcome": "poster_withglue",
+		"ending": true
+	}
 }

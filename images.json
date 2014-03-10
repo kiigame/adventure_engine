@@ -490,6 +490,7 @@
                         "id": "hairkeeper",
                         "scale": 0.7,
                         "src": "images/hairkeeper.png",
+						"object_name": "hairkeeper",
                         "x": 454,
                         "y": 209
                     },

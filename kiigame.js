@@ -245,18 +245,16 @@ function play_music(id) {
 
 	// If not already playing music or old/new songs are different
 	if (!current_music || current_music_source != data.music) {
-		var old_music;
+		var old_music = null;
 		if (current_music){
 		//	current_music.pause();
 			old_music = current_music
 			current_music = new Audio(data.music);
 			current_music.volume = 0;
-			console.log("music", current_music, current_music.volume);
 			//data.music_loop === false ? old_music.loop = false : old_music.loop = true;
 		} else {
 			current_music = new Audio(data.music);
 			current_music.volume = 1;
-			console.log("music", current_music, current_music.volume);
 			data.music_loop === false ? current_music.loop = false : current_music.loop = true;
 		}
 
@@ -267,8 +265,6 @@ function play_music(id) {
 
 		current_music.play();
 		
-		console.log("data", data)
-		
 		// Fade music volume if set so
 		if (data.music_fade === true) {
 		    current_music.faded = true;
@@ -276,8 +272,6 @@ function play_music(id) {
 			
 			if (old_music){
 				fade_interval_2 = setInterval(function() {
-                	console.log("volume2", old_music.volume)
-                
               	  // Audio API will throw exception when volume is maxed
                 	try {
                     	old_music.volume -= 0.05;
@@ -294,11 +288,8 @@ function play_music(id) {
 						old_music.volume = 1;
                 	}
             	}, 200)
-			} else {
-			
+			} else if (current_music) {
             	fade_interval = setInterval(function() {
-                	console.log("volume", current_music.volume)
-                
                 	// Audio API will throw exception when volume is maxed
                 	try {
                     	current_music.volume += 0.05
@@ -313,6 +304,9 @@ function play_music(id) {
         else {
             current_music.faded = false;
             current_music.volume = 1;
+			
+			if (old_music)
+				old_music.pause();
         }
 		current_music_source = data.music;
 	}
@@ -326,8 +320,6 @@ function stop_music() {
     // Fade music volume if set so
     if (current_music.faded === true) {
         fade_interval = setInterval(function() {
-            console.log("volume", current_music.volume)
-            
             // Audio API will throw exception when volume is maxed
             try {
                 current_music.volume -= 0.05
@@ -458,7 +450,7 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 		x : 50
 	});
 	clone.moveTo(start_layer);
-	clone.on('click', function() {stop_music();});
+	clone.on('click', function() {});
 
 	clone = stage.get('#oikotie_locker_room2')[0].clone({
 		visible : true,
@@ -466,7 +458,6 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 	});
 	clone.moveTo(start_layer);
 	clone.on('click', function() {
-		stop_music();
 		inventoryAdd(stage.get('#poster_withoutglue')[0]);
 		inventoryAdd(stage.get('#airfreshener')[0]);
 		inventoryAdd(stage.get('#cienibang')[0]);
@@ -815,8 +806,19 @@ function interact(event) {
 	var target = event.targetNode;
 	var target_category = target.getAttr('category');
 	
+	try {
+		var ending = objects_json[target.getAttr('object_name')].ending;
+	} catch(e) {
+		var ending = false;
+	}
+	
+	// Initiate ending
+	if (ending == true) {
+		console.log("END!");
+		play_ending();
+	}
 	// Pick up an item
-	if (target_category == 'item') {
+	else if (target_category == 'item') {
 		setMonologue(target.getAttr('id'), 'pickup');
 		if (target.getAttr('src2') != undefined) {
 			stage.get('#' + target.getAttr('src2'))[0].show();
@@ -924,10 +926,6 @@ function interact(event) {
 			inventory_index++;
 			redrawInventory();
 		}
-	}
-	// Initiate ending
-	else if (target_category == 'ending') {
-		play_ending();
 	}
 }
 
