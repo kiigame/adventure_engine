@@ -100,11 +100,13 @@ var fade = new Kinetic.Tween({
 	opacity : 1
 });
 
+/*
 var wakeup = new Kinetic.Tween({
 	node : fade_layer,
 	duration : 3,
 	opacity : 1
 });
+*/
 
 //Speak animation
 var speak_1_animation = new Kinetic.Tween({
@@ -320,10 +322,10 @@ function play_sequence(sequence) {
 	current_layer.hide();
 	current_music.pause();
 
-	var sequence_layer = stage.get("#"+sequence)[0];
-	var object = objects_json[sequence_layer.getAttr('object_name')];
+	current_layer = stage.get("#"+sequence)[0];
+	var object = objects_json[current_layer.getAttr('object_name')];
 
-	sequence_layer.show();
+	current_layer.show();
 
 	var delay = 700;
 	var sequence_counter = 0;
@@ -337,7 +339,7 @@ function play_sequence(sequence) {
 		
 		var last_image = image;
 		image = stage.get('#' + object.images[i].id)[0];
-		//console.log("LASTO", last_image)
+		
 		(function(i, image, last_image) {
 			setTimeout(function() {
 				fade_layer.show();
@@ -359,45 +361,21 @@ function play_sequence(sequence) {
 					setTimeout(function() {
 						fade.reverse();
 						stage.draw();
-						setTimeout('fade_layer.hide();', 700);
 					}, 700);
 				}
 				// Immediately display the image
 				else {
-					fade.reverse();
+					fade.reset();
 					stage.draw();
-					fade_layer.hide();
 				}
-
+				
 				sequence_counter += 1;
-console.log("show",image)
+				
 				// Last image in the sequence
 				if (images_total == sequence_counter) {
-					fade_layer.show();
-					wakeup.finish();
-console.log("hello")
 					setTimeout(function() {
-						stop_music();
-						wakeup.reverse();
-						sequence_layer.hide();
-						
-						current_layer = stage.get("#"+object.transition)[0]
-						current_layer.show()
-						
-						inventory_bar_layer.show();
-						character_layer.show();
-						
-						stage.draw();
-						setTimeout(function() {
-							fade_layer.hide();
-							stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-							fade_layer.moveDown();
-							setMonologue(sequence, 'endtext');
-							play_music(object.transition);
-						}, 3000);
-					}, 1500);
-
-					return;
+						do_transition(object.transition, true)
+					}, 700)
 				}
 
 			}, delay);
@@ -405,6 +383,40 @@ console.log("hello")
 
 		delay = delay + object.images[i].show_time;
 	};
+}
+
+// Do a transition to a layer with specified ID
+function do_transition(layerId, slow_fade) {
+	// By default do fast fade
+	var fade_time = 3000;
+	if (slow_fade == null)
+		var fade_time = 700;
+	fade.tween.duration = fade_time;
+	
+	fade_layer.moveUp();
+	fade_layer.show();
+	fade.play();
+	
+	setTimeout(function() {
+		stop_music();
+		fade.reverse();
+		
+		current_layer.hide();
+		current_layer = stage.get("#"+layerId)[0]
+		
+		current_layer.show();
+		inventory_bar_layer.show();
+		character_layer.show();
+		stage.draw();
+		
+		setTimeout(function() {
+			fade_layer.hide();
+			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+			fade_layer.moveDown();
+			//setMonologue(current_layer, 'transition');
+			play_music(current_layer.getAttr("object_name"));
+		}, fade_time*2);
+	}, fade_time);
 }
 
 //Listener and showing of credits on the start screen
@@ -834,13 +846,13 @@ function interact(event) {
 	}
 	// Open a door or do a transition
 	else if (target_category == 'door') {
-		setMonologue(target.getAttr('id'));
-
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.blocked === true)
 			setMonologue(target.getAttr('id'));
+			
 		else if (object.state == 'closed') {
+			setMonologue(target.getAttr('id'));
 			if (object.locked === true) {
 				object.state = 'locked';
 				stage.get('#' + object.locked_image)[0].show();
@@ -853,27 +865,7 @@ function interact(event) {
 			current_layer.draw();
 		}
 		else if (object.state == 'open') {
-			// Fading a black screen during the transition
-			fade_layer.show();
-			fade.play();
-
-			// Animation cycle for proper fading and drawing order
-			setTimeout(function() {
-				stage.get('#' + current_background)[0].hide();
-				target.getParent().hide();
-				current_background = object.transition;
-				current_layer = stage.get('#object_layer_' + current_background)[0];
-
-				stage.get('#' + object.transition)[0].show();
-				stage.get('#object_layer_' + object.transition)[0].show();
-
-				fade.reverse();
-				stage.draw();
-				setTimeout('fade_layer.hide();', 700);
-				setMonologue(target.getAttr('id'));
-
-				play_music(current_background);
-			}, 700);
+			do_transition(object.transition);
 		}
 	}
 	// Inventory arrow buttons

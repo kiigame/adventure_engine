@@ -92,7 +92,7 @@
         "locked": false,
         "open_image": "locker_room_1_door_to_shower_open",
         "state": "closed",
-        "transition": "shower_room",
+        "transition": "object_layer_shower_room",
         "type": "door"
     },
     "locker_room_2": {
@@ -103,7 +103,7 @@
         "locked": false,
         "open_image": "locker_room_2_door_to_shower",
         "state": "open",
-        "transition": "shower_room",
+        "transition": "object_layer_shower_room",
         "type": "door"
     },
     "locker_room_2_wc_door": {
@@ -112,7 +112,7 @@
         "locked": false,
         "open_image": "locker_room_2_door_to_wc_open",
         "state": "closed",
-        "transition": "wc_2",
+        "transition": "object_layer_wc_2",
         "type": "door"
     },
     "oikotie_locker_room2": {
@@ -121,7 +121,7 @@
         "locked": false,
         "open_image": "oikotie_locker_room2",
         "state": "open",
-        "transition": "locker_room_2"
+        "transition": "object_layer_locker_room_2"
     },
     "oikotie_onneen": {
         "blocked": false,
@@ -129,7 +129,7 @@
         "locked": false,
         "open_image": "oikotie",
         "state": "open",
-        "transition": "locker_room_1"
+        "transition": "object_layer_locker_room_1"
     },
     "outro": {
         "images": {
@@ -150,7 +150,7 @@
         "locked": false,
         "open_image": "shower_door_to_locker_room_1",
         "state": "open",
-        "transition": "locker_room_1",
+        "transition": "object_layer_locker_room_1",
         "type": "door"
     },
     "shower_door_to_locker_room_2": {
@@ -160,7 +160,7 @@
         "locked": false,
         "open_image": "shower_door_to_locker_room_2_open",
         "state": "closed",
-        "transition": "locker_room_2",
+        "transition": "object_layer_locker_room_2",
         "type": "door"
     },
     "shower_room": {
@@ -178,7 +178,7 @@
         "locked_image": "locker_room_1_door_to_wc_stinking",
         "open_image": "locker_room_1_door_to_wc_open",
         "state": "closed",
-        "transition": "wc_1",
+        "transition": "object_layer_wc_1",
         "type": "door"
     },
     "wc_1_door_to_locker_room_1": {
@@ -186,7 +186,7 @@
         "locked": false,
         "open_image": "wc_1_door_to_locker_room_1",
         "state": "open",
-        "transition": "locker_room_1",
+        "transition": "object_layer_locker_room_1",
         "type": "door"
     },
     "wc_2_door_to_locker_room_2": {
@@ -194,7 +194,7 @@
         "locked": false,
         "open_image": "wc_2_door_to_locker_room_2",
         "state": "open",
-        "transition": "locker_room_2",
+        "transition": "object_layer_locker_room_2",
         "type": "door"
     }
 }
