@@ -841,9 +841,9 @@ function interact(event) {
 	}
 	
 	// Initiate ending
-	if (ending == true) {
+	if (ending) {
 		console.log("END!");
-		play_ending();
+		play_ending(ending);
 	}
 	// Pick up an item
 	else if (target_category == 'item') {
@@ -939,7 +939,7 @@ function interact(event) {
 }
 
 //Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
-function play_ending() {
+function play_ending(ending) {
 
 	var delay = 700;
 
@@ -982,7 +982,8 @@ function play_ending() {
 		fade.play();
 		setTimeout(function() {
 			outro_layer.hide();
-			stage.get('#end_picture_' + rewards)[0].show();
+			console.log(stage.get('#end_layer'));
+			stage.get('#'+ending)[0].getChildren()[0].show();
 
 			end_layer.moveUp();	
 			stage.get('#rewards_text')[0].setText(rewards + stage.get('#rewards_text')[0].getText());

@@ -487,9 +487,9 @@
                     "attrs": {
                         "category": "item",
                         "id": "hairkeeper",
+                        "object_name": "hairkeeper",
                         "scale": 0.7,
                         "src": "images/hairkeeper.png",
-						"object_name": "hairkeeper",
                         "x": 454,
                         "y": 209
                     },
@@ -796,125 +796,6 @@
         },
         {
             "attrs": {
-                "category": "start",
-                "id": "start_layer",
-                "object_name": "start_layer"
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "height": 543,
-                        "id": "start",
-                        "src": "images/start.png",
-                        "width": 724
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "height": 300,
-                        "id": "start_game",
-                        "src": "images/start_game.png",
-                        "width": 257,
-                        "x": 724,
-                        "y": 0
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "height": 93,
-                        "id": "start_credits",
-                        "src": "images/start_credits.png",
-                        "width": 257,
-                        "x": 724,
-                        "y": 300
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "height": 150,
-                        "id": "start_empty",
-                        "src": "images/start_empty.png",
-                        "width": 257,
-                        "x": 724,
-                        "y": 393
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "height": 643,
-                        "id": "begining",
-                        "src": "images/begining.png",
-                        "width": 1024
-                    },
-                    "className": "Image"
-                }
-            ],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
-                "category": "end",
-                "id": "end_layer",
-                "object_name": "end_layer",
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "id": "end_picture_2",
-                        "src": "images/end_picture_2.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "id": "end_picture_3",
-                        "src": "images/end_picture_3.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "id": "end_picture_0",
-                        "src": "images/end_picture_0.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "id": "end_picture_1",
-                        "src": "images/end_picture_1.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "fill": "white",
-                        "fontFamily": "Chalkboard SE",
-                        "fontSize": 26,
-                        "fontStyle": "bold",
-                        "id": "rewards_text",
-                        "strokeColor": "grey",
-                        "strokeWidth": 1,
-                        "text": "/3 piilotettua kirjaa loydetty",
-                        "x": 340,
-                        "y": 580
-                    },
-                    "className": "Text"
-                }
-            ],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
                 "category": "sequence",
                 "id": "outro_layer",
                 "object_name": "outro",
@@ -1002,6 +883,157 @@
                         "src": "images/intro_1.png"
                     },
                     "className": "Image"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "start",
+                "id": "start_layer",
+                "object_name": "start_layer"
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "height": 543,
+                        "id": "start",
+                        "src": "images/start.png",
+                        "width": 724
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "height": 300,
+                        "id": "start_game",
+                        "src": "images/start_game.png",
+                        "width": 257,
+                        "x": 724,
+                        "y": 0
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "height": 93,
+                        "id": "start_credits",
+                        "src": "images/start_credits.png",
+                        "width": 257,
+                        "x": 724,
+                        "y": 300
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "height": 150,
+                        "id": "start_empty",
+                        "src": "images/start_empty.png",
+                        "width": 257,
+                        "x": 724,
+                        "y": 393
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "height": 643,
+                        "id": "begining",
+                        "src": "images/begining.png",
+                        "width": 1024
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "end",
+                "id": "lollo_end",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "id": "lollo1",
+                        "src": "images/begining.png"
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "fill": "white",
+                        "fontFamily": "Chalkboard SE",
+                        "fontSize": 26,
+                        "fontStyle": "bold",
+                        "id": "rewards_text",
+                        "strokeColor": "grey",
+                        "strokeWidth": 1,
+                        "text": "/3 piilotettua kirjaa loydetty",
+                        "x": 340,
+                        "y": 580
+                    },
+                    "className": "Text"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "end",
+                "id": "end_layer",
+                "object_name": "end_layer",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "id": "end_picture_2",
+                        "src": "images/end_picture_2.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "id": "end_picture_3",
+                        "src": "images/end_picture_3.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "id": "end_picture_0",
+                        "src": "images/end_picture_0.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "id": "end_picture_1",
+                        "src": "images/end_picture_1.png",
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "fill": "white",
+                        "fontFamily": "Chalkboard SE",
+                        "fontSize": 26,
+                        "fontStyle": "bold",
+                        "id": "rewards_text",
+                        "strokeColor": "grey",
+                        "strokeWidth": 1,
+                        "text": "/3 piilotettua kirjaa loydetty",
+                        "x": 340,
+                        "y": 580
+                    },
+                    "className": "Text"
                 }
             ],
             "className": "Layer"
