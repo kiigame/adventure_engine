@@ -156,7 +156,7 @@ input_layer.on('tap click', function(event) {
 		stage.get('#jersey_number')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
 		stage.get('#icehockey_jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
 		input_layer.hide();
-		play_sequence("intro_layer", "locker_room_1");
+		play_sequence("intro", "locker_room_1");
 	}
 	// Test feature - show the legend text when clicking the jersey
 	/*

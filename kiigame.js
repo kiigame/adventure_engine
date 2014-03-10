@@ -325,24 +325,33 @@ function play_sequence(sequence) {
 	var delay = 700;
 	var sequence_counter = 0;
 	var images_total = 0;
-
+	var image = null;
+	
+	play_music(sequence);
+	
 	for (var i in object.images) {
 		images_total++;
-		var image = stage.get('#' + object.images[i].id)[0];
-
-		(function(i, image) {
+		
+		var last_image = image;
+		image = stage.get('#' + object.images[i].id)[0];
+		//console.log("LASTO", last_image)
+		(function(i, image, last_image) {
 			setTimeout(function() {
 				fade_layer.show();
 				fade.play();
 
-				if (sequence_counter == 0)
-					play_music(sequence);
+				//if (sequence_counter == 0)
+				//	play_music(sequence);
 
 				character_layer.hide();
+				console.log("last iameg",last_image);
 				inventory_bar_layer.hide();
 
+				if (last_image)
+					last_image.hide();
 				image.show();
 
+				// Fade-in the image
 				var image_fade = object.images[i].do_fade;
 				if (image_fade === true) {
 					setTimeout(function() {
@@ -351,7 +360,7 @@ function play_sequence(sequence) {
 						setTimeout('fade_layer.hide();', 700);
 					}, 700);
 				}
-				// Immediately revert fade layer
+				// Immediately display the image
 				else {
 					fade.reverse();
 					stage.draw();
@@ -359,28 +368,31 @@ function play_sequence(sequence) {
 				}
 
 				sequence_counter += 1;
-
+console.log("show",image)
 				// Last image in the sequence
 				if (images_total == sequence_counter) {
 					fade_layer.show();
 					wakeup.finish();
-
+console.log("hello")
 					setTimeout(function() {
 						stop_music();
 						wakeup.reverse();
-						intro_layer.hide();
+						sequence_layer.hide();
 
 						stage.get("#"+object.transition)[0].show();
 						current_layer.show();
 						inventory_bar_layer.show();
 						character_layer.show();
-
+						console.log("cyre",current_layer)
+						current_layer.moveUp();
 						stage.draw();
 						setTimeout(function() {
+							console.log("ND",fade_layer)
 							fade_layer.hide();
 							stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 							fade_layer.moveDown();
-							setMonologue(sequence, 'end_text');
+							console.log("seq",sequence)
+							setMonologue(sequence, 'endtext');
 							play_music(object.transition);
 						}, 3000);
 					}, 1500);
@@ -389,7 +401,7 @@ function play_sequence(sequence) {
 				}
 
 			}, delay);
-		})(i, image);
+		})(i, image, last_image);
 
 		delay = delay + object.images[i].show_time;
 	};
