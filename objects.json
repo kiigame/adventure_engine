@@ -167,7 +167,8 @@
         "music": "audio/alku_musax_mono_20131213.mp3"
     },
     "start_layer": {
-        "music": "audio/alku_musax_mono_20131213.mp3"
+        "music": "audio/alku_musax_mono_20131213.mp3",
+        "music_fade": true
     },
     "stinking_wc_door": {
         "blocked": false,

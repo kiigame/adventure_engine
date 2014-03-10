@@ -247,17 +247,61 @@ function play_music(id) {
 			current_music.pause();
 
 		current_music = new Audio(data.music);
+		current_music.volume = 0;
+		console.log("music", current_music, current_music.volume);
 		data.music_loop === false ? current_music.loop = false : current_music.loop = true;
 
 		current_music.play();
-
+		
+		console.log("data", data)
+		
+		// Fade music volume if set so
+		if (data.music_fade === true) {
+		    current_music.faded = true;
+            volume = current_music.volume
+            fade_interval = setInterval(function() {
+                console.log("volume", current_music.volume)
+                
+                // Audio API will throw exception when volume is maxed
+                try {
+                    current_music.volume += 0.05
+                }
+                catch (e) {
+                    current_music.volume = 1;
+                    clearInterval(fade_interval);
+                }
+            }, 10)
+        }
+        else {
+            current_music.faded = false;
+            current_music.volume = 1;
+        }
 		current_music_source = data.music;
 	}
 }
 
 function stop_music() {
-	if (current_music)
-		current_music.pause();
+    console.log("faded?",current_music.faded);
+	if (current_music == null)
+	    return;
+	    
+    // Fade music volume if set so
+    if (current_music.faded === true) {
+        fade_interval = setInterval(function() {
+            console.log("volume", current_music.volume)
+            
+            // Audio API will throw exception when volume is maxed
+            try {
+                current_music.volume -= 0.05
+            }
+            catch (e) {
+                current_music.pause();
+                clearInterval(fade_interval);
+            }
+        }, 10)
+    }
+    else
+        current_music.pause();
 }
 
 /*
