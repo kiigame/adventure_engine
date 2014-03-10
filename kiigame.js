@@ -100,11 +100,13 @@ var fade = new Kinetic.Tween({
 	opacity : 1
 });
 
+/*
 var wakeup = new Kinetic.Tween({
 	node : fade_layer,
 	duration : 3,
 	opacity : 1
 });
+*/
 
 //Speak animation
 var speak_1_animation = new Kinetic.Tween({
@@ -229,8 +231,7 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 Play music
 string id - object ID from JSON with "music":"file name" attribute
  */
-//TODO: 
-//TODO: Music should loop without JSON attribute, explicit denial stops it?
+
 function play_music(id) {
 	var data = objects_json[id];
 
@@ -251,10 +252,12 @@ function play_music(id) {
 			old_music = current_music
 			current_music = new Audio(data.music);
 			current_music.volume = 0;
+			//console.log("music", current_music, current_music.volume);
 			//data.music_loop === false ? old_music.loop = false : old_music.loop = true;
 		} else {
 			current_music = new Audio(data.music);
 			current_music.volume = 1;
+			//console.log("music", current_music, current_music.volume);
 			data.music_loop === false ? current_music.loop = false : current_music.loop = true;
 		}
 
@@ -272,6 +275,8 @@ function play_music(id) {
 			
 			if (old_music){
 				fade_interval_2 = setInterval(function() {
+                	//console.log("volume2", old_music.volume)
+                
               	  // Audio API will throw exception when volume is maxed
                 	try {
                     	old_music.volume -= 0.05;
@@ -290,6 +295,7 @@ function play_music(id) {
             	}, 200)
 			} else if (current_music) {
             	fade_interval = setInterval(function() {
+                	//console.log("volume", current_music.volume)
                 	// Audio API will throw exception when volume is maxed
                 	try {
                     	current_music.volume += 0.05
@@ -313,19 +319,21 @@ function play_music(id) {
 }
 
 function stop_music() {
-    console.log("faded?",current_music.faded);
+    //console.log("faded?",current_music.faded);
 	if (current_music == null)
 	    return;
 	    
     // Fade music volume if set so
     if (current_music.faded === true) {
         fade_interval = setInterval(function() {
+            //console.log("volume", current_music.volume)
             // Audio API will throw exception when volume is maxed
+            // or an crossfade interval may still be running
             try {
                 current_music.volume -= 0.05
+                current_music.pause();
             }
             catch (e) {
-                current_music.pause();
                 clearInterval(fade_interval);
             }
         }, 100)
@@ -348,10 +356,10 @@ function play_sequence(sequence) {
 	current_layer.hide();
 	//current_music.pause(); // Why pause here?
 
-	var sequence_layer = stage.get("#"+sequence)[0];
-	var object = objects_json[sequence_layer.getAttr('object_name')];
+	current_layer = stage.get("#"+sequence)[0];
+	var object = objects_json[current_layer.getAttr('object_name')];
 
-	sequence_layer.show();
+	current_layer.show();
 
 	var delay = 700;
 	var sequence_counter = 0;
@@ -365,7 +373,7 @@ function play_sequence(sequence) {
 		
 		var last_image = image;
 		image = stage.get('#' + object.images[i].id)[0];
-		//console.log("LASTO", last_image)
+		
 		(function(i, image, last_image) {
 			setTimeout(function() {
 				fade_layer.show();
@@ -387,45 +395,21 @@ function play_sequence(sequence) {
 					setTimeout(function() {
 						fade.reverse();
 						stage.draw();
-						setTimeout('fade_layer.hide();', 700);
 					}, 700);
 				}
 				// Immediately display the image
 				else {
-					fade.reverse();
+					fade.reset();
 					stage.draw();
-					fade_layer.hide();
 				}
-
+				
 				sequence_counter += 1;
-console.log("show",image)
+				
 				// Last image in the sequence
 				if (images_total == sequence_counter) {
-					fade_layer.show();
-					wakeup.finish();
-console.log("hello")
 					setTimeout(function() {
-						stop_music();
-						wakeup.reverse();
-						sequence_layer.hide();
-						
-						current_layer = stage.get("#"+object.transition)[0]
-						current_layer.show()
-						
-						inventory_bar_layer.show();
-						character_layer.show();
-						
-						stage.draw();
-						setTimeout(function() {
-							fade_layer.hide();
-							stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-							fade_layer.moveDown();
-							setMonologue(sequence, 'endtext');
-							play_music(object.transition);
-						}, 3000);
-					}, 1500);
-
-					return;
+						do_transition(object.transition, true)
+					}, 700)
 				}
 
 			}, delay);
@@ -433,6 +417,43 @@ console.log("hello")
 
 		delay = delay + object.images[i].show_time;
 	};
+}
+
+// Do a transition to a layer with specified ID
+function do_transition(layerId, slow_fade) {
+	// By default do fast fade
+	var fade_time = 3000;
+	if (slow_fade == null)
+		var fade_time = 700;
+	fade.tween.duration = fade_time;
+	
+	fade_layer.moveUp();
+	fade_layer.show();
+	fade.play();
+	
+	var textId = current_layer.getAttr('id')
+	
+	setTimeout(function() {
+		stop_music();
+		fade.reverse();
+		
+		current_layer.hide();
+		current_layer = stage.get("#"+layerId)[0]
+		
+		current_layer.show();
+		inventory_bar_layer.show();
+		character_layer.show();
+		stage.draw();
+		
+		setMonologue(textId);
+		
+		setTimeout(function() {
+			fade_layer.hide();
+			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+			fade_layer.moveDown();
+			play_music(current_layer.getAttr("object_name"));
+		}, fade_time*2);
+	}, fade_time);
 }
 
 //Listener and showing of credits on the start screen
@@ -459,6 +480,7 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 	clone.moveTo(start_layer);
 	clone.on('click', function() {
 		inventoryAdd(stage.get('#poster_withoutglue')[0]);
+		inventoryAdd(stage.get('#poster_withglue')[0]);
 		inventoryAdd(stage.get('#airfreshener')[0]);
 		inventoryAdd(stage.get('#cienibang')[0]);
 	});
@@ -544,7 +566,9 @@ stage.on('dragmove', function(event) {
 					}
 				}
 			}
-			// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
+		}
+		// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
+		if (target == null) {
 			var leftArrow = stage.get("#inventory_left_arrow")[0];
 			var rightArrow = stage.get("#inventory_right_arrow")[0];
 			if (!dragDelayEnabled) {
@@ -566,7 +590,7 @@ stage.on('dragmove', function(event) {
 		}
 		
 		// If target is found, highlight it and show the interaction text
-		else if (target != null) {
+		if (target != null) {
 			current_layer.getChildren().each(function(shape, i) {
 				shape.setShadowBlur(0);
 			});
@@ -632,7 +656,8 @@ stage.get('Image').on('dragend', function(event) {
 
 	if (target != null)
 		say_text = texts_json[dragged_item.getId()][target.getId()];
-
+	console.log(target != null,say_text != undefined,object && object.outcome != undefined,target.getAttr('category') == 'usable')
+	console.log("JEA",object);
 	// If nothing's under the dragged item
 	if (target == null) {
 		console.log("Nothings under the dragged item");
@@ -641,7 +666,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Default text for unassigned item combinations + return item to inventory
 	else if (say_text == undefined) {
-		console.log("Unassigned item combination");
+		console.warn("Unassigned item combination text");
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 		setMonologue("default");
@@ -711,10 +736,11 @@ stage.get('Image').on('dragend', function(event) {
 
 			// TODO: unblocking_image, merge this with "use item on object"?
 			target.destroy();
-			var related = target.getAttr("related");
+			var related = objects_json[target.getAttr('id')].related;
+			
 			if (related && related.size != 0) {
 				for (var i in related)
-					stage.get("#" + related[i])[0].hide();
+					stage.get("#" + related[i])[0].destroy();
 			}
 		}
 		setMonologue(dragged_item.getId(), target.getId());
@@ -728,6 +754,8 @@ stage.get('Image').on('dragend', function(event) {
 			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
 
 			// Items may be consumed when used
+			dragged_object = objects_json[dragged_item.getAttr('object_name')];
+			print("objecto",dragged_object, dragged_object.consume)
 			if (dragged_item.getAttr('consume') === true)
 				destroy = true;
 			else {
@@ -872,13 +900,13 @@ function interact(event) {
 	}
 	// Open a door or do a transition
 	else if (target_category == 'door') {
-		setMonologue(target.getAttr('id'));
-
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.blocked === true)
 			setMonologue(target.getAttr('id'));
+			
 		else if (object.state == 'closed') {
+			setMonologue(target.getAttr('id'));
 			if (object.locked === true) {
 				object.state = 'locked';
 				stage.get('#' + object.locked_image)[0].show();
@@ -891,27 +919,8 @@ function interact(event) {
 			current_layer.draw();
 		}
 		else if (object.state == 'open') {
-			// Fading a black screen during the transition
-			fade_layer.show();
-			fade.play();
-
-			// Animation cycle for proper fading and drawing order
-			setTimeout(function() {
-				stage.get('#' + current_background)[0].hide();
-				target.getParent().hide();
-				current_background = object.transition;
-				current_layer = stage.get('#object_layer_' + current_background)[0];
-
-				stage.get('#' + object.transition)[0].show();
-				stage.get('#object_layer_' + object.transition)[0].show();
-
-				fade.reverse();
-				stage.draw();
-				setTimeout('fade_layer.hide();', 700);
-				setMonologue(target.getAttr('id'));
-
-				play_music(current_background);
-			}, 700);
+			console.log("TRANSITION", object.transition)
+			do_transition(object.transition);
 		}
 	}
 	// Inventory arrow buttons
@@ -991,20 +1000,29 @@ function play_ending() {
 
 //Set monologue text
 function setMonologue(id, name) {
-	if (!name)
+	if (name == null)
 		name = 'examine';
 
 	// Is there such an ID in JSON?
 	var text = texts_json[id];
-	if (!text)
+	if (!text) {
+		console.warn("No JSON text entry found for", id);
 		return;
-
+	}
 	text = text[name];
 
-	// Is there such a text?
-	if (!text || text.length == 0)
-		return;
-
+	// If no text found, use default text
+	if (!text || text.length == 0) {
+		// Item's own default
+		console.warn("No text" ,name, "found for", id);
+		text = texts_json[id]["default"];
+		if (!text) {
+			// Master default
+			console.warn("Default text not found for", id, ". Using master default.");
+			text = texts_json["default"]["examine"];
+		}
+	}
+	
 	monologue.setWidth('auto');
 	speech_bubble.show();
 	monologue.setText(text);

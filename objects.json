@@ -1,10 +1,34 @@
 {
+    "tactic_board_wiper": {
+        "trigger": "tactic_board_1",
+        "outcome": "tactic_board_2"
+    },
+    "cienibang": {
+        "category": "item",
+        "trigger": "cieni_1",
+		"outcome": "shower_door_to_locker_room_2_closed"
+    },
+    "poster_withglue": {
+        "category": "item",
+        "consume": false,
+		"trigger": "wall",
+		"outcome": "poster_onthewall"
+    },
+    "hairkeeper": {
+        "category": "item",
+    	"trigger": "poster_withoutglue",
+        "outcome": "poster_withglue"
+    },
     "cieni": {
         "blocking": true,
         "blocking_image": "cieni",
         "target": "shower_door_to_locker_room_2",
         "trigger": "cienibang",
-        "type": "obstacle"
+        "category": "obstacle",
+        "related": [
+            "cieni_eyes",
+            "cieni_mouth"
+        ]
     },
     "end_layer": {
         "category": "end",
@@ -61,7 +85,7 @@
         "music": "audio/intro_mono_20131213.ogg",
 		"music_fade": true,
         "transition": "object_layer_locker_room_1",
-        "type": "sequence"
+        "category": "sequence"
     },
     "jacket": {
         "blocked": false,
@@ -93,8 +117,8 @@
         "locked": false,
         "open_image": "locker_room_1_door_to_shower_open",
         "state": "closed",
-        "transition": "shower_room",
-        "type": "door"
+        "transition": "object_layer_shower_room",
+        "category": "door"
     },
     "locker_room_2": {
         "music": "audio/loppu_musax_mono_20131213.ogg"
@@ -104,8 +128,8 @@
         "locked": false,
         "open_image": "locker_room_2_door_to_shower",
         "state": "open",
-        "transition": "shower_room",
-        "type": "door"
+        "transition": "object_layer_shower_room",
+        "category": "door"
     },
     "locker_room_2_wc_door": {
         "blocked": false,
@@ -113,8 +137,8 @@
         "locked": false,
         "open_image": "locker_room_2_door_to_wc_open",
         "state": "closed",
-        "transition": "wc_2",
-        "type": "door"
+        "transition": "object_layer_wc_2",
+        "category": "door"
     },
     "oikotie_locker_room2": {
         "blocked": false,
@@ -122,7 +146,7 @@
         "locked": false,
         "open_image": "oikotie_locker_room2",
         "state": "open",
-        "transition": "locker_room_2"
+        "transition": "object_layer_locker_room_2"
     },
     "oikotie_onneen": {
         "blocked": false,
@@ -130,7 +154,7 @@
         "locked": false,
         "open_image": "oikotie",
         "state": "open",
-        "transition": "locker_room_1"
+        "transition": "object_layer_locker_room_1"
     },
     "outro": {
         "images": {
@@ -140,7 +164,7 @@
                 "show_time": 4000
             }
         },
-        "type": "sequence"
+        "category": "sequence"
     },
     "poster_onthewall": {
         "category": "object",
@@ -151,8 +175,8 @@
         "locked": false,
         "open_image": "shower_door_to_locker_room_1",
         "state": "open",
-        "transition": "locker_room_1",
-        "type": "door"
+        "transition": "object_layer_locker_room_1",
+        "category": "door"
     },
     "shower_door_to_locker_room_2": {
         "blocked": true,
@@ -161,8 +185,8 @@
         "locked": false,
         "open_image": "shower_door_to_locker_room_2_open",
         "state": "closed",
-        "transition": "locker_room_2",
-        "type": "door"
+        "transition": "object_layer_locker_room_2",
+        "category": "door"
     },
     "shower_room": {
         "music": "audio/alku_musax_mono_20131213.ogg"
@@ -179,24 +203,24 @@
         "locked_image": "locker_room_1_door_to_wc_stinking",
         "open_image": "locker_room_1_door_to_wc_open",
         "state": "closed",
-        "transition": "wc_1",
-        "type": "door"
+        "transition": "object_layer_wc_1",
+        "category": "door"
     },
     "wc_1_door_to_locker_room_1": {
         "blocked": false,
         "locked": false,
         "open_image": "wc_1_door_to_locker_room_1",
         "state": "open",
-        "transition": "locker_room_1",
-        "type": "door"
+        "transition": "object_layer_locker_room_1",
+        "category": "door"
     },
     "wc_2_door_to_locker_room_2": {
         "blocked": false,
         "locked": false,
         "open_image": "wc_2_door_to_locker_room_2",
         "state": "open",
-        "transition": "locker_room_2",
-        "type": "door"
+        "transition": "object_layer_locker_room_2",
+        "category": "door"
     },
 	"hairkeeper": {
         "category": "item",
