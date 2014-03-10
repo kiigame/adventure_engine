@@ -598,10 +598,6 @@
                         "category": "obstacle",
                         "id": "cieni",
                         "object_name": "cieni",
-                        "related": [
-                            "cieni_eyes",
-                            "cieni_mouth"
-                        ],
                         "src": "images/cieni_1.png",
                         "x": 100,
                         "y": 380
@@ -752,8 +748,8 @@
                 {
                     "attrs": {
                         "category": "item",
-                        "consume": true,
                         "id": "poster_withglue",
+                        "object_name": "poster_withglue",
                         "src": "images/poster_withglue.png",
                         "visible": false,
                         "x": 450,

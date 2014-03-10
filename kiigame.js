@@ -560,14 +560,18 @@ stage.on('dragmove', function(event) {
 					if (checkIntersection(dragged_item, object)) {
 						if (target != object) {
 							target = object;
+							console.log("FOUND!",target);
 						}
 						break;
 					} else {
 						target = null;
+						console.log("TARGET NULL!")
 					}
 				}
 			}
 			// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
+		}
+		if (target == null) {
 			var leftArrow = stage.get("#inventory_left_arrow")[0];
 			var rightArrow = stage.get("#inventory_right_arrow")[0];
 			if (!dragDelayEnabled) {
@@ -589,7 +593,7 @@ stage.on('dragmove', function(event) {
 		}
 		
 		// If target is found, highlight it and show the interaction text
-		else if (target != null) {
+		if (target != null) {
 			current_layer.getChildren().each(function(shape, i) {
 				shape.setShadowBlur(0);
 			});
@@ -655,7 +659,8 @@ stage.get('Image').on('dragend', function(event) {
 
 	if (target != null)
 		say_text = texts_json[dragged_item.getId()][target.getId()];
-
+	console.log("TARGET??",target, dragged_item.getId())
+	//console.log("SAY", texts_json[dragged_item.getId()], target.getId());
 	// If nothing's under the dragged item
 	if (target == null) {
 		console.log("Nothings under the dragged item");
@@ -664,7 +669,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Default text for unassigned item combinations + return item to inventory
 	else if (say_text == undefined) {
-		console.warn("Unassigned item combination");
+		console.warn("Unassigned item combination text");
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 		setMonologue("default");
@@ -734,10 +739,11 @@ stage.get('Image').on('dragend', function(event) {
 
 			// TODO: unblocking_image, merge this with "use item on object"?
 			target.destroy();
-			var related = target.getAttr("related");
+			var related = objects_json[target.getAttr('id')].related;
+			
 			if (related && related.size != 0) {
 				for (var i in related)
-					stage.get("#" + related[i])[0].hide();
+					stage.get("#" + related[i])[0].destroy();
 			}
 		}
 		setMonologue(dragged_item.getId(), target.getId());
@@ -751,6 +757,8 @@ stage.get('Image').on('dragend', function(event) {
 			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
 
 			// Items may be consumed when used
+			dragged_object = objects_json[dragged_item.getAttr('object_name')];
+			print("objecto",dragged_object, dragged_object.consume)
 			if (dragged_item.getAttr('consume') === true)
 				destroy = true;
 			else {

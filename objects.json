@@ -4,7 +4,11 @@
         "blocking_image": "cieni",
         "target": "shower_door_to_locker_room_2",
         "trigger": "cienibang",
-        "type": "obstacle"
+        "type": "obstacle",
+        "related": [
+            "cieni_eyes",
+            "cieni_mouth"
+        ]
     },
     "end_layer": {
         "category": "end",
@@ -145,6 +149,9 @@
     "poster_onthewall": {
         "category": "object",
         "ending": true
+    },
+    "poster_withglue": {
+    	"consume": true
     },
     "shower_door_to_locker_room_1": {
         "blocked": false,
