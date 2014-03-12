@@ -12,6 +12,7 @@
     },
     "end_layer": {
         "category": "end",
+		"sequence": "outro_layer",
         "music": "audio/loppu_musax_mono_20131213.ogg"
     },
     "garbagecan": {
@@ -26,7 +27,6 @@
     },
     "hairkeeper": {
         "category": "item",
-        "ending": "lollo_end",
         "outcome": "poster_withglue",
         "trigger": "poster_withoutglue"
     },
@@ -145,6 +145,7 @@
     },
     "outro": {
         "category": "sequence",
+		"music": "audio/loppu_musax_mono_20131213.ogg",
         "images": {
             "1": {
                 "do_fade": true,

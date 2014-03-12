@@ -225,6 +225,7 @@ stage.get('#begining')[0].on('tap click', function(event) {
 //On clicking the start game we open the choosing the jersey number
 stage.get('#start_game')[0].on('tap click', function(event) {
 	play_sequence("intro");
+	do_transition(game_start_layer.getId());
 });
 
 /*
@@ -233,7 +234,7 @@ string id - object ID from JSON with "music":"file name" attribute
  */
 
 function play_music(id) {
-	var data = objects_json[id];
+	var data = objects_json[stage.get('#'+id)[0].getAttr('object_name')];
 
 	// ID and music found from JSON?
 	if (!data || !data.music) {
@@ -345,9 +346,9 @@ function stop_music() {
 /*
 Plays a sequence defined in JSON
 string sequence - the sequence ID from JSON
-string post_sequence_image - the image displayed after sequence
+boolean/string transition - Override sequence's transition target, false cancels transition
  */
-function play_sequence(sequence) {
+function play_sequence(sequence, transition) {
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveUp();
 	fade_layer.show();
@@ -408,7 +409,10 @@ function play_sequence(sequence) {
 				// Last image in the sequence
 				if (images_total == sequence_counter) {
 					setTimeout(function() {
-						do_transition(object.transition, true)
+						if (transition == null)
+							do_transition(object.transition, true);
+						else if (transition !== false)
+							do_transition(transition, true);
 					}, 700)
 				}
 
@@ -417,6 +421,9 @@ function play_sequence(sequence) {
 
 		delay = delay + object.images[i].show_time;
 	};
+	
+	// Return sequence delay
+	return delay;
 }
 
 // Do a transition to a layer with specified ID
@@ -444,8 +451,6 @@ function do_transition(layerId, slow_fade) {
 		inventory_bar_layer.show();
 		character_layer.show();
 		stage.draw();
-		
-		setMonologue(textId);
 		
 		setTimeout(function() {
 			fade_layer.hide();
@@ -755,7 +760,7 @@ stage.get('Image').on('dragend', function(event) {
 
 			// Items may be consumed when used
 			dragged_object = objects_json[dragged_item.getAttr('object_name')];
-			print("objecto",dragged_object, dragged_object.consume)
+			console.log("objecto",dragged_object, dragged_object.consume)
 			if (dragged_item.getAttr('consume') === true)
 				destroy = true;
 			else {
@@ -919,8 +924,8 @@ function interact(event) {
 			current_layer.draw();
 		}
 		else if (object.state == 'open') {
-			console.log("TRANSITION", object.transition)
 			do_transition(object.transition);
+			setMonologue(target.getId());
 		}
 	}
 	// Inventory arrow buttons
@@ -942,60 +947,39 @@ function interact(event) {
 function play_ending(ending) {
 
 	var delay = 700;
+	var ending_object = objects_json[ending];
 
-	// Animation cycle for proper fading and drawing order
+	// Clear inventory except rewards
+	for (var i = inventory_layer.children.length-1; i >= 0; i--) {
+		var shape = inventory_layer.children[i];
+		if (shape.getAttr('category') != 'reward')
+			inventoryRemove(shape);
+	}
 
-	fade_layer.moveToTop();
-	stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
-	fade_layer.show();
-	fade.play();
-
-	play_music('outro_layer');
-
+	if (ending_object.sequence)
+		sequence_delay = play_sequence(ending_object.sequence, false);
+	
 	setTimeout(function() {
-		stage.get('#' + current_background)[0].hide();
-		stage.get('#object_layer_' + current_background)[0].hide();
-		inventory_layer.hide();
-
-		// Clear inventory except rewards
-		for (var i = inventory_layer.children.length-1; i >= 0; i--) {
-			var shape = inventory_layer.children[i];
-			if (shape.getAttr('category') != 'reward')
-				inventoryRemove(shape);
-		}
-
-		inventory_index = 0;
-		redrawInventory();
-
-		character_layer.hide();
-		inventory_bar_layer.hide();
-		outro_layer.show();
-
-		fade.reverse();
-		stage.draw();
-		setTimeout('fade_layer.hide();', 700);
-	}, delay);
-	delay = delay + 4000;
-
-	setTimeout(function() {
+		current_layer = stage.get('#' + ending)[0];
+		
 		fade_layer.show();
 		fade.play();
 		setTimeout(function() {
-			outro_layer.hide();
-			console.log(stage.get('#end_layer'));
-			stage.get('#'+ending)[0].getChildren()[0].show();
-
-			end_layer.moveUp();	
-			stage.get('#rewards_text')[0].setText(rewards + stage.get('#rewards_text')[0].getText());
-			end_layer.show();
+			play_music(current_layer.getId());
+			rewards_text = stage.get('#rewards_text')[0];
+			rewards_text.setText(rewards + rewards_text.getText());
+						
+			current_layer.show();
+			stage.get('#end_texts')[0].show();
 			inventory_bar_layer.show();
 			inventory_layer.show();
 			character_layer.show();
 			stage.draw();
+			
 			fade.reverse();
 			setTimeout('fade_layer.hide();', 700);
 		}, 700);
-	}, delay);
+	}, sequence_delay);
 
 }
 

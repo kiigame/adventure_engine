@@ -951,38 +951,6 @@
         {
             "attrs": {
                 "category": "end",
-                "id": "lollo_end",
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "id": "lollo1",
-                        "src": "images/begining.png"
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "fill": "white",
-                        "fontFamily": "Chalkboard SE",
-                        "fontSize": 26,
-                        "fontStyle": "bold",
-                        "id": "rewards_text",
-                        "strokeColor": "grey",
-                        "strokeWidth": 1,
-                        "text": "/3 piilotettua kirjaa loydetty",
-                        "x": 340,
-                        "y": 580
-                    },
-                    "className": "Text"
-                }
-            ],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
-                "category": "end",
                 "id": "end_layer",
                 "object_name": "end_layer",
                 "visible": false
@@ -990,36 +958,21 @@
             "children": [
                 {
                     "attrs": {
-                        "id": "end_picture_2",
-                        "src": "images/end_picture_2.png",
-                        "visible": false
+                        "id": "end_picture",
+                        "src": "images/end_picture_0.png"
                     },
                     "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "id": "end_picture_3",
-                        "src": "images/end_picture_3.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "id": "end_picture_0",
-                        "src": "images/end_picture_0.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "id": "end_picture_1",
-                        "src": "images/end_picture_1.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "custom",
+                "id": "end_texts",
+                "visible": false
+            },
+            "children": [
                 {
                     "attrs": {
                         "fill": "white",
@@ -1031,7 +984,7 @@
                         "strokeWidth": 1,
                         "text": "/3 piilotettua kirjaa loydetty",
                         "x": 340,
-                        "y": 580
+                        "y": 520
                     },
                     "className": "Text"
                 }
