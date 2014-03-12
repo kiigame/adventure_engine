@@ -354,9 +354,6 @@ function play_sequence(sequence, transition) {
 	var delay = 700;
 	
 	// Animation cycle for proper fading and drawing order
-	character_layer.hide();
-	inventory_bar_layer.hide();
-	inventory_layer.hide();
 	fade_layer.moveToTop();
 	fade_layer.show();
 	fade.play();
@@ -365,6 +362,7 @@ function play_sequence(sequence, transition) {
 
 	old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
+	current_layer.moveToTop();
 	var object = objects_json[current_layer.getAttr('object_name')];
 
 	current_layer.show();
@@ -384,10 +382,6 @@ function play_sequence(sequence, transition) {
 		(function(i, image, last_image) {
 			setTimeout(function() {
 				old_layer.hide();
-				inventory_layer.hide();
-				inventory_bar_layer.hide();
-				text_layer.hide();
-				character_layer.hide();
 				fade_layer.show();
 				fade.play();
 				
@@ -439,12 +433,12 @@ function play_sequence(sequence, transition) {
 function do_transition(layerId, slow_fade) {
 	// By default do fast fade
 	var fade_time = 3000;
-	if (slow_fade == null)
+	if (slow_fade == null) {
 		var fade_time = 700;
+		character_layer.moveToTop();
+	}
 	fade.tween.duration = fade_time;
 	
-	fade_layer.moveUp();
-	character_layer.moveUp();
 	fade_layer.show();
 	fade.play();
 	
@@ -457,16 +451,16 @@ function do_transition(layerId, slow_fade) {
 		
 		current_layer.hide();
 		current_layer = stage.get("#"+layerId)[0];
-		
 		current_layer.show();
-		inventory_bar_layer.show();
-		character_layer.show();
+		
+		//inventory_bar_layer.show();
+		//character_layer.show();
 		stage.draw();
 		
 		setTimeout(function() {
+							
 			fade_layer.hide();
 			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-			character_layer.moveDown();
 			fade_layer.moveDown();
 			play_music(current_layer.getAttr("object_name"));
 		}, fade_time*2);
