@@ -351,21 +351,24 @@ string sequence - the sequence ID from JSON
 boolean/string transition - Override sequence's transition target, false cancels transition
  */
 function play_sequence(sequence, transition) {
+	var delay = 700;
+	
 	// Animation cycle for proper fading and drawing order
-	fade_layer.moveUp();
+	character_layer.hide();
+	inventory_bar_layer.hide();
+	inventory_layer.hide();
+	fade_layer.moveToTop();
 	fade_layer.show();
 	fade.play();
-
-	current_layer.hide();
-	inventory_layer.hide();
+	
 	//current_music.pause(); // Why pause here?
 
+	old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
 	var object = objects_json[current_layer.getAttr('object_name')];
 
 	current_layer.show();
 
-	var delay = 700;
 	var sequence_counter = 0;
 	var images_total = 0;
 	var image = null;
@@ -380,19 +383,21 @@ function play_sequence(sequence, transition) {
 		
 		(function(i, image, last_image) {
 			setTimeout(function() {
+				old_layer.hide();
+				inventory_layer.hide();
+				inventory_bar_layer.hide();
+				text_layer.hide();
+				character_layer.hide();
 				fade_layer.show();
 				fade.play();
-
+				
 				//if (sequence_counter == 0)
 				//	play_music(sequence);
-
-				character_layer.hide();
-				inventory_bar_layer.hide();
-
+				
 				if (last_image)
 					last_image.hide();
 				image.show();
-
+				
 				// Fade-in the image
 				var image_fade = object.images[i].do_fade;
 				if (image_fade === true) {
@@ -416,6 +421,7 @@ function play_sequence(sequence, transition) {
 							do_transition(object.transition, true);
 						else if (transition !== false)
 							do_transition(transition, true);
+						text_layer.show();
 					}, 700)
 				}
 
@@ -438,6 +444,7 @@ function do_transition(layerId, slow_fade) {
 	fade.tween.duration = fade_time;
 	
 	fade_layer.moveUp();
+	character_layer.moveUp();
 	fade_layer.show();
 	fade.play();
 	
@@ -459,6 +466,7 @@ function do_transition(layerId, slow_fade) {
 		setTimeout(function() {
 			fade_layer.hide();
 			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+			character_layer.moveDown();
 			fade_layer.moveDown();
 			play_music(current_layer.getAttr("object_name"));
 		}, fade_time*2);
@@ -953,7 +961,6 @@ function interact(event) {
 
 //Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
 function play_ending(ending) {
-
 	var delay = 700;
 	var ending_object = objects_json[ending];
 
@@ -971,6 +978,7 @@ function play_ending(ending) {
 	setTimeout(function() {
 		current_layer = stage.get('#' + ending)[0];
 		
+		fade_layer.moveUp();
 		fade_layer.show();
 		fade.play();
 		setTimeout(function() {
