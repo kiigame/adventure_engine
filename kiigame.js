@@ -234,6 +234,8 @@ string id - object ID from JSON with "music":"file name" attribute
  */
 
 function play_music(id) {
+	if (id == undefined)
+		return;
 	var data = objects_json[stage.get('#'+id)[0].getAttr('object_name')];
 
 	// ID and music found from JSON?
@@ -355,6 +357,7 @@ function play_sequence(sequence, transition) {
 	fade.play();
 
 	current_layer.hide();
+	inventory_layer.hide();
 	//current_music.pause(); // Why pause here?
 
 	current_layer = stage.get("#"+sequence)[0];
@@ -438,14 +441,15 @@ function do_transition(layerId, slow_fade) {
 	fade_layer.show();
 	fade.play();
 	
-	var textId = current_layer.getAttr('id')
+	var textId = current_layer.getAttr('id');
+	console.log(current_layer);
 	
 	setTimeout(function() {
 		stop_music();
 		fade.reverse();
 		
 		current_layer.hide();
-		current_layer = stage.get("#"+layerId)[0]
+		current_layer = stage.get("#"+layerId)[0];
 		
 		current_layer.show();
 		inventory_bar_layer.show();
@@ -654,15 +658,18 @@ function checkIntersection(dragged_item, target) {
 stage.get('Image').on('dragend', function(event) {
 	var dragged_item = event.targetNode;
 	var say_text = undefined;
-	var object = objects_json[dragged_item.getId()];
-
+	try {
+		var object = objects_json[dragged_item.getId()];
+	} catch(e) {
+		var object = null;
+	}
 	// Variable for whether the dragged item is destroyed or not
 	var destroy = false;
 
 	if (target != null)
 		say_text = texts_json[dragged_item.getId()][target.getId()];
-	console.log(target != null,say_text != undefined,object && object.outcome != undefined,target.getAttr('category') == 'usable')
-	console.log("JEA",object);
+	//console.log(target != null,say_text != undefined,object && object.outcome != undefined,target.getAttr('category') == 'usable')
+	
 	// If nothing's under the dragged item
 	if (target == null) {
 		console.log("Nothings under the dragged item");
@@ -699,6 +706,7 @@ stage.get('Image').on('dragend', function(event) {
 			object.state = 'full';
 
 			if (object.in == dragged_item.getId()) {
+				console.log("LOOL", stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image']));
 				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
 				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
 
@@ -789,7 +797,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Default for all others
 	else {
-		console.log("Default use for all others");
+		console.log("Default use for all others", target, say_text, objects_json[dragged_item.getId()]);
 		setMonologue(dragged_item.getId(), target.getId());
 	}
 	// Check if dragged item's destroyed, if not, add it to inventory
@@ -954,6 +962,7 @@ function play_ending(ending) {
 		var shape = inventory_layer.children[i];
 		if (shape.getAttr('category') != 'reward')
 			inventoryRemove(shape);
+			inventory_index = 0;
 	}
 
 	if (ending_object.sequence)

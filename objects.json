@@ -18,7 +18,7 @@
     "garbagecan": {
         "blocked": false,
         "category": "container",
-        "empty_image": "garbagecan",
+        "empty_image": "garbagecan_empty",
         "full_image": "garbagecan_teddy",
         "in": "teddybear",
         "locked": false,
@@ -154,6 +154,11 @@
             }
         }
     },
+	"marker": {
+        "category": "item",
+        "trigger": "tactic_board_2",
+		"outcome": "tactic_board_3"
+    },
     "poster_onthewall": {
         "category": "object",
         "ending": "end_layer"
@@ -200,6 +205,11 @@
         "state": "closed",
         "transition": "object_layer_wc_1"
     },
+	"tactic_board_wiper": {
+		"category": "item",
+		"trigger": "tactic_board_1",
+		"outcome": "tactic_board_2"
+	},
     "wc_1_door_to_locker_room_1": {
         "blocked": false,
         "category": "door",

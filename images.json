@@ -37,6 +37,7 @@
                     "attrs": {
                         "category": "item",
                         "id": "marker",
+						"object_name": "marker",
                         "src": "images/marker.png",
                         "x": 230,
                         "y": 445
@@ -388,8 +389,8 @@
                 {
                     "attrs": {
                         "category": "item",
-                        "consume": false,
                         "id": "tactic_board_wiper",
+						"object_name": "tactic_board_wiper",
                         "scale": 0.6,
                         "src": "images/tactic_board_wiper.png",
                         "x": 680,
@@ -697,9 +698,7 @@
                         "category": "room_background",
                         "height": 543,
                         "id": "wc_1",
-                        "objects": "object_layer_wc_1",
                         "src": "images/wc_1.png",
-                        "visible": false,
                         "width": 981
                     },
                     "className": "Image"
