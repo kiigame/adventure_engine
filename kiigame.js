@@ -352,6 +352,10 @@ boolean/string transition - Override sequence's transition target, false cancels
  */
 function play_sequence(sequence, transition) {
 	var delay = 700;
+		
+	// For some reason fade_layer size may change, fix it back here
+	fade_layer.getChildren()[0].setWidth(1024);
+	fade_layer.getChildren()[0].setHeight(643);
 	
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveToTop();
@@ -360,7 +364,7 @@ function play_sequence(sequence, transition) {
 	
 	//current_music.pause(); // Why pause here?
 
-	old_layer = current_layer;
+	var old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
 	current_layer.moveToTop();
 	var object = objects_json[current_layer.getAttr('object_name')];
@@ -396,6 +400,8 @@ function play_sequence(sequence, transition) {
 				var image_fade = object.images[i].do_fade;
 				if (image_fade === true) {
 					setTimeout(function() {
+						fade_layer.moveToTop();
+						fade_layer.show();
 						fade.reverse();
 						stage.draw();
 					}, 700);
@@ -965,26 +971,39 @@ function play_ending(ending) {
 			inventoryRemove(shape);
 			inventory_index = 0;
 	}
-
+	
 	if (ending_object.sequence)
 		sequence_delay = play_sequence(ending_object.sequence, false);
 	
 	setTimeout(function() {
 		current_layer = stage.get('#' + ending)[0];
 		
-		fade_layer.moveUp();
+		fade_layer.moveToTop();
 		fade_layer.show();
 		fade.play();
 		setTimeout(function() {
 			play_music(current_layer.getId());
 			rewards_text = stage.get('#rewards_text')[0];
 			rewards_text.setText(rewards + rewards_text.getText());
+			console.log(rewards_text);
 						
 			current_layer.show();
-			stage.get('#end_texts')[0].show();
+			
 			inventory_bar_layer.show();
+			inventory_bar_layer.moveToTop();
+			
 			inventory_layer.show();
+			inventory_layer.moveToTop();
+			
 			character_layer.show();
+			character_layer.moveToTop();
+			
+			stage.get('#end_texts')[0].show();
+			stage.get('#end_texts')[0].moveToTop();
+			
+			// Still keep fade layer on top
+			fade_layer.moveToTop();
+			
 			stage.draw();
 			
 			fade.reverse();
