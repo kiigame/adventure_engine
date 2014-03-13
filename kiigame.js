@@ -100,6 +100,9 @@ var fade = new Kinetic.Tween({
 	opacity : 1
 });
 
+//List of animated objects
+var animated_objects = [];
+
 /*
 var wakeup = new Kinetic.Tween({
 	node : fade_layer,
@@ -169,8 +172,7 @@ function create_animation (object) {
 		}
 	});
 
-	// TODO: Playing everything at once can end up being laggy
-	animation.play();
+	animated_objects.push(animation);
 }
 
 //Creating all image objects from json file based on their attributes
@@ -449,7 +451,6 @@ function do_transition(layerId, slow_fade) {
 	fade.play();
 	
 	var textId = current_layer.getAttr('id');
-	console.log(current_layer);
 	
 	setTimeout(function() {
 		stop_music();
@@ -457,6 +458,15 @@ function do_transition(layerId, slow_fade) {
 		
 		current_layer.hide();
 		current_layer = stage.get("#"+layerId)[0];
+		
+		//Play the animations of the room
+		for (var i in animated_objects) {
+			if (animated_objects[i].node.parent.getId() == current_layer.getId())
+				animated_objects[i].play();
+			else if (animated_objects[i].anim.isRunning())
+				animated_objects[i].anim.stop();	//Should this be .anim.stop() or .pause()?
+		}
+		
 		current_layer.show();
 		
 		//inventory_bar_layer.show();
