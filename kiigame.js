@@ -56,6 +56,8 @@ var rewards = 0;
 
 //The amount of items in the inventory
 var inventory_items = 0;
+//List of items in the inventory
+var inventory_list = []
 //Offset from left for drawing inventory items starting from proper position
 var offsetFromLeft = 50;
 //How many items the inventory can show at a time (7 with current settings)
@@ -389,6 +391,7 @@ function play_sequence(sequence, transition) {
 			setTimeout(function() {
 				old_layer.hide();
 				fade_layer.show();
+				text_layer.hide();
 				fade.play();
 				
 				//if (sequence_counter == 0)
@@ -420,7 +423,7 @@ function play_sequence(sequence, transition) {
 				if (images_total == sequence_counter) {
 					setTimeout(function() {
 						if (transition == null)
-							do_transition(object.transition, true);
+							do_transition(object.transition, true, current_layer.getId());
 						else if (transition !== false)
 							do_transition(transition, true);
 						text_layer.show();
@@ -438,7 +441,7 @@ function play_sequence(sequence, transition) {
 }
 
 // Do a transition to a layer with specified ID
-function do_transition(layerId, slow_fade) {
+function do_transition(layerId, slow_fade, comingFrom=null) {
 	// By default do fast fade
 	var fade_time = 3000;
 	if (slow_fade == null) {
@@ -474,12 +477,13 @@ function do_transition(layerId, slow_fade) {
 		stage.draw();
 		
 		setTimeout(function() {
-							
 			fade_layer.hide();
 			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 			fade_layer.moveDown();
 			play_music(current_layer.getAttr("object_name"));
-		}, fade_time*2);
+			if (comingFrom)
+				setMonologue(comingFrom);
+		}, fade_time);
 	}, fade_time);
 }
 
@@ -821,11 +825,11 @@ stage.get('Image').on('dragend', function(event) {
 	// Check if dragged item's destroyed, if not, add it to inventory
 	if (destroy == false) {
 		inventoryAdd(dragged_item);
-		redrawInventory();
 	} else {
 		dragged_item.hide();
 		dragged_item.setDraggable(false);
 		dragged_item.destroy;
+		inventory_items--;
 	}
 
 	// Clearing the glow effects
@@ -842,6 +846,7 @@ stage.get('Image').on('dragend', function(event) {
 	clearTimeout(monologue_timeout);
 	monologue_timeout = setTimeout('stopTalking()', 3000);
 
+	//redrawInventory();
 	current_layer.draw();
 	inventory_layer.draw();
 });
@@ -951,7 +956,9 @@ function interact(event) {
 		}
 		else if (object.state == 'open') {
 			do_transition(object.transition);
-			setMonologue(target.getId());
+			setTimeout(function() {
+				setMonologue(target.getId());
+			}, 700);
 		}
 	}
 	// Inventory arrow buttons
@@ -1063,6 +1070,7 @@ function setMonologue(id, name) {
 	speak_1.show();
 	speak_1_animation.play();
 
+	text_layer.moveToTop();
 	text_layer.draw();
 	character_layer.draw();
 
@@ -1119,6 +1127,11 @@ function inventoryAdd(item) {
 	item.setScale(1);
 	item.setSize(80, 80);
 	inventory_items++;
+	
+	if (inventory_list.indexOf(item.getId()) > -1)
+		inventory_list.splice(inventory_list.indexOf(item.getId()), 1, item.getId());
+	else
+		inventory_list.push(item.getId());
 	redrawInventory();
 }
 
@@ -1128,6 +1141,7 @@ function inventoryRemove(item) {
 	item.moveTo(current_layer);
 	item.setDraggable(false);
 	inventory_items--;
+	inventory_list.splice(inventory_list.indexOf(item.getId()), 1);
 	redrawInventory();
 }
 
@@ -1137,7 +1151,7 @@ function inventoryDrag(item) {
 	clearText(monologue);
 	stopTalking();
 	inventory_items--;
-	redrawInventory();
+	//redrawInventory();
 	current_layer.moveToTop();
 	character_layer.moveToTop();
 	text_layer.moveToTop();
@@ -1152,11 +1166,12 @@ function redrawInventory() {
 
 	for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_items); i++) {
 		shape = inventory_layer.getChildren()[i];
+		//shape = inventory_list[i];
 		if (shape.getAttr('category') != 'reward') {
 			shape.setAttr('category', 'usable');
 		}
 		shape.setDraggable(true);
-		shape.setX(offsetFromLeft + (i - inventory_index) * 100);
+		shape.setX(offsetFromLeft + (inventory_list.indexOf(shape.getId()) - inventory_index) * 100);
 		shape.setY(stage.getHeight() - 90);
 		shape.setAttr('visible', true);
 	}
