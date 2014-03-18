@@ -22,6 +22,7 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 	stage.get('#button_0').show();
 	stage.get('#button_0_gray').hide();
 	input_layer.draw();
+	input_layer.moveToTop();
 });
 
 // Hidden feature, click the image on the start screen and get a funny reaction from the character

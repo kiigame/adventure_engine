@@ -20,11 +20,6 @@ var monologue = stage.get('#monologue')[0];
 var speech_bubble = stage.get('#speech_bubble')[0];
 var interaction_text = stage.get('#interaction_text')[0];
 
-var start_layer = stage.get("#start_layer")[0];
-var intro_layer = stage.get("#intro_layer")[0];
-var outro_layer = stage.get("#outro_layer")[0];
-var end_layer = stage.get("#end_layer")[0];
-
 var inventory_layer = stage.get('#inventory_layer')[0];
 var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
 var character_layer = stage.get('#character_layer')[0];
@@ -47,6 +42,8 @@ stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
 var images_json = stage.toObject();
 
 //Variable for saving the current room (for changing backgrounds and object layers)
+// TODO: Determine these other way
+var start_layer = stage.get("#start_layer")[0];
 var current_background = 'start_layer';
 var game_start_layer;
 var current_layer = start_layer;
@@ -88,6 +85,9 @@ var number_selected = false;
 //browsers in current versions.
 var current_music;
 var current_music_source;
+
+// Track the currently shown menu
+var current_menu;
 
 //The item dragged from the inventory
 var dragged_item;
@@ -182,24 +182,89 @@ for (var i = 0; i < images_json.children.length; i++) {
 	for (var j = 0; j < images_json.children[i].children.length; j++) {
 		if (images_json.children[i].children[j].className == 'Image') {
 			createObject(images_json.children[i].children[j].attrs);
+			object_attrs =images_json.children[i].children[j].attrs;
+			
+			if (object_attrs.animated === true)
+				create_animation(stage.get('#' + object_attrs.id)[0]);
+		}
+	}
+	if (images_json.children[i].attrs.category == 'menu')
+		create_menu_action(images_json.children[i]);
+}
 
-			if (images_json.children[i].children[j].attrs.animated === true)
-				create_animation(stage.get('#'+images_json.children[i].children[j].attrs.id)[0]);
+/*
+Create item actions such as "new game" for the given menu object
+Menus may have certain kinds of actions: start_game, credits, main_menu
+Object menu_image - the menu image object with the items inside
+*/
+function create_menu_action(menu_image) {
+	var menu_object = objects_json[menu_image.attrs.object_name];
+	if (!menu_object) {
+		console.warn("Could not find objects.json entry for menu '", menu_image.attrs.id, "'");
+		return;
+	}
+	
+	// Go through the menu items to bind their actions
+	for (var i = 0; i < menu_image.children.length; i++) {
+		var item_id = menu_image.children[i].attrs.id;
+		var item_action = menu_object.items[item_id];
+		
+		var item = stage.get('#' + item_id)[0];
+		console.log("lysas",item.eventListeners.click)
+		// Don't override custom menu event listeners
+		if (item.eventListeners.click) {console.log("wtf,", item)
+			continue; }
+			
+		if (item_action == "start_game") {
+			item.on('tap click', function(event) {
+				console.log("Current layer", current_layer);
+				play_sequence("intro");
+				do_transition(game_start_layer.getId());
+			});
+		}
+		else if (item_action == "credits") {
+			item.on('tap click', function(event) {
+				event = event.targetNode;
+				setMonologue(event.getAttr('id'));
+			});
+		}
+		else if (item_action == "main_menu") {
+			item.on('tap click', function(event) {
+				display_start_menu();
+			});
 		}
 	}
 }
 
+// Display menu for the given layer
+// string layerId - the ID of the layer we want to display the menu for
+function display_menu(layerId) {
+	hide_menu();
+	menu = stage.get('#' + objects_json[layerId]["menu"])[0];
+	if (!menu)
+		return;
+		
+	menu.show()
+	current_menu = menu;
+	menu.moveToTop();
+}
+
+function hide_menu() {
+	if (!current_menu)
+		return;
+		
+	menu.hide();
+	current_menu = null;
+}
+
 //On window load we create image hit regions for our items on object layers
-//Some items ended up being excluded from this
 //Loop backgrounds to create item hit regions and register mouseup event
 window.onload = function() {
 	stage.getChildren().each(function(o) {
 		if (o.getAttr('category') == 'room') {
 			o.getChildren().each(function(shape, i) {
-				shapeCategory = shape.getAttr('category')
 				if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
-					shape.createImageHitRegion(function() {
-					});
+					shape.createImageHitRegion(function() {});
 				}
 			});
 
@@ -220,23 +285,26 @@ window.onload = function() {
 
 stage.get('#begining')[0].on('tap click', function(event) {
 	stage.get('#begining')[0].hide();
-	inventory_bar_layer.show();
-	character_layer.show();
-	stage.draw();
-	play_music('start_layer');
+	display_start_menu();
 });
 
-//On clicking the start game we open the choosing the jersey number
-stage.get('#start_game')[0].on('tap click', function(event) {
-	play_sequence("intro");
-	do_transition(game_start_layer.getId());
-});
+// Display the start menu including "click" to proceed image
+function display_start_menu() {
+	start_layer.show();
+	start_layer.moveToTop();
+	
+	display_menu("start_layer");
+	character_layer.moveToTop();
+	
+	stage.draw();
+	
+	play_music('start_layer');
+}
 
 /*
 Play music
 string id - object ID from JSON with "music":"file name" attribute
  */
-
 function play_music(id) {
 	if (id == undefined)
 		return;
@@ -352,7 +420,7 @@ function stop_music() {
 /*
 Plays a sequence defined in JSON
 string sequence - the sequence ID from JSON
-boolean/string transition - Override sequence's transition target, false cancels transition
+boolean/string/null transition - Override sequence's transition target, false cancels transition, null does transition according to sequence
  */
 function play_sequence(sequence, transition) {
 	var delay = 700;
@@ -364,10 +432,9 @@ function play_sequence(sequence, transition) {
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveToTop();
 	fade_layer.show();
+	fade.reset();
 	fade.play();
 	
-	//current_music.pause(); // Why pause here?
-
 	var old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
 	current_layer.moveToTop();
@@ -442,6 +509,8 @@ function play_sequence(sequence, transition) {
 
 // Do a transition to a layer with specified ID
 function do_transition(layerId, slow_fade, comingFrom=null) {
+	hide_menu();
+	
 	// By default do fast fade
 	var fade_time = 3000;
 	if (slow_fade == null) {
@@ -472,8 +541,8 @@ function do_transition(layerId, slow_fade, comingFrom=null) {
 		
 		current_layer.show();
 		
-		//inventory_bar_layer.show();
-		//character_layer.show();
+		inventory_bar_layer.show();
+		character_layer.show();
 		stage.draw();
 		
 		setTimeout(function() {
@@ -487,11 +556,6 @@ function do_transition(layerId, slow_fade, comingFrom=null) {
 	}, fade_time);
 }
 
-//Listener and showing of credits on the start screen
-stage.get('#start_credits')[0].on('tap click', function(event) {
-	event = event.targetNode;
-	setMonologue(event.getAttr('id'));
-});
 //Developer feature - shortcut menu from the empty menu button for testing purposes
 stage.get('#start_empty')[0].on('tap click', function(event) {
 	event = event.targetNode;
@@ -790,7 +854,6 @@ stage.get('Image').on('dragend', function(event) {
 
 			// Items may be consumed when used
 			dragged_object = objects_json[dragged_item.getAttr('object_name')];
-			console.log("objecto",dragged_object, dragged_object.consume)
 			if (dragged_item.getAttr('consume') === true)
 				destroy = true;
 			else {
@@ -877,10 +940,9 @@ function interact(event) {
 	}
 	
 	// Initiate ending
-	if (ending) {
-		console.log("END!");
+	if (ending)
 		play_ending(ending);
-	}
+		
 	// Pick up an item
 	else if (target_category == 'item') {
 		setMonologue(target.getAttr('id'), 'pickup');
@@ -986,7 +1048,7 @@ function play_ending(ending) {
 		var shape = inventory_layer.children[i];
 		if (shape.getAttr('category') != 'reward')
 			inventoryRemove(shape);
-			inventory_index = 0;
+		inventory_index = 0;
 	}
 	
 	if (ending_object.sequence)
@@ -1011,6 +1073,8 @@ function play_ending(ending) {
 			
 			inventory_layer.show();
 			inventory_layer.moveToTop();
+			
+			display_menu(current_layer.getId());
 			
 			character_layer.show();
 			character_layer.moveToTop();
