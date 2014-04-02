@@ -37,7 +37,7 @@
                     "attrs": {
                         "category": "item",
                         "id": "marker",
-						"object_name": "marker",
+                        "object_name": "marker",
                         "src": "images/marker.png",
                         "x": 230,
                         "y": 445
@@ -390,7 +390,7 @@
                     "attrs": {
                         "category": "item",
                         "id": "tactic_board_wiper",
-						"object_name": "tactic_board_wiper",
+                        "object_name": "tactic_board_wiper",
                         "scale": 0.6,
                         "src": "images/tactic_board_wiper.png",
                         "x": 680,
@@ -981,7 +981,7 @@
                         "id": "rewards_text",
                         "strokeColor": "grey",
                         "strokeWidth": 1,
-                        "text": "/3 piilotettua kirjaa loydetty",
+                        "text": "/3 piilotettua kirjaa l\u00f6ydetty",
                         "x": 340,
                         "y": 580
                     },

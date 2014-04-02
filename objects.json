@@ -12,8 +12,8 @@
     },
     "end_layer": {
         "category": "end",
-		"sequence": "outro_layer",
-        "music": "audio/loppu_musax_mono_20131213.ogg"
+        "music": "audio/loppu_musax_mono_20131213.ogg",
+        "sequence": "outro_layer"
     },
     "garbagecan": {
         "blocked": false,
@@ -126,6 +126,11 @@
         "state": "closed",
         "transition": "object_layer_wc_2"
     },
+    "marker": {
+        "category": "item",
+        "outcome": "tactic_board_3",
+        "trigger": "tactic_board_2"
+    },
     "oikotie_locker_room2": {
         "blocked": false,
         "category": "door",
@@ -137,27 +142,22 @@
     "oikotie_onneen": {
         "blocked": false,
         "category": "door",
+        "ending": "end_layer",
         "locked": false,
         "open_image": "oikotie",
         "state": "open",
-        "transition": "object_layer_locker_room_1",
-		"ending": "end_layer"
+        "transition": "object_layer_locker_room_1"
     },
     "outro": {
         "category": "sequence",
-		"music": "audio/loppu_musax_mono_20131213.ogg",
         "images": {
             "1": {
                 "do_fade": true,
                 "id": "outro_1",
                 "show_time": 4000
             }
-        }
-    },
-	"marker": {
-        "category": "item",
-        "trigger": "tactic_board_2",
-		"outcome": "tactic_board_3"
+        },
+        "music": "audio/loppu_musax_mono_20131213.ogg"
     },
     "poster_onthewall": {
         "category": "object",
@@ -205,11 +205,11 @@
         "state": "closed",
         "transition": "object_layer_wc_1"
     },
-	"tactic_board_wiper": {
-		"category": "item",
-		"trigger": "tactic_board_1",
-		"outcome": "tactic_board_2"
-	},
+    "tactic_board_wiper": {
+        "category": "item",
+        "outcome": "tactic_board_2",
+        "trigger": "tactic_board_1"
+    },
     "wc_1_door_to_locker_room_1": {
         "blocked": false,
         "category": "door",
