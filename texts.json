@@ -88,7 +88,6 @@
     },
     "locker_room_1_door_to_shower_open": {
         "name": "Suihkun ovi",
-        "src": "images/locker_room_1_door_to_shower_open.png",
         "examine": "Suihkuunhan ei normaalioloissa sitten kannata mennä ilman sandaaleja..."
     },
     "locker_room_1_blood": {
@@ -503,7 +502,6 @@
     },
     "locker_room_2_door_to_wc_open": {
         "name": "Vessan ovi",
-        "src": "images/locker_room_2_door_to_wc_open.png",
         "examine": "Tämäkin on ihan tavallinen WC. Täällä on ikkuna, josta näkee ulos."
     },
     "locker_room_2_door_to_shower": {
@@ -694,7 +692,6 @@
     "teddybear_chewinggum": {
         "name": "Purkkainen nalle",
         "examine": "Nalle on sotkeentunut purukumiin, hyi! Mitä ihmettä tälle nyt teen?",
-        "examine": "ERROR: teddybear_chewinggum.use -tekstiä ei pitäisi näkyä.",
         "locker_room_1_door_to_out": "Nallekaan ei uskalla mennä ulos kun sieltä kuuluu tuota hirvittävää möykkää.",
         "jacket_full": "Takki on aivan liian suuri tälle nallelle. Nalle on niin likainenkin. Takin taskussa on muuten jotakin.",
         "jacket_empty": "Takki on aivan liian suuri tälle nallelle. Nalle on niin likainenkin.",
@@ -935,7 +932,6 @@
         "examine": "Mistähän minä oikein pääsisin ulos?"
     },
     "wc_2_window": {
-        "id": "wc_2_window",
         "name": "Ikkuna",
         "examine": "Ulkomaailma! En näe zombeja... ikkuna on jumissa, tästä ei voi kiivetä."
     },
@@ -991,7 +987,6 @@
         "poster_onthewall": "Ei saa sotkea upeaa julistetta! Kun se on nyt saatu pysymään seinälläkin noin upeasti…",
         "wc_2_door_to_locker_room_2": "Tällä aineella ei ole vaikutusta tähän.",
         "wc_2_window": "Ehkä parempi olla sotkematta ainoa näkymääni ulkomaailmaan.",
-        "hairkeeper": "Seurauksena voisi olla vaaraa aiheuttava kemiallinen reaktio. Jätetään tämä kokeilu tekemättä.",
         "book_reward_1": "Ei, ei ja vielä kerran ei! Kirjat sisältävät niin hienoja tarinoita, ettei niitä parane mennä sotkemaan tällaisilla tuotteilla.",
         "book_reward_2": "Ei, ei ja vielä kerran ei! Kirjat sisältävät niin hienoja tarinoita, ettei niitä parane mennä sotkemaan tällaisilla tuotteilla.",
         "book_reward_3": "Ei, ei ja vielä kerran ei! Kirjat sisältävät niin hienoja tarinoita, ettei niitä parane mennä sotkemaan tällaisilla tuotteilla.",

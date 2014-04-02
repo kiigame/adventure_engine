@@ -37,6 +37,7 @@ var panic = stage.get('#character_panic')[0];
 stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
 stage.get("#inventory_bar")[0].setY(stage.getHeight() - 100);
 stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
+//window.addEventListener("orientationchange", function() {console.log(window.orientation)}, false);
 
 //Make a json object from the json string
 var images_json = stage.toObject();
@@ -230,6 +231,8 @@ function create_menu_action(menu_image) {
 		}
 		else if (item_action == "main_menu") {
 			item.on('tap click', function(event) {
+				stage.get('#end_texts')[0].hide();
+				
 				display_start_menu();
 			});
 		}
@@ -295,6 +298,8 @@ function display_start_menu() {
 	
 	display_menu("start_layer");
 	character_layer.moveToTop();
+	character_layer.show();
+	inventory_bar_layer
 	
 	stage.draw();
 	
@@ -508,7 +513,7 @@ function play_sequence(sequence, transition) {
 }
 
 // Do a transition to a layer with specified ID
-function do_transition(layerId, slow_fade, comingFrom=null) {
+function do_transition(layerId, slow_fade, comingFrom) {
 	hide_menu();
 	
 	// By default do fast fade
@@ -1063,6 +1068,7 @@ function play_ending(ending) {
 		setTimeout(function() {
 			play_music(current_layer.getId());
 			rewards_text = stage.get('#rewards_text')[0];
+			old_text = rewards_text.getText();
 			rewards_text.setText(rewards + rewards_text.getText());
 			console.log(rewards_text);
 						
@@ -1086,6 +1092,7 @@ function play_ending(ending) {
 			fade_layer.moveToTop();
 			
 			stage.draw();
+			rewards_text.setText(old_text);
 			
 			fade.reverse();
 			setTimeout('fade_layer.hide();', 700);
