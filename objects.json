@@ -1,4 +1,5 @@
 {
+	
     "cieni": {
         "blocking": true,
         "blocking_image": "cieni",
@@ -13,7 +14,14 @@
     "end_layer": {
         "category": "end",
         "music": "audio/loppu_musax_mono_20131213.ogg",
-        "sequence": "outro_layer"
+        "sequence": "outro_layer",
+		"menu": "end_layer_menu"
+    },
+    "end_layer_menu": {
+		"items": {
+			"end_menu_main_menu": "main_menu",
+			"end_menu_restart": "start_game"
+		}
     },
     "garbagecan": {
         "blocked": false,
@@ -192,7 +200,20 @@
     },
     "start_layer": {
         "music": "audio/alku_musax_mono_20131213.ogg",
-        "music_fade": true
+        "music_fade": true,
+		"menu": "start_layer_menu"
+    },
+    "start_layer_menu": {
+		"items": {
+			"start_game": "start_game",
+			"start_credits": "credits"
+		}
+    },
+    "end_menu": {
+		"items": {
+			"end_menu_main_menu": "main_menu",
+			"end_menu_restart": "restart"
+		}
     },
     "stinking_wc_door": {
         "blocked": false,
