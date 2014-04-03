@@ -196,6 +196,7 @@ for (var i = 0; i < images_json.children.length; i++) {
 /*
 Create item actions such as "new game" for the given menu object
 Menus may have certain kinds of actions: start_game, credits, main_menu
+Other actions (such as "none") are regarded as non-functioning menu buttons
 Object menu_image - the menu image object with the items inside
 */
 function create_menu_action(menu_image) {
