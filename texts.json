@@ -3,10 +3,10 @@
         "examine": "Ei pysty, liian hapokasta."
     },
     "object_layer_locker_room_1": {
-        "name": "Suihkuhuone 1"
+        "name": "Pukuhuone 1"
     },
     "object_layer_locker_room_2": {
-        "name": "Suihkuhuone 2"
+        "name": "Pukuhuone 2"
     },
     "object_layer_wc_1": {
         "name": "Vessa 1"
