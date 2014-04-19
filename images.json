@@ -161,6 +161,27 @@
             "className": "Layer"
         },
         {
+        	"attrs": {
+                "category": "room",
+                "id": "object_layer_invisible",
+                "object_name": "invisible_room",
+                "visible": false
+        	},
+            "children": [
+            	{
+                    "attrs": {
+                        "category": "room_background",
+                        "height": 543,
+                        "id": "invisible_room",
+                        "src": "images/black.png",
+                        "width": 981
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
             "attrs": {
                 "category": "room",
                 "id": "object_layer_locker_room_1",

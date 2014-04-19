@@ -117,6 +117,9 @@
     "locker_room_2": {
         "music": "audio/loppu_musax_mono_20131213.ogg"
     },
+    "invisible_room": {
+    	
+    },
     "locker_room_2_shower_door": {
         "blocked": false,
         "category": "door",
