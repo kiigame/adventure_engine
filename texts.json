@@ -2,6 +2,21 @@
     "default": {
         "examine": "Ei pysty, liian hapokasta."
     },
+    "object_layer_locker_room_1": {
+        "name": "Pukuhuone 1"
+    },
+    "object_layer_locker_room_2": {
+        "name": "Pukuhuone 2"
+    },
+    "object_layer_wc_1": {
+        "name": "Vessa 1"
+    },
+    "object_layer_wc_2": {
+        "name": "Vessa 2"
+    },
+    "object_layer_shower_room": {
+        "name": "Suihkuhuone"
+    },
     "start_credits": {
         "id": "start_credits",
         "examine": "Tiesitkö muuten että tämän huikean pelin tekivät:\n- Eino Keskitalo\n- Toni Käkelä\n- Topi Leinonen\n- Eetu Mansikkamäki\n- Martti Similä"
