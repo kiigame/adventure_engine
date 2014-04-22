@@ -177,6 +177,63 @@
                         "width": 981
                     },
                     "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "id": "airfreshener",
+                        "src": "images/airfreshener.png",
+                        "visible": false,
+                        "x": 600,
+                        "y": 300
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "id": "dnaanalyzer",
+                        "src": "images/dnaanalyzer.png",
+                        "visible": false,
+                        "x": 500,
+                        "y": 400
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "consume": false,
+                        "id": "teddybear_chewinggum",
+                        "src": "images/teddybear_chewinggum.png",
+                        "visible": false,
+                        "x": 345,
+                        "y": 165
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "id": "poster_withoutglue",
+                        "src": "images/poster_withoutglue.png",
+                        "visible": false,
+                        "x": 215,
+                        "y": 473
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "id": "poster_withglue",
+                        "object_name": "poster_withglue",
+                        "src": "images/poster_withglue.png",
+                        "visible": false,
+                        "x": 450,
+                        "y": 300
+                    },
+                    "className": "Image"
                 }
             ],
             "className": "Layer"
@@ -202,34 +259,12 @@
                 },
                 {
                     "attrs": {
-                        "category": "item",
-                        "id": "airfreshener",
-                        "src": "images/airfreshener.png",
-                        "visible": false,
-                        "x": 600,
-                        "y": 300
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
                         "category": "object",
                         "id": "tactic_board_1",
                         "src": "images/tactic_board_1.png",
                         "visible": true,
                         "x": 565,
                         "y": 130
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "item",
-                        "id": "dnaanalyzer",
-                        "src": "images/dnaanalyzer.png",
-                        "visible": false,
-                        "x": 500,
-                        "y": 400
                     },
                     "className": "Image"
                 },
@@ -571,18 +606,6 @@
                 },
                 {
                     "attrs": {
-                        "category": "item",
-                        "consume": false,
-                        "id": "teddybear_chewinggum",
-                        "src": "images/teddybear_chewinggum.png",
-                        "visible": false,
-                        "x": 345,
-                        "y": 165
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
                         "category": "door",
                         "id": "shower_door_to_locker_room_2_blocked",
                         "object_name": "shower_door_to_locker_room_2",
@@ -769,18 +792,6 @@
                 {
                     "attrs": {
                         "category": "item",
-                        "id": "poster_withglue",
-                        "object_name": "poster_withglue",
-                        "src": "images/poster_withglue.png",
-                        "visible": false,
-                        "x": 450,
-                        "y": 300
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "item",
                         "id": "poster",
                         "src": "images/poster.png",
                         "src2": "poster_withoutglue",
@@ -797,17 +808,6 @@
                         "src": "images/wc_1_door_to_locker_room_1.png",
                         "x": 281,
                         "y": 125
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "item",
-                        "id": "poster_withoutglue",
-                        "src": "images/poster_withoutglue.png",
-                        "visible": false,
-                        "x": 215,
-                        "y": 473
                     },
                     "className": "Image"
                 }
