@@ -562,7 +562,7 @@ function do_transition(layerId, slow_fade, comingFrom) {
 	}, fade_time);
 }
 
-//Developer feature - shortcut menu from the empty menu button for testing purposes
+//Developer feature - shortcut menu from the empty menu button for testing purposes // TODO: Move to latkazombit.js or remove
 stage.get('#start_empty')[0].on('tap click', function(event) {
 	event = event.targetNode;
 	var clone;
