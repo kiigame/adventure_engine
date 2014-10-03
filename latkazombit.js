@@ -5,6 +5,9 @@ stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100
 var input_text = stage.get('#input_text')[0];
 var input_layer = stage.get('#input_layer')[0];
 
+//For checking whether player has selected their jersey number
+var number_selected = false;
+
 // Default player number
 input_text.setText(input_text.getText() + "8");
 

@@ -78,9 +78,6 @@ var delayEnabled = false;
 var dragDelay = 500;
 var dragDelayEnabled = false;
 
-//For checking whether player has selected their jersey number
-var number_selected = false;
-
 //Music
 //Different browsers and different browser versions support different formats. MP3 should work with in all the major
 //browsers in current versions.
