@@ -300,7 +300,7 @@ function display_start_menu() {
 	display_menu("start_layer");
 	character_layer.moveToTop();
 	character_layer.show();
-	inventory_bar_layer
+	inventory_bar_layer.show();
 	
 	stage.draw();
 	
