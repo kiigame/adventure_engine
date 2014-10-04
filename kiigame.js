@@ -52,10 +52,8 @@ var current_layer = start_layer;
 //The amount of rewards found
 var rewards = 0;
 
-//The amount of items in the inventory
-var inventory_items = 0;
-//List of items in the inventory
-var inventory_list = []
+//List of items in the inventory. inventory_list.length gives the item amount.
+var inventory_list = [];
 //Offset from left for drawing inventory items starting from proper position
 var offsetFromLeft = 50;
 //How many items the inventory can show at a time (7 with current settings)
@@ -892,10 +890,10 @@ stage.get('Image').on('dragend', function(event) {
 	if (destroy == false) {
 		inventoryAdd(dragged_item);
 	} else {
-		dragged_item.hide();
-		dragged_item.setDraggable(false);
-		dragged_item.destroy;
-		inventory_items--;
+        dragged_item.hide();
+        dragged_item.setDraggable(false);
+        inventory_list.splice(inventory_list.indexOf(dragged_item.getId()), 1);
+        dragged_item.destroy();
 	}
 
 	// Clearing the glow effects
@@ -912,9 +910,7 @@ stage.get('Image').on('dragend', function(event) {
 	clearTimeout(monologue_timeout);
 	monologue_timeout = setTimeout('stopTalking()', 3000);
 
-	//redrawInventory();
-	current_layer.draw();
-	inventory_layer.draw();
+	redrawInventory();
 });
 //Stop talking and clear monologue when clicked or touched anywhere on the screen
 stage.on('touchstart mousedown', function(event) {
@@ -1195,8 +1191,7 @@ function inventoryAdd(item) {
 	item.clearImageHitRegion();
 	item.setScale(1);
 	item.setSize(80, 80);
-	inventory_items++;
-	
+
 	if (inventory_list.indexOf(item.getId()) > -1)
 		inventory_list.splice(inventory_list.indexOf(item.getId()), 1, item.getId());
 	else
@@ -1209,7 +1204,6 @@ function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
 	item.setDraggable(false);
-	inventory_items--;
 	inventory_list.splice(inventory_list.indexOf(item.getId()), 1);
 	redrawInventory();
 }
@@ -1219,8 +1213,6 @@ function inventoryDrag(item) {
 	item.moveTo(current_layer);
 	clearText(monologue);
 	stopTalking();
-	inventory_items--;
-	//redrawInventory();
 	current_layer.moveToTop();
 	character_layer.moveToTop();
 	text_layer.moveToTop();
@@ -1233,7 +1225,7 @@ function redrawInventory() {
 		shape.setDraggable(false);
 	});
 
-	for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_items); i++) {
+	for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
 		shape = inventory_layer.getChildren()[i];
 		//shape = inventory_list[i];
 		if (shape.getAttr('category') != 'reward') {
@@ -1251,7 +1243,7 @@ function redrawInventory() {
 		stage.get('#inventory_left_arrow').hide();
 	}
 
-	if(inventory_index + inventory_max < inventory_items) {
+	if(inventory_index + inventory_max < inventory_list.length) {
 		stage.get('#inventory_right_arrow').show();
 	} else {
 		stage.get('#inventory_right_arrow').hide();
