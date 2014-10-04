@@ -926,8 +926,8 @@
                 {
                     "attrs": {
                         "height": 643,
-                        "id": "begining",
-                        "src": "images/begining.png",
+                        "id": "beginning",
+                        "src": "images/beginning.png",
                         "width": 1024
                     },
                     "className": "Image"

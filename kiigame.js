@@ -284,8 +284,8 @@ window.onload = function() {
 	idle_1_animation.play();
 };
 
-stage.get('#begining')[0].on('tap click', function(event) {
-	stage.get('#begining')[0].hide();
+stage.get('#beginning')[0].on('tap click', function(event) {
+	stage.get('#beginning')[0].hide();
 	display_start_menu();
 });
 
