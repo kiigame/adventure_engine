@@ -193,3 +193,46 @@ input_layer.on('tap click', function(event) {
 	input_layer.draw();
 
 });
+
+//Developer feature - shortcut menu from the empty menu button for testing purposes
+stage.get('#start_empty')[0].on('tap click', function(event) {
+	event = event.targetNode;
+	var clone;
+
+	clone = stage.get('#oikotie')[0].clone({
+		visible : true,
+		x : 50
+	});
+	clone.moveTo(start_layer);
+	clone.on('click', function() {});
+
+	clone = stage.get('#oikotie_locker_room2')[0].clone({
+		visible : true,
+		x : 200
+	});
+	clone.moveTo(start_layer);
+	clone.on('click', function() {
+		inventoryAdd(stage.get('#poster_withoutglue')[0]);
+		inventoryAdd(stage.get('#poster_withglue')[0]);
+		inventoryAdd(stage.get('#airfreshener')[0]);
+		inventoryAdd(stage.get('#cienibang')[0]);
+	});
+
+
+	/*
+	clone = stage.get('#locker_room_1_door_to_wc_open')[0].clone({
+		visible : true,
+		x : 600
+	});
+	clone.moveTo(start_layer);
+	clone = stage.get('#shower_door_to_locker_room_2_open')[0].clone({
+		visible : true
+	});
+	clone.moveTo(start_layer);
+	clone = stage.get('#shower_door_to_locker_room_1')[0].clone({
+		x : 330
+	});
+	clone.moveTo(start_layer);
+	 */
+	stage.draw();
+});
