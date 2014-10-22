@@ -790,13 +790,28 @@ stage.get('Image').on('dragend', function(event) {
 			stage.get('#' + blocked_object.blocked_image)[0].hide();
 			stage.get('#' + blocked_object.closed_image)[0].show();
 
+            // Check if the target is in the list of animated objects;
+            // remove it from there if so. TODO: There should probably be
+            // generic item/object destruction which checks if it was
+            // animated.
+            if (animated_objects.indexOf(target.getId()) > -1)
+                animated_objects.splice(animated_objects.indexOf(target.getId()), 1);
+
 			// TODO: unblocking_image, merge this with "use item on object"?
 			target.destroy();
+
+            // TODO: There should probably be generic item/object destruction
+            // which checks if it has related parts.
 			var related = objects_json[target.getAttr('id')].related;
 			
 			if (related && related.size != 0) {
 				for (var i in related)
-					stage.get("#" + related[i])[0].destroy();
+                {
+                    var related_part = stage.get("#" + related[i])[0];
+                    if (animated_objects.indexOf(related_part.getId() > -1))
+                        animated_objects.splice(animated_objects.indexOf(related_part.getId()), 1);
+					related_part.destroy();
+                }
 			}
 		}
 		setMonologue(dragged_item.getId(), target.getId());
