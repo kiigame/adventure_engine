@@ -1,3 +1,4 @@
+var legends_json = JSON.parse(getJSON('legends.json'));
 
 stage.get("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
