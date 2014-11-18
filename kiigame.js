@@ -864,7 +864,6 @@ stage.get('Image').on('dragend', function(event) {
         dragged_item.hide();
         dragged_item.setDraggable(false);
         inventory_list.splice(inventory_list.indexOf(dragged_item.getId()), 1);
-        dragged_item.destroy();
 	}
 
 	// Clearing the glow effects
