@@ -986,6 +986,8 @@ function interact(event) {
 			target.hide();
 			current_layer.draw();
 		}
+        else if (object.state == 'locked')
+            setMonologue(target.getAttr('id'));
 		else if (object.state == 'open') {
 			do_transition(object.transition);
 			setTimeout(function() {
