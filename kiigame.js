@@ -863,7 +863,7 @@ stage.get('Image').on('dragend', function(event) {
 	} else {
         dragged_item.hide();
         dragged_item.setDraggable(false);
-        inventory_list.splice(inventory_list.indexOf(dragged_item.getId()), 1);
+        inventory_list.splice(inventory_list.indexOf(dragged_item), 1);
 	}
 
 	// Clearing the glow effects
@@ -1164,10 +1164,10 @@ function inventoryAdd(item) {
 	item.setScale(1);
 	item.setSize(80, 80);
 
-	if (inventory_list.indexOf(item.getId()) > -1)
-		inventory_list.splice(inventory_list.indexOf(item.getId()), 1, item.getId());
+	if (inventory_list.indexOf(item) > -1)
+		inventory_list.splice(inventory_list.indexOf(item), 1, item);
 	else
-		inventory_list.push(item.getId());
+		inventory_list.push(item);
 	redrawInventory();
 }
 
@@ -1176,7 +1176,7 @@ function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
 	item.setDraggable(false);
-	inventory_list.splice(inventory_list.indexOf(item.getId()), 1);
+	inventory_list.splice(inventory_list.indexOf(item), 1);
 	redrawInventory();
 }
 
@@ -1198,13 +1198,12 @@ function redrawInventory() {
 	});
 
 	for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
-		shape = inventory_layer.getChildren()[i];
-		//shape = inventory_list[i];
+		shape = inventory_list[i];
 		if (shape.getAttr('category') != 'reward') {
 			shape.setAttr('category', 'usable');
 		}
 		shape.setDraggable(true);
-		shape.setX(offsetFromLeft + (inventory_list.indexOf(shape.getId()) - inventory_index) * 100);
+		shape.setX(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
 		shape.setY(stage.getHeight() - 90);
 		shape.setAttr('visible', true);
 	}
