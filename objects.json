@@ -176,7 +176,7 @@
     },
     "poster_withglue": {
         "category": "item",
-        "consume": false,
+        "consume": true,
         "outcome": "poster_onthewall",
         "trigger": "wall"
     },
