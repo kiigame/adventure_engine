@@ -828,10 +828,12 @@ stage.get('Image').on('dragend', function(event) {
 			dragged_object = objects_json[dragged_item.getAttr('object_name')];
 			if (dragged_item.getAttr('consume') === true)
 				destroy = true;
-			else {
-				target.destroy();
-			}
 
+            // The object is destroyed if it is the target of item's use
+		    target.destroy();
+
+            // Objects related to the target (i.e. the other "parts" of the
+            // target are hidden as well
 			var related = target.getAttr("related");
 			if (related && related.size != 0) {
 				for (var i in related)
