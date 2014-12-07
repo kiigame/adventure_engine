@@ -549,7 +549,7 @@ function do_transition(layerId, slow_fade, comingFrom) {
 			fade_layer.hide();
 			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 			fade_layer.moveDown();
-			play_music(current_layer.getAttr("object_name"));
+			play_music(current_layer.getId());
 			if (comingFrom)
 				setMonologue(comingFrom);
 		}, fade_time);
