@@ -213,9 +213,10 @@ function create_menu_action(menu_image) {
 			
 		if (item_action == "start_game") {
 			item.on('tap click', function(event) {
-				console.log("Current layer", current_layer);
-				play_sequence("intro");
-				do_transition(game_start_layer.getId());
+                if (stage.get('#intro') != "")
+                    play_sequence("intro");
+                else // Assume intro layer has a transition to game_start_layer
+                    do_transition(game_start_layer.getId());
 			});
 		}
 		else if (item_action == "credits") {
