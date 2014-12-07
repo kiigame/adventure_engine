@@ -103,7 +103,6 @@
         "state": "full"
     },
     "locker_room_1": {
-        "music": "audio/alku_musax_mono_20131213.ogg"
     },
     "locker_room_1_shower_door": {
         "blocked": false,
@@ -115,7 +114,6 @@
         "transition": "object_layer_shower_room"
     },
     "locker_room_2": {
-        "music": "audio/loppu_musax_mono_20131213.ogg"
     },
     "invisible_room": {
     	
@@ -198,7 +196,6 @@
         "transition": "object_layer_locker_room_2"
     },
     "shower_room": {
-        "music": "audio/alku_musax_mono_20131213.ogg"
     },
     "start_layer": {
         "music": "audio/alku_musax_mono_20131213.ogg",
