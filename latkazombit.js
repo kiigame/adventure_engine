@@ -162,8 +162,7 @@ input_layer.on('tap click', function(event) {
 		stage.get('#icehockey_jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
 		input_layer.hide();
 
-		sequence_delay = play_sequence("intro");
-		//setMonologue("intro");
+		play_sequence("intro");
 	}
 	// Test feature - show the legend text when clicking the jersey
 	/*
