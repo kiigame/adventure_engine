@@ -879,10 +879,6 @@ stage.get('Image').on('dragend', function(event) {
 	// Clearing the texts
 	clearText(interaction_text);
 
-	// Stopping the talking animation after certain period of time
-	clearTimeout(monologue_timeout);
-	monologue_timeout = setTimeout('stopTalking()', 3000);
-
 	redrawInventory();
 });
 //Stop talking and clear monologue when clicked or touched anywhere on the screen
