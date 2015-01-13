@@ -206,9 +206,8 @@ function create_menu_action(menu_image) {
 		var item_action = menu_object.items[item_id];
 		
 		var item = stage.get('#' + item_id)[0];
-		console.log("lysas",item.eventListeners.click)
 		// Don't override custom menu event listeners
-		if (item.eventListeners.click) {console.log("wtf,", item)
+		if (item.eventListeners.click) {
 			continue; }
 			
 		if (item_action == "start_game") {
@@ -716,7 +715,6 @@ stage.get('Image').on('dragend', function(event) {
 	
 	// If nothing's under the dragged item
 	if (target == null) {
-		console.log("Nothings under the dragged item");
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 	}
@@ -729,7 +727,6 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Put something into a container
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
-		console.log("Put something into a container");
 		var object = objects_json[target.getAttr('object_name')];
 		var unlocked = undefined;
 
@@ -750,7 +747,6 @@ stage.get('Image').on('dragend', function(event) {
 			object.state = 'full';
 
 			if (object.in == dragged_item.getId()) {
-				console.log("LOOL", stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image']));
 				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
 				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
 
@@ -763,7 +759,6 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Unlock a door
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'door') {
-		console.log("Unlock a door");
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
@@ -778,7 +773,6 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Unblock an obstacle
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'obstacle') {
-		console.log("Unblock an obstacle");
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.blocking === true && object.trigger == dragged_item.getId()) {
@@ -819,7 +813,6 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on object
 	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'object') {
-		console.log("Use item on object");
 		setMonologue(dragged_item.getId(), target.getId());
 
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
@@ -844,7 +837,6 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on item
 	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
-		console.log("Use item on item");
 		setMonologue(dragged_item.getId(), target.getId());
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
 
@@ -857,7 +849,6 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Default for all others
 	else {
-		console.log("Default use for all others", target, say_text, objects_json[dragged_item.getId()]);
 		setMonologue(dragged_item.getId(), target.getId());
 	}
 	// Check if dragged item's destroyed, if not, add it to inventory
@@ -1035,7 +1026,6 @@ function play_ending(ending) {
 			rewards_text = stage.get('#rewards_text')[0];
 			old_text = rewards_text.getText();
 			rewards_text.setText(rewards + rewards_text.getText());
-			console.log(rewards_text);
 						
 			current_layer.show();
 			
