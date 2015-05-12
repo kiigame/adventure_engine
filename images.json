@@ -90,6 +90,16 @@
                 },
                 {
                     "attrs": {
+                        "category": "object",
+                        "id": "icehockey_jersey",
+                        "src": "images/icehockey_jersey.png",
+                        "x": 616,
+                        "y": 136
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
                         "align": "center",
                         "category": "object",
                         "fill": "white",
@@ -144,16 +154,6 @@
                         "visible": false,
                         "x": 298,
                         "y": 155
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "object",
-                        "id": "icehockey_jersey",
-                        "src": "images/icehockey_jersey.png",
-                        "x": 616,
-                        "y": 136
                     },
                     "className": "Image"
                 }
