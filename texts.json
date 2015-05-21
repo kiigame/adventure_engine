@@ -618,7 +618,7 @@
     },
     "shower_door_to_locker_room_2_blocked": {
         "name": "Pukuhuoneen ovi",
-        "examine": "Tuo kammottava sieni tukkii tieni! Oho, riimi."
+        "examine": "Tuo kammottava sieni tukkii tieni! Oho, sisäsointu."
     },
     "shower_door_to_locker_room_2_closed": {
         "name": "Pukuhuoneen ovi",
