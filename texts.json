@@ -277,7 +277,7 @@
     "tactic_board_wiper": {
         "name": "Taulusieni",
         "pickup": "Taktiikkataulun pyyhkimistyökalu jonka poimin mukaani. Eihän sitä koskaan tiedä milloin tätä voisi tarvita.",
-        "examine": "Tämä näyttää aivan taktiikkataulunpyyhkimiseen käytettävältä työkalulta. Meidän koutsi kyllä yleensä käyttää kauluspaitansa hihaa taktiikkataulun pyyhkimiseen.",
+        "examine": "Tällä voi vetäistä taktiikkataulun päältä ja puhdasta tulee. Meidän koutsi kyllä yleensä käyttää kauluspaitansa hihaa taulun pyyhkimiseen.",
         "locker_room_1_door_to_out": "Tätä ei ole tarkoitettu ovien pyyhkimiseen.",
         "jacket_full": "Tätä ei ole tarkoitettu vaatteiden puhdistamiseen.",
         "jacket_empty": "Tätä ei ole tarkoitettu vaatteiden puhdistamiseen.",
