@@ -8,6 +8,27 @@ var texts_json = JSON.parse(getJSON('texts.json'));
 //Create stage and everything in it from json
 var stage = Kinetic.Node.create(images_json_text, 'container');
 
+// Add texts to objects in stage so that they can be dynamically changed,
+// for example changing the jersey text in Lätkäzombit according to the
+// player number chosen.
+for (var key in texts_json)
+{
+    if (texts_json.hasOwnProperty(key))
+    {
+        var object = stage.get('#' + key)[0];
+        if (object) // e.g. "default" in texts.json is not a proper object
+        {
+            for (var subkey in texts_json[key])
+            {
+                if (texts_json[key].hasOwnProperty(subkey))
+                {
+                    object.setAttr(subkey, texts_json[key][subkey]);
+                }
+            }
+        }
+    }
+}
+
 //Scale stage to window size
 //stage.setWidth(window.innerWidth);
 //stage.setHeight(window.innerHeight);
@@ -178,7 +199,7 @@ for (var i = 0; i < images_json.children.length; i++) {
 		if (images_json.children[i].children[j].className == 'Image') {
 			createObject(images_json.children[i].children[j].attrs);
 			object_attrs =images_json.children[i].children[j].attrs;
-			
+
 			if (object_attrs.animated === true)
 				create_animation(stage.get('#' + object_attrs.id)[0]);
 		}
