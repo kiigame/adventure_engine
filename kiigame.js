@@ -1094,11 +1094,11 @@ function findMonologue(object, key) {
 	// If no text found, use default text
 	if (!text || text.length == 0) {
 		// Item's own default
-		console.warn("No text ", key, " found for ", object.getAttr('id'));
+		console.warn("No text " + key + " found for " + object.getAttr('id'));
 		text = object.getAttr('default');
 		if (!text) {
 			// Master default
-			console.warn("Default text not found for ", object.getAttr('id'), ". Using master default.");
+			console.warn("Default text not found for " + object.getAttr('id') + ". Using master default.");
 			text = texts_json["default"]["examine"];
 		}
 	}
