@@ -10,7 +10,7 @@ var input_layer = stage.get('#input_layer')[0];
 var number_selected = false;
 
 // Default player number
-input_text.setText(input_text.getText() + "8");
+input_text.setText(input_text.getText());
 
 // Dirty removing of default event handler to allow using jersey input
 stage.get('#start_game')[0].eventListeners.click = [];
