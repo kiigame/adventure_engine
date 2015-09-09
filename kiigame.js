@@ -242,7 +242,7 @@ function create_menu_action(menu_image) {
 		else if (item_action == "credits") {
 			item.on('tap click', function(event) {
 				event = event.targetNode;
-				setMonologue(event.getAttr('id'));
+				setMonologue(findMonologue(event));
 			});
 		}
 		else if (item_action == "main_menu") {
@@ -572,7 +572,7 @@ function do_transition(layerId, slow_fade, comingFrom) {
 			fade_layer.moveDown();
 			play_music(current_layer.getId());
 			if (comingFrom)
-				setMonologue(comingFrom);
+				setMonologue(findMonologue(stage.get('#' + comingFrom)[0]));
 		}, fade_time);
 	}, fade_time);
 }
@@ -676,7 +676,7 @@ stage.on('dragmove', function(event) {
 			
 			// Don't cause a mass of errors if no text found
 			try {
-				interaction_text.setText(texts_json[target.getAttr('id')].name);
+				interaction_text.setText(target.getAttr('name'));
 			}
 			catch (e) {
 			}
@@ -731,7 +731,7 @@ stage.get('Image').on('dragend', function(event) {
 	var destroy = false;
 
 	if (target != null)
-		say_text = texts_json[dragged_item.getId()][target.getId()];
+		say_text = dragged_item.getAttr(target.getId());
 	//console.log(target != null,say_text != undefined,object && object.outcome != undefined,target.getAttr('category') == 'usable')
 	
 	// If nothing's under the dragged item
@@ -744,7 +744,7 @@ stage.get('Image').on('dragend', function(event) {
 		console.warn("Unassigned item combination text");
 		dragged_item.setX(x);
 		dragged_item.setY(y);
-		setMonologue("default");
+		setMonologue(text = texts_json["default"]["examine"]);
 	}
 	// Put something into a container
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
@@ -776,7 +776,7 @@ stage.get('Image').on('dragend', function(event) {
 				current_layer.draw();
 			}
 		}
-		setMonologue(dragged_item.getId(), target.getId());
+		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Unlock a door
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'door') {
@@ -790,7 +790,7 @@ stage.get('Image').on('dragend', function(event) {
 			stage.get('#' + object.open_image)[0].show();
 		}
 
-		setMonologue(dragged_item.getId(), target.getId());
+		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Unblock an obstacle
 	else if (target != null && say_text != undefined && target.getAttr('category') == 'obstacle') {
@@ -830,11 +830,11 @@ stage.get('Image').on('dragend', function(event) {
                 }
 			}
 		}
-		setMonologue(dragged_item.getId(), target.getId());
+		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Use item on object
 	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'object') {
-		setMonologue(dragged_item.getId(), target.getId());
+		setMonologue(findMonologue(dragged_item, target.getId()));
 
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
 			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
@@ -858,7 +858,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on item
 	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
-		setMonologue(dragged_item.getId(), target.getId());
+		setMonologue(findMonologue(dragged_item, target.getId()));
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
 
 			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
@@ -870,7 +870,7 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Default for all others
 	else {
-		setMonologue(dragged_item.getId(), target.getId());
+		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Check if dragged item's destroyed, if not, add it to inventory
 	if (destroy == false) {
@@ -925,7 +925,7 @@ function interact(event) {
 		
 	// Pick up an item
 	else if (target_category == 'item') {
-		setMonologue(target.getAttr('id'), 'pickup');
+		setMonologue(findMonologue(target, 'pickup'));
 		if (target.getAttr('src2') != undefined) {
 			stage.get('#' + target.getAttr('src2'))[0].show();
 			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
@@ -939,7 +939,7 @@ function interact(event) {
 		event.cancelBubble = true;
 		// Pick up a secret item
 	} else if (target_category == 'secret') {
-		setMonologue(target.getAttr('id'), 'pickup');
+		setMonologue(findMonologue(target, 'pickup'));
 		var rewardID = target.getAttr('reward');
 		stage.get('#'+rewardID)[0].show();
 		inventoryAdd(stage.get('#'+rewardID)[0]);
@@ -952,7 +952,7 @@ function interact(event) {
 	}
 	// Print examine texts for items, rewards and objects
 	else if (target_category == 'object' || target_category == 'usable' || target_category == 'reward' || target_category == 'obstacle') {
-		setMonologue(target.getAttr('id'));
+		setMonologue(findMonologue(target));
 	}
 	// Take an item out of a container
 	else if (target_category == 'container') {
@@ -974,17 +974,17 @@ function interact(event) {
 			}
 		}
 
-		setMonologue(target.getAttr('id'));
+		setMonologue(findMonologue(target));
 	}
 	// Open a door or do a transition
 	else if (target_category == 'door') {
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.blocked === true)
-			setMonologue(target.getAttr('id'));
+			setMonologue(findMonologue(target));
 			
 		else if (object.state == 'closed') {
-			setMonologue(target.getAttr('id'));
+			setMonologue(findMonologue(target));
 			if (object.locked === true) {
 				object.state = 'locked';
 				stage.get('#' + object.locked_image)[0].show();
@@ -997,11 +997,11 @@ function interact(event) {
 			current_layer.draw();
 		}
         else if (object.state == 'locked')
-            setMonologue(target.getAttr('id'));
+            setMonologue(findMonologue(target));
 		else if (object.state == 'open') {
 			do_transition(object.transition);
 			setTimeout(function() {
-				setMonologue(target.getId());
+				setMonologue(findMonologue(target));
 			}, 700);
 		}
 	}
@@ -1077,31 +1077,38 @@ function play_ending(ending) {
 
 }
 
-//Set monologue text
-function setMonologue(id, name) {
-	if (name == null)
-		name = 'examine';
+/// Find monologue text in object. If a text is not found from the object by
+/// the parameter, return the defaul text for the object (if it exists), or
+/// the master default text (looked up from JSON).
+/// @param object The object in stage where text is looked up from.
+/// @param key The key to look up the text with. If null, set to 'examine' by
+///            default. Otherwise usually the name of the other object in
+///            item-object interactions.
+/// @return The text found, or the default text.
+function findMonologue(object, key) {
+	if (key == null)
+		key = 'examine';
 
-	// Is there such an ID in JSON?
-	var text = texts_json[id];
-	if (!text) {
-		console.warn("No JSON text entry found for", id);
-		return;
-	}
-	text = text[name];
+    var text = object.getAttr(key);
 
 	// If no text found, use default text
 	if (!text || text.length == 0) {
 		// Item's own default
-		console.warn("No text" ,name, "found for", id);
-		text = texts_json[id]["default"];
+		console.warn("No text ", key, " found for ", object.getAttr('id'));
+		text = object.getAttr('default');
 		if (!text) {
 			// Master default
-			console.warn("Default text not found for", id, ". Using master default.");
+			console.warn("Default text not found for ", object.getAttr('id'), ". Using master default.");
 			text = texts_json["default"]["examine"];
 		}
 	}
-	
+
+    return text;
+}
+
+/// Set monologue text.
+/// @param text The text to be shown in the monologue bubble.
+function setMonologue(text) {
 	monologue.setWidth('auto');
 	speech_bubble.show();
 	monologue.setText(text);
