@@ -79,7 +79,7 @@
         "name": "Pyyhi"
     },
     "intro": {
-        "default": "Missäköhän hitossa minä olen... Ja miten täältä pääsee pois."
+        "examine": "Missäköhän hitossa minä olen... Ja miten täältä pääsee pois."
     },
     "rewards_text": {
         "text": "/3 piilotettua kirjaa löydetty"
