@@ -113,7 +113,8 @@
         "examine": "Oven alta valuva verilammikko. Ehkä on parempi pysyä kauempana tuosta."
     },
     "garbagecan_empty": {
-        "name": "Roskakori"
+        "name": "Roskakori",
+        "examine": "Sehän on roska-astia. Täynnä pureskeltua purkkaa ja muuta roskaa. En poimi täältä mitään paljain käsin."
     },
     "garbagecan_teddy": {
         "name": "Nalle roskakorissa",
@@ -276,6 +277,7 @@
     "tactic_board_wiper": {
         "name": "Taulusieni",
         "pickup": "Taktiikkataulun pyyhkimistyökalu jonka poimin mukaani. Eihän sitä koskaan tiedä milloin tätä voisi tarvita.",
+        "examine": "Tällä voi vetäistä taktiikkataulun päältä ja puhdasta tulee. Meidän koutsi kyllä yleensä käyttää kauluspaitansa hihaa taulun pyyhkimiseen.",
         "locker_room_1_door_to_out": "Tätä ei ole tarkoitettu ovien pyyhkimiseen.",
         "jacket_full": "Tätä ei ole tarkoitettu vaatteiden puhdistamiseen.",
         "jacket_empty": "Tätä ei ole tarkoitettu vaatteiden puhdistamiseen.",
