@@ -33,7 +33,7 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 stage.get('#start')[0].on('tap click', function(event) {
 	event = event.targetNode;
 
-	setMonologue(panic.getAttr('id'), 'text');
+	setMonologue(findMonologue(panic, 'text'));
 	setTimeout(function() {
 		idle_1.hide();
 		panic.show();
