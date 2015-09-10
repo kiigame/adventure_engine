@@ -1092,7 +1092,11 @@ function findMonologue(object, key) {
 		if (!text) {
 			// Master default
 			console.warn("Default text not found for " + object.getAttr('id') + ". Using master default.");
-			text = texts_json["default"]["examine"];
+			try {
+                text = texts_json["default"]["examine"];
+            } catch (e) {
+                text = "Fallback default examine entry missing from texts.json!"; // crude
+            }
 		}
 	}
 
