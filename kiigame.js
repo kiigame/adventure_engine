@@ -739,15 +739,8 @@ stage.get('Image').on('dragend', function(event) {
 		dragged_item.setX(x);
 		dragged_item.setY(y);
 	}
-	// Default text for unassigned item combinations + return item to inventory
-	else if (say_text == undefined) {
-		console.warn("Unassigned item combination text");
-		dragged_item.setX(x);
-		dragged_item.setY(y);
-		setMonologue(text = texts_json["default"]["examine"]);
-	}
 	// Put something into a container
-	else if (target != null && say_text != undefined && target.getAttr('category') == 'container') {
+	else if (target != null && target.getAttr('category') == 'container') {
 		var object = objects_json[target.getAttr('object_name')];
 		var unlocked = undefined;
 
@@ -779,7 +772,7 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Unlock a door
-	else if (target != null && say_text != undefined && target.getAttr('category') == 'door') {
+	else if (target != null && target.getAttr('category') == 'door') {
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
@@ -793,7 +786,7 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Unblock an obstacle
-	else if (target != null && say_text != undefined && target.getAttr('category') == 'obstacle') {
+	else if (target != null && target.getAttr('category') == 'obstacle') {
 		var object = objects_json[target.getAttr('object_name')];
 
 		if (object.blocking === true && object.trigger == dragged_item.getId()) {
@@ -833,7 +826,7 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Use item on object
-	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'object') {
+	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'object') {
 		setMonologue(findMonologue(dragged_item, target.getId()));
 
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
@@ -857,7 +850,7 @@ stage.get('Image').on('dragend', function(event) {
 		}
 	}
 	// Use item on item
-	else if (target != null && say_text != undefined && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
+	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
 		setMonologue(findMonologue(dragged_item, target.getId()));
 		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
 
