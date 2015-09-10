@@ -14,14 +14,7 @@
     "end_layer": {
         "category": "end",
         "music": "audio/loppu_musax_mono_20131213.ogg",
-        "sequence": "outro_layer",
-		"menu": "end_layer_menu"
-    },
-    "end_layer_menu": {
-		"items": {
-			"end_menu_main_menu": "main_menu",
-			"end_menu_restart": "start_game"
-		}
+        "sequence": "outro_layer"
     },
     "garbagecan": {
         "blocked": false,
@@ -207,12 +200,6 @@
 			"start_game": "start_game",
 			"start_credits": "credits",
 			"start_empty": "none"
-		}
-    },
-    "end_menu": {
-		"items": {
-			"end_menu_main_menu": "main_menu",
-			"end_menu_restart": "restart"
 		}
     },
     "stinking_wc_door": {

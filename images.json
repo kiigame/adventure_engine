@@ -1238,34 +1238,6 @@
                 }
             ],
             "className": "Layer"
-        }, {
-            "attrs": {
-                "category": "menu",
-                "id": "end_layer_menu",
-				"object_name": "end_layer_menu",
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "id": "end_menu_main_menu",
-                        "src": "images/button_back.png",
-                        "x": 724,
-                        "y": 0
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "id": "end_menu_restart",
-                        "src": "images/button_0_gray.png",
-                        "x": 724,
-                        "y": 100
-                    },
-                    "className": "Image"
-                }
-            ],
-            "className": "Layer"
 		}, {
             "attrs": {
                 "category": "misc",
