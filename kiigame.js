@@ -1018,17 +1018,17 @@ function play_ending(ending) {
 	var delay = 700;
 	var ending_object = objects_json[ending];
 
-	// Clear inventory except rewards
-	for (var i = inventory_layer.children.length-1; i >= 0; i--) {
-		var shape = inventory_layer.children[i];
-		if (shape.getAttr('category') != 'reward')
-			inventoryRemove(shape);
-		inventory_index = 0;
-	}
-	
-	if (ending_object.sequence)
-		sequence_delay = play_sequence(ending_object.sequence, false);
-	
+    if (ending_object.sequence)
+        sequence_delay = play_sequence(ending_object.sequence, false);
+
+    // Clear inventory except rewards
+    for (var i = inventory_layer.children.length-1; i >= 0; i--) {
+        var shape = inventory_layer.children[i];
+        if (shape.getAttr('category') != 'reward')
+            inventoryRemove(shape);
+        inventory_index = 0;
+    }
+
 	setTimeout(function() {
 		current_layer = stage.get('#' + ending)[0];
 		
