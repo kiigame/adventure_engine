@@ -720,7 +720,6 @@ function checkIntersection(dragged_item, target) {
 //Drag end events
 stage.get('Image').on('dragend', function(event) {
 	var dragged_item = event.targetNode;
-	var say_text = undefined;
 	try {
 		var object = objects_json[dragged_item.getId()];
 	} catch(e) {
@@ -729,10 +728,6 @@ stage.get('Image').on('dragend', function(event) {
 	// Variable for whether the dragged item is destroyed or not
 	var destroy = false;
 
-	if (target != null)
-		say_text = dragged_item.getAttr(target.getId());
-	//console.log(target != null,say_text != undefined,object && object.outcome != undefined,target.getAttr('category') == 'usable')
-	
 	// If nothing's under the dragged item
 	if (target == null) {
 		dragged_item.setX(x);
