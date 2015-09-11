@@ -1170,7 +1170,11 @@ function createObject(o) {
 	window[o.id].src = o.src;
 }
 
-//Adding an item to the inventory
+/// Adding an item to the inventory. Adds new items, but also an item that
+/// has been dragged out of the inventory is put back with this function.
+/// XXX: May become problematic if interaction both returns the dragged item
+/// and adds a new one.
+/// @param item Item to be added to the inventory
 function inventoryAdd(item) {
 	item.moveTo(inventory_layer);
 	item.clearImageHitRegion();
@@ -1181,10 +1185,18 @@ function inventoryAdd(item) {
 		inventory_list.splice(inventory_list.indexOf(item), 1, item);
 	else
 		inventory_list.push(item);
+
+    // The picked up item should be visible in the inventory. Scroll inventory
+    // to the right if necessary.
+    if (inventory_list.indexOf(item) > inventory_index + inventory_max - 1)
+        inventory_index = Math.max(inventory_list.indexOf(item) + 1 - inventory_max, 0);
+
 	redrawInventory();
 }
 
-//Removing an item from the inventory
+/// Removing an item from the inventory. Dragged items are currently just
+/// destroyed & inventory is readrawn only after drag ends.
+/// @param item Item to be removed from the inventory
 function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
@@ -1203,12 +1215,18 @@ function inventoryDrag(item) {
 	text_layer.moveToTop();
 }
 
-//Redrawing inventory
+/// Redrawing inventory. Shows the items that should be visible according to
+/// inventory_index and takes care of showing inventory arrows as necessary.
 function redrawInventory() {
 	inventory_layer.getChildren().each(function(shape, i) {
 		shape.setAttr('visible', false);
 		shape.setDraggable(false);
 	});
+
+    // If the left arrow is visible AND there's empty space to the right,
+    // scroll the inventory to the left. This should happen when removing items.
+    if (inventory_index + inventory_max > inventory_list.length)
+        inventory_index = Math.max(inventory_list.length - inventory_max, 0);
 
 	for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
 		shape = inventory_list[i];
@@ -1232,7 +1250,7 @@ function redrawInventory() {
 	} else {
 		stage.get('#inventory_right_arrow').hide();
 	}
-	
+
 	inventory_bar_layer.draw();
 	inventory_layer.draw();
 	current_layer.draw();
