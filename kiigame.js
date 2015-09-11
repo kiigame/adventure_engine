@@ -461,8 +461,6 @@ function play_sequence(sequence, transition) {
 	current_layer.moveToTop();
 	var object = objects_json[current_layer.getAttr('object_name')];
 
-	current_layer.show();
-
 	var sequence_counter = 0;
 	var images_total = 0;
 	var image = null;
@@ -477,6 +475,7 @@ function play_sequence(sequence, transition) {
 		
 		(function(i, image, last_image) {
 			setTimeout(function() {
+                current_layer.show();
 				old_layer.hide();
 				fade_layer.show();
 				text_layer.hide();
