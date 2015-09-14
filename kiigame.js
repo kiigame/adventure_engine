@@ -783,6 +783,8 @@ stage.get('Image').on('dragend', function(event) {
 	else if (target != null && target.getAttr('category') == 'obstacle') {
 		var object = objects_json[target.getAttr('object_name')];
 
+		setMonologue(findMonologue(dragged_item, target.getId()));
+
 		if (object.blocking === true && object.trigger == dragged_item.getId()) {
 			var blocked_object = objects_json[object.target];
 
@@ -801,8 +803,6 @@ stage.get('Image').on('dragend', function(event) {
                 animated_objects.splice(animated_objects.indexOf(target.getId()), 1);
 
 			// TODO: unblocking_image, merge this with "use item on object"?
-			target.destroy();
-
             // TODO: There should probably be generic item/object destruction
             // which checks if it has related parts.
 			var related = objects_json[target.getAttr('id')].related;
@@ -816,8 +816,9 @@ stage.get('Image').on('dragend', function(event) {
 					related_part.destroy();
                 }
 			}
+
+			target.destroy();
 		}
-		setMonologue(findMonologue(dragged_item, target.getId()));
 	}
 	// Use item on object
 	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'object') {
@@ -831,16 +832,16 @@ stage.get('Image').on('dragend', function(event) {
 			if (dragged_item.getAttr('consume') === true)
 				destroy = true;
 
-            // The object is destroyed if it is the target of item's use
-		    target.destroy();
-
             // Objects related to the target (i.e. the other "parts" of the
-            // target are hidden as well
+            // target) are hidden.
 			var related = target.getAttr("related");
 			if (related && related.size != 0) {
 				for (var i in related)
 					stage.get("#" + related[i])[0].hide();
 			}
+
+            // The object is destroyed if it is the target of item's use.
+            target.destroy();
 		}
 	}
 	// Use item on item
