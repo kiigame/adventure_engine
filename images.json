@@ -203,7 +203,6 @@
                 {
                     "attrs": {
                         "category": "item",
-                        "consume": false,
                         "id": "teddybear_chewinggum",
                         "src": "images/teddybear_chewinggum.png",
                         "visible": false,
@@ -689,7 +688,6 @@
                 {
                     "attrs": {
                         "category": "item",
-                        "consume": true,
                         "id": "teddybear",
                         "src": "images/teddybear.png",
                         "x": 370,

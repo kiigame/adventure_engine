@@ -828,7 +828,7 @@ stage.get('Image').on('dragend', function(event) {
 
 			// Items may be consumed when used
 			dragged_object = objects_json[dragged_item.getAttr('object_name')];
-			if (dragged_item.getAttr('consume') === true)
+			if (dragged_object.consume === true)
 				destroy = true;
 
             // The object is destroyed if it is the target of item's use
