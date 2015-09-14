@@ -818,6 +818,7 @@ stage.get('Image').on('dragend', function(event) {
 			}
 
 			target.destroy();
+            target = null;
 		}
 	}
 	// Use item on object
@@ -842,6 +843,7 @@ stage.get('Image').on('dragend', function(event) {
 
             // The object is destroyed if it is the target of item's use.
             target.destroy();
+            target = null;
 		}
 	}
 	// Use item on item
@@ -918,6 +920,7 @@ function interact(event) {
 			stage.get('#' + target.getAttr('src2'))[0].show();
 			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
 			target.destroy();
+            target = null;
 		} else {
 			inventoryAdd(target);
 		}
@@ -933,6 +936,7 @@ function interact(event) {
 		inventoryAdd(stage.get('#'+rewardID)[0]);
 		rewards++;
 		target.destroy();
+        target = null;
 		current_layer.draw();
 
 		// To prevent multiple events happening at the same time
