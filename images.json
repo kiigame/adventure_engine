@@ -229,7 +229,6 @@
                         "object_name": "poster_withglue",
                         "src": "images/poster_withglue.png",
                         "visible": false,
-                        "consume": true,
                         "x": 450,
                         "y": 300
                     },
