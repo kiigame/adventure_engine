@@ -167,6 +167,7 @@
     },
     "poster_withglue": {
         "category": "item",
+        "consume": true,
         "outcome": "poster_onthewall",
         "trigger": "wall"
     },
@@ -217,6 +218,14 @@
         "category": "item",
         "outcome": "tactic_board_2",
         "trigger": "tactic_board_1"
+    },
+    "teddybear": {
+        "category": "item",
+        "consume": "true"
+    },
+    "teddybear_chewinggum": {
+        "category": "item",
+        "consume": false
     },
     "wc_1_door_to_locker_room_1": {
         "blocked": false,
