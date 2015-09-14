@@ -806,14 +806,14 @@ stage.get('Image').on('dragend', function(event) {
             // TODO: There should probably be generic item/object destruction
             // which checks if it has related parts.
 			var related = objects_json[target.getAttr('id')].related;
-			
+
 			if (related && related.size != 0) {
 				for (var i in related)
                 {
                     var related_part = stage.get("#" + related[i])[0];
                     if (animated_objects.indexOf(related_part.getId() > -1))
                         animated_objects.splice(animated_objects.indexOf(related_part.getId()), 1);
-					related_part.destroy();
+					related_part.hide();
                 }
 			}
 
