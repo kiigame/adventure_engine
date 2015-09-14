@@ -1,7 +1,7 @@
 kiigame
 =======
 
-KiiGame Adventure Engine is a HTML5/Javascript based simple adventure game engine for web browsers. KGAE uses Kinect.JS. Currently the engine is not separated from the example game, Lätkäzombit: Pako hallista. The example game is in the Finnish language.
+KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engine for web browsers. KGAE uses KineticJS. The engine comes with an example game, Lätkäzombit: Pako hallista. The example game is in the Finnish language.
 
 How to test locally on Linux
 ----------------------------
