@@ -31,7 +31,7 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 
 // Hidden feature, click the image on the start screen and get a funny reaction from the character
 stage.get('#start')[0].on('tap click', function(event) {
-	event = event.targetNode;
+	event = event.target;
 
 	setMonologue(findMonologue(panic, 'text'));
 	setTimeout(function() {
@@ -43,7 +43,7 @@ stage.get('#start')[0].on('tap click', function(event) {
 
 // Listeners for the input screen buttons
 input_layer.on('tap click', function(event) {
-	target = event.targetNode;
+	target = event.target;
 	
 	selected = texts_json[target.getAttr('id')];
 	if (selected)
@@ -195,7 +195,7 @@ input_layer.on('tap click', function(event) {
 
 //Developer feature - shortcut menu from the empty menu button for testing purposes
 stage.get('#start_empty')[0].on('tap click', function(event) {
-	event = event.targetNode;
+	event = event.target;
 	var clone;
 
 	clone = stage.get('#oikotie')[0].clone({

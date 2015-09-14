@@ -54,9 +54,9 @@ var idle_2 = stage.get('#character_idle_2')[0];
 var panic = stage.get('#character_panic')[0];
 
 //Scale background and UI elements
-stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
-stage.get("#inventory_bar")[0].setY(stage.getHeight() - 100);
-stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
+stage.get("#black_screen")[0].size({width: stage.width(), height: stage.height()});
+stage.get("#inventory_bar")[0].y(stage.height() - 100);
+stage.get("#inventory_bar")[0].width(stage.width());
 //window.addEventListener("orientationchange", function() {console.log(window.orientation)}, false);
 
 //Make a json object from the json string
@@ -176,9 +176,9 @@ function create_animation (object) {
 	var attrs = object.getAttr("animation");
 	var animation = new Kinetic.Tween({
 		node: object,
-		x: attrs.x ? object.getX() + attrs.x : object.getX(),
-		y: attrs.y ? object.getY() + attrs.y : object.getY(),
-		width: attrs.width ? object.getWidth() - 15 : object.getWidth(),
+		x: attrs.x ? object.x() + attrs.x : object.x(),
+		y: attrs.y ? object.y() + attrs.y : object.y(),
+		width: attrs.width ? object.width() - 15 : object.width(),
 		easing: Kinetic.Easings.EaseInOut,
 		duration: attrs.duration,
 
@@ -236,12 +236,12 @@ function create_menu_action(menu_image) {
                 if (stage.get('#intro') != "")
                     play_sequence("intro");
                 else // Assume intro layer has a transition to game_start_layer
-                    do_transition(game_start_layer.getId());
+                    do_transition(game_start_layer.id());
 			});
 		}
 		else if (item_action == "credits") {
 			item.on('tap click', function(event) {
-				event = event.targetNode;
+				event = event.target;
 				setMonologue(findMonologue(event));
 			});
 		}
@@ -283,7 +283,8 @@ window.onload = function() {
 		if (o.getAttr('category') == 'room') {
 			o.getChildren().each(function(shape, i) {
 				if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
-					shape.createImageHitRegion(function() {});
+                    shape.cache();
+					shape.drawHitFromCache();
 				}
 			});
 
@@ -447,8 +448,8 @@ function play_sequence(sequence, transition) {
 	var delay = 700;
 		
 	// For some reason fade_layer size may change, fix it back here
-	fade_layer.getChildren()[0].setWidth(1024);
-	fade_layer.getChildren()[0].setHeight(643);
+	fade_layer.getChildren()[0].width(1024);
+	fade_layer.getChildren()[0].height(643);
 	
 	// Animation cycle for proper fading and drawing order
 	fade_layer.moveToTop();
@@ -510,7 +511,7 @@ function play_sequence(sequence, transition) {
 				if (images_total == sequence_counter) {
 					setTimeout(function() {
 						if (transition == null)
-							do_transition(object.transition, true, current_layer.getId());
+							do_transition(object.transition, true, current_layer.id());
 						else if (transition !== false)
 							do_transition(transition, true);
 						text_layer.show();
@@ -553,7 +554,7 @@ function do_transition(layerId, slow_fade, comingFrom) {
 		
 		//Play the animations of the room
 		for (var i in animated_objects) {
-			if (animated_objects[i].node.parent.getId() == current_layer.getId())
+			if (animated_objects[i].node.parent.id() == current_layer.id())
 				animated_objects[i].play();
 			else if (animated_objects[i].anim.isRunning())
 				animated_objects[i].anim.stop();	//Should this be .anim.stop() or .pause()?
@@ -567,9 +568,9 @@ function do_transition(layerId, slow_fade, comingFrom) {
 		
 		setTimeout(function() {
 			fade_layer.hide();
-			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+			stage.get("#black_screen")[0].size({width: stage.width(), height: stage.height() - 100});
 			fade_layer.moveDown();
-			play_music(current_layer.getId());
+			play_music(current_layer.id());
 			if (comingFrom)
 				setMonologue(findMonologue(stage.get('#' + comingFrom)[0]));
 		}, fade_time);
@@ -588,12 +589,12 @@ inventory_layer.on('click tap', function(event) {
 });
 //Drag start events
 stage.get('Image').on('dragstart', function(event) {
-	dragged_item = event.targetNode;
+	dragged_item = event.target;
 	inventoryDrag(dragged_item);
 });
 //While dragging events (use item on item or object)
 stage.on('dragmove', function(event) {
-	dragged_item = event.targetNode;
+	dragged_item = event.target;
 
 	if (!delayEnabled) {
 		// Setting a small delay to not spam intersection check on every moved pixel
@@ -664,25 +665,26 @@ stage.on('dragmove', function(event) {
 		// If target is found, highlight it and show the interaction text
 		if (target != null) {
 			current_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
 			inventory_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
-			target.setShadowColor('purple');
-			target.setShadowOffset(0);
-			target.setShadowBlur(20);
+            target.clearCache();
+			target.shadowColor('purple');
+			target.shadowOffset(0);
+			target.shadowBlur(20);
 			
 			// Don't cause a mass of errors if no text found
 			try {
-				interaction_text.setText(target.getAttr('name'));
+				interaction_text.text(target.getAttr('name'));
 			}
 			catch (e) {
 			}
-			interaction_text.setX(dragged_item.getX() + (dragged_item.getWidth() / 2));
-			interaction_text.setY(dragged_item.getY() - 30);
-			interaction_text.setOffset({
-				x : interaction_text.getWidth() / 2
+			interaction_text.x(dragged_item.x() + (dragged_item.width() / 2));
+			interaction_text.y(dragged_item.y() - 30);
+			interaction_text.offset({
+				x : interaction_text.width() / 2
 			});
 
 			dragged_item.moveToTop();
@@ -691,10 +693,10 @@ stage.on('dragmove', function(event) {
 			// If no target, clear the texts and highlights
 		} else {
 			current_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
 			inventory_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
 			clearText(interaction_text);
 		}
@@ -707,9 +709,9 @@ function checkIntersection(dragged_item, target) {
 	// If target is visible and of suitable category
 	if (target.isVisible() && (target.getAttr('category') != undefined && target.getAttr('category') != 'secret' && target.getAttr('category') != 'transition')) {
 		// If horizontally inside
-		if (dragged_item.getX() > target.getX() && dragged_item.getX() < (target.getX() + target.getWidth()) || (dragged_item.getX() + dragged_item.getWidth()) > target.getX() && (dragged_item.getX() + dragged_item.getWidth()) < (target.getX() + target.getWidth())) {
+		if (dragged_item.x() > target.x() && dragged_item.x() < (target.x() + target.width()) || (dragged_item.x() + dragged_item.width()) > target.x() && (dragged_item.x() + dragged_item.width()) < (target.x() + target.width())) {
 			// If vertically inside
-			if (dragged_item.getY() > target.getY() && dragged_item.getY() < (target.getY() + target.getHeight()) || (dragged_item.getY() + dragged_item.getHeight()) > target.getY() && (dragged_item.getY() + dragged_item.getHeight()) < (target.getY() + target.getHeight())) {
+			if (dragged_item.y() > target.y() && dragged_item.y() < (target.y() + target.height()) || (dragged_item.y() + dragged_item.height()) > target.y() && (dragged_item.y() + dragged_item.height()) < (target.y() + target.height())) {
 				return true;
 			}
 		}
@@ -719,9 +721,9 @@ function checkIntersection(dragged_item, target) {
 
 //Drag end events
 stage.get('Image').on('dragend', function(event) {
-	var dragged_item = event.targetNode;
+	var dragged_item = event.target;
 	try {
-		var object = objects_json[dragged_item.getId()];
+		var object = objects_json[dragged_item.id()];
 	} catch(e) {
 		var object = null;
 	}
@@ -730,8 +732,8 @@ stage.get('Image').on('dragend', function(event) {
 
 	// If nothing's under the dragged item
 	if (target == null) {
-		dragged_item.setX(x);
-		dragged_item.setY(y);
+		dragged_item.x(x);
+		dragged_item.y(y);
 	}
 	// Put something into a container
 	else if (target != null && target.getAttr('category') == 'container') {
@@ -739,7 +741,7 @@ stage.get('Image').on('dragend', function(event) {
 		var unlocked = undefined;
 
 		// Can dragged object unlock locked container?
-		if (object.locked === true && object.key == dragged_item.getId()) {
+		if (object.locked === true && object.key == dragged_item.id()) {
 			object.locked = false;
 			stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
 
@@ -749,43 +751,48 @@ stage.get('Image').on('dragend', function(event) {
 				unlocked = "full_image";
 
 			stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
+            stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].clearCache();
+
+
 		}
 		// Can dragged object be put into the container
-		else if (object.state == 'empty' && object.in == dragged_item.getId()) {
+		else if (object.state == 'empty' && object.in == dragged_item.id()) {
 			object.state = 'full';
 
-			if (object.in == dragged_item.getId()) {
+			if (object.in == dragged_item.id()) {
 				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
 				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
+                stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].clearCache();
 
 				// Remove dragged item
 				destroy = true;
 				current_layer.draw();
 			}
 		}
-		setMonologue(findMonologue(dragged_item, target.getId()));
+		setMonologue(findMonologue(dragged_item, target.id()));
 	}
 	// Unlock a door
 	else if (target != null && target.getAttr('category') == 'door') {
 		var object = objects_json[target.getAttr('object_name')];
 
-		if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
+		if (object.locked === true && object.state == 'locked' && object.key == dragged_item.id()) {
 			object.state = 'open';
 			object.locked = false;
 
 			stage.get('#' + object.locked_image)[0].hide();
 			stage.get('#' + object.open_image)[0].show();
+            stage.get('#' + object.open_image)[0].clearCache();
 		}
 
-		setMonologue(findMonologue(dragged_item, target.getId()));
+		setMonologue(findMonologue(dragged_item, target.id()));
 	}
 	// Unblock an obstacle
 	else if (target != null && target.getAttr('category') == 'obstacle') {
 		var object = objects_json[target.getAttr('object_name')];
 
-		setMonologue(findMonologue(dragged_item, target.getId()));
+		setMonologue(findMonologue(dragged_item, target.id()));
 
-		if (object.blocking === true && object.trigger == dragged_item.getId()) {
+		if (object.blocking === true && object.trigger == dragged_item.id()) {
 			var blocked_object = objects_json[object.target];
 
 			object.blocking = false;
@@ -794,13 +801,14 @@ stage.get('Image').on('dragend', function(event) {
 			// TODO: What about other objects than door?
 			stage.get('#' + blocked_object.blocked_image)[0].hide();
 			stage.get('#' + blocked_object.closed_image)[0].show();
+            stage.get('#' + blocked_object.closed_image)[0].clearCache();
 
             // Check if the target is in the list of animated objects;
             // remove it from there if so. TODO: There should probably be
             // generic item/object destruction which checks if it was
             // animated.
-            if (animated_objects.indexOf(target.getId()) > -1)
-                animated_objects.splice(animated_objects.indexOf(target.getId()), 1);
+            if (animated_objects.indexOf(target.id()) > -1)
+                animated_objects.splice(animated_objects.indexOf(target.id()), 1);
 
 			// TODO: unblocking_image, merge this with "use item on object"?
             // TODO: There should probably be generic item/object destruction
@@ -811,8 +819,8 @@ stage.get('Image').on('dragend', function(event) {
 				for (var i in related)
                 {
                     var related_part = stage.get("#" + related[i])[0];
-                    if (animated_objects.indexOf(related_part.getId() > -1))
-                        animated_objects.splice(animated_objects.indexOf(related_part.getId()), 1);
+                    if (animated_objects.indexOf(related_part.id() > -1))
+                        animated_objects.splice(animated_objects.indexOf(related_part.id()), 1);
 					related_part.hide();
                 }
 			}
@@ -823,10 +831,11 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on object
 	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'object') {
-		setMonologue(findMonologue(dragged_item, target.getId()));
+		setMonologue(findMonologue(dragged_item, target.id()));
 
-		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
-			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
+		if (objects_json[dragged_item.id()].trigger == target.id()) {
+			stage.get('#' + objects_json[dragged_item.id()].outcome)[0].show();
+			stage.get('#' + objects_json[dragged_item.id()].outcome)[0].clearCache();
 
 			// Items may be consumed when used
 			dragged_object = objects_json[dragged_item.getAttr('object_name')];
@@ -848,35 +857,35 @@ stage.get('Image').on('dragend', function(event) {
 	}
 	// Use item on item
 	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
-		setMonologue(findMonologue(dragged_item, target.getId()));
-		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
+		setMonologue(findMonologue(dragged_item, target.id()));
+		if (objects_json[dragged_item.id()].trigger == target.id()) {
 
-			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
+			stage.get('#' + objects_json[dragged_item.id()].outcome)[0].show();
 
-			inventoryAdd(stage.get('#' + objects_json[dragged_item.getId()].outcome)[0]);
+			inventoryAdd(stage.get('#' + objects_json[dragged_item.id()].outcome)[0]);
 			destroy = true;
 			inventoryRemove(target);
 		}
 	}
 	// Default for all others
 	else {
-		setMonologue(findMonologue(dragged_item, target.getId()));
+		setMonologue(findMonologue(dragged_item, target.id()));
 	}
 	// Check if dragged item's destroyed, if not, add it to inventory
 	if (destroy == false) {
 		inventoryAdd(dragged_item);
 	} else {
         dragged_item.hide();
-        dragged_item.setDraggable(false);
+        dragged_item.draggable(false);
         inventory_list.splice(inventory_list.indexOf(dragged_item), 1);
 	}
 
 	// Clearing the glow effects
 	current_layer.getChildren().each(function(shape, i) {
-		shape.setShadowBlur(0);
+		shape.shadowBlur(0);
 	});
 	inventory_layer.getChildren().each(function(shape, i) {
-		shape.setShadowBlur(0);
+		shape.shadowBlur(0);
 	});
 	// Clearing the texts
 	clearText(interaction_text);
@@ -890,8 +899,8 @@ stage.on('touchstart mousedown', function(event) {
 });
 //Touch start and mouse down events (save the coordinates before dragging)
 inventory_layer.on('touchstart mousedown', function(event) {
-	x = event.targetNode.getX();
-	y = event.targetNode.getY();
+	x = event.target.x();
+	y = event.target.y();
 	//clearText(monologue);
 });
 //Inventory arrow clicking events
@@ -900,7 +909,7 @@ inventory_bar_layer.on('click tap', function(event) {
 });
 //Interaction between items based on their category
 function interact(event) {
-	var target = event.targetNode;
+	var target = event.target;
 	var target_category = target.getAttr('category');
 	
 	try {
@@ -956,6 +965,7 @@ function interact(event) {
 
 				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].hide();
 				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].show();
+				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].clearCache();
 
 				// Show and add the added inventory item
 				var new_item = stage.get('#' + object.out)[0];
@@ -980,10 +990,12 @@ function interact(event) {
 			if (object.locked === true) {
 				object.state = 'locked';
 				stage.get('#' + object.locked_image)[0].show();
+                stage.get('#' + object.locked_image)[0].clearCache();
 			}
 			else {
 				object.state = 'open';
 				stage.get('#' + object.open_image)[0].show();
+                stage.get('#' + object.open_image)[0].clearCache();
 			}
 			target.hide();
 			current_layer.draw();
@@ -1035,10 +1047,10 @@ function play_ending(ending) {
 		fade_layer.show();
 		fade.play();
 		setTimeout(function() {
-			play_music(current_layer.getId());
+			play_music(current_layer.id());
 			rewards_text = stage.get('#rewards_text')[0];
-			old_text = rewards_text.getText();
-			rewards_text.setText(rewards + rewards_text.getText());
+			old_text = rewards_text.text();
+			rewards_text.text(rewards + rewards_text.text());
 						
 			current_layer.show();
 			
@@ -1048,7 +1060,7 @@ function play_ending(ending) {
 			inventory_layer.show();
 			inventory_layer.moveToTop();
 			
-			display_menu(current_layer.getId());
+			display_menu(current_layer.id());
 			
 			character_layer.show();
 			character_layer.moveToTop();
@@ -1060,7 +1072,7 @@ function play_ending(ending) {
 			fade_layer.moveToTop();
 			
 			stage.draw();
-			rewards_text.setText(old_text);
+			rewards_text.text(old_text);
 			
 			fade.reverse();
 			setTimeout('fade_layer.hide();', 700);
@@ -1107,13 +1119,13 @@ function findMonologue(object, key) {
 function setMonologue(text) {
 	monologue.setWidth('auto');
 	speech_bubble.show();
-	monologue.setText(text);
-	if (monologue.getWidth() > 524) {
-		monologue.setWidth(524);
-		monologue.setText(text);
+	monologue.text(text);
+	if (monologue.width() > 524) {
+		monologue.width(524);
+		monologue.text(text);
 	}
 
-	speech_bubble.setY(stage.getHeight() - 100 - 15 - monologue.getHeight() / 2);
+	speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
 
 	// Playing the speaking animation
 	idle_1.hide();
@@ -1130,9 +1142,9 @@ function setMonologue(text) {
 
 //Clearing the given text
 function clearText(text) {
-	text.setText("");
+	text.text("");
 
-	if (text.getId() == 'monologue') {
+	if (text.id() == 'monologue') {
 		speech_bubble.hide();
 	}
 	text_layer.draw();
@@ -1165,7 +1177,7 @@ function getJSON(json_file) {
 function createObject(o) {
 	window[o.id] = new Image();
 	window[o.id].onLoad = function() {
-		stage.get('#' + o.id)[0].setImage(window[o.id]);
+		stage.get('#' + o.id)[0].image(window[o.id]);
 	}();
 	window[o.id].src = o.src;
 }
@@ -1177,9 +1189,9 @@ function createObject(o) {
 /// @param item Item to be added to the inventory
 function inventoryAdd(item) {
 	item.moveTo(inventory_layer);
-	item.clearImageHitRegion();
-	item.setScale(1);
-	item.setSize(80, 80);
+    item.clearCache();
+	item.scale({x: 1, y: 1});
+	item.size({width: 80, height: 80});
 
 	if (inventory_list.indexOf(item) > -1)
 		inventory_list.splice(inventory_list.indexOf(item), 1, item);
@@ -1200,7 +1212,7 @@ function inventoryAdd(item) {
 function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
-	item.setDraggable(false);
+	item.draggable(false);
 	inventory_list.splice(inventory_list.indexOf(item), 1);
 	redrawInventory();
 }
@@ -1220,7 +1232,7 @@ function inventoryDrag(item) {
 function redrawInventory() {
 	inventory_layer.getChildren().each(function(shape, i) {
 		shape.setAttr('visible', false);
-		shape.setDraggable(false);
+		shape.draggable(false);
 	});
 
     // If the left arrow is visible AND there's empty space to the right,
@@ -1233,9 +1245,9 @@ function redrawInventory() {
 		if (shape.getAttr('category') != 'reward') {
 			shape.setAttr('category', 'usable');
 		}
-		shape.setDraggable(true);
-		shape.setX(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
-		shape.setY(stage.getHeight() - 90);
+		shape.draggable(true);
+		shape.x(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
+		shape.y(stage.height() - 90);
 		shape.setAttr('visible', true);
 	}
 

@@ -19,7 +19,8 @@
                         "height": 543,
                         "id": "locker_room_2",
                         "src": "images/locker_room_2.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -29,7 +30,8 @@
                         "id": "tag_on_wall",
                         "src": "images/tag_on_wall.png",
                         "x": 890,
-                        "y": 255
+                        "y": 255,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -40,7 +42,8 @@
                         "object_name": "marker",
                         "src": "images/marker.png",
                         "x": 230,
-                        "y": 445
+                        "y": 445,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -51,7 +54,8 @@
                         "object_name": "locker_room_2_shower_door",
                         "src": "images/locker_room_2_door_to_shower.png",
                         "x": 16,
-                        "y": 8
+                        "y": 8,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -62,7 +66,8 @@
                         "object_name": "locker_room_2_wc_door",
                         "src": "images/locker_room_2_door_to_wc_closed.png",
                         "x": 117,
-                        "y": 60
+                        "y": 60,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -84,7 +89,8 @@
                         "id": "locker_room_2_door_to_out",
                         "src": "images/locker_room_2_door_to_out.png",
                         "x": 816,
-                        "y": 83
+                        "y": 83,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -94,7 +100,8 @@
                         "id": "icehockey_jersey",
                         "src": "images/icehockey_jersey.png",
                         "x": 616,
-                        "y": 136
+                        "y": 136,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -110,7 +117,8 @@
                         "strokeWidth": 2,
                         "width": 55,
                         "x": 642,
-                        "y": 196
+                        "y": 196,
+                        "visible": true
                     },
                     "className": "Text"
                 },
@@ -120,7 +128,8 @@
                         "id": "wall",
                         "src": "images/wall.png",
                         "x": 300,
-                        "y": 160
+                        "y": 160,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -131,7 +140,8 @@
                         "reward": "book_reward_3",
                         "src": "images/reward_3.png",
                         "x": 290,
-                        "y": 345
+                        "y": 345,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -141,7 +151,8 @@
                         "id": "locker_room_2_blood",
                         "src": "images/locker_room_2_blood.png",
                         "x": 775,
-                        "y": 373
+                        "y": 373,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -253,7 +264,8 @@
                         "height": 543,
                         "id": "locker_room_1",
                         "src": "images/locker_room_1.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -274,7 +286,8 @@
                         "id": "locker_room_1_blood",
                         "src": "images/locker_room_1_blood.png",
                         "x": 83,
-                        "y": 383
+                        "y": 383,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -335,7 +348,8 @@
                         "id": "locker_room_1_door_to_out",
                         "src": "images/locker_room_1_door_to_out.png",
                         "x": 69,
-                        "y": 102
+                        "y": 102,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -346,7 +360,8 @@
                         "object_name": "locker_room_1_shower_door",
                         "src": "images/locker_room_1_door_to_shower_closed.png",
                         "x": 865,
-                        "y": 33
+                        "y": 33,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -368,7 +383,8 @@
                         "id": "book_stephenking",
                         "src": "images/book_stephenking.png",
                         "x": 600,
-                        "y": 280
+                        "y": 280,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -379,7 +395,8 @@
                         "object_name": "stinking_wc_door",
                         "src": "images/locker_room_1_door_to_wc_closed.png",
                         "x": 776,
-                        "y": 72
+                        "y": 72,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -414,7 +431,8 @@
                         "object_name": "locker",
                         "src": "images/locker_closed.png",
                         "x": 150,
-                        "y": 50
+                        "y": 50,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -447,10 +465,12 @@
                         "category": "item",
                         "id": "tactic_board_wiper",
                         "object_name": "tactic_board_wiper",
-                        "scale": 0.6,
+                        "scaleX": 0.8,
+                        "scaleY": 0.8,
                         "src": "images/tactic_board_wiper.png",
                         "x": 680,
-                        "y": 390
+                        "y": 390,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -494,7 +514,8 @@
                         "object_name": "garbagecan",
                         "src": "images/garbagecan.png",
                         "x": 5,
-                        "y": 428
+                        "y": 428,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -526,7 +547,8 @@
                         "height": 543,
                         "id": "wc_2",
                         "src": "images/wc_2.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -536,7 +558,8 @@
                         "id": "wc_2_mirror",
                         "src": "images/wc_2_mirror.png",
                         "x": 395,
-                        "y": 138
+                        "y": 138,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -545,10 +568,12 @@
                         "category": "item",
                         "id": "hairkeeper",
                         "object_name": "hairkeeper",
-                        "scale": 0.7,
+                        "scaleX": 0.85,
+                        "scaleY": 0.85,
                         "src": "images/hairkeeper.png",
                         "x": 454,
-                        "y": 209
+                        "y": 209,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -559,7 +584,8 @@
                         "object_name": "wc_2_door_to_locker_room_2",
                         "src": "images/wc_2_door_to_locker_room_2.png",
                         "x": 555,
-                        "y": 127
+                        "y": 127,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -569,7 +595,8 @@
                         "id": "wc_2_window",
                         "src": "images/wc_2_window.png",
                         "x": 110,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 }
@@ -590,7 +617,8 @@
                         "height": 543,
                         "id": "shower_room",
                         "src": "images/shower_room.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -600,7 +628,8 @@
                         "id": "shower_middle",
                         "src": "images/shower_middle.png",
                         "x": 440,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -611,7 +640,8 @@
                         "object_name": "shower_door_to_locker_room_2",
                         "src": "images/shower_door_to_locker_room_2_closed.png",
                         "x": 155,
-                        "y": 132
+                        "y": 132,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -646,7 +676,8 @@
                         "object_name": "cieni",
                         "src": "images/cieni_1.png",
                         "x": 100,
-                        "y": 380
+                        "y": 380,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -662,7 +693,8 @@
                         "object_name": "cieni",
                         "src": "images/cieni_eyes.png",
                         "x": 220,
-                        "y": 415
+                        "y": 415,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -681,7 +713,8 @@
                         "src": "images/cieni_mouth.png",
                         "width": 73,
                         "x": 215,
-                        "y": 453
+                        "y": 453,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -691,7 +724,8 @@
                         "id": "teddybear",
                         "src": "images/teddybear.png",
                         "x": 370,
-                        "y": 360
+                        "y": 360,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -702,7 +736,8 @@
                         "object_name": "shower_door_to_locker_room_1",
                         "src": "images/shower_door_to_locker_room_1.png",
                         "x": 691,
-                        "y": 136
+                        "y": 136,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -712,7 +747,8 @@
                         "id": "shower_right",
                         "src": "images/shower_right.png",
                         "x": 570,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -722,7 +758,8 @@
                         "id": "shower_left",
                         "src": "images/shower_left.png",
                         "x": 310,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 }
@@ -742,7 +779,8 @@
                         "height": 543,
                         "id": "wc_1",
                         "src": "images/wc_1.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -761,10 +799,12 @@
                     "attrs": {
                         "category": "item",
                         "id": "cienibang",
-                        "scale": 0.8,
+                        "scaleX": 0.9,
+                        "scaleY": 0.9,
                         "src": "images/cienibang.png",
                         "x": 443,
-                        "y": 325
+                        "y": 325,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -774,7 +814,8 @@
                         "id": "wc_1_mirror",
                         "src": "images/wc_1_mirror.png",
                         "x": 460,
-                        "y": 143
+                        "y": 143,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -784,7 +825,8 @@
                         "id": "library_receipt",
                         "src": "images/library_receipt.png",
                         "x": 610,
-                        "y": 380
+                        "y": 380,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -795,7 +837,8 @@
                         "src": "images/poster.png",
                         "src2": "poster_withoutglue",
                         "x": 215,
-                        "y": 473
+                        "y": 473,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -806,7 +849,8 @@
                         "object_name": "wc_1_door_to_locker_room_1",
                         "src": "images/wc_1_door_to_locker_room_1.png",
                         "x": 281,
-                        "y": 125
+                        "y": 125,
+                        "visible": true
                     },
                     "className": "Image"
                 }
@@ -1010,7 +1054,7 @@
                         "fontSize": 26,
                         "fontStyle": "bold",
                         "id": "rewards_text",
-                        "strokeColor": "grey",
+                        "stroke": "grey",
                         "strokeWidth": 1,
                         "text": "/3 piilotettua kirjaa l\u00f6ydetty",
                         "x": 340,
@@ -1250,7 +1294,7 @@
                         "fontSize": 18,
                         "fontStyle": "bold",
                         "id": "interaction_text",
-                        "strokeColor": "black",
+                        "stroke": "black",
                         "strokeWidth": 1,
                         "x": 512,
                         "y": 430
@@ -1273,7 +1317,7 @@
                                 "pointerDirection": "right",
                                 "pointerHeight": 15,
                                 "pointerWidth": 40,
-                                "strokeColor": "black",
+                                "stroke": "black",
                                 "strokeWidth": 1
                             },
                             "className": "Tag"
