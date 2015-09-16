@@ -755,10 +755,7 @@ stage.get('Image').on('dragend', function(event) {
 			else
 				unlocked = "full_image";
 
-			stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
-            stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].clearCache();
-
-
+            addObject(stage.get('#' + objects_json[target.getAttr('object_name')][unlocked]));
 		}
 		// Can dragged object be put into the container
 		else if (object.state == 'empty' && object.in == dragged_item.id()) {
@@ -766,8 +763,7 @@ stage.get('Image').on('dragend', function(event) {
 
 			if (object.in == dragged_item.id()) {
 				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
-				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
-                stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].clearCache();
+                addObject(stage.get('#' + objects_json[target.getAttr('object_name')]['full_image']));
 
 				// Remove dragged item
 				destroy = true;
@@ -785,8 +781,7 @@ stage.get('Image').on('dragend', function(event) {
 			object.locked = false;
 
             destroyObject(stage.get('#' + object.locked_image));
-			stage.get('#' + object.open_image)[0].show();
-            stage.get('#' + object.open_image)[0].clearCache();
+            addObject(stage.get('#' + object.open_image));
 		}
 
 		setMonologue(findMonologue(dragged_item, target.id()));
@@ -805,8 +800,7 @@ stage.get('Image').on('dragend', function(event) {
 
 			// TODO: What about other objects than door?
             destroyObject(stage.get('#' + object.locked_image));
-			stage.get('#' + blocked_object.closed_image)[0].show();
-            stage.get('#' + blocked_object.closed_image)[0].clearCache();
+            addObject(stage.get('#' + blocked_object.closed_image));
 
             destroyObject(target);
 		}
@@ -816,8 +810,7 @@ stage.get('Image').on('dragend', function(event) {
 		setMonologue(findMonologue(dragged_item, target.id()));
 
 		if (objects_json[dragged_item.id()].trigger == target.id()) {
-			stage.get('#' + objects_json[dragged_item.id()].outcome)[0].show();
-			stage.get('#' + objects_json[dragged_item.id()].outcome)[0].clearCache();
+            addObject(stage.get('#' + objects_json[dragged_item.id()].outcome));
 
 			// Items may be consumed when used
 			dragged_object = objects_json[dragged_item.getAttr('object_name')];
@@ -930,8 +923,7 @@ function interact(event) {
 				object.state = 'empty';
 
 				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].hide();
-				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].show();
-				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].clearCache();
+                addObject(stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image']));
 
 				// Show and add the added inventory item
 				var new_item = stage.get('#' + object.out)[0];
@@ -954,13 +946,11 @@ function interact(event) {
 			setMonologue(findMonologue(target));
 			if (object.locked === true) {
 				object.state = 'locked';
-				stage.get('#' + object.locked_image)[0].show();
-                stage.get('#' + object.locked_image)[0].clearCache();
+                addObject(stage.get('#' + object.locked_image));
 			}
 			else {
 				object.state = 'open';
-				stage.get('#' + object.open_image)[0].show();
-                stage.get('#' + object.open_image)[0].clearCache();
+                addObject(stage.get('#' + object.open_image));
 			}
             destroyObject(target);
 			current_layer.draw();
@@ -987,6 +977,15 @@ function interact(event) {
 			redrawInventory();
 		}
 	}
+}
+
+/// Add an object to the stage. Currently, this means setting its visibility
+/// to true.
+/// @param The object to be added.
+function addObject(object) {
+    object.clearCache();
+    object.show();
+    object.cache();
 }
 
 /// Destroy an object from stage. Called after interactions that remove objects.
