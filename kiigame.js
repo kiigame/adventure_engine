@@ -748,7 +748,7 @@ stage.get('Image').on('dragend', function(event) {
 		// Can dragged object unlock locked container?
 		if (object.locked === true && object.key == dragged_item.id()) {
 			object.locked = false;
-			stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
+            destroyObject(stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image']));
 
 			if (object.state == "empty")
 				unlocked = "empty_image";
@@ -784,7 +784,7 @@ stage.get('Image').on('dragend', function(event) {
 			object.state = 'open';
 			object.locked = false;
 
-			stage.get('#' + object.locked_image)[0].hide();
+            destroyObject(stage.get('#' + object.locked_image));
 			stage.get('#' + object.open_image)[0].show();
             stage.get('#' + object.open_image)[0].clearCache();
 		}
@@ -804,34 +804,11 @@ stage.get('Image').on('dragend', function(event) {
 			blocked_object.blocked = false;
 
 			// TODO: What about other objects than door?
-			stage.get('#' + blocked_object.blocked_image)[0].hide();
+            destroyObject(stage.get('#' + object.locked_image));
 			stage.get('#' + blocked_object.closed_image)[0].show();
             stage.get('#' + blocked_object.closed_image)[0].clearCache();
 
-            // Check if the target is in the list of animated objects;
-            // remove it from there if so. TODO: There should probably be
-            // generic item/object destruction which checks if it was
-            // animated.
-            if (animated_objects.indexOf(target.id()) > -1)
-                animated_objects.splice(animated_objects.indexOf(target.id()), 1);
-
-			// TODO: unblocking_image, merge this with "use item on object"?
-            // TODO: There should probably be generic item/object destruction
-            // which checks if it has related parts.
-			var related = objects_json[target.getAttr('id')].related;
-
-			if (related && related.size != 0) {
-				for (var i in related)
-                {
-                    var related_part = stage.get("#" + related[i])[0];
-                    if (animated_objects.indexOf(related_part.id() > -1))
-                        animated_objects.splice(animated_objects.indexOf(related_part.id()), 1);
-					related_part.hide();
-                }
-			}
-
-			target.destroy();
-            target = null;
+            destroyObject(target);
 		}
 	}
 	// Use item on object
@@ -847,17 +824,8 @@ stage.get('Image').on('dragend', function(event) {
 			if (dragged_object.consume === true)
 				destroy = true;
 
-            // Objects related to the target (i.e. the other "parts" of the
-            // target) are hidden.
-			var related = target.getAttr("related");
-			if (related && related.size != 0) {
-				for (var i in related)
-					stage.get("#" + related[i])[0].hide();
-			}
-
             // The object is destroyed if it is the target of item's use.
-            target.destroy();
-            target = null;
+            destroyObject(target);
 		}
 	}
 	// Use item on item
@@ -930,11 +898,10 @@ function interact(event) {
 	// Pick up an item
 	else if (target_category == 'item') {
 		setMonologue(findMonologue(target, 'pickup'));
-		if (target.getAttr('src2') != undefined) {
+		if (target.getAttr('src2') != undefined) { // different image on floor
 			stage.get('#' + target.getAttr('src2'))[0].show();
 			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
-			target.destroy();
-            target = null;
+            destroyObject(target);
 		} else {
 			inventoryAdd(target);
 		}
@@ -949,8 +916,7 @@ function interact(event) {
 		stage.get('#'+rewardID)[0].show();
 		inventoryAdd(stage.get('#'+rewardID)[0]);
 		rewards++;
-		target.destroy();
-        target = null;
+        destroyObject(target);
 		current_layer.draw();
 
 		// To prevent multiple events happening at the same time
@@ -1002,7 +968,7 @@ function interact(event) {
 				stage.get('#' + object.open_image)[0].show();
                 stage.get('#' + object.open_image)[0].clearCache();
 			}
-			target.hide();
+            destroyObject(target);
 			current_layer.draw();
 		}
         else if (object.state == 'locked')
@@ -1027,6 +993,40 @@ function interact(event) {
 			redrawInventory();
 		}
 	}
+}
+
+/// Destroy an object from stage. Called after interactions that remove objects.
+/// The destroyed object is set to null in case it's the target variable.
+/// @param object The object to be destroyed.
+function destroyObject(object) {
+    // Remove the object from the list of animated thingies, if it's there.
+    removeAnimation(object.id());
+
+    // If a multipart object, hide parts.
+    var related = null;
+    // FIXME: In LZ, not all objects are in objects_json - the lookup may fail.
+    try {
+        related = objects_json[object.id()].related;
+    }
+    catch(e) {}
+
+    if (related && related.length != 0) {
+	    for (var i in related) {
+            var related_part = stage.get("#" + related[i])[0];
+            removeAnimation(related_part.id());
+            related_part.hide(); // TODO: Don't hide, destroy.
+         }
+	}
+
+    object.destroy();
+    object = null; // in case it's "target"
+}
+
+/// Remove an object from the list of animated objects.
+/// @param id The id of the object to be de-animated.
+function removeAnimation(id) {
+    if (animated_objects.indexOf(id) > -1)
+        animated_objects.splice(animated_objects.indexOf(id), 1);
 }
 
 //Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
