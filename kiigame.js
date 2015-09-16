@@ -200,6 +200,11 @@ for (var i = 0; i < images_json.children.length; i++) {
 			createObject(images_json.children[i].children[j].attrs);
 			object_attrs =images_json.children[i].children[j].attrs;
 
+            // Disable unneeded transformations. Pickable items may be scaled,
+            // for other things the position may change. Untested optimization.
+            if (object_attrs.category != 'item')
+                stage.get('#' + object_attrs.id)[0].transformsEnabled('position');
+
 			if (object_attrs.animated === true)
 				create_animation(stage.get('#' + object_attrs.id)[0]);
 		}
