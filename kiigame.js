@@ -832,9 +832,6 @@ stage.get('Image').on('dragend', function(event) {
 	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
 		setMonologue(findMonologue(dragged_item, target.id()));
 		if (objects_json[dragged_item.id()].trigger == target.id()) {
-
-			stage.get('#' + objects_json[dragged_item.id()].outcome)[0].show();
-
 			inventoryAdd(stage.get('#' + objects_json[dragged_item.id()].outcome)[0]);
 			destroy = true;
 			inventoryRemove(target);
@@ -899,7 +896,6 @@ function interact(event) {
 	else if (target_category == 'item') {
 		setMonologue(findMonologue(target, 'pickup'));
 		if (target.getAttr('src2') != undefined) { // different image on floor
-			stage.get('#' + target.getAttr('src2'))[0].show();
 			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
             destroyObject(target);
 		} else {
@@ -913,7 +909,6 @@ function interact(event) {
 	} else if (target_category == 'secret') {
 		setMonologue(findMonologue(target, 'pickup'));
 		var rewardID = target.getAttr('reward');
-		stage.get('#'+rewardID)[0].show();
 		inventoryAdd(stage.get('#'+rewardID)[0]);
 		rewards++;
         destroyObject(target);
@@ -940,7 +935,6 @@ function interact(event) {
 
 				// Show and add the added inventory item
 				var new_item = stage.get('#' + object.out)[0];
-				new_item.show();
 				inventoryAdd(new_item);
 
 				current_layer.draw();
@@ -1193,6 +1187,7 @@ function createObject(o) {
 /// and adds a new one.
 /// @param item Item to be added to the inventory
 function inventoryAdd(item) {
+    item.show();
 	item.moveTo(inventory_layer);
     item.clearCache();
 	item.scale({x: 1, y: 1});
