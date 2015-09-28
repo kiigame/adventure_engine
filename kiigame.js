@@ -185,27 +185,6 @@ for (var i = 0; i < images_json.children.length; i++) {
 		create_menu_action(images_json.children[i]);
 }
 
-function create_animation (object) {
-	var attrs = object.getAttr("animation");
-	var animation = new Kinetic.Tween({
-		node: object,
-		x: attrs.x ? object.x() + attrs.x : object.x(),
-		y: attrs.y ? object.y() + attrs.y : object.y(),
-		width: attrs.width ? object.width() - 15 : object.width(),
-		easing: Kinetic.Easings.EaseInOut,
-		duration: attrs.duration,
-
-		onFinish: function() {
-			animation.reverse();
-			setTimeout(function() {
-				animation.play();
-			}, attrs.duration * 1000);
-		}
-	});
-
-	animated_objects.push(animation);
-}
-
 //Variable for saving the current room (for changing backgrounds and object layers)
 var current_layer;
 var current_background;
@@ -239,6 +218,27 @@ if (stage.get("#start_layer")[0] != null) {
     }
 } else { // no start layer
     do_transition(game_start_layer.id());
+}
+
+function create_animation (object) {
+	var attrs = object.getAttr("animation");
+	var animation = new Kinetic.Tween({
+		node: object,
+		x: attrs.x ? object.x() + attrs.x : object.x(),
+		y: attrs.y ? object.y() + attrs.y : object.y(),
+		width: attrs.width ? object.width() - 15 : object.width(),
+		easing: Kinetic.Easings.EaseInOut,
+		duration: attrs.duration,
+
+		onFinish: function() {
+			animation.reverse();
+			setTimeout(function() {
+				animation.play();
+			}, attrs.duration * 1000);
+		}
+	});
+
+	animated_objects.push(animation);
 }
 
 /*
