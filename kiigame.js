@@ -547,9 +547,7 @@ function do_transition(layerId, slow_fade, comingFrom) {
 	
 	fade_layer.show();
 	fade.play();
-	
-	var textId = current_layer.getAttr('id');
-	
+
 	setTimeout(function() {
 		stop_music();
 		fade.reverse();
