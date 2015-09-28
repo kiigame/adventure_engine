@@ -62,13 +62,6 @@ stage.get("#inventory_bar")[0].width(stage.width());
 //Make a json object from the json string
 var images_json = stage.toObject();
 
-//Variable for saving the current room (for changing backgrounds and object layers)
-// TODO: Determine these other way
-var start_layer = stage.get("#start_layer")[0];
-var current_background = 'start_layer';
-var game_start_layer;
-var current_layer = start_layer;
-
 //The amount of rewards found
 var rewards = 0;
 
@@ -172,6 +165,26 @@ var idle_2_animation = new Kinetic.Tween({
 	}
 });
 
+//Creating all image objects from json file based on their attributes
+for (var i = 0; i < images_json.children.length; i++) {
+	for (var j = 0; j < images_json.children[i].children.length; j++) {
+		if (images_json.children[i].children[j].className == 'Image') {
+			createObject(images_json.children[i].children[j].attrs);
+			object_attrs =images_json.children[i].children[j].attrs;
+
+            // Disable unneeded transformations. Pickable items may be scaled,
+            // for other things the position may change. Untested optimization.
+            if (object_attrs.category != 'item')
+                stage.get('#' + object_attrs.id)[0].transformsEnabled('position');
+
+			if (object_attrs.animated === true)
+				create_animation(stage.get('#' + object_attrs.id)[0]);
+		}
+	}
+	if (images_json.children[i].attrs.category == 'menu')
+		create_menu_action(images_json.children[i]);
+}
+
 function create_animation (object) {
 	var attrs = object.getAttr("animation");
 	var animation = new Kinetic.Tween({
@@ -193,24 +206,39 @@ function create_animation (object) {
 	animated_objects.push(animation);
 }
 
-//Creating all image objects from json file based on their attributes
-for (var i = 0; i < images_json.children.length; i++) {
-	for (var j = 0; j < images_json.children[i].children.length; j++) {
-		if (images_json.children[i].children[j].className == 'Image') {
-			createObject(images_json.children[i].children[j].attrs);
-			object_attrs =images_json.children[i].children[j].attrs;
+//Variable for saving the current room (for changing backgrounds and object layers)
+var current_layer;
+var current_background;
+var game_start_layer;
 
-            // Disable unneeded transformations. Pickable items may be scaled,
-            // for other things the position may change. Untested optimization.
-            if (object_attrs.category != 'item')
-                stage.get('#' + object_attrs.id)[0].transformsEnabled('position');
+stage.getChildren().each(function(o) {
+    if (o.getAttr('category') === 'room' && o.getAttr('start') === true)
+	    game_start_layer = o;
+});
 
-			if (object_attrs.animated === true)
-				create_animation(stage.get('#' + object_attrs.id)[0]);
-		}
-	}
-	if (images_json.children[i].attrs.category == 'menu')
-		create_menu_action(images_json.children[i]);
+var start_layer = stage.get("#start_layer")[0]; // TODO: get rid of start_layer
+
+// The optional start layer has optional splash screen and optional start menu.
+// TODO: Delay transition to game_start_layer?
+if (stage.get("#start_layer")[0] != null) {
+    current_background = 'start_layer';
+    current_layer = start_layer;
+    if (stage.get('#splash_screen')[0] != null) {
+        stage.get('#splash_screen')[0].on('tap click', function(event) {
+            stage.get('#splash_screen')[0].hide();
+            if (stage.get('#start_layer_menu')[0] != null)
+                display_start_menu();
+            else
+                do_transition(game_start_layer.id());
+        });
+    } else { // no splash screen
+        if (stage.get('#start_layer_menu')[0] != null)
+            display_start_menu();
+        else // start layer without splash or menu?!
+            do_transition(game_start_layer.id());
+    }
+} else { // no start layer
+    do_transition(game_start_layer.id());
 }
 
 /*
@@ -250,6 +278,7 @@ function create_menu_action(menu_image) {
 				setMonologue(findMonologue(event));
 			});
 		}
+        // TODO: Return to main menu after end of game.
 		else if (item_action == "main_menu") {
 			item.on('tap click', function(event) {
 				stage.get('#end_texts')[0].hide();
@@ -296,22 +325,12 @@ window.onload = function() {
 			o.on('mouseup touchend', function(event) {
 				interact(event);
 			});
-
-			// Current layer for hit region purposes in different rooms
-			if (o.getAttr('start') === true) {
-				game_start_layer = o;
-			}
 		}
 	});
 
 	stage.draw();
 	idle_1_animation.play();
 };
-
-stage.get('#splash_screen')[0].on('tap click', function(event) {
-	stage.get('#splash_screen')[0].hide();
-	display_start_menu();
-});
 
 // Display the start menu including "click" to proceed image
 function display_start_menu() {
@@ -551,8 +570,10 @@ function do_transition(layerId, slow_fade, comingFrom) {
 	setTimeout(function() {
 		stop_music();
 		fade.reverse();
-		
-		current_layer.hide();
+
+        if (current_layer != null) // may be null if no start_layer is defined
+            current_layer.hide();
+
 		current_layer = stage.get("#"+layerId)[0];
 		
 		//Play the animations of the room
