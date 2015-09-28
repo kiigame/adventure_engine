@@ -968,8 +968,8 @@
                 {
                     "attrs": {
                         "height": 643,
-                        "id": "beginning",
-                        "src": "images/beginning.png",
+                        "id": "splash_screen",
+                        "src": "images/splash_screen.png",
                         "width": 1024
                     },
                     "className": "Image"

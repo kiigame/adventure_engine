@@ -308,8 +308,8 @@ window.onload = function() {
 	idle_1_animation.play();
 };
 
-stage.get('#beginning')[0].on('tap click', function(event) {
-	stage.get('#beginning')[0].hide();
+stage.get('#splash_screen')[0].on('tap click', function(event) {
+	stage.get('#splash_screen')[0].hide();
 	display_start_menu();
 });
 
