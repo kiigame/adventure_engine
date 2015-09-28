@@ -781,7 +781,6 @@ stage.get('Image').on('dragend', function(event) {
 
 				// Remove dragged item
 				destroy = true;
-				current_layer.draw();
 			}
 		}
 		setMonologue(findMonologue(dragged_item, target.id()));
@@ -908,7 +907,6 @@ function interact(event) {
 		} else {
 			inventoryAdd(target);
 		}
-		current_layer.draw();
 
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
@@ -919,7 +917,6 @@ function interact(event) {
 		inventoryAdd(stage.get('#'+rewardID)[0]);
 		rewards++;
         destroyObject(target);
-		current_layer.draw();
 
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
@@ -942,8 +939,6 @@ function interact(event) {
 				// Show and add the added inventory item
 				var new_item = stage.get('#' + object.out)[0];
 				inventoryAdd(new_item);
-
-				current_layer.draw();
 			}
 		}
 
@@ -967,7 +962,6 @@ function interact(event) {
                 addObject(stage.get('#' + object.open_image));
 			}
             destroyObject(target);
-			current_layer.draw();
 		}
         else if (object.state == 'locked')
             setMonologue(findMonologue(target));
@@ -1000,6 +994,7 @@ function addObject(object) {
     object.clearCache();
     object.show();
     object.cache();
+    current_layer.draw();
 }
 
 /// Destroy an object from stage. Called after interactions that remove objects.
@@ -1027,6 +1022,7 @@ function destroyObject(object) {
 
     object.destroy();
     object = null; // in case it's "target"
+    current_layer.draw();
 }
 
 /// Remove an object from the list of animated objects.
@@ -1216,6 +1212,7 @@ function inventoryAdd(item) {
     if (inventory_list.indexOf(item) > inventory_index + inventory_max - 1)
         inventory_index = Math.max(inventory_list.indexOf(item) + 1 - inventory_max, 0);
 
+    current_layer.draw();
 	redrawInventory();
 }
 
