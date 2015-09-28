@@ -583,11 +583,6 @@ function do_transition(layerId, slow_fade, comingFrom) {
 }
 
 //Mouse up and touch end events (picking up items from the environment
-//Start layer for the shortcut developer menu
-start_layer.on('mouseup touchend', function(event) {
-	interact(event);
-});
-
 //Mouse click and tap events (examine items in the inventory)
 inventory_layer.on('click tap', function(event) {
 	interact(event);

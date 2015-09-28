@@ -194,6 +194,10 @@ input_layer.on('tap click', function(event) {
 });
 
 //Developer feature - shortcut menu from the empty menu button for testing purposes
+start_layer.on('mouseup touchend', function(event) {
+	interact(event);
+});
+
 stage.get('#start_empty')[0].on('tap click', function(event) {
 	event = event.target;
 	var clone;
