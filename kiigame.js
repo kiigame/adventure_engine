@@ -762,7 +762,7 @@ stage.get('Image').on('dragend', function(event) {
 		// Can dragged object unlock locked container?
 		if (object.locked === true && object.key == dragged_item.id()) {
 			object.locked = false;
-            destroyObject(stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image']));
+            removeObject(stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image']));
 
 			if (object.state == "empty")
 				unlocked = "empty_image";
@@ -776,7 +776,7 @@ stage.get('Image').on('dragend', function(event) {
 			object.state = 'full';
 
 			if (object.in == dragged_item.id()) {
-				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
+				removeObject(stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image']));
                 addObject(stage.get('#' + objects_json[target.getAttr('object_name')]['full_image']));
 
 				// Remove dragged item
@@ -793,7 +793,7 @@ stage.get('Image').on('dragend', function(event) {
 			object.state = 'open';
 			object.locked = false;
 
-            destroyObject(stage.get('#' + object.locked_image));
+            removeObject(stage.get('#' + object.locked_image));
             addObject(stage.get('#' + object.open_image));
 		}
 
@@ -812,10 +812,10 @@ stage.get('Image').on('dragend', function(event) {
 			blocked_object.blocked = false;
 
 			// TODO: What about other objects than door?
-            destroyObject(stage.get('#' + object.locked_image));
+            removeObject(stage.get('#' + object.locked_image));
             addObject(stage.get('#' + blocked_object.closed_image));
 
-            destroyObject(target);
+            removeObject(target);
 		}
 	}
 	// Use item on object
@@ -831,7 +831,7 @@ stage.get('Image').on('dragend', function(event) {
 				destroy = true;
 
             // The object is destroyed if it is the target of item's use.
-            destroyObject(target);
+            removeObject(target);
 		}
 	}
 	// Use item on item
@@ -903,7 +903,7 @@ function interact(event) {
 		setMonologue(findMonologue(target, 'pickup'));
 		if (target.getAttr('src2') != undefined) { // different image on floor
 			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
-            destroyObject(target);
+            removeObject(target);
 		} else {
 			inventoryAdd(target);
 		}
@@ -916,7 +916,7 @@ function interact(event) {
 		var rewardID = target.getAttr('reward');
 		inventoryAdd(stage.get('#'+rewardID)[0]);
 		rewards++;
-        destroyObject(target);
+        removeObject(target);
 
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
@@ -933,7 +933,7 @@ function interact(event) {
 			if (object.state == 'full') {
 				object.state = 'empty';
 
-				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].hide();
+				removeObject(stage.get('#' + objects_json[target.getAttr('object_name')]['full_image']));
                 addObject(stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image']));
 
 				// Show and add the added inventory item
@@ -961,7 +961,7 @@ function interact(event) {
 				object.state = 'open';
                 addObject(stage.get('#' + object.open_image));
 			}
-            destroyObject(target);
+            removeObject(target);
 		}
         else if (object.state == 'locked')
             setMonologue(findMonologue(target));
@@ -997,10 +997,10 @@ function addObject(object) {
     current_layer.draw();
 }
 
-/// Destroy an object from stage. Called after interactions that remove objects.
-/// The destroyed object is set to null in case it's the target variable.
+/// Remove an object from stage. Called after interactions that remove objects.
+/// The removed object is hidden. Handles animations and multipart objects.
 /// @param object The object to be destroyed.
-function destroyObject(object) {
+function removeObject(object) {
     // Remove the object from the list of animated thingies, if it's there.
     removeAnimation(object.id());
 
@@ -1016,12 +1016,11 @@ function destroyObject(object) {
 	    for (var i in related) {
             var related_part = stage.get("#" + related[i])[0];
             removeAnimation(related_part.id());
-            related_part.hide(); // TODO: Don't hide, destroy.
+            related_part.hide();
          }
 	}
 
-    object.destroy();
-    object = null; // in case it's "target"
+    object.hide();
     current_layer.draw();
 }
 
