@@ -634,7 +634,7 @@ stage.on('dragmove', function(event) {
 						target = object;
 					}
 					break;
-					// No target, move on
+                // No target, move on
 				} else {
 					target = null;
 				}
