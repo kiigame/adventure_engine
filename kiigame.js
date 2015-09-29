@@ -988,7 +988,7 @@ function interact(event) {
 }
 
 /// Add an object to the stage. Currently, this means setting its visibility
-/// to true.
+/// to true. // TODO: Add animations & related parts.
 /// @param The object to be added.
 function addObject(object) {
     object.clearCache();
