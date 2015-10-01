@@ -158,8 +158,8 @@ input_layer.on('tap click', function(event) {
 		// OK
 	} else if (selected == 'OK' && input_text.getText().length > 0) {
 		stage.get('#jersey_number')[0].setText(input_text.getText());
-		stage.get('#jersey_number')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-		stage.get('#icehockey_jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
+		texts_json['jersey_number']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
+		texts_json['icehockey_jersey']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
 		input_layer.hide();
 
 		play_sequence("intro");
