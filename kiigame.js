@@ -674,7 +674,7 @@ stage.on('dragmove', function(event) {
 			
 			// Don't cause a mass of errors if no text found
 			try {
-				interaction_text.text(target.getAttr('name'));
+				interaction_text.text(texts_json[target.id()].name);
 			}
 			catch (e) {
 			}

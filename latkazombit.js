@@ -10,7 +10,7 @@ var input_layer = stage.get('#input_layer')[0];
 var number_selected = false;
 
 // Default player number
-input_text.setText(input_text.getText());
+input_text.setText(texts_json['input_text']['text']);
 
 // Dirty removing of default event handler to allow using jersey input
 stage.get('#start_game')[0].eventListeners.click = [];
@@ -33,7 +33,7 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 stage.get('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
-	setMonologue(findMonologue(panic, 'text'));
+	setMonologue(findMonologue('character_panic', 'text'));
 	setTimeout(function() {
 		idle_1.hide();
 		panic.show();
