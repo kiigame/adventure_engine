@@ -4,6 +4,7 @@
 var images_json_text = getJSON('images.json');
 var objects_json = JSON.parse(getJSON('objects.json'));
 var texts_json = JSON.parse(getJSON('texts.json'));
+var interactions_json = JSON.parse(getJSON('interactions.json'));
 
 //Create stage and everything in it from json
 var stage = Kinetic.Node.create(images_json_text, 'container');
@@ -150,11 +151,6 @@ for (var i = 0; i < images_json.children.length; i++) {
 		if (images_json.children[i].children[j].className == 'Image') {
 			createObject(images_json.children[i].children[j].attrs);
 			object_attrs =images_json.children[i].children[j].attrs;
-
-            // Disable unneeded transformations. Pickable items may be scaled,
-            // for other things the position may change. Untested optimization.
-            if (object_attrs.category != 'item')
-                stage.get('#' + object_attrs.id)[0].transformsEnabled('position');
 
 			if (object_attrs.animated === true)
 				create_animation(stage.get('#' + object_attrs.id)[0]);
@@ -719,120 +715,19 @@ function checkIntersection(dragged_item, target) {
 //Drag end events
 stage.get('Image').on('dragend', function(event) {
 	var dragged_item = event.target;
-	try {
-		var object = objects_json[dragged_item.id()];
-	} catch(e) {
-		var object = null;
-	}
-	// Variable for whether the dragged item is destroyed or not
-	var destroy = false;
 
 	// If nothing's under the dragged item
 	if (target == null) {
 		dragged_item.x(x);
 		dragged_item.y(y);
 	}
-	// Put something into a container
-	else if (target != null && target.getAttr('category') == 'container') {
-		var object = objects_json[target.getAttr('object_name')];
-		var unlocked = undefined;
+    else if (target.getAttr('category') == 'furniture' || target.getAttr('category') == 'item') {
+        dragend_handler(dragged_item, target);
+    }
 
-		// Can dragged object unlock locked container?
-		if (object.locked === true && object.key == dragged_item.id()) {
-			object.locked = false;
-            removeObject(stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image']));
-
-			if (object.state == "empty")
-				unlocked = "empty_image";
-			else
-				unlocked = "full_image";
-
-            addObject(stage.get('#' + objects_json[target.getAttr('object_name')][unlocked]));
-		}
-		// Can dragged object be put into the container
-		else if (object.state == 'empty' && object.in == dragged_item.id()) {
-			object.state = 'full';
-
-			if (object.in == dragged_item.id()) {
-				removeObject(stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image']));
-                addObject(stage.get('#' + objects_json[target.getAttr('object_name')]['full_image']));
-
-				// Remove dragged item
-				destroy = true;
-			}
-		}
-		setMonologue(findMonologue(dragged_item.id(), target.id()));
-	}
-	// Unlock a door
-	else if (target != null && target.getAttr('category') == 'door') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		if (object.locked === true && object.state == 'locked' && object.key == dragged_item.id()) {
-			object.state = 'open';
-			object.locked = false;
-
-            removeObject(stage.get('#' + object.locked_image));
-            addObject(stage.get('#' + object.open_image));
-		}
-
-		setMonologue(findMonologue(dragged_item.id(), target.id()));
-	}
-	// Unblock an obstacle
-	else if (target != null && target.getAttr('category') == 'obstacle') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		setMonologue(findMonologue(dragged_item.id(), target.id()));
-
-		if (object.blocking === true && object.trigger == dragged_item.id()) {
-			var blocked_object = objects_json[object.target];
-
-			object.blocking = false;
-			blocked_object.blocked = false;
-
-			// TODO: What about other objects than door?
-            removeObject(stage.get('#' + object.locked_image));
-            addObject(stage.get('#' + blocked_object.closed_image));
-
-            removeObject(target);
-		}
-	}
-	// Use item on object
-	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'object') {
-		setMonologue(findMonologue(dragged_item.id(), target.id()));
-
-		if (objects_json[dragged_item.id()].trigger == target.id()) {
-            addObject(stage.get('#' + objects_json[dragged_item.id()].outcome));
-
-			// Items may be consumed when used
-			dragged_object = objects_json[dragged_item.getAttr('object_name')];
-			if (dragged_object.consume === true)
-				destroy = true;
-
-            // The object is destroyed if it is the target of item's use.
-            removeObject(target);
-		}
-	}
-	// Use item on item
-	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
-		setMonologue(findMonologue(dragged_item.id(), target.id()));
-		if (objects_json[dragged_item.id()].trigger == target.id()) {
-			inventoryAdd(stage.get('#' + objects_json[dragged_item.id()].outcome)[0]);
-			destroy = true;
-			inventoryRemove(target);
-		}
-	}
-	// Default for all others
-	else {
-		setMonologue(findMonologue(dragged_item.id(), target.id()));
-	}
 	// Check if dragged item's destroyed, if not, add it to inventory
-	if (destroy == false) {
+	if (dragged_item.isVisible())
 		inventoryAdd(dragged_item);
-	} else {
-        dragged_item.hide();
-        dragged_item.draggable(false);
-        inventory_list.splice(inventory_list.indexOf(dragged_item), 1);
-	}
 
 	// Clearing the glow effects
 	current_layer.getChildren().each(function(shape, i) {
@@ -861,35 +756,16 @@ inventory_layer.on('touchstart mousedown', function(event) {
 inventory_bar_layer.on('click tap', function(event) {
 	interact(event);
 });
-//Interaction between items based on their category
+//Handling objects/items being clicked based on their category
 function interact(event) {
 	var target = event.target;
 	var target_category = target.getAttr('category');
-	
-	try {
-		var ending = objects_json[target.getAttr('object_name')].ending;
-	} catch(e) {
-		var ending = false;
-	}
-	
-	// Initiate ending
-	if (ending)
-		play_ending(ending);
-		
-	// Pick up an item
-	else if (target_category == 'item') {
-		setMonologue(findMonologue(target.id(), 'pickup'));
-		if (target.getAttr('src2') != undefined) { // different image on floor
-			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
-            removeObject(target);
-		} else {
-			inventoryAdd(target);
-		}
 
-		// To prevent multiple events happening at the same time
-		event.cancelBubble = true;
-		// Pick up a secret item
-	} else if (target_category == 'secret') {
+    if (target_category == 'furniture' || target_category == 'item') {
+        click_handler(target);
+	}
+    // Pick up rewards
+    else if (target_category == 'secret') {
 		setMonologue(findMonologue(target.id(), 'pickup'));
 		var rewardID = target.getAttr('reward');
 		inventoryAdd(stage.get('#'+rewardID)[0]);
@@ -899,56 +775,9 @@ function interact(event) {
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
 	}
-	// Print examine texts for items, rewards and objects
-	else if (target_category == 'object' || target_category == 'usable' || target_category == 'reward' || target_category == 'obstacle') {
+	// Print examine texts for rewards
+	else if (target_category == 'reward') {
 		setMonologue(findMonologue(target.id()));
-	}
-	// Take an item out of a container
-	else if (target_category == 'container') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		if (object.locked === false) {
-			if (object.state == 'full') {
-				object.state = 'empty';
-
-				removeObject(stage.get('#' + objects_json[target.getAttr('object_name')]['full_image']));
-                addObject(stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image']));
-
-				// Show and add the added inventory item
-				var new_item = stage.get('#' + object.out)[0];
-				inventoryAdd(new_item);
-			}
-		}
-
-		setMonologue(findMonologue(target.id()));
-	}
-	// Open a door or do a transition
-	else if (target_category == 'door') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		if (object.blocked === true)
-			setMonologue(findMonologue(target.id()));
-			
-		else if (object.state == 'closed') {
-			setMonologue(findMonologue(target.id()));
-			if (object.locked === true) {
-				object.state = 'locked';
-                addObject(stage.get('#' + object.locked_image));
-			}
-			else {
-				object.state = 'open';
-                addObject(stage.get('#' + object.open_image));
-			}
-            removeObject(target);
-		}
-        else if (object.state == 'locked')
-            setMonologue(findMonologue(target.id()));
-		else if (object.state == 'open') {
-			do_transition(object.transition);
-			setTimeout(function() {
-				setMonologue(findMonologue(target.id()));
-			}, 700);
-		}
 	}
 	// Inventory arrow buttons
 	else if (target.getAttr('id') == 'inventory_left_arrow') {
@@ -965,6 +794,72 @@ function interact(event) {
 	}
 }
 
+/// Handle click interactions on room objects and inventory items. Looks up
+/// the interaction from interactions.json. // TODO: better function/param names
+/// @param clicked_item The object or item that was clicked
+function click_handler(clicked_item) {
+    var commands;
+
+    // Not all clicked items have their entry in interactions_json.
+    try {
+        commands = interactions_json[clicked_item.id()].click;
+    } catch (e) {}
+
+    if (commands == null) // no click interaction defined: usual examine
+        commands = [{"command":"monologue", "textkey":{"object": clicked_item.id(), "string": "examine"}}];
+
+    handle_commands(commands);
+}
+
+/// Handle dragend interactions on room objects and inventory items. Looks up
+/// the interaction from interactions.json. // TODO: better function/param names
+function dragend_handler(dragged_item, target_item) {
+    var commands;
+
+    // Not all dragged_items have an entry in interactions_json, or have
+    // anything specified for target_item.
+    try {
+        commands = interactions_json[dragged_item.id()][target_item.id()];
+    } catch (e) {}
+
+    if (commands == null) // no dragend interaction defined: usual text
+         commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target_item.id()}}];
+
+    handle_commands(commands);
+}
+
+/// Loop through a list of interaction commands and execute them with
+/// handle_command, with timeout if specified.
+function handle_commands(commands) {
+    for (var i in commands) {
+        if (commands[i].timeout != null) {
+            setTimeout(function() {
+                handle_command(commands[i]);
+            }, commands[i].timeout);
+        } else {
+            handle_command(commands[i]);
+        }
+    }
+}
+
+/// Handle each interaction. Check what command is coming in, and do the thing.
+function handle_command(command) {
+    if (command.command == "monologue")
+        setMonologue(findMonologue(command.textkey.object, command.textkey.string));
+    else if (command.command == "inventory_add")
+        inventoryAdd(stage.get('#' + command.item)[0]);
+    else if (command.command == "inventory_remove")
+        inventoryRemove(stage.get('#' + command.item)[0]);
+    else if (command.command == "remove_object")
+        removeObject(stage.get('#' + command.object));
+    else if (command.command == "add_object")
+        addObject(stage.get('#' + command.object));
+    else if (command.command == "play_ending")
+        play_ending(command.ending);
+    else if (command.command == "do_transition")
+        do_transition(command.destination);
+}
+
 /// Add an object to the stage. Currently, this means setting its visibility
 /// to true. // TODO: Add animations & related parts.
 /// @param The object to be added.
@@ -976,28 +871,10 @@ function addObject(object) {
 }
 
 /// Remove an object from stage. Called after interactions that remove objects.
-/// The removed object is hidden. Handles animations and multipart objects.
+/// The removed object is hidden. Handles animations.
 /// @param object The object to be destroyed.
 function removeObject(object) {
-    // Remove the object from the list of animated thingies, if it's there.
     removeAnimation(object.id());
-
-    // If a multipart object, hide parts.
-    var related = null;
-    // FIXME: In LZ, not all objects are in objects_json - the lookup may fail.
-    try {
-        related = objects_json[object.id()].related;
-    }
-    catch(e) {}
-
-    if (related && related.length != 0) {
-	    for (var i in related) {
-            var related_part = stage.get("#" + related[i])[0];
-            removeAnimation(related_part.id());
-            related_part.hide();
-         }
-	}
-
     object.hide();
     current_layer.draw();
 }
@@ -1194,7 +1071,7 @@ function inventoryAdd(item) {
 }
 
 /// Removing an item from the inventory. Dragged items are currently just
-/// destroyed & inventory is readrawn only after drag ends.
+/// hidden & inventory is readrawn only after drag ends.
 /// @param item Item to be removed from the inventory
 function inventoryRemove(item) {
 	item.hide();
@@ -1229,9 +1106,6 @@ function redrawInventory() {
 
 	for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
 		shape = inventory_list[i];
-		if (shape.getAttr('category') != 'reward') {
-			shape.setAttr('category', 'usable');
-		}
 		shape.draggable(true);
 		shape.x(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
 		shape.y(stage.height() - 90);

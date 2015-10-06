@@ -1,0 +1,590 @@
+{
+    "airfreshener": {
+        "locker_room_1_door_to_wc_stinking": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "airfreshener", "string": "locker_room_1_door_to_wc_stinking"}
+            },
+            {
+                "command": "remove_object",
+                "object": "locker_room_1_door_to_wc_stinking"
+            },
+            {
+                "command": "add_object",
+                "object": "locker_room_1_door_to_wc_open"
+            }
+        ]
+    },
+    "book_stephenking": {
+    },
+    "cienibang_floor": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "cienibang_floor", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "cienibang"
+            },
+            {
+                "command": "remove_object",
+                "object": "cienibang_floor"
+            }
+        ]
+    },
+    "cienibang": {
+        "cieni": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "cienibang", "string": "cieni"}
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni"
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni_mouth"
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni_eyes"
+            },
+            {
+                "command": "remove_object",
+                "object": "shower_door_to_locker_room_2_blocked"
+            },
+            {
+                "command": "add_object",
+                "object": "shower_door_to_locker_room_2_closed"
+            }
+        ],
+        "cieni_eyes": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "cienibang", "string": "cieni"}
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni"
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni_mouth"
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni_eyes"
+            },
+            {
+                "command": "remove_object",
+                "object": "shower_door_to_locker_room_2_blocked"
+            },
+            {
+                "command": "add_object",
+                "object": "shower_door_to_locker_room_2_closed"
+            }
+        ],
+        "cieni_mouth": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "cienibang", "string": "cieni"}
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni"
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni_mouth"
+            },
+            {
+                "command": "remove_object",
+                "object": "cieni_eyes"
+            },
+            {
+                "command": "remove_object",
+                "object": "shower_door_to_locker_room_2_blocked"
+            },
+            {
+                "command": "add_object",
+                "object": "shower_door_to_locker_room_2_closed"
+            }
+        ]
+    },
+    "garbagecan_empty": {
+    },
+    "garbagecan_teddy": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "garbagecan_teddy", "string": "examine"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "teddybear_chewinggum"
+            },
+            {
+                "command": "remove_object",
+                "object": "garbagecan_teddy"
+            },
+            {
+                "command": "add_object",
+                "object": "garbagecan_empty"
+            }
+        ]
+    },
+    "hairkeeper_floor": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "hairkeeper_floor", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "hairkeeper"
+            },
+            {
+                "command": "remove_object",
+                "object": "hairkeeper_floor"
+            }
+        ]
+    },
+    "hairkeeper": {
+        "poster_withoutglue": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "hairkeeper", "string": "poster_withoutglue"}
+            },
+            {
+                "command": "inventory_remove",
+                "item": "poster_withoutglue"
+            },
+            {
+                "command": "inventory_remove",
+                "item": "hairkeeper"
+            },
+            {
+                "command": "inventory_add",
+                "item": "poster_withglue"
+            }
+        ]
+    },
+    "icehockey_jersey": {
+    },
+    "jersey_number": {
+    },
+    "jacket_full": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "jacket_full", "string": "examine"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "dnaanalyzer"
+            },
+            {
+                "command": "remove_object",
+                "object": "jacket_full"
+            },
+            {
+                "command": "add_object",
+                "object": "jacket_empty"
+            }
+        ]
+    },
+    "jacket_empty": {
+    },
+    "library_receipt": {
+    },
+    "locker_room_1_door_to_out": {
+    },
+    "locker_room_2_door_to_out": {
+    },
+    "locker_room_1_blood": {
+    },
+    "locker_room_2_blood": {
+    },
+    "locker_room_1_door_to_shower_closed": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_1_door_to_shower_closed", "string": "examine"}
+            },
+            {
+                "command": "remove_object",
+                "object": "locker_room_1_door_to_shower_closed"
+            },
+            {
+                "command": "add_object",
+                "object": "locker_room_1_door_to_shower_open"
+            }
+        ]
+    },
+    "locker_room_1_door_to_shower_open": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_shower_room"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_1_door_to_shower_open", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "locker_room_1_door_to_wc_closed": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_1_door_to_wc_closed", "string": "examine"}
+            },
+            {
+                "command": "remove_object",
+                "object": "locker_room_1_door_to_wc_closed"
+            },
+            {
+                "command": "add_object",
+                "object": "locker_room_1_door_to_wc_stinking"
+            }
+        ]
+    },
+    "locker_room_1_door_to_wc_stinking": {
+    },
+    "locker_room_1_door_to_wc_open": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_wc_1"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_1_door_to_wc_open", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "locker_room_2_door_to_wc_closed": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_2_door_to_wc_closed", "string": "examine"}
+            },
+            {
+                "command": "remove_object",
+                "object": "locker_room_2_door_to_wc_closed"
+            },
+            {
+                "command": "add_object",
+                "object": "locker_room_2_door_to_wc_open"
+            }
+        ]
+    },
+    "locker_room_2_door_to_wc_open": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_wc_2"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_2_door_to_shower", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "locker_room_2_door_to_shower": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_shower_room"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_2_door_to_shower", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "locker_closed": {
+    },
+    "locker_open": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_open", "string": "examine"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "airfreshener"
+            },
+            {
+                "command": "remove_object",
+                "object": "locker_open"
+            },
+            {
+                "command": "add_object",
+                "object": "locker_empty"
+            }
+        ]
+    },
+    "locker_empty": {
+    },
+    "marker": {
+        "tactic_board_2": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "marker", "string": "tactic_board_2"}
+            },
+            {
+                "command": "remove_object",
+                "object": "tactic_board_2"
+            },
+            {
+                "command": "add_object",
+                "object": "tactic_board_3"
+            }
+        ]
+    },
+    "marker_floor": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "marker_floor", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "marker"
+            },
+            {
+                "command": "remove_object",
+                "object": "marker_floor"
+            }
+        ]
+    },
+    "poster": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "poster", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "poster_withoutglue"
+            },
+            {
+                "command": "remove_object",
+                "object": "poster"
+            }
+        ]
+    },
+    "poster_withglue": {
+        "wall": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "poster_withglue", "string": "wall"}
+            },
+            {
+                "command": "remove_object",
+                "object": "wall"
+            },
+            {
+                "command": "add_object",
+                "object": "poster_onthewall"
+            },
+            {
+                "command": "inventory_remove",
+                "item": "poster_withglue"
+            }
+        ]
+    },
+    "poster_onthewall": {
+        "click": [
+            {
+                "command": "play_ending",
+                "ending": "end_layer"
+            }
+        ]
+    },
+    "shower_left": {
+    },
+    "shower_middle": {
+    },
+    "shower_right": {
+    },
+    "shower_door_to_locker_room_1": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_locker_room_1"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "shower_door_to_locker_room_1", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "shower_door_to_locker_room_2_blocked": {
+    },
+    "shower_door_to_locker_room_2_closed": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "shower_door_to_locker_room_2_closed", "string": "examine"}
+            },
+            {
+                "command": "remove_object",
+                "object": "shower_door_to_locker_room_2_closed"
+            },
+            {
+                "command": "add_object",
+                "object": "shower_door_to_locker_room_2_open"
+            }
+        ]
+    },
+    "shower_door_to_locker_room_2_open": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_locker_room_2"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "shower_door_to_locker_room_2_open", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "tactic_board_1": {
+    },
+    "tactic_board_2": {
+    },
+    "tactic_board_3": {
+    },
+    "tactic_board_wiper_floor": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "tactic_board_wiper_floor", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "tactic_board_wiper"
+            },
+            {
+                "command": "remove_object",
+                "object": "tactic_board_wiper_floor"
+            }
+        ]
+    },
+    "tactic_board_wiper": {
+        "tactic_board_1": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "tactic_board_wiper", "string": "tactic_board_1"}
+            },
+            {
+                "command": "remove_object",
+                "object": "tactic_board_1"
+            },
+            {
+                "command": "add_object",
+                "object": "tactic_board_2"
+            }
+        ]
+    },
+    "tag_on_wall": {
+    },
+    "teddybear_floor": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "teddybear_floor", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "teddybear"
+            },
+            {
+                "command": "remove_object",
+                "object": "teddybear_floor"
+            }
+        ]
+    },
+    "teddybear": {
+        "garbagecan_empty": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "teddybear", "string": "garbagecan_empty"}
+            },
+            {
+                "command": "inventory_remove",
+                "item": "teddybear"
+            },
+            {
+                "command": "remove_object",
+                "object": "garbagecan_empty"
+            },
+            {
+                "command": "add_object",
+                "object": "garbagecan_teddy"
+            }
+        ]
+    },
+    "teddybear_chewinggum": {
+        "locker_closed": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "teddybear_chewinggum", "string": "locker_closed"}
+            },
+            {
+                "command": "remove_object",
+                "object": "locker_closed"
+            },
+            {
+                "command": "add_object",
+                "object": "locker_open"
+            }
+        ]
+    },
+    "wall": {
+    },
+    "wc_1_mirror": {
+    },
+    "wc_2_mirror": {
+    },
+    "wc_2_window": {
+    },
+    "wc_1_door_to_locker_room_1": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_locker_room_1"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "wc_1_door_to_locker_room_1", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "wc_2_door_to_locker_room_2": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_locker_room_2"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "wc_2_door_to_locker_room_2", "string": "examine"},
+                "timeout": 700
+            }
+        ]
+    },
+    "oikotie": {"click": [ {"command": "play_ending", "ending": "end_layer"}]},
+    "oikotie2": {"click":[{"command":"do_transition","destination":"object_layer_locker_room_2"}]}
+}

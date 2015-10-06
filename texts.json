@@ -2,6 +2,9 @@
     "default": {
         "examine": "Ei pysty, liian hapokasta."
     },
+    "default.pickable": {
+        "default": "Tätä ei voi käyttää tähän. Voisin kyllä poimia tämän mukaani."
+    },
     "object_layer_locker_room_1": {
         "name": "Pukuhuone 1"
     },
@@ -274,9 +277,12 @@
         "shower_middle": "\"Liian monta eri DNA:ta tunnistettu.\" Näitä suihkuja tosiaan käyttää aika moni henkilö päivän aikana.",
         "shower_right": "\"Liian monta eri DNA:ta tunnistettu.\" Näitä suihkuja tosiaan käyttää aika moni henkilö päivän aikana."
     },
+    "tactic_board_wiper_floor": {
+        "name": "Taulusieni",
+        "pickup": "Taktiikkataulun pyyhkimistyökalu jonka poimin mukaani. Eihän sitä koskaan tiedä milloin tätä voisi tarvita."
+    },
     "tactic_board_wiper": {
         "name": "Taulusieni",
-        "pickup": "Taktiikkataulun pyyhkimistyökalu jonka poimin mukaani. Eihän sitä koskaan tiedä milloin tätä voisi tarvita.",
         "examine": "Tällä voi vetäistä taktiikkataulun päältä ja puhdasta tulee. Meidän koutsi kyllä yleensä käyttää kauluspaitansa hihaa taulun pyyhkimiseen.",
         "locker_room_1_door_to_out": "Tätä ei ole tarkoitettu ovien pyyhkimiseen.",
         "jacket_full": "Tätä ei ole tarkoitettu vaatteiden puhdistamiseen.",
@@ -537,9 +543,12 @@
     "reward_3": {
         "pickup": "Löysin naulakon alle piilotetun kirjan!"
     },
+    "marker_floor": {
+        "name": "Tussi",
+        "pickup": "Joku on unohtanut tänne tussin. Otan sen mukaani niin ei kukaan kompastu siihen."
+    },
     "marker": {
         "name": "Tussi",
-        "pickup": "Joku on unohtanut tänne tussin. Otan sen mukaani niin ei kukaan kompastu siihen.",
         "examine": "Vesiliukoiselta vaikuttava tussi. Tusseja käytetään esimerkiksi piirtämiseen. Joidenkin tiedetään käyttävän tusseja myös töhrimiseen.",
         "locker_room_1_door_to_out": "En halua töhriä tuota ovea.",
         "jacket_full": "Laitetaan Japen takkiin nimmari vasta myöhemmin… paljon myöhemmin.",
@@ -650,10 +659,13 @@
     "cieni_mouth": {
         "examine": "Hyi, mikä sienikasvusto! En missään nimessä koske pitkällä tikullakaan tuohon kasvustoon. Taitaa olla muuten tason 23 jalkasieni! Harmi kun pokepallot jäivät kotiin..."
     },
+    "teddybear_floor": {
+        "name": "Nalle",
+        "pickup": "Mitähän tämä täällä tekee... mutta... en voi vastustaa! Tämä söpö nalle lähtee mukaani! En kyllä kehtaa näyttää tätä muulle joukkueelle."
+    },
     "teddybear": {
         "name": "Nalle",
         "examine": "Söpö nalle ja niin pörröinenkin! Tämä varmaan sotkeentuu tosi helposti.",
-        "pickup": "Mitähän tämä täällä tekee... mutta... en voi vastustaa! Tämä söpö nalle lähtee mukaani! En kyllä kehtaa näyttää tätä muulle joukkueelle.",
         "locker_room_1_door_to_out": "Nallekaan ei uskalla mennä ulos kun sieltä kuuluu tuota hirvittävää möykkää.",
         "jacket_full": "Takki on aivan liian suuri tälle nallelle. Takin taskussa on muuten jotakin.",
         "jacket_empty": "Takki on aivan liian suuri tälle nallelle.",
@@ -767,9 +779,12 @@
         "name": "Vessan ovi",
         "examine": "Mistähän minä oikein pääsisin ulos?"
     },
+    "cienibang_floor": {
+        "name": "CieniBang",
+        "pickup": "Hmm, jotain puhdistustököttiä. Eihän sitä koskaan tiedä milloin sitä innostuu siivoamaan."
+    },
     "cienibang": {
         "name": "CieniBang",
-        "pickup": "Hmm, jotain puhdistustököttiä. Eihän sitä koskaan tiedä milloin sitä innostuu siivoamaan.",
         "examine": "\"CieniBang -yleispuhdistusaine. Räjäyttää aivan kaiken… lian pois aivan kaikesta\". Olisikohan täällä jotain puhdistettavaa.",
         "locker_room_1_door_to_out": "Ovi ja etenkin tuo lammikko olisi syytä puhdistaa. Säästän puhdistusaineen kuitenkin tuonnemmaksi.",
         "jacket_full": "Takin pudistaminen olisi toki huomaavaista. Parempi kuitenkin antaa Japen huolehtia siitä itse. Tuolle taskussa olevalle laitteellekin saattaisi loiskua.",
@@ -954,16 +969,19 @@
         "examine": "Ulkomaailma! En näe zombeja... ikkuna on jumissa, tästä ei voi kiivetä."
     },
     "wc_2_mirror": {
-        "name": "Ikkuna",
+        "name": "Peili",
 		"examine": "Oih miten komea karju peilissä onkaan. Näyttää aivan kädelliseltä, kreikkalaiselta jumalpatsaalta. Kuinka olenkaan itseni näin komeaksi päästänyt."
     },
     "wc_1_mirror": {
         "name": "Peili",
         "examine": "Oih miten komea karju peilissä onkaan. Näyttää aivan kädelliseltä, kreikkalaiselta jumalpatsaalta. Kuinka olenkaan itseni näin komeaksi päästänyt."
     },
+    "hairkeeper_floor": {
+        "name": "Hiuskeepperi",
+        "pickup": "Koutsilla on unohtunut jotain tänne. Nappaanpa mukaan."
+    },
     "hairkeeper": {
         "name": "Hiuskeepperi",
-        "pickup": "Koutsilla on unohtunut jotain tänne. Nappaanpa mukaan.",
         "examine": "\"Hiuskeepperi - Koska olen jonkin arvoinen: Pitää kampauksesi kunnossa kolme viikkoa kerrallaan.\" Koutsi käyttää aika rajuja aineita tyylikkään kampauksensa ylläpitoon.",
         "locker_room_1_door_to_out": "Tuon hirveän mölinän aiheuttajia tuskin kiinnostaa hiustensa hyvinvointi.",
         "jacket_full": "Takin omistajan frisyyri on aina sellainen sekamelska, ettei hän liene kuullutkaan tällaisista aineista. Pidän hiuskeepperin kuitenkin vielä itselläni.",
