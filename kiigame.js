@@ -853,6 +853,8 @@ function handle_command(command) {
         play_ending(command.ending);
     else if (command.command == "do_transition")
         do_transition(command.destination);
+    else
+        console.warn("Unknown interaction command " + command.command);
 }
 
 /// Add an object to the stage. Currently, this means setting its visibility
