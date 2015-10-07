@@ -986,6 +986,7 @@ function setMonologue(text) {
 
 	// Playing the speaking animation
 	idle_1.hide();
+    idle_2.hide();
 	speak_1.show();
 	speak_1_animation.play();
 
