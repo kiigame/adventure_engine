@@ -164,15 +164,6 @@ input_layer.on('tap click', function(event) {
 
 		play_sequence("intro");
 	}
-	// Test feature - show the legend text when clicking the jersey
-	/*
-	else if (selected == 'Pelipaita' || selected == 'Pelinumero') {
-		if (input_text.getText() > 0) {
-			stage.get('#input_text')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			stage.get('#jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			interact(event);
-		}
-	}*/
 	// If no number, grey out buttons that can't be used
 	if (input_text.getText().length == 0) {
 		stage.get('#button_ok').hide();
@@ -195,7 +186,7 @@ input_layer.on('tap click', function(event) {
 
 //Developer feature - shortcut menu from the empty menu button for testing purposes
 start_layer.on('mouseup touchend', function(event) {
-	interact(event);
+	handle_click(event);
 });
 
 stage.get('#start_empty')[0].on('tap click', function(event) {

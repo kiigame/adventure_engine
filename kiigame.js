@@ -297,7 +297,7 @@ window.onload = function() {
 			});
 
 			o.on('mouseup touchend', function(event) {
-				interact(event);
+				handle_click(event);
 			});
 		}
 	});
@@ -578,7 +578,7 @@ function do_transition(layerId, slow_fade, comingFrom) {
 //Mouse up and touch end events (picking up items from the environment
 //Mouse click and tap events (examine items in the inventory)
 inventory_layer.on('click tap', function(event) {
-	interact(event);
+	handle_click(event);
 });
 //Drag start events
 stage.get('Image').on('dragstart', function(event) {
@@ -712,7 +712,26 @@ function checkIntersection(dragged_item, target) {
 	return false;
 }
 
-//Drag end events
+/// Stop talking and clear monologue when clicked or touched anywhere on the
+/// screen.
+stage.on('touchstart mousedown', function(event) {
+	clearText(monologue);
+	stopTalking();
+});
+
+/// Touch start and mouse down events (save the coordinates before dragging)
+inventory_layer.on('touchstart mousedown', function(event) {
+	x = event.target.x();
+	y = event.target.y();
+	//clearText(monologue);
+});
+
+/// Inventory arrow clicking events
+inventory_bar_layer.on('click tap', function(event) {
+	handle_click(event);
+});
+
+/// Drag end events for inventory items.
 stage.get('Image').on('dragend', function(event) {
 	var dragged_item = event.target;
 
@@ -721,8 +740,20 @@ stage.get('Image').on('dragend', function(event) {
 		dragged_item.x(x);
 		dragged_item.y(y);
 	}
+    // Look up the possible interaction from interactions.json.
     else if (target.getAttr('category') == 'furniture' || target.getAttr('category') == 'item') {
-        dragend_handler(dragged_item, target);
+        var commands;
+
+        // Not all dragged_items have an entry in interactions_json, or have
+        // anything specified for target_item.
+        try {
+            commands = interactions_json[dragged_item.id()][target.id()];
+        } catch (e) {}
+
+        if (commands == null) // no dragend interaction defined: usual text
+             commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target.id()}}];
+
+        handle_commands(commands);
     }
 
 	// Check if dragged item's destroyed, if not, add it to inventory
@@ -741,28 +772,25 @@ stage.get('Image').on('dragend', function(event) {
 
 	redrawInventory();
 });
-//Stop talking and clear monologue when clicked or touched anywhere on the screen
-stage.on('touchstart mousedown', function(event) {
-	clearText(monologue);
-	stopTalking();
-});
-//Touch start and mouse down events (save the coordinates before dragging)
-inventory_layer.on('touchstart mousedown', function(event) {
-	x = event.target.x();
-	y = event.target.y();
-	//clearText(monologue);
-});
-//Inventory arrow clicking events
-inventory_bar_layer.on('click tap', function(event) {
-	interact(event);
-});
-//Handling objects/items being clicked based on their category
-function interact(event) {
+
+/// Handle click interactions on room objects, inventory items and inventory
+/// arrows.
+function handle_click(event) {
 	var target = event.target;
 	var target_category = target.getAttr('category');
 
     if (target_category == 'furniture' || target_category == 'item') {
-        click_handler(target);
+        var commands;
+
+        // Not all clicked items have their entry in interactions_json.
+        try {
+            commands = interactions_json[target.id()].click;
+        } catch (e) {}
+
+        if (commands == null) // no click interaction defined: usual examine
+            commands = [{"command":"monologue", "textkey":{"object": target.id(), "string": "examine"}}];
+
+        handle_commands(commands);
 	}
     // Pick up rewards
     else if (target_category == 'secret') {
@@ -794,40 +822,6 @@ function interact(event) {
 	}
 }
 
-/// Handle click interactions on room objects and inventory items. Looks up
-/// the interaction from interactions.json. // TODO: better function/param names
-/// @param clicked_item The object or item that was clicked
-function click_handler(clicked_item) {
-    var commands;
-
-    // Not all clicked items have their entry in interactions_json.
-    try {
-        commands = interactions_json[clicked_item.id()].click;
-    } catch (e) {}
-
-    if (commands == null) // no click interaction defined: usual examine
-        commands = [{"command":"monologue", "textkey":{"object": clicked_item.id(), "string": "examine"}}];
-
-    handle_commands(commands);
-}
-
-/// Handle dragend interactions on room objects and inventory items. Looks up
-/// the interaction from interactions.json. // TODO: better function/param names
-function dragend_handler(dragged_item, target_item) {
-    var commands;
-
-    // Not all dragged_items have an entry in interactions_json, or have
-    // anything specified for target_item.
-    try {
-        commands = interactions_json[dragged_item.id()][target_item.id()];
-    } catch (e) {}
-
-    if (commands == null) // no dragend interaction defined: usual text
-         commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target_item.id()}}];
-
-    handle_commands(commands);
-}
-
 /// Loop through a list of interaction commands and execute them with
 /// handle_command, with timeout if specified.
 function handle_commands(commands) {
@@ -843,6 +837,7 @@ function handle_commands(commands) {
 }
 
 /// Handle each interaction. Check what command is coming in, and do the thing.
+/// Timeouts are done in handle_commands.
 function handle_command(command) {
     if (command.command == "monologue")
         setMonologue(findMonologue(command.textkey.object, command.textkey.string));
