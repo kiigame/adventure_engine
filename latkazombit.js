@@ -34,7 +34,6 @@ stage.get('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
 	setMonologue(findMonologue('character_panic', 'text'));
-    stopCharacterAnimations();
     playCharacterAnimation(character_animations["panic"], 6000);
 });
 

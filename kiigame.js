@@ -833,7 +833,10 @@ function handle_commands(commands) {
 }
 
 /// Handle each interaction. Check what command is coming in, and do the thing.
-/// Timeouts are done in handle_commands.
+/// Timeouts are done in handle_commands. Order of commands in interactinos.json
+/// can be important: for instance, monologue plays the speaking animation, so
+/// play_character_animation should come after it, so that the speaking
+/// animation is stopped and the defined animation plays, and not vice versa.
 function handle_command(command) {
     if (command.command == "monologue")
         setMonologue(findMonologue(command.textkey.object, command.textkey.string));
@@ -850,7 +853,7 @@ function handle_command(command) {
     else if (command.command == "do_transition")
         do_transition(command.destination);
     else if (command.command == "play_character_animation")
-        playCharacterAnimation(character_animations[command.animation], command.length);
+        playCharacterAnimation(character_animations[command.animation], command.length); // Overrides default speak animation from setMonologue.
     else
         console.warn("Unknown interaction command " + command.command);
 }
@@ -998,6 +1001,7 @@ function setMonologue(text) {
 /// @param animation The animation to play.
 /// @param timeout The time in ms until the character returns to idle animation.
 function playCharacterAnimation(animation, timeout) {
+    stopCharacterAnimations();
     for (var i in idle_animation) {
         idle_animation[i].node.hide();
         idle_animation[i].reset();
