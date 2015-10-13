@@ -1420,7 +1420,8 @@
                         "id": "character_idle_1",
                         "src": "images/character_idle_1.png",
                         "x": 764,
-                        "y": 443
+                        "y": 443,
+                        "visible": true
                     },
                     "className": "Image"
                 },

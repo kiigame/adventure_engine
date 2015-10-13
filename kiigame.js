@@ -5,6 +5,7 @@ var images_json_text = getJSON('images.json');
 var objects_json = JSON.parse(getJSON('objects.json'));
 var texts_json = JSON.parse(getJSON('texts.json'));
 var interactions_json = JSON.parse(getJSON('interactions.json'));
+var character_animations_json = JSON.parse(getJSON('character_animations.json'));
 
 //Create stage and everything in it from json
 var stage = Kinetic.Node.create(images_json_text, 'container');
@@ -25,13 +26,6 @@ var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
 var character_layer = stage.get('#character_layer')[0];
 var text_layer = stage.get('#text_layer')[0];
 var fade_layer = stage.get("#fade_layer")[0];
-
-//Character frames
-var speak_1 = stage.get('#character_speak_1')[0];
-var speak_2 = stage.get('#character_speak_2')[0];
-var idle_1 = stage.get('#character_idle_1')[0];
-var idle_2 = stage.get('#character_idle_2')[0];
-var panic = stage.get('#character_panic')[0];
 
 //Scale background and UI elements
 stage.get("#black_screen")[0].size({width: stage.width(), height: stage.height()});
@@ -55,8 +49,8 @@ var inventory_max = 7;
 //(how many items from the beginning are not shown)
 var inventory_index = 0;
 
-//Timeout event for showing monologue animation for certain duration
-var monologue_timeout;
+//Timeout event for showing character animation for certain duration
+var character_animation_timeout;
 
 //Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
 var x;
@@ -94,56 +88,57 @@ var fade = new Kinetic.Tween({
 //List of animated objects
 var animated_objects = [];
 
-/*
-var wakeup = new Kinetic.Tween({
-	node : fade_layer,
-	duration : 3,
-	opacity : 1
-});
-*/
+// Create character animations.
+var character_animations = [];
 
-//Speak animation
-var speak_1_animation = new Kinetic.Tween({
-	node : speak_1,
-	duration : 0.3,
-	onFinish : function() {
-		speak_1.hide();
-		speak_2.show();
-		speak_1_animation.reset();
-		speak_2_animation.play();
-	}
-});
-var speak_2_animation = new Kinetic.Tween({
-	node : speak_2,
-	duration : 0.3,
-	onFinish : function() {
-		speak_1.show();
-		speak_2.hide();
-		speak_2_animation.reset();
-		speak_1_animation.play();
-	}
-});
-//Character's idle animation
-var idle_1_animation = new Kinetic.Tween({
-	node : idle_1,
-	duration : 8.7,
-	onFinish : function() {
-		idle_1.hide();
-		idle_2.show();
-		idle_1_animation.reset();
-		idle_2_animation.play();
-	}
-});
-var idle_2_animation = new Kinetic.Tween({
-	node : idle_2,
-	duration : 0.2,
-	onFinish : function() {
-		idle_1.show();
-		idle_2.hide();
-		idle_2_animation.reset();
-		idle_1_animation.play();
-	}
-});
+for (var i in character_animations_json) {
+    var frames = [];
+    for (var j in character_animations_json[i].frames) {
+        var frame = new Kinetic.Tween({
+            node: stage.get('#' + character_animations_json[i].frames[j].node)[0],
+            duration: character_animations_json[i].frames[j].duration
+        });
+        frames.push(frame);
+    }
+    character_animations[character_animations_json[i].id] = frames;
+}
+
+for (var i in character_animations) {
+    for (var j = 0; j < character_animations[i].length; j++) {
+        if (character_animations[i].length > j+1) {
+            character_animations[i][j].onFinish = function() {
+                var animation = null;
+                var frame_index = null;
+                for (var k in character_animations) {
+                    if (character_animations[k].indexOf(this) > -1) {
+                        animation = character_animations[k];
+                        frame_index = character_animations[k].indexOf(this);
+                    }
+                }
+                this.node.hide();
+                animation[frame_index+1].node.show();
+                this.reset();
+                animation[frame_index+1].play();
+            }
+        } else {
+            character_animations[i][j].onFinish = function() {
+                var animation = null;
+                for (var k in character_animations) {
+                    if (character_animations[k].indexOf(this) > -1)
+                        animation = character_animations[k];
+                }
+                this.node.hide();
+                animation[0].node.show();
+                this.reset();
+                animation[0].play();
+            }
+        }
+    }
+}
+
+// Default character animations
+var speak_animation = character_animations["speak"];
+var idle_animation = character_animations["idle"];
 
 //Creating all image objects from json file based on their attributes
 for (var i = 0; i < images_json.children.length; i++) {
@@ -303,7 +298,8 @@ window.onload = function() {
 	});
 
 	stage.draw();
-	idle_1_animation.play();
+    idle_animation[0].node.show();
+	idle_animation[0].play();
 };
 
 // Display the start menu including "click" to proceed image
@@ -712,11 +708,11 @@ function checkIntersection(dragged_item, target) {
 	return false;
 }
 
-/// Stop talking and clear monologue when clicked or touched anywhere on the
-/// screen.
+/// Stop character animations and clear monologue when clicked or touched
+/// anywhere on the screen.
 stage.on('touchstart mousedown', function(event) {
 	clearText(monologue);
-	stopTalking();
+	stopCharacterAnimations();
 });
 
 /// Touch start and mouse down events (save the coordinates before dragging)
@@ -853,6 +849,8 @@ function handle_command(command) {
         play_ending(command.ending);
     else if (command.command == "do_transition")
         do_transition(command.destination);
+    else if (command.command == "play_character_animation")
+        playCharacterAnimation(character_animations[command.animation], command.length);
     else
         console.warn("Unknown interaction command " + command.command);
 }
@@ -990,19 +988,27 @@ function setMonologue(text) {
 	}
 
 	speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
-
-	// Playing the speaking animation
-	idle_1.hide();
-    idle_2.hide();
-	speak_1.show();
-	speak_1_animation.play();
-
 	text_layer.moveToTop();
 	text_layer.draw();
+
+    playCharacterAnimation(speak_animation, 3000);
+}
+
+/// Play a character animation
+/// @param animation The animation to play.
+/// @param timeout The time in ms until the character returns to idle animation.
+function playCharacterAnimation(animation, timeout) {
+    for (var i in idle_animation) {
+        idle_animation[i].node.hide();
+        idle_animation[i].reset();
+    }
+	animation[0].node.show();
+	animation[0].play();
+
 	character_layer.draw();
 
-	clearTimeout(monologue_timeout);
-	monologue_timeout = setTimeout('stopTalking();', 3000);
+	clearTimeout(character_animation_timeout);
+	character_animation_timeout = setTimeout('stopCharacterAnimations();', timeout);
 }
 
 //Clearing the given text
@@ -1015,18 +1021,18 @@ function clearText(text) {
 	text_layer.draw();
 }
 
-//Stop the talking animations
-function stopTalking() {
-	character_layer.getChildren().each(function(shape, i) {
-		shape.hide();
-	});
-	stage.get("#character_idle_1")[0].show();
+///Stop the characer animations, start idle animation
+function stopCharacterAnimations() {
+	for (var i in character_animations) {
+        for (var j in character_animations[i]) {
+            character_animations[i][j].node.hide();
+            character_animations[i][j].reset();
+        }
+    }
 
-	speak_1_animation.reset();
-	speak_2_animation.reset();
-
+    idle_animation[0].node.show();
+    idle_animation[0].play();
 	character_layer.draw();
-
 }
 
 //Load json from the server
@@ -1088,7 +1094,7 @@ function inventoryRemove(item) {
 function inventoryDrag(item) {
 	item.moveTo(current_layer);
 	clearText(monologue);
-	stopTalking();
+	stopCharacterAnimations();
 	current_layer.moveToTop();
 	character_layer.moveToTop();
 	text_layer.moveToTop();

@@ -34,11 +34,8 @@ stage.get('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
 	setMonologue(findMonologue('character_panic', 'text'));
-	setTimeout(function() {
-		idle_1.hide();
-		panic.show();
-		setTimeout('panic.hide(); idle_1.show();', 2000);
-	}, 1000);
+    stopCharacterAnimations();
+    playCharacterAnimation(character_animations["panic"], 6000);
 });
 
 // Listeners for the input screen buttons

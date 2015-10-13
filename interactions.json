@@ -200,8 +200,30 @@
     "library_receipt": {
     },
     "locker_room_1_door_to_out": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_1_door_to_out", "string": "examine"}
+            },
+            {
+                "command": "play_character_animation",
+                "animation": "panic",
+                "length": 6000
+            }
+        ]
     },
     "locker_room_2_door_to_out": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "locker_room_2_door_to_out", "string": "examine"}
+            },
+            {
+                "command": "play_character_animation",
+                "animation": "panic",
+                "length": 6000
+            }
+        ]
     },
     "locker_room_1_blood": {
     },
