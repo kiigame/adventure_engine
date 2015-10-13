@@ -505,9 +505,9 @@ function play_sequence(sequence, transition) {
 				if (images_total == sequence_counter) {
 					setTimeout(function() {
 						if (transition == null)
-							do_transition(object.transition, true, current_layer.id());
+							do_transition(object.transition, 3000, current_layer.id());
 						else if (transition !== false)
-							do_transition(transition, true);
+							do_transition(transition, 3000);
 						text_layer.show();
 					}, 700)
 				}
@@ -523,23 +523,28 @@ function play_sequence(sequence, transition) {
 }
 
 // Do a transition to a layer with specified ID
-function do_transition(layerId, slow_fade, comingFrom) {
+function do_transition(layerId, fade_time_param, comingFrom) {
 	hide_menu();
-	
+
 	// By default do fast fade
-	var fade_time = 3000;
-	if (slow_fade == null) {
+	var fade_time = fade_time_param;
+	if (fade_time_param == null) {
 		var fade_time = 700;
 		character_layer.moveToTop();
 	}
-	fade.tween.duration = fade_time;
-	
-	fade_layer.show();
-	fade.play();
+
+    // Don't fade if duration is zero.
+    if (fade_time != 0)
+    {
+        fade.tween.duration = fade_time;
+        fade_layer.show();
+        fade.play();
+    }
 
 	setTimeout(function() {
 		stop_music();
-		fade.reverse();
+		if (fade_time != 0) // Don't fade if duration is zero.
+            fade.reverse();
 
         if (current_layer != null) // may be null if no start_layer is defined
             current_layer.hide();
@@ -851,7 +856,7 @@ function handle_command(command) {
     else if (command.command == "play_ending")
         play_ending(command.ending);
     else if (command.command == "do_transition")
-        do_transition(command.destination);
+        do_transition(command.destination, command.length != null ? command.length : 700);
     else if (command.command == "play_character_animation")
         playCharacterAnimation(character_animations[command.animation], command.length); // Overrides default speak animation from setMonologue.
     else
