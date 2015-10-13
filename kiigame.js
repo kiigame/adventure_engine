@@ -952,13 +952,18 @@ function findMonologue(object_id, key) {
 	if (key == null)
 		key = 'examine';
 
-    var text = texts_json[object_id][key];
+    var text = null;
+    try { // Might not find with object_id
+        text = texts_json[object_id][key];
+    } catch(e) {}
 
 	// If no text found, use default text
 	if (!text || text.length == 0) {
 		// Item's own default
 		console.warn("No text " + key + " found for " + object_id);
-		text = texts_json[object_id]['default'];
+		try { // Might not find with object_id
+            text = texts_json[object_id]['default'];
+        } catch(e) {}
 		if (!text) {
 			// Master default
 			console.warn("Default text not found for " + object_id + ". Using master default.");
