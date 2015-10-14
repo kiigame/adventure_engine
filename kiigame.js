@@ -238,8 +238,11 @@ function create_menu_action(menu_image) {
 			
 		if (item_action == "start_game") {
 			item.on('tap click', function(event) {
-                if (stage.get('#intro') != "")
-                    play_sequence("intro");
+                if (stage.get('#intro') != "") {
+                    var intro_delay = play_sequence("intro");
+                    // TODO: This should be done after any sequence! See #87.
+                    setTimeout('character_layer.moveToTop();', intro_delay);
+                }
                 else // Assume intro layer has a transition to game_start_layer
                     do_transition(game_start_layer.id());
 			});
@@ -528,12 +531,11 @@ function play_sequence(sequence, transition) {
 function do_transition(layerId, fade_time_param, comingFrom) {
 	hide_menu();
 
-	// By default do fast fade
 	var fade_time = fade_time_param;
-	if (fade_time_param == null) {
+
+	// By default do fast fade
+	if (fade_time_param == null)
 		var fade_time = 700;
-		character_layer.moveToTop();
-	}
 
     // Don't fade if duration is zero.
     if (fade_time != 0)
