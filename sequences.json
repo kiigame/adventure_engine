@@ -1,0 +1,55 @@
+{
+    "intro": {
+        "images": {
+            "1": {
+                "do_fade": true,
+                "id": "intro_1",
+                "show_time": 4000
+            },
+            "2": {
+                "do_fade": true,
+                "id": "intro_2",
+                "show_time": 5000
+            },
+            "3": {
+                "do_fade": true,
+                "id": "intro_3",
+                "show_time": 4500
+            },
+            "4": {
+                "do_fade": false,
+                "id": "intro_4",
+                "show_time": 1000
+            },
+            "5": {
+                "do_fade": false,
+                "id": "intro_5",
+                "show_time": 1000
+            },
+            "6": {
+                "do_fade": false,
+                "id": "intro_6",
+                "show_time": 1000
+            },
+            "7": {
+                "do_fade": false,
+                "id": "intro_7",
+                "show_time": 1000
+            }
+        },
+        "music": "audio/intro_mono_20131213.ogg",
+        "music_fade": true,
+        "transition": "object_layer_locker_room_1"
+    },
+    "outro": {
+        "category": "sequence",
+        "images": {
+            "1": {
+                "do_fade": true,
+                "id": "outro_1",
+                "show_time": 4000
+            }
+        },
+        "music": "outro"
+    }
+}

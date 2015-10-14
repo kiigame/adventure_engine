@@ -6,6 +6,8 @@ var objects_json = JSON.parse(getJSON('objects.json'));
 var texts_json = JSON.parse(getJSON('texts.json'));
 var interactions_json = JSON.parse(getJSON('interactions.json'));
 var character_animations_json = JSON.parse(getJSON('character_animations.json'));
+var sequences_json = JSON.parse(getJSON('sequences.json'));
+var music_json = JSON.parse(getJSON('music.json'));
 
 //Create stage and everything in it from json
 var stage = Kinetic.Node.create(images_json_text, 'container');
@@ -324,7 +326,7 @@ string id - object ID from JSON with "music":"file name" attribute
 function play_music(id) {
 	if (id == undefined)
 		return;
-	var data = objects_json[stage.get('#'+id)[0].getAttr('object_name')];
+	var data = music_json[stage.get('#'+id)[0].getAttr('object_name')];
 
 	// ID and music found from JSON?
 	if (!data || !data.music) {
@@ -454,7 +456,7 @@ function play_sequence(sequence, transition) {
 	var old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
 	current_layer.moveToTop();
-	var object = objects_json[current_layer.getAttr('object_name')];
+	var object = sequences_json[current_layer.getAttr('object_name')];
 
 	var sequence_counter = 0;
 	var images_total = 0;
