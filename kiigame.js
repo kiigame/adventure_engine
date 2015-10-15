@@ -1,5 +1,3 @@
-//KineticJS JavaScript Framework http://www.kineticjs.com/ Copyright 2013, Eric Rowell. Licensed under the MIT license.
-
 //Get jsons from the server
 var images_json_text = getJSON('images.json');
 var objects_json = JSON.parse(getJSON('objects.json'));
@@ -10,7 +8,7 @@ var sequences_json = JSON.parse(getJSON('sequences.json'));
 var music_json = JSON.parse(getJSON('music.json'));
 
 //Create stage and everything in it from json
-var stage = Kinetic.Node.create(images_json_text, 'container');
+var stage = Konva.Node.create(images_json_text, 'container');
 
 //Scale stage to window size
 //stage.setWidth(window.innerWidth);
@@ -81,7 +79,7 @@ var dragged_item;
 var target;
 
 //Animation for fading the screen
-var fade = new Kinetic.Tween({
+var fade = new Konva.Tween({
 	node : fade_layer,
 	duration : 0.6,
 	opacity : 1
@@ -96,7 +94,7 @@ var character_animations = [];
 for (var i in character_animations_json) {
     var frames = [];
     for (var j in character_animations_json[i].frames) {
-        var frame = new Kinetic.Tween({
+        var frame = new Konva.Tween({
             node: stage.get('#' + character_animations_json[i].frames[j].node)[0],
             duration: character_animations_json[i].frames[j].duration
         });
@@ -194,12 +192,12 @@ if (stage.get("#start_layer")[0] != null) {
 
 function create_animation (object) {
 	var attrs = object.getAttr("animation");
-	var animation = new Kinetic.Tween({
+	var animation = new Konva.Tween({
 		node: object,
 		x: attrs.x ? object.x() + attrs.x : object.x(),
 		y: attrs.y ? object.y() + attrs.y : object.y(),
 		width: attrs.width ? object.width() - 15 : object.width(),
-		easing: Kinetic.Easings.EaseInOut,
+		easing: Konva.Easings.EaseInOut,
 		duration: attrs.duration,
 
 		onFinish: function() {
@@ -1106,6 +1104,8 @@ function inventoryRemove(item) {
 //Dragging an item from the inventory
 function inventoryDrag(item) {
 	item.moveTo(current_layer);
+    inventory_bar_layer.draw();
+    inventory_layer.draw();
 	clearText(monologue);
 	stopCharacterAnimations();
 	current_layer.moveToTop();

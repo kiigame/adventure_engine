@@ -506,7 +506,7 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "tactic_board_wiper_floor",
-                        "scale": {"x": 0.8, "y": 0.8},
+                        "scale": {"x": 0.6, "y": 0.6},
                         "src": "images/tactic_board_wiper.png",
                         "x": 680,
                         "y": 390,
@@ -603,7 +603,7 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "hairkeeper_floor",
-                        "scale": {"x": 0.85, "y": 0.85},
+                        "scale": {"x": 0.7, "y": 0.7},
                         "src": "images/hairkeeper.png",
                         "x": 454,
                         "y": 209,
@@ -828,7 +828,7 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "cienibang_floor",
-                        "scale": {"x": 0.9, "y": 0.9},
+                        "scale": {"x": 0.8, "y": 0.8},
                         "src": "images/cienibang.png",
                         "x": 443,
                         "y": 325,
