@@ -480,7 +480,7 @@ function play_sequence(sequence, transition, transition_length) {
                 current_layer.show();
 				old_layer.hide();
 				fade_layer.show();
-				text_layer.hide();
+				hide_menu(); // So that the menu is hidden after first fadeout.
 				fade.play();
 				
 				//if (sequence_counter == 0)
@@ -539,8 +539,6 @@ function play_sequence(sequence, transition, transition_length) {
 
 // Do a transition to a layer with specified ID
 function do_transition(layerId, fade_time_param, comingFrom) {
-	hide_menu();
-
 	var fade_time = fade_time_param;
 
 	// By default do fast fade
