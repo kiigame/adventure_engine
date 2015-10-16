@@ -438,12 +438,14 @@ function stop_music() {
         current_music.pause();
 }
 
-/*
-Plays a sequence defined in JSON
-string sequence - the sequence ID from JSON
-boolean/string/null transition - Override sequence's transition target, false cancels transition, null does transition according to sequence
- */
-function play_sequence(sequence, transition) {
+/// Plays a sequence defined in sequences.json
+/// @param sequence The sequence id in sequences.json
+/// @param transition Override sequence's transition target. False cancels
+///                   transition, null does transistion according to sequence.
+/// @param transition_length The length of the transition (fade in) to
+///                           transition target in milliseconds. Only used if
+///                           transition is overridden with transition param.
+function play_sequence(sequence, transition, transition_length) {
 	var delay = 700;
 		
 	// For some reason fade_layer size may change, fix it back here
@@ -510,9 +512,17 @@ function play_sequence(sequence, transition) {
 				if (images_total == sequence_counter) {
 					setTimeout(function() {
 						if (transition == null)
-							do_transition(object.transition, 3000, current_layer.id());
+                        {
+							do_transition(object.transition, object.transition_length, current_layer.id());
+                            if (object.transition_length != null)
+                                delay = delay + object.transition_length;
+                        }
 						else if (transition !== false)
-							do_transition(transition, 3000);
+                        {
+							do_transition(transition, transition_length);
+                            if (transition_length != null)
+                                delay = delay + transition_length;
+                        }
 						text_layer.show();
 					}, 700)
 				}
