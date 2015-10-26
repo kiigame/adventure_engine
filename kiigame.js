@@ -24,13 +24,15 @@ var speech_bubble = stage.get('#speech_bubble')[0];
 var interaction_text = stage.get('#interaction_text')[0];
 
 var inventory_layer = stage.get('#inventory_layer')[0];
-var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
+var inventory_bar_layer = stage.get('#inventory_bar_layer')[0];
 var character_layer = stage.get('#character_layer')[0];
 var text_layer = stage.get('#text_layer')[0];
-var fade_layer = stage.get("#fade_layer")[0];
+var fade_layer_full = stage.get('#fade_layer_full')[0];
+var fade_layer_room = stage.get('#fade_layer_room')[0];
 
 //Scale background and UI elements
-stage.get("#black_screen")[0].size({width: stage.width(), height: stage.height()});
+stage.get("#black_screen_full")[0].size({width: stage.width(), height: stage.height()});
+stage.get("#black_screen_room")[0].size({width: stage.width(), height: stage.height() - 100});
 stage.get("#inventory_bar")[0].y(stage.height() - 100);
 stage.get("#inventory_bar")[0].width(stage.width());
 //window.addEventListener("orientationchange", function() {console.log(window.orientation)}, false);
@@ -81,8 +83,15 @@ var dragged_item;
 var target;
 
 //Animation for fading the screen
-var fade = new Kinetic.Tween({
-	node : fade_layer,
+var fade_full = new Kinetic.Tween({
+	node : fade_layer_full,
+	duration : 0.6,
+	opacity : 1
+});
+
+//Animation for fading the room portion of the screen
+var fade_room = new Kinetic.Tween({
+	node : fade_layer_room,
 	duration : 0.6,
 	opacity : 1
 });
@@ -238,11 +247,8 @@ function create_menu_action(menu_image) {
 			
 		if (item_action == "start_game") {
 			item.on('tap click', function(event) {
-                if (stage.get('#intro') != "") {
-                    var intro_delay = play_sequence("intro");
-                    // TODO: This should be done after any sequence! See #87.
-                    setTimeout('character_layer.moveToTop();', intro_delay);
-                }
+                if (stage.get('#intro') != "")
+                    play_sequence("intro");
                 else // Assume intro layer has a transition to game_start_layer
                     do_transition(game_start_layer.id());
 			});
@@ -270,10 +276,9 @@ function display_menu(layerId) {
 	menu = stage.get('#' + objects_json[layerId]["menu"])[0];
 	if (!menu)
 		return;
-		
+
 	menu.show()
 	current_menu = menu;
-	menu.moveToTop();
 }
 
 function hide_menu() {
@@ -310,15 +315,10 @@ window.onload = function() {
 // Display the start menu including "click" to proceed image
 function display_start_menu() {
 	start_layer.show();
-	start_layer.moveToTop();
-	
 	display_menu("start_layer");
-	character_layer.moveToTop();
 	character_layer.show();
 	inventory_bar_layer.show();
-	
 	stage.draw();
-	
 	play_music('start_layer');
 }
 
@@ -447,20 +447,14 @@ function stop_music() {
 ///                           transition is overridden with transition param.
 function play_sequence(sequence, transition, transition_length) {
 	var delay = 700;
-		
-	// For some reason fade_layer size may change, fix it back here
-	fade_layer.getChildren()[0].width(1024);
-	fade_layer.getChildren()[0].height(643);
-	
+
 	// Animation cycle for proper fading and drawing order
-	fade_layer.moveToTop();
-	fade_layer.show();
-	fade.reset();
-	fade.play();
-	
+	fade_full.reset();
+	fade_layer_full.show();
+	fade_full.play();
+
 	var old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
-	current_layer.moveToTop();
 	var object = sequences_json[current_layer.getAttr('object_name')];
 
 	var sequence_counter = 0;
@@ -479,43 +473,58 @@ function play_sequence(sequence, transition, transition_length) {
 			setTimeout(function() {
                 current_layer.show();
 				old_layer.hide();
-				fade_layer.show();
+				fade_layer_full.show();
 				hide_menu(); // So that the menu is hidden after first fadeout.
-				fade.play();
-				
-				//if (sequence_counter == 0)
-				//	play_music(sequence);
-				
+                character_layer.hide();
+                inventory_bar_layer.hide();
+                inventory_layer.hide();
+				fade_full.play();
+
 				if (last_image)
 					last_image.hide();
 				image.show();
-				
+
 				// Fade-in the image
 				var image_fade = object.images[i].do_fade;
 				if (image_fade === true) {
 					setTimeout(function() {
-						fade_layer.moveToTop();
-						fade_layer.show();
-						fade.reverse();
+						fade_full.reverse();
 						stage.draw();
 					}, 700);
 				}
 				// Immediately display the image
 				else {
-					fade.reset();
+					fade_full.reset();
 					stage.draw();
 				}
-				
+
 				sequence_counter += 1;
-				
+
 				// Last image in the sequence
 				if (images_total == sequence_counter) {
+                    var final_fade_duration = object.transition_length != null ? object.transition_length : 0;
+                    if (final_fade_duration > 0) {
+                        fade_full.tween.duration = final_fade_duration;
+                        fade_full.play();
+                    }
+
 					setTimeout(function() {
 						if (transition == null)
                         {
-							do_transition(object.transition, object.transition_length, current_layer.id());
-                            if (object.transition_length != null)
-                                delay = delay + object.transition_length;
+                            // Set a timeout for monologue, with delay from
+                            // transition_length. Do a zero delay transition to
+                            // room, then a full screen fade-in with
+                            // transition_length.
+                            var sequence_exit_text = findMonologue(current_layer.id());
+                            setTimeout(function() {
+                                fade_layer_full.hide();
+                                setMonologue(sequence_exit_text);
+                                fade_full.tween.duration = 600; // default
+                            }, final_fade_duration);
+                            do_transition(object.transition, 0);
+                            fade_full.reverse();
+
+                            delay = delay + final_fade_duration;
                         }
 						else if (transition !== false)
                         {
@@ -523,8 +532,7 @@ function play_sequence(sequence, transition, transition_length) {
                             if (transition_length != null)
                                 delay = delay + transition_length;
                         }
-						text_layer.show();
-					}, 700)
+					}, final_fade_duration);
 				}
 
 			}, delay);
@@ -532,7 +540,7 @@ function play_sequence(sequence, transition, transition_length) {
 
 		delay = delay + object.images[i].show_time;
 	};
-	
+
 	// Return sequence delay
 	return delay;
 }
@@ -548,15 +556,15 @@ function do_transition(layerId, fade_time_param, comingFrom) {
     // Don't fade if duration is zero.
     if (fade_time != 0)
     {
-        fade.tween.duration = fade_time;
-        fade_layer.show();
-        fade.play();
+        fade_room.tween.duration = fade_time;
+        fade_layer_room.show();
+        fade_room.play();
     }
 
 	setTimeout(function() {
 		stop_music();
 		if (fade_time != 0) // Don't fade if duration is zero.
-            fade.reverse();
+            fade_room.reverse();
 
         if (current_layer != null) // may be null if no start_layer is defined
             current_layer.hide();
@@ -572,15 +580,13 @@ function do_transition(layerId, fade_time_param, comingFrom) {
 		}
 		
 		current_layer.show();
-		
+		inventory_layer.show();
 		inventory_bar_layer.show();
 		character_layer.show();
 		stage.draw();
 		
 		setTimeout(function() {
-			fade_layer.hide();
-			stage.get("#black_screen")[0].size({width: stage.width(), height: stage.height() - 100});
-			fade_layer.moveDown();
+			fade_layer_room.hide();
 			play_music(current_layer.id());
 			if (comingFrom)
 				setMonologue(findMonologue(comingFrom));
@@ -693,7 +699,6 @@ stage.on('dragmove', function(event) {
 				x : interaction_text.width() / 2
 			});
 
-			dragged_item.moveToTop();
 			text_layer.draw();
 
 			// If no target, clear the texts and highlights
@@ -909,50 +914,38 @@ function play_ending(ending) {
     if (ending_object.sequence)
         sequence_delay = play_sequence(ending_object.sequence, false);
 
-    // Clear inventory except rewards
-    for (var i = inventory_layer.children.length-1; i >= 0; i--) {
-        var shape = inventory_layer.children[i];
-        if (shape.getAttr('category') != 'reward')
-            inventoryRemove(shape);
-        inventory_index = 0;
-    }
-
 	setTimeout(function() {
-		current_layer = stage.get('#' + ending)[0];
-		
-		fade_layer.moveToTop();
-		fade_layer.show();
-		fade.play();
+        fade_full.reset();
+		fade_layer_full.show();
+		fade_full.play();
+
 		setTimeout(function() {
+            // Clear inventory except rewards
+            for (var i = inventory_layer.children.length-1; i >= 0; i--) {
+                var shape = inventory_layer.children[i];
+                if (shape.getAttr('category') != 'reward')
+                    inventoryRemove(shape);
+                inventory_index = 0;
+            }
+
 			play_music(current_layer.id());
 			rewards_text = stage.get('#rewards_text')[0];
 			old_text = rewards_text.text();
 			rewards_text.text(rewards + rewards_text.text());
-						
-			current_layer.show();
-			
+
+            current_layer.hide(); // hide the sequence layer
+            current_layer = stage.get('#' + ending)[0];
+            current_layer.show();
 			inventory_bar_layer.show();
-			inventory_bar_layer.moveToTop();
-			
 			inventory_layer.show();
-			inventory_layer.moveToTop();
-			
 			display_menu(current_layer.id());
-			
 			character_layer.show();
-			character_layer.moveToTop();
-			
 			stage.get('#end_texts')[0].show();
-			stage.get('#end_texts')[0].moveToTop();
-			
-			// Still keep fade layer on top
-			fade_layer.moveToTop();
-			
 			stage.draw();
 			rewards_text.text(old_text);
-			
-			fade.reverse();
-			setTimeout('fade_layer.hide();', 700);
+
+			fade_full.reverse();
+			setTimeout('fade_layer_full.hide();', 700);
 		}, 700);
 	}, sequence_delay);
 
@@ -1008,7 +1001,6 @@ function setMonologue(text) {
 	}
 
 	speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
-	text_layer.moveToTop();
 	text_layer.draw();
 
     playCharacterAnimation(speak_animation, 3000);
@@ -1116,9 +1108,6 @@ function inventoryDrag(item) {
 	item.moveTo(current_layer);
 	clearText(monologue);
 	stopCharacterAnimations();
-	current_layer.moveToTop();
-	character_layer.moveToTop();
-	text_layer.moveToTop();
 }
 
 /// Redrawing inventory. Shows the items that should be visible according to

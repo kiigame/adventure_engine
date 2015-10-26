@@ -43,7 +43,6 @@
         "transition_length": 3000
     },
     "outro": {
-        "category": "sequence",
         "images": {
             "1": {
                 "do_fade": true,

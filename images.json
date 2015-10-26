@@ -7,6 +7,52 @@
     "children": [
         {
             "attrs": {
+                "id": "inventory_bar_layer",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "id": "inventory_bar",
+                        "src": "images/inventory_bar.png",
+                        "y": 543
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "invArrow",
+                        "id": "inventory_left_arrow",
+                        "src": "images/inventory_left_arrow.png",
+                        "visible": false,
+                        "x": 30,
+                        "y": 550
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "invArrow",
+                        "id": "inventory_right_arrow",
+                        "src": "images/inventory_right_arrow.png",
+                        "visible": false,
+                        "x": 750,
+                        "y": 550
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "id": "inventory_layer"
+            },
+            "children": [],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
                 "category": "room",
                 "id": "object_layer_locker_room_2",
                 "object_name": "locker_room_2",
@@ -885,6 +931,25 @@
         },
         {
             "attrs": {
+                "id": "fade_layer_room",
+                "opacity": 0,
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "height": 543,
+                        "id": "black_screen_room",
+                        "src": "images/black.png",
+                        "width": 1024
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
                 "category": "sequence",
                 "id": "outro_layer",
                 "object_name": "outro",
@@ -1362,52 +1427,6 @@
         },
         {
             "attrs": {
-                "id": "inventory_bar_layer",
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "id": "inventory_bar",
-                        "src": "images/inventory_bar.png",
-                        "y": 543
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "invArrow",
-                        "id": "inventory_left_arrow",
-                        "src": "images/inventory_left_arrow.png",
-                        "visible": false,
-                        "x": 30,
-                        "y": 550
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "invArrow",
-                        "id": "inventory_right_arrow",
-                        "src": "images/inventory_right_arrow.png",
-                        "visible": false,
-                        "x": 750,
-                        "y": 550
-                    },
-                    "className": "Image"
-                }
-            ],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
-                "id": "inventory_layer"
-            },
-            "children": [],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
                 "id": "character_layer",
                 "visible": false
             },
@@ -1467,7 +1486,7 @@
         },
         {
             "attrs": {
-                "id": "fade_layer",
+                "id": "fade_layer_full",
                 "opacity": 0,
                 "visible": false
             },
@@ -1475,7 +1494,7 @@
                 {
                     "attrs": {
                         "height": 543,
-                        "id": "black_screen",
+                        "id": "black_screen_full",
                         "src": "images/black.png",
                         "width": 1024
                     },
