@@ -1033,18 +1033,73 @@
                     "attrs": {
                         "category": "sequence",
                         "id": "intro_3",
-                        "src": "images/intro_3.png",
+                        "height": 643,
+                        "width": 981,
                         "visible": false
                     },
-                    "className": "Image"
+                    "children": [
+                        {
+                            "attrs": {
+                                "x": 0,
+                                "y": 0,
+                                "fill": "black",
+                                "height": 643,
+                                "width": 981
+                            },
+                            "className": "Rect"
+                        },
+                        {
+                            "attrs": {
+                                "text": "Kaikki ei kuitenkaan ollut niin kuin piti..",
+                                "fontFamily": "Chalkboard SE",
+                                "fontSize": 26,
+                                "fill": "white",
+                                "shadowColor": "#bbbbbb",
+                                "shadowBlur": 10,
+                                "width": 981,
+                                "align": "center",
+                                "y": 321
+                            },
+                            "className": "Text"
+                        }
+                    ],
+                    "className": "Group"
                 },
                 {
                     "attrs": {
                         "category": "sequence",
                         "id": "intro_1",
-                        "src": "images/intro_1.png"
+                        "height": 643,
+                        "width": 981,
+                        "visible": false
                     },
-                    "className": "Image"
+                    "children": [
+                        {
+                            "attrs": {
+                                "x": 0,
+                                "y": 0,
+                                "fill": "black",
+                                "height": 643,
+                                "width": 981
+                            },
+                            "className": "Rect"
+                        },
+                        {
+                            "attrs": {
+                                "text": "Oli nätti päivä, piti olla ihan normaalit treenit..",
+                                "fontFamily": "Chalkboard SE",
+                                "fontSize": 26,
+                                "fill": "white",
+                                "shadowColor": "#bbbbbb",
+                                "shadowBlur": 10,
+                                "width": 981,
+                                "align": "center",
+                                "y": 321
+                            },
+                            "className": "Text"
+                        }
+                    ],
+                    "className": "Group"
                 }
             ],
             "className": "Layer"
