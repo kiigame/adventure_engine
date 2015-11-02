@@ -870,6 +870,8 @@ function handle_command(command) {
         do_transition(command.destination, command.length != null ? command.length : 700);
     else if (command.command == "play_character_animation")
         playCharacterAnimation(character_animations[command.animation], command.length); // Overrides default speak animation from setMonologue.
+    else if (command.command == "play_sequence")
+        play_sequence(command.sequence, command.monologue);
     else
         console.warn("Unknown interaction command " + command.command);
 }
