@@ -837,9 +837,11 @@ function handle_click(event) {
 function handle_commands(commands) {
     for (var i in commands) {
         if (commands[i].timeout != null) {
-            setTimeout(function() {
-                handle_command(commands[i]);
-            }, commands[i].timeout);
+            (function(commands, i) {
+                setTimeout(function() {
+                    handle_command(commands[i]);
+                }, commands[i].timeout);
+            })(commands, i);
         } else {
             handle_command(commands[i]);
         }
