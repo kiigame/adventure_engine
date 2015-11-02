@@ -248,13 +248,20 @@
     "locker_room_1_door_to_shower_open": {
         "click": [
             {
+                "command": "play_sequence",
+                "sequence": "seq_ovimeno",
+                "monologue": false
+            },
+            {
                 "command": "do_transition",
-                "destination": "object_layer_shower_room"
+                "destination": "object_layer_shower_room",
+                "length": 0,
+                "timeout": 4400
             },
             {
                 "command": "monologue",
                 "textkey": {"object": "locker_room_1_door_to_shower_open", "string": "examine"},
-                "timeout": 700
+                "timeout": 5800
             }
         ]
     },

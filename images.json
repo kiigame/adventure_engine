@@ -979,6 +979,54 @@
         {
             "attrs": {
                 "category": "sequence",
+                "id": "seq_ovimeno",
+                "object_name": "seq_ovimeno",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "category": "sequence",
+                        "id": "ovimeno_1",
+                        "object_name": "seq_ovimeno",
+                        "height": 643,
+                        "width": 981,
+                        "visible": false
+                    },
+                    "children": [
+                        {
+                            "attrs": {
+                                "x": 0,
+                                "y": 0,
+                                "fill": "black",
+                                "height": 643,
+                                "width": 981
+                            },
+                            "className": "Rect"
+                        },
+                        {
+                            "attrs": {
+                                "text": "Nyt sitä vaan ovesta mennään!",
+                                "fontFamily": "Chalkboard SE",
+                                "fontSize": 26,
+                                "fill": "white",
+                                "shadowColor": "#bbbbbb",
+                                "shadowBlur": 10,
+                                "width": 981,
+                                "align": "center",
+                                "y": 321
+                            },
+                            "className": "Text"
+                        }
+                    ],
+                    "className": "Group"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "sequence",
                 "id": "intro",
                 "object_name": "intro",
                 "visible": false

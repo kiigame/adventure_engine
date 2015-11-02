@@ -50,5 +50,15 @@
             }
         },
         "music": "outro"
+    },
+    "seq_ovimeno": {
+        "images": {
+            "1": {
+                "do_fade": true,
+                "id": "ovimeno_1",
+                "show_time": 3000
+            }
+        },
+        "transition_length": 700
     }
 }
