@@ -533,8 +533,12 @@ function play_sequence(sequence, monologue) {
 	return delay;
 }
 
-// Do a transition to a layer with specified ID
-function do_transition(layerId, fade_time_param, comingFrom) {
+/// Transition to a room.
+/// @param room_id The id of the room to transition to.
+/// @param fade_time_param The fade duration; if null, use a default.
+/// @param comingFrom The room where the transition was started in. Sets up
+///                   the monologue text.
+function do_transition(room_id, fade_time_param, comingFrom) {
 	var fade_time = fade_time_param;
 
 	// By default do fast fade
@@ -557,7 +561,7 @@ function do_transition(layerId, fade_time_param, comingFrom) {
         if (current_layer != null) // may be null if no start_layer is defined
             current_layer.hide();
 
-		current_layer = stage.get("#"+layerId)[0];
+		current_layer = stage.get("#"+room_id)[0];
 		
 		//Play the animations of the room
 		for (var i in animated_objects) {
