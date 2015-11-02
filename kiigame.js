@@ -455,7 +455,7 @@ function play_sequence(sequence, monologue) {
 
 	var old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
-    var sequence_exit_text = findMonologue(current_layer.id());
+    var sequence_exit_text = monologue === true ? findMonologue(current_layer.id()) : null;
 	var object = sequences_json[current_layer.getAttr('object_name')];
     var final_fade_duration = object.transition_length != null ? object.transition_length : 0;
 
