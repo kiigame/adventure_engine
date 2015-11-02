@@ -9,6 +9,16 @@
             {"node": "character_idle_1", "duration": "8.7"},
             {"node": "character_idle_2", "duration": "0.2"} ]
     },
+    "second_speak": {
+        "id": "second_speak", "frames":[
+            {"node": "second_character_speak_1", "duration": "0.3"},
+            {"node": "second_character_speak_2", "duration": "0.3"} ]
+    },
+    "second_idle": {
+        "id": "second_idle", "frames":[
+            {"node": "second_character_idle_1", "duration": "8.7"},
+            {"node": "second_character_idle_2", "duration": "0.2"} ]
+    },
     "panic": {
         "id": "panic", "frames":[
             {"node": "character_speak_1", "duration": "0.3"},

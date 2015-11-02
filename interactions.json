@@ -576,8 +576,36 @@
     "wall": {
     },
     "wc_1_mirror": {
+        "click": [
+            {
+                "command": "set_idle_animation",
+                "animation_name": "second_idle"
+            },
+            {
+                "command": "set_speak_animation",
+                "animation_name": "second_speak"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "wc_1_mirror", "string": "examine"}
+            }
+        ]
     },
     "wc_2_mirror": {
+        "click": [
+            {
+                "command": "set_idle_animation",
+                "animation_name": "idle"
+            },
+            {
+                "command": "set_speak_animation",
+                "animation_name": "speak"
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "wc_2_mirror", "string": "examine"}
+            }
+        ]
     },
     "wc_2_window": {
     },

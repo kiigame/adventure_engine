@@ -1536,6 +1536,46 @@
                 },
                 {
                     "attrs": {
+                        "id": "second_character_idle_1",
+                        "src": "images/second_character_idle_1.png",
+                        "x": 764,
+                        "y": 443,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "id": "second_character_idle_2",
+                        "src": "images/second_character_idle_2.png",
+                        "visible": false,
+                        "x": 764,
+                        "y": 443
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "id": "second_character_speak_1",
+                        "src": "images/second_character_speak_1.png",
+                        "visible": false,
+                        "x": 764,
+                        "y": 443
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "id": "second_character_speak_2",
+                        "src": "images/second_character_speak_2.png",
+                        "visible": false,
+                        "x": 764,
+                        "y": 443
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
                         "id": "character_panic",
                         "src": "images/character_panic.png",
                         "visible": false,
