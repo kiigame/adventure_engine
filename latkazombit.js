@@ -192,6 +192,9 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 	oikotie.x(50);
     oikotie.show();
 	oikotie.moveTo(start_layer);
+    oikotie.on('click', function() {
+        menu.hide();
+    });
 
     var oikotie2 = stage.get('#oikotie2')[0];
     oikotie2.x(200);
@@ -202,6 +205,7 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
 		inventoryAdd(stage.get('#poster_withglue')[0]);
 		inventoryAdd(stage.get('#airfreshener')[0]);
 		inventoryAdd(stage.get('#cienibang')[0]);
+        menu.hide();
 	});
 
 	stage.draw();
