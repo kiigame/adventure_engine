@@ -248,7 +248,10 @@ function create_menu_action(menu_image) {
 		if (item_action == "start_game") {
 			item.on('tap click', function(event) {
                 if (stage.get('#intro') != "")
-                    play_sequence("intro");
+                {
+                    var intro_delay = play_sequence("intro", true);
+                    setTimeout('do_transition(game_start_layer.id(), 0)', intro_delay);
+                }
                 else // Assume intro layer has a transition to game_start_layer
                     do_transition(game_start_layer.id());
 			});
@@ -440,12 +443,9 @@ function stop_music() {
 
 /// Plays a sequence defined in sequences.json
 /// @param sequence The sequence id in sequences.json
-/// @param transition Override sequence's transition target. False cancels
-///                   transition, null does transistion according to sequence.
-/// @param transition_length The length of the transition (fade in) to
-///                           transition target in milliseconds. Only used if
-///                           transition is overridden with transition param.
-function play_sequence(sequence, transition, transition_length) {
+/// @param monologue boolean Show sequence's examine text at the end of sequence
+/// @return The length of sequence in ms. Doesn't include the fade-in!
+function play_sequence(sequence, monologue) {
 	var delay = 700;
 
 	// Animation cycle for proper fading and drawing order
@@ -455,7 +455,9 @@ function play_sequence(sequence, transition, transition_length) {
 
 	var old_layer = current_layer;
 	current_layer = stage.get("#"+sequence)[0];
+    var sequence_exit_text = findMonologue(current_layer.id());
 	var object = sequences_json[current_layer.getAttr('object_name')];
+    var final_fade_duration = object.transition_length != null ? object.transition_length : 0;
 
 	var sequence_counter = 0;
 	var images_total = 0;
@@ -500,46 +502,32 @@ function play_sequence(sequence, transition, transition_length) {
 
 				sequence_counter += 1;
 
-				// Last image in the sequence
-				if (images_total == sequence_counter) {
-                    var final_fade_duration = object.transition_length != null ? object.transition_length : 0;
-                    if (final_fade_duration > 0) {
-                        fade_full.tween.duration = final_fade_duration;
-                        fade_full.play();
-                    }
-
-					setTimeout(function() {
-						if (transition == null)
-                        {
-                            // Set a timeout for monologue, with delay from
-                            // transition_length. Do a zero delay transition to
-                            // room, then a full screen fade-in with
-                            // transition_length.
-                            var sequence_exit_text = findMonologue(current_layer.id());
-                            setTimeout(function() {
-                                fade_layer_full.hide();
-                                setMonologue(sequence_exit_text);
-                                fade_full.tween.duration = 600; // default
-                            }, final_fade_duration);
-                            do_transition(object.transition, 0);
-                            fade_full.reverse();
-
-                            delay = delay + final_fade_duration;
-                        }
-						else if (transition !== false)
-                        {
-							do_transition(transition, transition_length);
-                            if (transition_length != null)
-                                delay = delay + transition_length;
-                        }
-					}, final_fade_duration);
-				}
-
 			}, delay);
 		})(i, image, last_image);
 
 		delay = delay + object.images[i].show_time;
 	};
+
+    // After last image, do the final fade and set up exit monologue.
+    if (final_fade_duration > 0) {
+        setTimeout(function() {
+            fade_full.tween.duration = final_fade_duration;
+            fade_full.play();
+
+            setTimeout(function() {
+                fade_full.reverse();
+                setTimeout(function() {
+                    fade_layer_full.hide();
+                    fade_full.tween.duration = 600; // reset to default
+                    if (monologue === true)
+                        setMonologue(sequence_exit_text);
+                }, final_fade_duration);
+            }, final_fade_duration);
+        }, delay);
+
+        // Doesn't include the fade-in!
+        delay = delay + final_fade_duration;
+    }
 
 	// Return sequence delay
 	return delay;
