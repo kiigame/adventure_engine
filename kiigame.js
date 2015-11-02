@@ -908,47 +908,38 @@ function removeAnimation(id) {
 
 //Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
 function play_ending(ending) {
-	var delay = 700;
-	var ending_object = objects_json[ending];
+    fade_full.reset();
+    fade_layer_full.show();
+    fade_full.play();
 
-    if (ending_object.sequence)
-        sequence_delay = play_sequence(ending_object.sequence, false);
+    setTimeout(function() {
+        // Clear inventory except rewards
+        for (var i = inventory_layer.children.length-1; i >= 0; i--) {
+            var shape = inventory_layer.children[i];
+            if (shape.getAttr('category') != 'reward')
+                inventoryRemove(shape);
+            inventory_index = 0;
+        }
 
-	setTimeout(function() {
-        fade_full.reset();
-		fade_layer_full.show();
-		fade_full.play();
+        play_music(ending);
+        rewards_text = stage.get('#rewards_text')[0];
+        old_text = rewards_text.text();
+        rewards_text.text(rewards + rewards_text.text());
 
-		setTimeout(function() {
-            // Clear inventory except rewards
-            for (var i = inventory_layer.children.length-1; i >= 0; i--) {
-                var shape = inventory_layer.children[i];
-                if (shape.getAttr('category') != 'reward')
-                    inventoryRemove(shape);
-                inventory_index = 0;
-            }
+        current_layer.hide(); // hide the sequence layer
+        current_layer = stage.get('#' + ending)[0];
+        current_layer.show();
+        inventory_bar_layer.show();
+        inventory_layer.show();
+        display_menu(current_layer.id());
+        character_layer.show();
+        stage.get('#end_texts')[0].show();
+        stage.draw();
+        rewards_text.text(old_text);
 
-			play_music(current_layer.id());
-			rewards_text = stage.get('#rewards_text')[0];
-			old_text = rewards_text.text();
-			rewards_text.text(rewards + rewards_text.text());
-
-            current_layer.hide(); // hide the sequence layer
-            current_layer = stage.get('#' + ending)[0];
-            current_layer.show();
-			inventory_bar_layer.show();
-			inventory_layer.show();
-			display_menu(current_layer.id());
-			character_layer.show();
-			stage.get('#end_texts')[0].show();
-			stage.draw();
-			rewards_text.text(old_text);
-
-			fade_full.reverse();
-			setTimeout('fade_layer_full.hide();', 700);
-		}, 700);
-	}, sequence_delay);
-
+        fade_full.reverse();
+        setTimeout('fade_layer_full.hide();', 700);
+    }, 700);
 }
 
 //Clearing the given text

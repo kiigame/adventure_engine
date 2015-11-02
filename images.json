@@ -959,7 +959,7 @@
         {
             "attrs": {
                 "category": "sequence",
-                "id": "outro_layer",
+                "id": "outro",
                 "object_name": "outro",
                 "visible": false
             },
