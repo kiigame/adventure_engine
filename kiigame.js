@@ -872,6 +872,10 @@ function handle_command(command) {
         playCharacterAnimation(character_animations[command.animation], command.length); // Overrides default speak animation from setMonologue.
     else if (command.command == "play_sequence")
         play_sequence(command.sequence, command.monologue);
+    else if (command.command == "set_idle_animation")
+        setIdleAnimation(command.animation_name);
+    else if (command.command == "set_speak_animation")
+        setSpeakAnimation(command.animation_name);
     else
         console.warn("Unknown interaction command " + command.command);
 }
@@ -947,6 +951,16 @@ function play_ending(ending) {
 
 }
 
+//Clearing the given text
+function clearText(text) {
+	text.text("");
+
+	if (text.id() == 'monologue') {
+		speech_bubble.hide();
+	}
+	text_layer.draw();
+}
+
 /// Find monologue text in object. If a text is not found from texts_json by
 /// the parameter, return the default text for the object (if it exists), or
 /// the master default text.
@@ -1020,16 +1034,6 @@ function playCharacterAnimation(animation, timeout) {
 	character_animation_timeout = setTimeout('stopCharacterAnimations();', timeout);
 }
 
-//Clearing the given text
-function clearText(text) {
-	text.text("");
-
-	if (text.id() == 'monologue') {
-		speech_bubble.hide();
-	}
-	text_layer.draw();
-}
-
 ///Stop the characer animations, start idle animation
 function stopCharacterAnimations() {
 	for (var i in character_animations) {
@@ -1042,6 +1046,24 @@ function stopCharacterAnimations() {
     idle_animation[0].node.show();
     idle_animation[0].play();
 	character_layer.draw();
+}
+
+/// Change idle animation, so that the character graphics can be changed
+/// mid-game.
+/// @param animation_name The name of the animation, look the animation up
+///                       from character_animations[].
+function setIdleAnimation(animation_name) {
+    idle_animation = character_animations[animation_name];
+    stopCharacterAnimations(); // reset and play the new idle animation
+}
+
+/// Change speak animation, so that the character graphics can be changed
+/// mid-game.
+/// @param animation_name The name of the animation, look the animation up
+///                       from character_animations[].
+function setSpeakAnimation(animation_name) {
+    speak_animation = character_animations[animation_name];
+    stopCharacterAnimations(); // reset and play idle animation
 }
 
 //Load json from the server
