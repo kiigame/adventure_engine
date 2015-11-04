@@ -1096,7 +1096,6 @@ function inventoryAdd(item) {
     item.show();
 	item.moveTo(inventory_layer);
     item.clearCache();
-	item.scale({x: 1, y: 1});
 	item.size({width: 80, height: 80});
 
 	if (inventory_list.indexOf(item) > -1)
