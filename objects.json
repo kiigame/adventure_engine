@@ -1,8 +1,5 @@
 {
     "end_layer": {
-        "category": "end",
-        "music": "end_layer",
-        "sequence": "outro_layer"
     },
     "start_layer": {
         "music": "start_layer",

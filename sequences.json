@@ -39,7 +39,6 @@
         },
         "music": "audio/intro_mono_20131213.ogg",
         "music_fade": true,
-        "transition": "object_layer_locker_room_1",
         "transition_length": 3000
     },
     "outro": {

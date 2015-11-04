@@ -426,8 +426,14 @@
     "poster_onthewall": {
         "click": [
             {
+                "command": "play_sequence",
+                "sequence": "outro",
+                "monologue": false
+            },
+            {
                 "command": "play_ending",
-                "ending": "end_layer"
+                "ending": "end_layer",
+                "timeout": 4700
             }
         ]
     },
@@ -607,6 +613,6 @@
             }
         ]
     },
-    "oikotie": {"click": [ {"command": "play_ending", "ending": "end_layer"}]},
+    "oikotie": {"click": [{"command": "play_sequence","sequence": "outro","monologue": false},{"command": "play_ending", "ending": "end_layer", "timeout": 4700}]},
     "oikotie2": {"click":[{"command":"do_transition","destination":"object_layer_locker_room_2"}]}
 }
