@@ -18,7 +18,9 @@ var stage = Konva.Node.create(images_json_text, 'container');
 
 //Texts & layers
 var monologue = getObject("monologue");
-var speech_bubble = getObject("speech_bubble");
+var character_speech_bubble = getObject("character_speech_bubble");
+var npc_monologue = getObject("npc_monologue");
+var npc_speech_bubble = getObject("npc_speech_bubble");
 var interaction_text = getObject("interaction_text");
 
 var inventory_layer = getObject("inventory_layer");
@@ -724,6 +726,7 @@ function checkIntersection(dragged_item, target) {
 /// anywhere on the screen.
 stage.on('touchstart mousedown', function(event) {
 	clearText(monologue);
+    clearText(npc_monologue);
 	stopCharacterAnimations();
 });
 
@@ -874,6 +877,8 @@ function handle_command(command) {
         setIdleAnimation(command.animation_name);
     else if (command.command == "set_speak_animation")
         setSpeakAnimation(command.animation_name);
+    else if (command.command == "npc_monologue")
+        npcMonologue(getObject(command.npc), findMonologue(command.textkey.object, command.textkey.string));
     else
         console.warn("Unknown interaction command " + command.command);
 }
@@ -959,8 +964,12 @@ function clearText(text) {
 	text.text("");
 
 	if (text.id() == 'monologue') {
-		speech_bubble.hide();
+		character_speech_bubble.hide();
 	}
+    else if (text.id() == 'npc_monologue') {
+        npc_speech_bubble.hide();
+    }
+
 	text_layer.draw();
 }
 
@@ -1002,18 +1011,50 @@ function findMonologue(object_id, key) {
     return text;
 }
 
+/// Set NPC monologue text and position the NPC speech bubble to the desired
+/// NPC.
+/// @param npc The object in the stage that will have the speech bubble.
+/// @param text The text to be shown in the speech bubble.
+function npcMonologue(npc, text) {
+
+    npc_monologue.setWidth('auto');
+    npc_speech_bubble.show();
+    npc_monologue.text(text);
+
+    var npc_tag = getObject("npc_tag");
+    if (npc.x() + npc.width() > (stage.width()/2)) {
+        npc_tag.pointerDirection("right");
+        if (npc_monologue.width() > npc.x() - 100) {
+            npc_monologue.width(npc.x() - 100);
+        }
+        npc_monologue.text(text);
+        npc_speech_bubble.x(npc.x());
+    } else {
+        npc_tag.pointerDirection("left");
+        if (npc_monologue.width() > stage.width() - (npc.x() + npc.width() + 100)) {
+            npc_monologue.width(stage.width() - (npc.x() + npc.width() + 100));
+        }
+        npc_monologue.text(text);
+        npc_speech_bubble.x(npc.x() + npc.width());
+    }
+
+    npc_speech_bubble.y(npc.y() + (npc.height()/3));
+
+    text_layer.draw();
+}
+
 /// Set monologue text.
 /// @param text The text to be shown in the monologue bubble.
 function setMonologue(text) {
 	monologue.setWidth('auto');
-	speech_bubble.show();
+	character_speech_bubble.show();
 	monologue.text(text);
 	if (monologue.width() > 524) {
 		monologue.width(524);
 		monologue.text(text);
 	}
 
-	speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
+	character_speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
 	text_layer.draw();
 
     playCharacterAnimation(speak_animation, 3000);
@@ -1125,11 +1166,12 @@ function inventoryRemove(item) {
 
 //Dragging an item from the inventory
 function inventoryDrag(item) {
-	item.moveTo(current_layer);
+    item.moveTo(current_layer);
     inventory_bar_layer.draw();
     inventory_layer.draw();
-	clearText(monologue);
-	stopCharacterAnimations();
+    clearText(monologue);
+    clearText(npc_monologue);
+    stopCharacterAnimations();
 }
 
 /// Redrawing inventory. Shows the items that should be visible according to

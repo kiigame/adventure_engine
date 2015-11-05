@@ -1452,7 +1452,43 @@
                 },
                 {
                     "attrs": {
-                        "id": "speech_bubble",
+                        "id": "npc_speech_bubble",
+                        "visible": false,
+                        "x": 100,
+                        "y": 200
+                    },
+                    "children": [
+                        {
+                            "attrs": {
+                                "cornerRadius": 10,
+                                "fill": "#ddd",
+                                "id": "npc_tag",
+                                "lineJoin": "round",
+                                "pointerDirection": "left",
+                                "pointerHeight": 15,
+                                "pointerWidth": 40,
+                                "stroke": "black",
+                                "strokeWidth": 1
+                            },
+                            "className": "Tag"
+                        },
+                        {
+                            "attrs": {
+                                "fill": "black",
+                                "fontFamily": "Chalkboard SE",
+                                "fontSize": 14,
+                                "id": "npc_monologue",
+                                "padding": 10,
+                                "width": "auto"
+                            },
+                            "className": "Text"
+                        }
+                    ],
+                    "className": "Label"
+                },
+                {
+                    "attrs": {
+                        "id": "character_speech_bubble",
                         "visible": false,
                         "x": 800,
                         "y": 513
