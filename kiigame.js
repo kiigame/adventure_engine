@@ -710,7 +710,7 @@ stage.on('dragmove', function(event) {
 //Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
 function checkIntersection(dragged_item, target) {
 	// If target is visible and of suitable category
-	if (target.isVisible() && (target.getAttr('category') != undefined && target.getAttr('category') != 'secret' && target.getAttr('category') != 'transition')) {
+	if (target.isVisible() && (target.getAttr('category') != undefined && target.getAttr('category') != 'secret')) {
 		// If horizontally inside
 		if (dragged_item.x() > target.x() && dragged_item.x() < (target.x() + target.width()) || (dragged_item.x() + dragged_item.width()) > target.x() && (dragged_item.x() + dragged_item.width()) < (target.x() + target.width())) {
 			// If vertically inside
