@@ -210,7 +210,6 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "poster_onthewall",
-                        "object_name": "poster_onthewall",
                         "src": "images/poster_onthewall.png",
                         "visible": false,
                         "x": 298,
@@ -342,7 +341,6 @@
                     "attrs": {
                         "category": "item",
                         "id": "poster_withglue",
-                        "object_name": "poster_withglue",
                         "src": "images/poster_withglue.png",
                         "visible": false,
                         "x": 450,
@@ -757,7 +755,6 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "cieni",
-                        "object_name": "cieni",
                         "src": "images/cieni_1.png",
                         "x": 100,
                         "y": 380,
@@ -774,7 +771,6 @@
                         },
                         "category": "furniture",
                         "id": "cieni_eyes",
-                        "object_name": "cieni",
                         "src": "images/cieni_eyes.png",
                         "x": 220,
                         "y": 415,
@@ -793,7 +789,6 @@
                         },
                         "category": "furniture",
                         "id": "cieni_mouth",
-                        "object_name": "cieni",
                         "src": "images/cieni_mouth.png",
                         "width": 73,
                         "x": 215,
