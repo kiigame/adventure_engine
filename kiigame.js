@@ -102,6 +102,7 @@ var animated_objects = [];
 // Create character animations.
 var character_animations = [];
 
+// Load up frames from json to the character animations array.
 for (var i in character_animations_json) {
     var frames = [];
     for (var j in character_animations_json[i].frames) {
@@ -114,6 +115,8 @@ for (var i in character_animations_json) {
     character_animations[character_animations_json[i].id] = frames;
 }
 
+// Set up onFinish functions for each frame to show the next frame. In the case
+// of the last of the frames, show the first frame.
 for (var i in character_animations) {
     for (var j = 0; j < character_animations[i].length; j++) {
         if (character_animations[i].length > j+1) {
