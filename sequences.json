@@ -37,8 +37,6 @@
                 "show_time": 1000
             }
         },
-        "music": "audio/intro_mono_20131213.ogg",
-        "music_fade": true,
         "transition_length": 3000
     },
     "outro": {
@@ -48,7 +46,6 @@
                 "id": "outro_1",
                 "show_time": 4000
             }
-        },
-        "music": "outro"
+        }
     }
 }
