@@ -313,7 +313,7 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_2_door_to_shower", "string": "examine"},
+                "textkey": {"object": "locker_room_2_door_to_wc_open", "string": "examine"},
                 "timeout": 700
             }
         ]
