@@ -279,7 +279,7 @@ function create_menu_action(menu_image) {
 // string layerId - the ID of the layer we want to display the menu for
 function display_menu(layerId) {
 	hide_menu();
-	menu = getObject(objects_json[layerId]["menu"]);
+	menu = typeof objects_json[layerId] !== undefined ? getObject(objects_json[layerId]["menu"]) : false;
 	if (!menu) {
 		return;
 	}
