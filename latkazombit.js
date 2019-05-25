@@ -10,7 +10,7 @@ var input_layer = stage.get('#input_layer')[0];
 var number_selected = false;
 
 // Default player number
-input_text.setText(input_text.getText());
+input_text.setText(texts_json['input_text']['text']);
 
 // Dirty removing of default event handler to allow using jersey input
 stage.get('#start_game')[0].eventListeners.click = [];
@@ -31,19 +31,15 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 
 // Hidden feature, click the image on the start screen and get a funny reaction from the character
 stage.get('#start')[0].on('tap click', function(event) {
-	event = event.targetNode;
+	event = event.target;
 
-	setMonologue(findMonologue(panic, 'text'));
-	setTimeout(function() {
-		idle_1.hide();
-		panic.show();
-		setTimeout('panic.hide(); idle_1.show();', 2000);
-	}, 1000);
+	setMonologue(findMonologue('character_panic', 'text'));
+    playCharacterAnimation(character_animations["panic"], 6000);
 });
 
 // Listeners for the input screen buttons
 input_layer.on('tap click', function(event) {
-	target = event.targetNode;
+	target = event.target;
 	
 	selected = texts_json[target.getAttr('id')];
 	if (selected)
@@ -158,21 +154,13 @@ input_layer.on('tap click', function(event) {
 		// OK
 	} else if (selected == 'OK' && input_text.getText().length > 0) {
 		stage.get('#jersey_number')[0].setText(input_text.getText());
-		stage.get('#jersey_number')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-		stage.get('#icehockey_jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
+		texts_json['jersey_number']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
+		texts_json['icehockey_jersey']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
 		input_layer.hide();
 
-		play_sequence("intro");
+	    var intro_delay = play_sequence("intro", true);
+        setTimeout('do_transition(game_start_layer.id(), 0)', intro_delay);
 	}
-	// Test feature - show the legend text when clicking the jersey
-	/*
-	else if (selected == 'Pelipaita' || selected == 'Pelinumero') {
-		if (input_text.getText() > 0) {
-			stage.get('#input_text')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			stage.get('#jersey')[0].setAttr('examine', input_text.getAttr('wikistart') + input_text.getText() + input_text.getAttr('wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-			interact(event);
-		}
-	}*/
 	// If no number, grey out buttons that can't be used
 	if (input_text.getText().length == 0) {
 		stage.get('#button_ok').hide();
@@ -194,44 +182,32 @@ input_layer.on('tap click', function(event) {
 });
 
 //Developer feature - shortcut menu from the empty menu button for testing purposes
+start_layer.on('mouseup touchend', function(event) {
+	handle_click(event);
+});
+
 stage.get('#start_empty')[0].on('tap click', function(event) {
-	event = event.targetNode;
-	var clone;
+	event = event.target;
 
-	clone = stage.get('#oikotie')[0].clone({
-		visible : true,
-		x : 50
-	});
-	clone.moveTo(start_layer);
-	clone.on('click', function() {});
+	var oikotie = stage.get('#oikotie')[0];
+	oikotie.x(50);
+    oikotie.show();
+	oikotie.moveTo(start_layer);
+    oikotie.on('click', function() {
+        menu.hide();
+    });
 
-	clone = stage.get('#oikotie_locker_room2')[0].clone({
-		visible : true,
-		x : 200
-	});
-	clone.moveTo(start_layer);
-	clone.on('click', function() {
+    var oikotie2 = stage.get('#oikotie2')[0];
+    oikotie2.x(200);
+    oikotie2.show();
+    oikotie2.moveTo(start_layer);
+	oikotie2.on('click', function() {
 		inventoryAdd(stage.get('#poster_withoutglue')[0]);
 		inventoryAdd(stage.get('#poster_withglue')[0]);
 		inventoryAdd(stage.get('#airfreshener')[0]);
 		inventoryAdd(stage.get('#cienibang')[0]);
+        menu.hide();
 	});
 
-
-	/*
-	clone = stage.get('#locker_room_1_door_to_wc_open')[0].clone({
-		visible : true,
-		x : 600
-	});
-	clone.moveTo(start_layer);
-	clone = stage.get('#shower_door_to_locker_room_2_open')[0].clone({
-		visible : true
-	});
-	clone.moveTo(start_layer);
-	clone = stage.get('#shower_door_to_locker_room_1')[0].clone({
-		x : 330
-	});
-	clone.moveTo(start_layer);
-	 */
 	stage.draw();
 });

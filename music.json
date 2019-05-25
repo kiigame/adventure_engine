@@ -1,0 +1,16 @@
+{
+    "end_layer": {
+        "music": "audio/loppu_musax_mono_20131213.ogg"
+    },
+    "start_layer": {
+        "music": "audio/alku_musax_mono_20131213.ogg",
+        "music_fade": true
+    },
+    "intro": {
+        "music": "audio/intro_mono_20131213.ogg",
+        "music_fade": true
+    },
+    "outro": {
+        "music": "audio/loppu_musax_mono_20131213.ogg"
+    }
+}

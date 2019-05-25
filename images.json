@@ -1,10 +1,64 @@
 {
     "attrs": {
-        "height": 643,
         "id": "Stage",
-        "width": 981
+        "width": 981,
+        "height": 643
     },
     "children": [
+        {
+            "attrs": {
+                "id": "inventory_bar_layer",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "id": "inventory_bar",
+                        "src": "images/inventory_bar.png",
+                        "y": 543
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "invArrow",
+                        "id": "inventory_left_arrow",
+                        "visible": false,
+                        "x": 20,
+                        "y": 550,
+                        "closed": true,
+                        "fill": "yellow",
+                        "stroke": "black",
+                        "strokeWidth": 2,
+                        "points": [18, 6, 0, 43, 18, 80, 18, 6]
+                    },
+                    "className": "Line"
+                },
+                {
+                    "attrs": {
+                        "category": "invArrow",
+                        "id": "inventory_right_arrow",
+                        "visible": false,
+                        "x": 750,
+                        "y": 550,
+                        "closed": true,
+                        "fill": "yellow",
+                        "stroke": "black",
+                        "strokeWidth": 2,
+                        "points": [0, 6, 18, 43, 0, 80, 0, 6]
+                    },
+                    "className": "Line"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "id": "inventory_layer"
+            },
+            "children": [],
+            "className": "Layer"
+        },
         {
             "attrs": {
                 "category": "room",
@@ -19,108 +73,135 @@
                         "height": 543,
                         "id": "locker_room_2",
                         "src": "images/locker_room_2.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "tag_on_wall",
                         "src": "images/tag_on_wall.png",
-                        "x": 890,
-                        "y": 255
+                        "x": 930,
+                        "y": 255,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "item",
-                        "id": "marker",
-                        "object_name": "marker",
+                        "category": "furniture",
+                        "id": "marker_floor",
                         "src": "images/marker.png",
                         "x": 230,
-                        "y": 445
+                        "y": 445,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "locker_room_2_door_to_shower",
-                        "object_name": "locker_room_2_shower_door",
                         "src": "images/locker_room_2_door_to_shower.png",
                         "x": 16,
-                        "y": 8
+                        "y": 8,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "locker_room_2_door_to_wc_closed",
-                        "object_name": "locker_room_2_wc_door",
                         "src": "images/locker_room_2_door_to_wc_closed.png",
-                        "x": 117,
-                        "y": 60
+                        "x": 123,
+                        "y": 60,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "locker_room_2_door_to_wc_open",
-                        "object_name": "locker_room_2_wc_door",
                         "src": "images/locker_room_2_door_to_wc_open.png",
                         "visible": false,
-                        "x": 117,
+                        "x": 123,
                         "y": 60
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "locker_room_2_door_to_out",
                         "src": "images/locker_room_2_door_to_out.png",
-                        "x": 816,
-                        "y": 83
+                        "x": 856,
+                        "y": 83,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
+                        "id": "locker_room_2_blood",
+                        "src": "images/locker_room_2_blood.png",
+                        "x": 815,
+                        "y": 373,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
                         "id": "icehockey_jersey",
                         "src": "images/icehockey_jersey.png",
-                        "x": 616,
-                        "y": 136
+                        "x": 651,
+                        "y": 136,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
+                        "category": "furniture",
                         "align": "center",
-                        "category": "object",
-                        "fill": "white",
+                        "id": "jersey_number",
                         "fontFamily": "Chalkboard SE",
                         "fontSize": 30,
-                        "id": "jersey_number",
                         "stroke": "#53a3d1",
+                        "fill": "white",
                         "strokeWidth": 2,
                         "width": 55,
-                        "x": 642,
-                        "y": 196
+                        "x": 677,
+                        "y": 196,
+                        "visible": true
                     },
                     "className": "Text"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "wall",
                         "src": "images/wall.png",
-                        "x": 300,
-                        "y": 160
+                        "x": 320,
+                        "y": 160,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "poster_onthewall",
+                        "src": "images/poster_onthewall.png",
+                        "visible": false,
+                        "x": 318,
+                        "y": 155
                     },
                     "className": "Image"
                 },
@@ -131,29 +212,8 @@
                         "reward": "book_reward_3",
                         "src": "images/reward_3.png",
                         "x": 290,
-                        "y": 345
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "object",
-                        "id": "locker_room_2_blood",
-                        "src": "images/locker_room_2_blood.png",
-                        "x": 775,
-                        "y": 373
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "object",
-                        "id": "poster_onthewall",
-                        "object_name": "poster_onthewall",
-                        "src": "images/poster_onthewall.png",
-                        "visible": false,
-                        "x": 298,
-                        "y": 155
+                        "y": 345,
+                        "visible": true
                     },
                     "className": "Image"
                 }
@@ -203,7 +263,28 @@
                 {
                     "attrs": {
                         "category": "item",
-                        "consume": false,
+                        "id": "marker",
+                        "src": "images/marker.png",
+                        "x": 230,
+                        "y": 445,
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "id": "teddybear",
+                        "src": "images/teddybear.png",
+                        "x": 370,
+                        "y": 360,
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
                         "id": "teddybear_chewinggum",
                         "src": "images/teddybear_chewinggum.png",
                         "visible": false,
@@ -226,11 +307,42 @@
                 {
                     "attrs": {
                         "category": "item",
+                        "id": "tactic_board_wiper",
+                        "src": "images/tactic_board_wiper.png",
+                        "x": 680,
+                        "y": 390,
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "id": "hairkeeper",
+                        "src": "images/hairkeeper.png",
+                        "x": 454,
+                        "y": 209,
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
+                        "id": "cienibang",
+                        "src": "images/cienibang.png",
+                        "x": 443,
+                        "y": 325,
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "item",
                         "id": "poster_withglue",
-                        "object_name": "poster_withglue",
                         "src": "images/poster_withglue.png",
                         "visible": false,
-                        "consume": true,
                         "x": 450,
                         "y": 300
                     },
@@ -254,28 +366,41 @@
                         "height": 543,
                         "id": "locker_room_1",
                         "src": "images/locker_room_1.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "tactic_board_1",
                         "src": "images/tactic_board_1.png",
                         "visible": true,
-                        "x": 565,
-                        "y": 130
+                        "x": 590,
+                        "y": 120
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
-                        "id": "locker_room_1_blood",
-                        "src": "images/locker_room_1_blood.png",
-                        "x": 83,
-                        "y": 383
+                        "category": "furniture",
+                        "id": "tactic_board_2",
+                        "src": "images/tactic_board_2.png",
+                        "visible": false,
+                        "x": 590,
+                        "y": 120
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "tactic_board_3",
+                        "src": "images/tactic_board_3.png",
+                        "visible": false,
+                        "x": 590,
+                        "y": 120
                     },
                     "className": "Image"
                 },
@@ -301,28 +426,6 @@
                 },
                 {
                     "attrs": {
-                        "category": "object",
-                        "id": "tactic_board_2",
-                        "src": "images/tactic_board_2.png",
-                        "visible": false,
-                        "x": 565,
-                        "y": 130
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "object",
-                        "id": "tactic_board_3",
-                        "src": "images/tactic_board_3.png",
-                        "visible": false,
-                        "x": 565,
-                        "y": 130
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
                         "category": "reward",
                         "id": "book_reward_2",
                         "src": "images/book_reward_2.png",
@@ -332,149 +435,155 @@
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "locker_room_1_door_to_out",
                         "src": "images/locker_room_1_door_to_out.png",
-                        "x": 69,
-                        "y": 102
+                        "x": 74,
+                        "y": 102,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
+                        "id": "locker_room_1_blood",
+                        "src": "images/locker_room_1_blood.png",
+                        "x": 88,
+                        "y": 383,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
                         "id": "locker_room_1_door_to_shower_closed",
-                        "object_name": "locker_room_1_shower_door",
                         "src": "images/locker_room_1_door_to_shower_closed.png",
-                        "x": 865,
-                        "y": 33
+                        "x": 910,
+                        "y": 33,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "locker_room_1_door_to_shower_open",
-                        "object_name": "locker_room_1_shower_door",
                         "src": "images/locker_room_1_door_to_shower_open.png",
                         "visible": false,
-                        "x": 865,
+                        "x": 910,
                         "y": 17
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
+                        "id": "locker_room_1_door_to_wc_closed",
+                        "src": "images/locker_room_1_door_to_wc_closed.png",
+                        "x": 811,
+                        "y": 72,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_1_door_to_wc_stinking",
+                        "src": "images/locker_room_1_door_to_wc_stinking.png",
+                        "visible": false,
+                        "x": 811,
+                        "y": 72
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_1_door_to_wc_open",
+                        "src": "images/locker_room_1_door_to_wc_open.png",
+                        "visible": false,
+                        "x": 811,
+                        "y": 72
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
                         "id": "book_stephenking",
                         "src": "images/book_stephenking.png",
                         "x": 600,
-                        "y": 280
+                        "y": 280,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
-                        "id": "locker_room_1_door_to_wc_closed",
-                        "object_name": "stinking_wc_door",
-                        "src": "images/locker_room_1_door_to_wc_closed.png",
-                        "x": 776,
-                        "y": 72
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "door",
-                        "id": "locker_room_1_door_to_wc_stinking",
-                        "object_name": "stinking_wc_door",
-                        "src": "images/locker_room_1_door_to_wc_stinking.png",
-                        "visible": false,
-                        "x": 776,
-                        "y": 72
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "door",
-                        "id": "locker_room_1_door_to_wc_open",
-                        "object_name": "stinking_wc_door",
-                        "src": "images/locker_room_1_door_to_wc_open.png",
-                        "visible": false,
-                        "x": 776,
-                        "y": 72
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "container",
+                        "category": "furniture",
                         "id": "locker_closed",
-                        "object_name": "locker",
                         "src": "images/locker_closed.png",
-                        "x": 150,
-                        "y": 50
+                        "x": 160,
+                        "y": 50,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "container",
+                        "category": "furniture",
                         "id": "locker_open",
-                        "object_name": "locker",
                         "src": "images/locker_open.png",
                         "visible": false,
-                        "x": 150,
+                        "x": 160,
                         "y": 50
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "container",
+                        "category": "furniture",
                         "id": "locker_empty",
-                        "object_name": "locker",
                         "src": "images/locker_open.png",
                         "visible": false,
-                        "x": 150,
+                        "x": 160,
                         "y": 50
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "item",
-                        "id": "tactic_board_wiper",
-                        "object_name": "tactic_board_wiper",
-                        "scale": 0.6,
+                        "category": "furniture",
+                        "id": "tactic_board_wiper_floor",
+                        "scale": {"x": 0.6, "y": 0.6},
                         "src": "images/tactic_board_wiper.png",
                         "x": 680,
-                        "y": 390
+                        "y": 390,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "container",
+                        "category": "furniture",
                         "id": "jacket_full",
-                        "object_name": "jacket",
                         "src": "images/jacket_full.png",
                         "visible": true,
-                        "x": 435,
+                        "x": 455,
                         "y": 130
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "container",
+                        "category": "furniture",
                         "id": "jacket_empty",
-                        "object_name": "jacket",
                         "src": "images/jacket_empty.png",
                         "visible": false,
-                        "x": 435,
+                        "x": 455,
                         "y": 130
                     },
                     "className": "Image"
@@ -490,23 +599,22 @@
                 },
                 {
                     "attrs": {
-                        "category": "container",
+                        "category": "furniture",
                         "id": "garbagecan_empty",
-                        "object_name": "garbagecan",
                         "src": "images/garbagecan.png",
-                        "x": 5,
-                        "y": 428
+                        "x": 15,
+                        "y": 428,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "container",
+                        "category": "furniture",
                         "id": "garbagecan_teddy",
-                        "object_name": "garbagecan",
                         "src": "images/garbagecan_teddy.png",
                         "visible": false,
-                        "x": 5,
+                        "x": 15,
                         "y": 428
                     },
                     "className": "Image"
@@ -527,50 +635,53 @@
                         "height": 543,
                         "id": "wc_2",
                         "src": "images/wc_2.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "wc_2_mirror",
                         "src": "images/wc_2_mirror.png",
                         "x": 395,
-                        "y": 138
+                        "y": 138,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "item",
-                        "id": "hairkeeper",
-                        "object_name": "hairkeeper",
-                        "scale": 0.7,
+                        "category": "furniture",
+                        "id": "hairkeeper_floor",
+                        "scale": {"x": 0.7, "y": 0.7},
                         "src": "images/hairkeeper.png",
                         "x": 454,
-                        "y": 209
+                        "y": 209,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "wc_2_door_to_locker_room_2",
-                        "object_name": "wc_2_door_to_locker_room_2",
                         "src": "images/wc_2_door_to_locker_room_2.png",
                         "x": 555,
-                        "y": 127
+                        "y": 127,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "wc_2_window",
                         "src": "images/wc_2_window.png",
                         "x": 110,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 }
@@ -591,36 +702,37 @@
                         "height": 543,
                         "id": "shower_room",
                         "src": "images/shower_room.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "shower_middle",
                         "src": "images/shower_middle.png",
                         "x": 440,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "shower_door_to_locker_room_2_blocked",
-                        "object_name": "shower_door_to_locker_room_2",
                         "src": "images/shower_door_to_locker_room_2_closed.png",
                         "x": 155,
-                        "y": 132
+                        "y": 132,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "shower_door_to_locker_room_2_closed",
-                        "object_name": "shower_door_to_locker_room_2",
                         "src": "images/shower_door_to_locker_room_2_closed.png",
                         "visible": false,
                         "x": 155,
@@ -630,9 +742,8 @@
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "shower_door_to_locker_room_2_open",
-                        "object_name": "shower_door_to_locker_room_2",
                         "src": "images/shower_door_to_locker_room_2_open.png",
                         "visible": false,
                         "x": 155,
@@ -642,12 +753,12 @@
                 },
                 {
                     "attrs": {
-                        "category": "obstacle",
+                        "category": "furniture",
                         "id": "cieni",
-                        "object_name": "cieni",
                         "src": "images/cieni_1.png",
                         "x": 100,
-                        "y": 380
+                        "y": 380,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -658,12 +769,12 @@
                             "duration": 1.4,
                             "x": -10
                         },
-                        "category": "obstacle",
+                        "category": "furniture",
                         "id": "cieni_eyes",
-                        "object_name": "cieni",
                         "src": "images/cieni_eyes.png",
                         "x": 220,
-                        "y": 415
+                        "y": 415,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -676,55 +787,57 @@
                             "x": 9,
                             "y": -3
                         },
-                        "category": "obstacle",
+                        "category": "furniture",
                         "id": "cieni_mouth",
-                        "object_name": "cieni",
                         "src": "images/cieni_mouth.png",
                         "width": 73,
                         "x": 215,
-                        "y": 453
+                        "y": 453,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "item",
-                        "consume": true,
-                        "id": "teddybear",
+                        "category": "furniture",
+                        "id": "teddybear_floor",
                         "src": "images/teddybear.png",
                         "x": 370,
-                        "y": 360
+                        "y": 360,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "shower_door_to_locker_room_1",
-                        "object_name": "shower_door_to_locker_room_1",
                         "src": "images/shower_door_to_locker_room_1.png",
                         "x": 691,
-                        "y": 136
+                        "y": 136,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "shower_right",
                         "src": "images/shower_right.png",
                         "x": 570,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "shower_left",
                         "src": "images/shower_left.png",
                         "x": 310,
-                        "y": 100
+                        "y": 100,
+                        "visible": true
                     },
                     "className": "Image"
                 }
@@ -744,7 +857,8 @@
                         "height": 543,
                         "id": "wc_1",
                         "src": "images/wc_1.png",
-                        "width": 981
+                        "width": 981,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -761,54 +875,76 @@
                 },
                 {
                     "attrs": {
-                        "category": "item",
-                        "id": "cienibang",
-                        "scale": 0.8,
+                        "category": "furniture",
+                        "id": "cienibang_floor",
+                        "scale": {"x": 0.8, "y": 0.8},
                         "src": "images/cienibang.png",
                         "x": 443,
-                        "y": 325
+                        "y": 325,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "wc_1_mirror",
                         "src": "images/wc_1_mirror.png",
                         "x": 460,
-                        "y": 143
+                        "y": 143,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "object",
+                        "category": "furniture",
                         "id": "library_receipt",
                         "src": "images/library_receipt.png",
                         "x": 610,
-                        "y": 380
+                        "y": 380,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "item",
+                        "category": "furniture",
                         "id": "poster",
                         "src": "images/poster.png",
-                        "src2": "poster_withoutglue",
                         "x": 215,
-                        "y": 473
+                        "y": 473,
+                        "visible": true
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "wc_1_door_to_locker_room_1",
-                        "object_name": "wc_1_door_to_locker_room_1",
                         "src": "images/wc_1_door_to_locker_room_1.png",
                         "x": 281,
-                        "y": 125
+                        "y": 125,
+                        "visible": true
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Layer"
+        },
+        {
+            "attrs": {
+                "id": "fade_layer_room",
+                "opacity": 0,
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "height": 543,
+                        "id": "black_screen_room",
+                        "src": "images/black.png",
+                        "width": 1024
                     },
                     "className": "Image"
                 }
@@ -818,7 +954,7 @@
         {
             "attrs": {
                 "category": "sequence",
-                "id": "outro_layer",
+                "id": "outro",
                 "object_name": "outro",
                 "visible": false
             },
@@ -892,18 +1028,73 @@
                     "attrs": {
                         "category": "sequence",
                         "id": "intro_3",
-                        "src": "images/intro_3.png",
+                        "height": 643,
+                        "width": 981,
                         "visible": false
                     },
-                    "className": "Image"
+                    "children": [
+                        {
+                            "attrs": {
+                                "x": 0,
+                                "y": 0,
+                                "fill": "black",
+                                "height": 643,
+                                "width": 981
+                            },
+                            "className": "Rect"
+                        },
+                        {
+                            "attrs": {
+                                "text": "Kaikki ei kuitenkaan ollut niin kuin piti..",
+                                "fontFamily": "Chalkboard SE",
+                                "fontSize": 26,
+                                "fill": "white",
+                                "shadowColor": "#bbbbbb",
+                                "shadowBlur": 10,
+                                "width": 981,
+                                "align": "center",
+                                "y": 321
+                            },
+                            "className": "Text"
+                        }
+                    ],
+                    "className": "Group"
                 },
                 {
                     "attrs": {
                         "category": "sequence",
                         "id": "intro_1",
-                        "src": "images/intro_1.png"
+                        "height": 643,
+                        "width": 981,
+                        "visible": false
                     },
-                    "className": "Image"
+                    "children": [
+                        {
+                            "attrs": {
+                                "x": 0,
+                                "y": 0,
+                                "fill": "black",
+                                "height": 643,
+                                "width": 981
+                            },
+                            "className": "Rect"
+                        },
+                        {
+                            "attrs": {
+                                "text": "Oli nätti päivä, piti olla ihan normaalit treenit..",
+                                "fontFamily": "Chalkboard SE",
+                                "fontSize": 26,
+                                "fill": "white",
+                                "shadowColor": "#bbbbbb",
+                                "shadowBlur": 10,
+                                "width": 981,
+                                "align": "center",
+                                "y": 321
+                            },
+                            "className": "Text"
+                        }
+                    ],
+                    "className": "Group"
                 }
             ],
             "className": "Layer"
@@ -927,8 +1118,8 @@
                 {
                     "attrs": {
                         "height": 643,
-                        "id": "beginning",
-                        "src": "images/beginning.png",
+                        "id": "splash_screen",
+                        "src": "images/splash_screen.png",
                         "width": 1024
                     },
                     "className": "Image"
@@ -1012,7 +1203,7 @@
                         "fontSize": 26,
                         "fontStyle": "bold",
                         "id": "rewards_text",
-                        "strokeColor": "grey",
+                        "stroke": "grey",
                         "strokeWidth": 1,
                         "text": "/3 piilotettua kirjaa l\u00f6ydetty",
                         "x": 340,
@@ -1032,9 +1223,8 @@
             "children": [
                 {
                     "attrs": {
-                        "category": "door",
+                        "category": "furniture",
                         "id": "oikotie",
-                        "object_name": "oikotie_onneen",
                         "src": "images/shower_door_to_locker_room_1.png",
                         "x": 691,
                         "y": 136
@@ -1043,9 +1233,8 @@
                 },
                 {
                     "attrs": {
-                        "category": "door",
-                        "id": "oikotie_locker_room2",
-                        "object_name": "oikotie_locker_room2",
+                        "category": "furniture",
+                        "id": "oikotie2",
                         "src": "images/shower_door_to_locker_room_1.png",
                         "x": 691,
                         "y": 136
@@ -1118,7 +1307,6 @@
                 },
                 {
                     "attrs": {
-                        "category": "object",
                         "id": "jersey",
                         "src": "images/icehockey_jersey.png",
                         "x": 530,
@@ -1175,7 +1363,6 @@
                 {
                     "attrs": {
                         "align": "center",
-                        "category": "object",
                         "fill": "white",
                         "fontFamily": "Chalkboard SE",
                         "fontSize": 30,
@@ -1240,7 +1427,6 @@
             "className": "Layer"
 		}, {
             "attrs": {
-                "category": "misc",
                 "id": "text_layer"
             },
             "children": [
@@ -1252,7 +1438,7 @@
                         "fontSize": 18,
                         "fontStyle": "bold",
                         "id": "interaction_text",
-                        "strokeColor": "black",
+                        "stroke": "black",
                         "strokeWidth": 1,
                         "x": 512,
                         "y": 430
@@ -1261,7 +1447,43 @@
                 },
                 {
                     "attrs": {
-                        "id": "speech_bubble",
+                        "id": "npc_speech_bubble",
+                        "visible": false,
+                        "x": 100,
+                        "y": 200
+                    },
+                    "children": [
+                        {
+                            "attrs": {
+                                "cornerRadius": 10,
+                                "fill": "#ddd",
+                                "id": "npc_tag",
+                                "lineJoin": "round",
+                                "pointerDirection": "left",
+                                "pointerHeight": 15,
+                                "pointerWidth": 40,
+                                "stroke": "black",
+                                "strokeWidth": 1
+                            },
+                            "className": "Tag"
+                        },
+                        {
+                            "attrs": {
+                                "fill": "black",
+                                "fontFamily": "Chalkboard SE",
+                                "fontSize": 14,
+                                "id": "npc_monologue",
+                                "padding": 10,
+                                "width": "auto"
+                            },
+                            "className": "Text"
+                        }
+                    ],
+                    "className": "Label"
+                },
+                {
+                    "attrs": {
+                        "id": "character_speech_bubble",
                         "visible": false,
                         "x": 800,
                         "y": 513
@@ -1275,7 +1497,7 @@
                                 "pointerDirection": "right",
                                 "pointerHeight": 15,
                                 "pointerWidth": 40,
-                                "strokeColor": "black",
+                                "stroke": "black",
                                 "strokeWidth": 1
                             },
                             "className": "Tag"
@@ -1299,55 +1521,6 @@
         },
         {
             "attrs": {
-                "category": "misc",
-                "id": "inventory_bar_layer",
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "id": "inventory_bar",
-                        "src": "images/inventory_bar.png",
-                        "y": 543
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "invArrow",
-                        "id": "inventory_left_arrow",
-                        "src": "images/inventory_left_arrow.png",
-                        "visible": false,
-                        "x": 30,
-                        "y": 550
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "invArrow",
-                        "id": "inventory_right_arrow",
-                        "src": "images/inventory_right_arrow.png",
-                        "visible": false,
-                        "x": 750,
-                        "y": 550
-                    },
-                    "className": "Image"
-                }
-            ],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
-                "category": "misc",
-                "id": "inventory_layer"
-            },
-            "children": [],
-            "className": "Layer"
-        },
-        {
-            "attrs": {
-                "category": "misc",
                 "id": "character_layer",
                 "visible": false
             },
@@ -1357,7 +1530,8 @@
                         "id": "character_idle_1",
                         "src": "images/character_idle_1.png",
                         "x": 764,
-                        "y": 443
+                        "y": 443,
+                        "visible": true
                     },
                     "className": "Image"
                 },
@@ -1406,8 +1580,7 @@
         },
         {
             "attrs": {
-                "category": "misc",
-                "id": "fade_layer",
+                "id": "fade_layer_full",
                 "opacity": 0,
                 "visible": false
             },
@@ -1415,7 +1588,7 @@
                 {
                     "attrs": {
                         "height": 543,
-                        "id": "black_screen",
+                        "id": "black_screen_full",
                         "src": "images/black.png",
                         "width": 1024
                     },

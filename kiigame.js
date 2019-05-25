@@ -1,33 +1,14 @@
-//KineticJS JavaScript Framework http://www.kineticjs.com/ Copyright 2013, Eric Rowell. Licensed under the MIT license.
-
 //Get jsons from the server
 var images_json_text = getJSON('images.json');
 var objects_json = JSON.parse(getJSON('objects.json'));
 var texts_json = JSON.parse(getJSON('texts.json'));
+var interactions_json = JSON.parse(getJSON('interactions.json'));
+var character_animations_json = JSON.parse(getJSON('character_animations.json'));
+var sequences_json = JSON.parse(getJSON('sequences.json'));
+var music_json = JSON.parse(getJSON('music.json'));
 
 //Create stage and everything in it from json
-var stage = Kinetic.Node.create(images_json_text, 'container');
-
-// Add texts to objects in stage so that they can be dynamically changed,
-// for example changing the jersey text in Lätkäzombit according to the
-// player number chosen.
-for (var key in texts_json)
-{
-    if (texts_json.hasOwnProperty(key))
-    {
-        var object = stage.get('#' + key)[0];
-        if (object) // e.g. "default" in texts.json is not a proper object
-        {
-            for (var subkey in texts_json[key])
-            {
-                if (texts_json[key].hasOwnProperty(subkey))
-                {
-                    object.setAttr(subkey, texts_json[key][subkey]);
-                }
-            }
-        }
-    }
-}
+var stage = Konva.Node.create(images_json_text, 'container');
 
 //Scale stage to window size
 //stage.setWidth(window.innerWidth);
@@ -36,38 +17,28 @@ for (var key in texts_json)
 //Define variables from stage for easier use"
 
 //Texts & layers
-var monologue = stage.get('#monologue')[0];
-var speech_bubble = stage.get('#speech_bubble')[0];
-var interaction_text = stage.get('#interaction_text')[0];
+var monologue = getObject("monologue");
+var character_speech_bubble = getObject("character_speech_bubble");
+var npc_monologue = getObject("npc_monologue");
+var npc_speech_bubble = getObject("npc_speech_bubble");
+var interaction_text = getObject("interaction_text");
 
-var inventory_layer = stage.get('#inventory_layer')[0];
-var inventory_bar_layer = stage.get("#inventory_bar_layer")[0];
-var character_layer = stage.get('#character_layer')[0];
-var text_layer = stage.get('#text_layer')[0];
-var fade_layer = stage.get("#fade_layer")[0];
-
-//Character frames
-var speak_1 = stage.get('#character_speak_1')[0];
-var speak_2 = stage.get('#character_speak_2')[0];
-var idle_1 = stage.get('#character_idle_1')[0];
-var idle_2 = stage.get('#character_idle_2')[0];
-var panic = stage.get('#character_panic')[0];
+var inventory_layer = getObject("inventory_layer");
+var inventory_bar_layer = getObject("inventory_bar_layer");
+var character_layer = getObject("character_layer");
+var text_layer = getObject("text_layer");
+var fade_layer_full = getObject("fade_layer_full");
+var fade_layer_room = getObject("fade_layer_room");
 
 //Scale background and UI elements
-stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight());
-stage.get("#inventory_bar")[0].setY(stage.getHeight() - 100);
-stage.get("#inventory_bar")[0].setWidth(stage.getWidth());
+getObject("black_screen_full").size({width: stage.width(), height: stage.height()});
+getObject("black_screen_room").size({width: stage.width(), height: stage.height() - 100});
+getObject("inventory_bar").y(stage.height() - 100);
+getObject("inventory_bar").width(stage.width());
 //window.addEventListener("orientationchange", function() {console.log(window.orientation)}, false);
 
 //Make a json object from the json string
 var images_json = stage.toObject();
-
-//Variable for saving the current room (for changing backgrounds and object layers)
-// TODO: Determine these other way
-var start_layer = stage.get("#start_layer")[0];
-var current_background = 'start_layer';
-var game_start_layer;
-var current_layer = start_layer;
 
 //The amount of rewards found
 var rewards = 0;
@@ -82,8 +53,8 @@ var inventory_max = 7;
 //(how many items from the beginning are not shown)
 var inventory_index = 0;
 
-//Timeout event for showing monologue animation for certain duration
-var monologue_timeout;
+//Timeout event for showing character animation for certain duration
+var character_animation_timeout;
 
 //Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
 var x;
@@ -112,8 +83,15 @@ var dragged_item;
 var target;
 
 //Animation for fading the screen
-var fade = new Kinetic.Tween({
-	node : fade_layer,
+var fade_full = new Konva.Tween({
+	node : fade_layer_full,
+	duration : 0.6,
+	opacity : 1
+});
+
+//Animation for fading the room portion of the screen
+var fade_room = new Konva.Tween({
+	node : fade_layer_room,
 	duration : 0.6,
 	opacity : 1
 });
@@ -121,65 +99,120 @@ var fade = new Kinetic.Tween({
 //List of animated objects
 var animated_objects = [];
 
-/*
-var wakeup = new Kinetic.Tween({
-	node : fade_layer,
-	duration : 3,
-	opacity : 1
-});
-*/
+// Create character animations.
+var character_animations = [];
 
-//Speak animation
-var speak_1_animation = new Kinetic.Tween({
-	node : speak_1,
-	duration : 0.3,
-	onFinish : function() {
-		speak_1.hide();
-		speak_2.show();
-		speak_1_animation.reset();
-		speak_2_animation.play();
+// Load up frames from json to the character animations array.
+for (var i in character_animations_json) {
+    var frames = [];
+    for (var j in character_animations_json[i].frames) {
+        var frame = new Konva.Tween({
+            node: getObject(character_animations_json[i].frames[j].node),
+            duration: character_animations_json[i].frames[j].duration
+        });
+        frames.push(frame);
+    }
+    character_animations[character_animations_json[i].id] = frames;
+}
+
+// Set up onFinish functions for each frame to show the next frame. In the case
+// of the last of the frames, show the first frame.
+for (var i in character_animations) {
+    for (var j = 0; j < character_animations[i].length; j++) {
+        if (character_animations[i].length > j+1) {
+            character_animations[i][j].onFinish = function() {
+                var animation = null;
+                var frame_index = null;
+                for (var k in character_animations) {
+                    if (character_animations[k].indexOf(this) > -1) {
+                        animation = character_animations[k];
+                        frame_index = character_animations[k].indexOf(this);
+                    }
+                }
+                this.node.hide();
+                animation[frame_index+1].node.show();
+                this.reset();
+                animation[frame_index+1].play();
+            }
+        } else {
+            character_animations[i][j].onFinish = function() {
+                var animation = null;
+                for (var k in character_animations) {
+                    if (character_animations[k].indexOf(this) > -1)
+                        animation = character_animations[k];
+                }
+                this.node.hide();
+                animation[0].node.show();
+                this.reset();
+                animation[0].play();
+            }
+        }
+    }
+}
+
+// Default character animations
+var speak_animation = character_animations["speak"];
+var idle_animation = character_animations["idle"];
+
+//Creating all image objects from json file based on their attributes
+for (var i = 0; i < images_json.children.length; i++) {
+	for (var j = 0; j < images_json.children[i].children.length; j++) {
+		if (images_json.children[i].children[j].className == 'Image') {
+			createObject(images_json.children[i].children[j].attrs);
+			object_attrs =images_json.children[i].children[j].attrs;
+
+			if (object_attrs.animated === true)
+				create_animation(getObject(object_attrs.id));
+		}
 	}
+	if (images_json.children[i].attrs.category == 'menu')
+		create_menu_action(images_json.children[i]);
+}
+
+//Variable for saving the current room (for changing backgrounds and object layers)
+var current_layer;
+var current_background;
+var game_start_layer;
+
+stage.getChildren().each(function(o) {
+    if (o.getAttr('category') === 'room' && o.getAttr('start') === true)
+	    game_start_layer = o;
 });
-var speak_2_animation = new Kinetic.Tween({
-	node : speak_2,
-	duration : 0.3,
-	onFinish : function() {
-		speak_1.show();
-		speak_2.hide();
-		speak_2_animation.reset();
-		speak_1_animation.play();
-	}
-});
-//Character's idle animation
-var idle_1_animation = new Kinetic.Tween({
-	node : idle_1,
-	duration : 8.7,
-	onFinish : function() {
-		idle_1.hide();
-		idle_2.show();
-		idle_1_animation.reset();
-		idle_2_animation.play();
-	}
-});
-var idle_2_animation = new Kinetic.Tween({
-	node : idle_2,
-	duration : 0.2,
-	onFinish : function() {
-		idle_1.show();
-		idle_2.hide();
-		idle_2_animation.reset();
-		idle_1_animation.play();
-	}
-});
+
+// Not using getObject (with its error messaging), because these are optional.
+var start_layer = stage.get("#start_layer")[0]; // TODO: get rid of start_layer
+
+// The optional start layer has optional splash screen and optional start menu.
+// TODO: Delay transition to game_start_layer?
+if (stage.get("#start_layer")[0] != null) {
+    current_background = 'start_layer';
+    current_layer = start_layer;
+    if (stage.get('#splash_screen')[0] != null) {
+        stage.get('#splash_screen')[0].on('tap click', function(event) {
+            stage.get('#splash_screen')[0].hide();
+            if (stage.get('#start_layer_menu')[0] != null)
+                display_start_menu();
+            else
+                do_transition(game_start_layer.id());
+        });
+    } else { // no splash screen
+        if (stage.get('#start_layer_menu')[0] != null)
+            display_start_menu();
+        else // start layer without splash or menu?!
+            do_transition(game_start_layer.id());
+    }
+} else { // no start layer
+    do_transition(game_start_layer.id());
+}
 
 function create_animation (object) {
 	var attrs = object.getAttr("animation");
-	var animation = new Kinetic.Tween({
+	var animation = new Konva.Tween({
 		node: object,
-		x: attrs.x ? object.getX() + attrs.x : object.getX(),
-		y: attrs.y ? object.getY() + attrs.y : object.getY(),
-		width: attrs.width ? object.getWidth() - 15 : object.getWidth(),
-		easing: Kinetic.Easings.EaseInOut,
+		x: attrs.x ? object.x() + attrs.x : object.x(),
+		y: attrs.y ? object.y() + attrs.y : object.y(),
+		width: attrs.width ? object.width() - 15 : object.width(),
+		easing: Konva.Easings.EaseInOut,
 		duration: attrs.duration,
 
 		onFinish: function() {
@@ -191,21 +224,6 @@ function create_animation (object) {
 	});
 
 	animated_objects.push(animation);
-}
-
-//Creating all image objects from json file based on their attributes
-for (var i = 0; i < images_json.children.length; i++) {
-	for (var j = 0; j < images_json.children[i].children.length; j++) {
-		if (images_json.children[i].children[j].className == 'Image') {
-			createObject(images_json.children[i].children[j].attrs);
-			object_attrs =images_json.children[i].children[j].attrs;
-
-			if (object_attrs.animated === true)
-				create_animation(stage.get('#' + object_attrs.id)[0]);
-		}
-	}
-	if (images_json.children[i].attrs.category == 'menu')
-		create_menu_action(images_json.children[i]);
 }
 
 /*
@@ -226,29 +244,31 @@ function create_menu_action(menu_image) {
 		var item_id = menu_image.children[i].attrs.id;
 		var item_action = menu_object.items[item_id];
 		
-		var item = stage.get('#' + item_id)[0];
+		var item = getObject(item_id);
 		// Don't override custom menu event listeners
 		if (item.eventListeners.click) {
 			continue; }
 			
 		if (item_action == "start_game") {
 			item.on('tap click', function(event) {
-                if (stage.get('#intro') != "")
-                    play_sequence("intro");
+                if (getObject("intro") != "")
+                {
+                    var intro_delay = play_sequence("intro", true);
+                    setTimeout('do_transition(game_start_layer.id(), 0)', intro_delay);
+                }
                 else // Assume intro layer has a transition to game_start_layer
-                    do_transition(game_start_layer.getId());
+                    do_transition(game_start_layer.id());
 			});
 		}
 		else if (item_action == "credits") {
 			item.on('tap click', function(event) {
-				event = event.targetNode;
-				setMonologue(findMonologue(event));
+				setMonologue(findMonologue(event.target.id()));
 			});
 		}
+        // TODO: Return to main menu after end of game.
 		else if (item_action == "main_menu") {
 			item.on('tap click', function(event) {
-				stage.get('#end_texts')[0].hide();
-				
+				getObject("end_texts").hide();
 				display_start_menu();
 			});
 		}
@@ -259,13 +279,12 @@ function create_menu_action(menu_image) {
 // string layerId - the ID of the layer we want to display the menu for
 function display_menu(layerId) {
 	hide_menu();
-	menu = stage.get('#' + objects_json[layerId]["menu"])[0];
+	menu = getObject(objects_json[layerId]["menu"]);
 	if (!menu)
 		return;
-		
+
 	menu.show()
 	current_menu = menu;
-	menu.moveToTop();
 }
 
 function hide_menu() {
@@ -283,42 +302,29 @@ window.onload = function() {
 		if (o.getAttr('category') == 'room') {
 			o.getChildren().each(function(shape, i) {
 				if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
-					shape.createImageHitRegion(function() {});
+                    shape.cache();
+					shape.drawHitFromCache();
 				}
 			});
 
 			o.on('mouseup touchend', function(event) {
-				interact(event);
+				handle_click(event);
 			});
-
-			// Current layer for hit region purposes in different rooms
-			if (o.getAttr('start') === true) {
-				game_start_layer = o;
-			}
 		}
 	});
 
 	stage.draw();
-	idle_1_animation.play();
+    idle_animation[0].node.show();
+	idle_animation[0].play();
 };
-
-stage.get('#beginning')[0].on('tap click', function(event) {
-	stage.get('#beginning')[0].hide();
-	display_start_menu();
-});
 
 // Display the start menu including "click" to proceed image
 function display_start_menu() {
 	start_layer.show();
-	start_layer.moveToTop();
-	
 	display_menu("start_layer");
-	character_layer.moveToTop();
 	character_layer.show();
 	inventory_bar_layer.show();
-	
 	stage.draw();
-	
 	play_music('start_layer');
 }
 
@@ -329,7 +335,7 @@ string id - object ID from JSON with "music":"file name" attribute
 function play_music(id) {
 	if (id == undefined)
 		return;
-	var data = objects_json[stage.get('#'+id)[0].getAttr('object_name')];
+	var data = music_json[getObject(id).getAttr('object_name')];
 
 	// ID and music found from JSON?
 	if (!data || !data.music) {
@@ -438,28 +444,23 @@ function stop_music() {
         current_music.pause();
 }
 
-/*
-Plays a sequence defined in JSON
-string sequence - the sequence ID from JSON
-boolean/string/null transition - Override sequence's transition target, false cancels transition, null does transition according to sequence
- */
-function play_sequence(sequence, transition) {
+/// Plays a sequence defined in sequences.json
+/// @param sequence The sequence id in sequences.json
+/// @param monologue boolean Show sequence's examine text at the end of sequence
+/// @return The length of sequence in ms. Doesn't include the fade-in!
+function play_sequence(sequence, monologue) {
 	var delay = 700;
-		
-	// For some reason fade_layer size may change, fix it back here
-	fade_layer.getChildren()[0].setWidth(1024);
-	fade_layer.getChildren()[0].setHeight(643);
-	
+
 	// Animation cycle for proper fading and drawing order
-	fade_layer.moveToTop();
-	fade_layer.show();
-	fade.reset();
-	fade.play();
-	
+	fade_full.reset();
+	fade_layer_full.show();
+	fade_full.play();
+
 	var old_layer = current_layer;
-	current_layer = stage.get("#"+sequence)[0];
-	current_layer.moveToTop();
-	var object = objects_json[current_layer.getAttr('object_name')];
+	current_layer = getObject(sequence);
+    var sequence_exit_text = monologue === true ? findMonologue(current_layer.id()) : null;
+	var object = sequences_json[current_layer.getAttr('object_name')];
+    var final_fade_duration = object.transition_length != null ? object.transition_length : 0;
 
 	var sequence_counter = 0;
 	var images_total = 0;
@@ -471,129 +472,137 @@ function play_sequence(sequence, transition) {
 		images_total++;
 		
 		var last_image = image;
-		image = stage.get('#' + object.images[i].id)[0];
+		image = getObject(object.images[i].id);
 		
 		(function(i, image, last_image) {
 			setTimeout(function() {
                 current_layer.show();
 				old_layer.hide();
-				fade_layer.show();
-				text_layer.hide();
-				fade.play();
-				
-				//if (sequence_counter == 0)
-				//	play_music(sequence);
-				
+				fade_layer_full.show();
+				hide_menu(); // So that the menu is hidden after first fadeout.
+                character_layer.hide();
+                inventory_bar_layer.hide();
+                inventory_layer.hide();
+				fade_full.play();
+
 				if (last_image)
 					last_image.hide();
 				image.show();
-				
+
 				// Fade-in the image
 				var image_fade = object.images[i].do_fade;
 				if (image_fade === true) {
 					setTimeout(function() {
-						fade_layer.moveToTop();
-						fade_layer.show();
-						fade.reverse();
+						fade_full.reverse();
 						stage.draw();
 					}, 700);
 				}
 				// Immediately display the image
 				else {
-					fade.reset();
+					fade_full.reset();
 					stage.draw();
 				}
-				
+
 				sequence_counter += 1;
-				
-				// Last image in the sequence
-				if (images_total == sequence_counter) {
-					setTimeout(function() {
-						if (transition == null)
-							do_transition(object.transition, true, current_layer.getId());
-						else if (transition !== false)
-							do_transition(transition, true);
-						text_layer.show();
-					}, 700)
-				}
 
 			}, delay);
 		})(i, image, last_image);
 
 		delay = delay + object.images[i].show_time;
 	};
-	
+
+    // After last image, do the final fade and set up exit monologue.
+    if (final_fade_duration > 0) {
+        setTimeout(function() {
+            fade_full.tween.duration = final_fade_duration;
+            fade_full.play();
+
+            setTimeout(function() {
+                fade_full.reverse();
+                setTimeout(function() {
+                    fade_layer_full.hide();
+                    fade_full.tween.duration = 600; // reset to default
+                    if (monologue === true)
+                        setMonologue(sequence_exit_text);
+                }, final_fade_duration);
+            }, final_fade_duration);
+        }, delay);
+
+        // Doesn't include the fade-in!
+        delay = delay + final_fade_duration;
+    }
+
 	// Return sequence delay
 	return delay;
 }
 
-// Do a transition to a layer with specified ID
-function do_transition(layerId, slow_fade, comingFrom) {
-	hide_menu();
-	
+/// Transition to a room.
+/// @param room_id The id of the room to transition to.
+/// @param fade_time_param The fade duration; if null, use a default.
+/// @param comingFrom The room where the transition was started in. Sets up
+///                   the monologue text.
+function do_transition(room_id, fade_time_param, comingFrom) {
+	var fade_time = fade_time_param;
+
 	// By default do fast fade
-	var fade_time = 3000;
-	if (slow_fade == null) {
+	if (fade_time_param == null)
 		var fade_time = 700;
-		character_layer.moveToTop();
-	}
-	fade.tween.duration = fade_time;
-	
-	fade_layer.show();
-	fade.play();
-	
-	var textId = current_layer.getAttr('id');
-	
+
+    // Don't fade if duration is zero.
+    if (fade_time != 0)
+    {
+        fade_room.tween.duration = fade_time;
+        fade_layer_room.show();
+        fade_room.play();
+    }
+
 	setTimeout(function() {
 		stop_music();
-		fade.reverse();
-		
-		current_layer.hide();
-		current_layer = stage.get("#"+layerId)[0];
+		if (fade_time != 0) // Don't fade if duration is zero.
+            fade_room.reverse();
+
+        if (current_layer != null) // may be null if no start_layer is defined
+            current_layer.hide();
+
+		current_layer = getObject(room_id);
 		
 		//Play the animations of the room
 		for (var i in animated_objects) {
-			if (animated_objects[i].node.parent.getId() == current_layer.getId())
+			if (animated_objects[i].node.parent.id() == current_layer.id())
 				animated_objects[i].play();
 			else if (animated_objects[i].anim.isRunning())
 				animated_objects[i].anim.stop();	//Should this be .anim.stop() or .pause()?
 		}
 		
 		current_layer.show();
-		
+		inventory_layer.show();
 		inventory_bar_layer.show();
 		character_layer.show();
 		stage.draw();
 		
 		setTimeout(function() {
-			fade_layer.hide();
-			stage.get("#black_screen")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-			fade_layer.moveDown();
-			play_music(current_layer.getId());
+			fade_layer_room.hide();
+			play_music(current_layer.id());
 			if (comingFrom)
-				setMonologue(findMonologue(stage.get('#' + comingFrom)[0]));
+				setMonologue(findMonologue(comingFrom));
 		}, fade_time);
 	}, fade_time);
 }
 
 //Mouse up and touch end events (picking up items from the environment
-//Start layer for the shortcut developer menu
-start_layer.on('mouseup touchend', function(event) {
-	interact(event);
-});
-
 //Mouse click and tap events (examine items in the inventory)
 inventory_layer.on('click tap', function(event) {
-	interact(event);
+	handle_click(event);
 });
 //Drag start events
 stage.get('Image').on('dragstart', function(event) {
-	dragged_item = event.targetNode;
+	dragged_item = event.target;
 	inventoryDrag(dragged_item);
 });
+
 //While dragging events (use item on item or object)
 stage.on('dragmove', function(event) {
-	dragged_item = event.targetNode;
+	dragged_item = event.target;
 
 	if (!delayEnabled) {
 		// Setting a small delay to not spam intersection check on every moved pixel
@@ -614,7 +623,7 @@ stage.on('dragmove', function(event) {
 						target = object;
 					}
 					break;
-					// No target, move on
+                // No target, move on
 				} else {
 					target = null;
 				}
@@ -639,10 +648,11 @@ stage.on('dragmove', function(event) {
 				}
 			}
 		}
+
 		// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
 		if (target == null) {
-			var leftArrow = stage.get("#inventory_left_arrow")[0];
-			var rightArrow = stage.get("#inventory_right_arrow")[0];
+			var leftArrow = getObject("inventory_left_arrow");
+			var rightArrow = getObject("inventory_right_arrow");
 			if (!dragDelayEnabled) {
 				if (checkIntersection(dragged_item, leftArrow)) {
 					dragDelayEnabled = true;
@@ -664,37 +674,38 @@ stage.on('dragmove', function(event) {
 		// If target is found, highlight it and show the interaction text
 		if (target != null) {
 			current_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
 			inventory_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
-			target.setShadowColor('purple');
-			target.setShadowOffset(0);
-			target.setShadowBlur(20);
+            target.clearCache();
+			target.shadowColor('purple');
+			target.shadowOffset(0);
+			target.shadowBlur(20);
+			inventory_layer.draw();
 			
 			// Don't cause a mass of errors if no text found
 			try {
-				interaction_text.setText(target.getAttr('name'));
+				interaction_text.text(texts_json[target.id()].name);
+			} catch (e) {
+				// Do nothing
 			}
-			catch (e) {
-			}
-			interaction_text.setX(dragged_item.getX() + (dragged_item.getWidth() / 2));
-			interaction_text.setY(dragged_item.getY() - 30);
-			interaction_text.setOffset({
-				x : interaction_text.getWidth() / 2
+
+			interaction_text.x(dragged_item.x() + (dragged_item.width() / 2));
+			interaction_text.y(dragged_item.y() - 30);
+			interaction_text.offset({
+				x : interaction_text.width() / 2
 			});
 
-			dragged_item.moveToTop();
 			text_layer.draw();
-
-			// If no target, clear the texts and highlights
 		} else {
+			// If no target, clear the texts and highlights
 			current_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
 			inventory_layer.getChildren().each(function(shape, i) {
-				shape.setShadowBlur(0);
+				shape.shadowBlur(0);
 			});
 			clearText(interaction_text);
 		}
@@ -702,14 +713,15 @@ stage.on('dragmove', function(event) {
 		current_layer.draw();
 	}
 });
+
 //Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
 function checkIntersection(dragged_item, target) {
 	// If target is visible and of suitable category
-	if (target.isVisible() && (target.getAttr('category') != undefined && target.getAttr('category') != 'secret' && target.getAttr('category') != 'transition')) {
+	if (target.isVisible() && (target.getAttr('category') != undefined && target.getAttr('category') != 'secret')) {
 		// If horizontally inside
-		if (dragged_item.getX() > target.getX() && dragged_item.getX() < (target.getX() + target.getWidth()) || (dragged_item.getX() + dragged_item.getWidth()) > target.getX() && (dragged_item.getX() + dragged_item.getWidth()) < (target.getX() + target.getWidth())) {
+		if (dragged_item.x() > target.x() && dragged_item.x() < (target.x() + target.width()) || (dragged_item.x() + dragged_item.width()) > target.x() && (dragged_item.x() + dragged_item.width()) < (target.x() + target.width())) {
 			// If vertically inside
-			if (dragged_item.getY() > target.getY() && dragged_item.getY() < (target.getY() + target.getHeight()) || (dragged_item.getY() + dragged_item.getHeight()) > target.getY() && (dragged_item.getY() + dragged_item.getHeight()) < (target.getY() + target.getHeight())) {
+			if (dragged_item.y() > target.y() && dragged_item.y() < (target.y() + target.height()) || (dragged_item.y() + dragged_item.height()) > target.y() && (dragged_item.y() + dragged_item.height()) < (target.y() + target.height())) {
 				return true;
 			}
 		}
@@ -717,285 +729,101 @@ function checkIntersection(dragged_item, target) {
 	return false;
 }
 
-//Drag end events
-stage.get('Image').on('dragend', function(event) {
-	var dragged_item = event.targetNode;
-	var say_text = undefined;
-	try {
-		var object = objects_json[dragged_item.getId()];
-	} catch(e) {
-		var object = null;
-	}
-	// Variable for whether the dragged item is destroyed or not
-	var destroy = false;
+/// Stop character animations and clear monologue when clicked or touched
+/// anywhere on the screen.
+stage.on('touchstart mousedown', function(event) {
+	clearText(monologue);
+    clearText(npc_monologue);
+	stopCharacterAnimations();
+});
 
-	if (target != null)
-		say_text = dragged_item.getAttr(target.getId());
-	//console.log(target != null,say_text != undefined,object && object.outcome != undefined,target.getAttr('category') == 'usable')
-	
+/// Touch start and mouse down events (save the coordinates before dragging)
+inventory_layer.on('touchstart mousedown', function(event) {
+	x = event.target.x();
+	y = event.target.y();
+	//clearText(monologue);
+});
+
+/// Inventory arrow clicking events
+inventory_bar_layer.on('click tap', function(event) {
+	handle_click(event);
+});
+
+/// Drag end events for inventory items.
+stage.get('Image').on('dragend', function(event) {
+	var dragged_item = event.target;
+
 	// If nothing's under the dragged item
 	if (target == null) {
-		dragged_item.setX(x);
-		dragged_item.setY(y);
+		dragged_item.x(x);
+		dragged_item.y(y);
 	}
-	// Put something into a container
-	else if (target != null && target.getAttr('category') == 'container') {
-		var object = objects_json[target.getAttr('object_name')];
-		var unlocked = undefined;
+    // Look up the possible interaction from interactions.json.
+    else if (target.getAttr('category') == 'furniture' || target.getAttr('category') == 'item') {
+        var commands;
 
-		// Can dragged object unlock locked container?
-		if (object.locked === true && object.key == dragged_item.getId()) {
-			object.locked = false;
-			stage.get('#' + objects_json[target.getAttr('object_name')]['locked_image'])[0].hide();
+        // Not all dragged_items have an entry in interactions_json, or have
+        // anything specified for target_item.
+        try {
+            commands = interactions_json[dragged_item.id()][target.id()];
+        } catch (e) {}
 
-			if (object.state == "empty")
-				unlocked = "empty_image";
-			else
-				unlocked = "full_image";
+        if (commands == null) // no dragend interaction defined: usual text
+             commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target.id()}}];
 
-			stage.get('#' + objects_json[target.getAttr('object_name')][unlocked])[0].show();
-		}
-		// Can dragged object be put into the container
-		else if (object.state == 'empty' && object.in == dragged_item.getId()) {
-			object.state = 'full';
+        handle_commands(commands);
+    }
 
-			if (object.in == dragged_item.getId()) {
-				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].hide();
-				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].show();
-
-				// Remove dragged item
-				destroy = true;
-				current_layer.draw();
-			}
-		}
-		setMonologue(findMonologue(dragged_item, target.getId()));
-	}
-	// Unlock a door
-	else if (target != null && target.getAttr('category') == 'door') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		if (object.locked === true && object.state == 'locked' && object.key == dragged_item.getId()) {
-			object.state = 'open';
-			object.locked = false;
-
-			stage.get('#' + object.locked_image)[0].hide();
-			stage.get('#' + object.open_image)[0].show();
-		}
-
-		setMonologue(findMonologue(dragged_item, target.getId()));
-	}
-	// Unblock an obstacle
-	else if (target != null && target.getAttr('category') == 'obstacle') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		if (object.blocking === true && object.trigger == dragged_item.getId()) {
-			var blocked_object = objects_json[object.target];
-
-			object.blocking = false;
-			blocked_object.blocked = false;
-
-			// TODO: What about other objects than door?
-			stage.get('#' + blocked_object.blocked_image)[0].hide();
-			stage.get('#' + blocked_object.closed_image)[0].show();
-
-            // Check if the target is in the list of animated objects;
-            // remove it from there if so. TODO: There should probably be
-            // generic item/object destruction which checks if it was
-            // animated.
-            if (animated_objects.indexOf(target.getId()) > -1)
-                animated_objects.splice(animated_objects.indexOf(target.getId()), 1);
-
-			// TODO: unblocking_image, merge this with "use item on object"?
-			target.destroy();
-
-            // TODO: There should probably be generic item/object destruction
-            // which checks if it has related parts.
-			var related = objects_json[target.getAttr('id')].related;
-			
-			if (related && related.size != 0) {
-				for (var i in related)
-                {
-                    var related_part = stage.get("#" + related[i])[0];
-                    if (animated_objects.indexOf(related_part.getId() > -1))
-                        animated_objects.splice(animated_objects.indexOf(related_part.getId()), 1);
-					related_part.destroy();
-                }
-			}
-		}
-		setMonologue(findMonologue(dragged_item, target.getId()));
-	}
-	// Use item on object
-	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'object') {
-		setMonologue(findMonologue(dragged_item, target.getId()));
-
-		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
-			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
-
-			// Items may be consumed when used
-			dragged_object = objects_json[dragged_item.getAttr('object_name')];
-			if (dragged_item.getAttr('consume') === true)
-				destroy = true;
-
-            // The object is destroyed if it is the target of item's use
-		    target.destroy();
-
-            // Objects related to the target (i.e. the other "parts" of the
-            // target are hidden as well
-			var related = target.getAttr("related");
-			if (related && related.size != 0) {
-				for (var i in related)
-					stage.get("#" + related[i])[0].hide();
-			}
-		}
-	}
-	// Use item on item
-	else if (target != null && object && object.outcome != undefined && target.getAttr('category') == 'usable') {
-		setMonologue(findMonologue(dragged_item, target.getId()));
-		if (objects_json[dragged_item.getId()].trigger == target.getId()) {
-
-			stage.get('#' + objects_json[dragged_item.getId()].outcome)[0].show();
-
-			inventoryAdd(stage.get('#' + objects_json[dragged_item.getId()].outcome)[0]);
-			destroy = true;
-			inventoryRemove(target);
-		}
-	}
-	// Default for all others
-	else {
-		setMonologue(findMonologue(dragged_item, target.getId()));
-	}
 	// Check if dragged item's destroyed, if not, add it to inventory
-	if (destroy == false) {
+	if (dragged_item.isVisible())
 		inventoryAdd(dragged_item);
-	} else {
-        dragged_item.hide();
-        dragged_item.setDraggable(false);
-        inventory_list.splice(inventory_list.indexOf(dragged_item), 1);
-	}
 
 	// Clearing the glow effects
 	current_layer.getChildren().each(function(shape, i) {
-		shape.setShadowBlur(0);
+		shape.shadowBlur(0);
 	});
 	inventory_layer.getChildren().each(function(shape, i) {
-		shape.setShadowBlur(0);
+		shape.shadowBlur(0);
 	});
 	// Clearing the texts
 	clearText(interaction_text);
 
 	redrawInventory();
 });
-//Stop talking and clear monologue when clicked or touched anywhere on the screen
-stage.on('touchstart mousedown', function(event) {
-	clearText(monologue);
-	stopTalking();
-});
-//Touch start and mouse down events (save the coordinates before dragging)
-inventory_layer.on('touchstart mousedown', function(event) {
-	x = event.targetNode.getX();
-	y = event.targetNode.getY();
-	//clearText(monologue);
-});
-//Inventory arrow clicking events
-inventory_bar_layer.on('click tap', function(event) {
-	interact(event);
-});
-//Interaction between items based on their category
-function interact(event) {
-	var target = event.targetNode;
+
+/// Handle click interactions on room objects, inventory items and inventory
+/// arrows.
+function handle_click(event) {
+	var target = event.target;
 	var target_category = target.getAttr('category');
-	
-	try {
-		var ending = objects_json[target.getAttr('object_name')].ending;
-	} catch(e) {
-		var ending = false;
-	}
-	
-	// Initiate ending
-	if (ending)
-		play_ending(ending);
-		
-	// Pick up an item
-	else if (target_category == 'item') {
-		setMonologue(findMonologue(target, 'pickup'));
-		if (target.getAttr('src2') != undefined) {
-			stage.get('#' + target.getAttr('src2'))[0].show();
-			inventoryAdd(stage.get('#' + target.getAttr('src2'))[0]);
-			target.destroy();
-		} else {
-			inventoryAdd(target);
-		}
-		current_layer.draw();
 
-		// To prevent multiple events happening at the same time
-		event.cancelBubble = true;
-		// Pick up a secret item
-	} else if (target_category == 'secret') {
-		setMonologue(findMonologue(target, 'pickup'));
+    if (target_category == 'furniture' || target_category == 'item') {
+        var commands;
+
+        // Not all clicked items have their entry in interactions_json.
+        try {
+            commands = interactions_json[target.id()].click;
+        } catch (e) {}
+
+        if (commands == null) // no click interaction defined: usual examine
+            commands = [{"command":"monologue", "textkey":{"object": target.id(), "string": "examine"}}];
+
+        handle_commands(commands);
+	}
+    // Pick up rewards
+    else if (target_category == 'secret') {
+		setMonologue(findMonologue(target.id(), 'pickup'));
 		var rewardID = target.getAttr('reward');
-		stage.get('#'+rewardID)[0].show();
-		inventoryAdd(stage.get('#'+rewardID)[0]);
+		inventoryAdd(getObject(rewardID));
 		rewards++;
-		target.destroy();
-		current_layer.draw();
+        removeObject(target);
 
 		// To prevent multiple events happening at the same time
 		event.cancelBubble = true;
 	}
-	// Print examine texts for items, rewards and objects
-	else if (target_category == 'object' || target_category == 'usable' || target_category == 'reward' || target_category == 'obstacle') {
-		setMonologue(findMonologue(target));
-	}
-	// Take an item out of a container
-	else if (target_category == 'container') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		if (object.locked === false) {
-			if (object.state == 'full') {
-				object.state = 'empty';
-
-				stage.get('#' + objects_json[target.getAttr('object_name')]['full_image'])[0].hide();
-				stage.get('#' + objects_json[target.getAttr('object_name')]['empty_image'])[0].show();
-
-				// Show and add the added inventory item
-				var new_item = stage.get('#' + object.out)[0];
-				new_item.show();
-				inventoryAdd(new_item);
-
-				current_layer.draw();
-			}
-		}
-
-		setMonologue(findMonologue(target));
-	}
-	// Open a door or do a transition
-	else if (target_category == 'door') {
-		var object = objects_json[target.getAttr('object_name')];
-
-		if (object.blocked === true)
-			setMonologue(findMonologue(target));
-			
-		else if (object.state == 'closed') {
-			setMonologue(findMonologue(target));
-			if (object.locked === true) {
-				object.state = 'locked';
-				stage.get('#' + object.locked_image)[0].show();
-			}
-			else {
-				object.state = 'open';
-				stage.get('#' + object.open_image)[0].show();
-			}
-			target.hide();
-			current_layer.draw();
-		}
-        else if (object.state == 'locked')
-            setMonologue(findMonologue(target));
-		else if (object.state == 'open') {
-			do_transition(object.transition);
-			setTimeout(function() {
-				setMonologue(findMonologue(target));
-			}, 700);
-		}
+	// Print examine texts for rewards
+	else if (target_category == 'reward') {
+		setMonologue(findMonologue(target.id()));
 	}
 	// Inventory arrow buttons
 	else if (target.getAttr('id') == 'inventory_left_arrow') {
@@ -1012,85 +840,173 @@ function interact(event) {
 	}
 }
 
-//Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
-function play_ending(ending) {
-	var delay = 700;
-	var ending_object = objects_json[ending];
-
-    if (ending_object.sequence)
-        sequence_delay = play_sequence(ending_object.sequence, false);
-
-    // Clear inventory except rewards
-    for (var i = inventory_layer.children.length-1; i >= 0; i--) {
-        var shape = inventory_layer.children[i];
-        if (shape.getAttr('category') != 'reward')
-            inventoryRemove(shape);
-        inventory_index = 0;
+/// Loop through a list of interaction commands and execute them with
+/// handle_command, with timeout if specified.
+function handle_commands(commands) {
+    for (var i in commands) {
+        if (commands[i].timeout != null) {
+            (function(commands, i) {
+                setTimeout(function() {
+                    handle_command(commands[i]);
+                }, commands[i].timeout);
+            })(commands, i);
+        } else {
+            handle_command(commands[i]);
+        }
     }
-
-	setTimeout(function() {
-		current_layer = stage.get('#' + ending)[0];
-		
-		fade_layer.moveToTop();
-		fade_layer.show();
-		fade.play();
-		setTimeout(function() {
-			play_music(current_layer.getId());
-			rewards_text = stage.get('#rewards_text')[0];
-			old_text = rewards_text.getText();
-			rewards_text.setText(rewards + rewards_text.getText());
-						
-			current_layer.show();
-			
-			inventory_bar_layer.show();
-			inventory_bar_layer.moveToTop();
-			
-			inventory_layer.show();
-			inventory_layer.moveToTop();
-			
-			display_menu(current_layer.getId());
-			
-			character_layer.show();
-			character_layer.moveToTop();
-			
-			stage.get('#end_texts')[0].show();
-			stage.get('#end_texts')[0].moveToTop();
-			
-			// Still keep fade layer on top
-			fade_layer.moveToTop();
-			
-			stage.draw();
-			rewards_text.setText(old_text);
-			
-			fade.reverse();
-			setTimeout('fade_layer.hide();', 700);
-		}, 700);
-	}, sequence_delay);
-
 }
 
-/// Find monologue text in object. If a text is not found from the object by
-/// the parameter, return the defaul text for the object (if it exists), or
-/// the master default text (looked up from JSON).
-/// @param object The object in stage where text is looked up from.
+/// Handle each interaction. Check what command is coming in, and do the thing.
+/// Timeouts are done in handle_commands. Order of commands in interactinos.json
+/// can be important: for instance, monologue plays the speaking animation, so
+/// play_character_animation should come after it, so that the speaking
+/// animation is stopped and the defined animation plays, and not vice versa.
+function handle_command(command) {
+    if (command.command == "monologue")
+        setMonologue(findMonologue(command.textkey.object, command.textkey.string));
+    else if (command.command == "inventory_add")
+        inventoryAdd(getObject(command.item));
+    else if (command.command == "inventory_remove")
+        inventoryRemove(getObject(command.item));
+    else if (command.command == "remove_object")
+        removeObject(getObject(command.object));
+    else if (command.command == "add_object")
+        addObject(getObject(command.object));
+    else if (command.command == "play_ending")
+        play_ending(command.ending);
+    else if (command.command == "do_transition")
+        do_transition(command.destination, command.length != null ? command.length : 700);
+    else if (command.command == "play_character_animation")
+        playCharacterAnimation(character_animations[command.animation], command.length); // Overrides default speak animation from setMonologue.
+    else if (command.command == "play_sequence")
+        play_sequence(command.sequence, command.monologue);
+    else if (command.command == "set_idle_animation")
+        setIdleAnimation(command.animation_name);
+    else if (command.command == "set_speak_animation")
+        setSpeakAnimation(command.animation_name);
+    else if (command.command == "npc_monologue")
+        npcMonologue(getObject(command.npc), findMonologue(command.textkey.object, command.textkey.string));
+    else
+        console.warn("Unknown interaction command " + command.command);
+}
+
+/// Get an object from stage by it's id. Gives an error message in console with
+/// the looked up name if it is not found. Basically, a wrapper for
+/// stage.get(object_name) with error messaging, helpful with typos in jsons,
+/// and also gives some errors if an object required by the kiigame.js script
+/// itself is missing.
+/// @param object The name of the object to look up.
+/// @return Returns the object if it's found, or null if it isn't.
+function getObject(object_name) {
+    var object = stage.get('#' + object_name)[0];
+    if (object == null)
+        console.warn("Could not find object from stage with id " + object_name);
+    return object;
+}
+
+/// Add an object to the stage. Currently, this means setting its visibility
+/// to true. // TODO: Add animations & related parts.
+/// @param The object to be added.
+function addObject(object) {
+    object.clearCache();
+    object.show();
+    object.cache();
+    current_layer.draw();
+}
+
+/// Remove an object from stage. Called after interactions that remove objects.
+/// The removed object is hidden. Handles animations.
+/// @param object The object to be destroyed.
+function removeObject(object) {
+    removeAnimation(object.id());
+    object.hide();
+    current_layer.draw();
+}
+
+/// Remove an object from the list of animated objects.
+/// @param id The id of the object to be de-animated.
+function removeAnimation(id) {
+    if (animated_objects.indexOf(id) > -1)
+        animated_objects.splice(animated_objects.indexOf(id), 1);
+}
+
+//Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
+function play_ending(ending) {
+    fade_full.reset();
+    fade_layer_full.show();
+    fade_full.play();
+
+    setTimeout(function() {
+        // Clear inventory except rewards
+        for (var i = inventory_layer.children.length-1; i >= 0; i--) {
+            var shape = inventory_layer.children[i];
+            if (shape.getAttr('category') != 'reward')
+                inventoryRemove(shape);
+            inventory_index = 0;
+        }
+
+        play_music(ending);
+        rewards_text = getObject("rewards_text");
+        old_text = rewards_text.text();
+        rewards_text.text(rewards + rewards_text.text());
+
+        current_layer.hide(); // hide the sequence layer
+        current_layer = getObject(ending);
+        current_layer.show();
+        inventory_bar_layer.show();
+        inventory_layer.show();
+        display_menu(current_layer.id());
+        character_layer.show();
+        getObject("end_texts").show();
+        stage.draw();
+        rewards_text.text(old_text);
+
+        fade_full.reverse();
+        setTimeout('fade_layer_full.hide();', 700);
+    }, 700);
+}
+
+//Clearing the given text
+function clearText(text) {
+	text.text("");
+
+	if (text.id() == 'monologue') {
+		character_speech_bubble.hide();
+	}
+    else if (text.id() == 'npc_monologue') {
+        npc_speech_bubble.hide();
+    }
+
+	text_layer.draw();
+}
+
+/// Find monologue text in object. If a text is not found from texts_json by
+/// the parameter, return the default text for the object (if it exists), or
+/// the master default text.
+/// @param object_id The id of the object which's texts are looked up.
 /// @param key The key to look up the text with. If null, set to 'examine' by
 ///            default. Otherwise usually the name of the other object in
 ///            item-object interactions.
 /// @return The text found, or the default text.
-function findMonologue(object, key) {
+function findMonologue(object_id, key) {
 	if (key == null)
 		key = 'examine';
 
-    var text = object.getAttr(key);
+    var text = null;
+    try { // Might not find with object_id
+        text = texts_json[object_id][key];
+    } catch(e) {}
 
 	// If no text found, use default text
 	if (!text || text.length == 0) {
 		// Item's own default
-		console.warn("No text " + key + " found for " + object.getAttr('id'));
-		text = object.getAttr('default');
+		console.warn("No text " + key + " found for " + object_id);
+		try { // Might not find with object_id
+            text = texts_json[object_id]['default'];
+        } catch(e) {}
 		if (!text) {
 			// Master default
-			console.warn("Default text not found for " + object.getAttr('id') + ". Using master default.");
+			console.warn("Default text not found for " + object_id + ". Using master default.");
 			try {
                 text = texts_json["default"]["examine"];
             } catch (e) {
@@ -1102,54 +1018,103 @@ function findMonologue(object, key) {
     return text;
 }
 
+/// Set NPC monologue text and position the NPC speech bubble to the desired
+/// NPC.
+/// @param npc The object in the stage that will have the speech bubble.
+/// @param text The text to be shown in the speech bubble.
+function npcMonologue(npc, text) {
+
+    npc_monologue.setWidth('auto');
+    npc_speech_bubble.show();
+    npc_monologue.text(text);
+
+    var npc_tag = getObject("npc_tag");
+    if (npc.x() + npc.width() > (stage.width()/2)) {
+        npc_tag.pointerDirection("right");
+        if (npc_monologue.width() > npc.x() - 100) {
+            npc_monologue.width(npc.x() - 100);
+        }
+        npc_monologue.text(text);
+        npc_speech_bubble.x(npc.x());
+    } else {
+        npc_tag.pointerDirection("left");
+        if (npc_monologue.width() > stage.width() - (npc.x() + npc.width() + 100)) {
+            npc_monologue.width(stage.width() - (npc.x() + npc.width() + 100));
+        }
+        npc_monologue.text(text);
+        npc_speech_bubble.x(npc.x() + npc.width());
+    }
+
+    npc_speech_bubble.y(npc.y() + (npc.height()/3));
+
+    text_layer.draw();
+}
+
 /// Set monologue text.
 /// @param text The text to be shown in the monologue bubble.
 function setMonologue(text) {
 	monologue.setWidth('auto');
-	speech_bubble.show();
-	monologue.setText(text);
-	if (monologue.getWidth() > 524) {
-		monologue.setWidth(524);
-		monologue.setText(text);
+	character_speech_bubble.show();
+	monologue.text(text);
+	if (monologue.width() > 524) {
+		monologue.width(524);
+		monologue.text(text);
 	}
 
-	speech_bubble.setY(stage.getHeight() - 100 - 15 - monologue.getHeight() / 2);
-
-	// Playing the speaking animation
-	idle_1.hide();
-	speak_1.show();
-	speak_1_animation.play();
-
-	text_layer.moveToTop();
+	character_speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
 	text_layer.draw();
-	character_layer.draw();
 
-	clearTimeout(monologue_timeout);
-	monologue_timeout = setTimeout('stopTalking();', 3000);
+    playCharacterAnimation(speak_animation, 3000);
 }
 
-//Clearing the given text
-function clearText(text) {
-	text.setText("");
-
-	if (text.getId() == 'monologue') {
-		speech_bubble.hide();
-	}
-	text_layer.draw();
-}
-
-//Stop the talking animations
-function stopTalking() {
-	character_layer.getChildren().each(function(shape, i) {
-		shape.hide();
-	});
-	stage.get("#character_idle_1")[0].show();
-
-	speak_1_animation.reset();
-	speak_2_animation.reset();
+/// Play a character animation
+/// @param animation The animation to play.
+/// @param timeout The time in ms until the character returns to idle animation.
+function playCharacterAnimation(animation, timeout) {
+    stopCharacterAnimations();
+    for (var i in idle_animation) {
+        idle_animation[i].node.hide();
+        idle_animation[i].reset();
+    }
+	animation[0].node.show();
+	animation[0].play();
 
 	character_layer.draw();
 
+	clearTimeout(character_animation_timeout);
+	character_animation_timeout = setTimeout('stopCharacterAnimations();', timeout);
+}
+
+///Stop the characer animations, start idle animation
+function stopCharacterAnimations() {
+	for (var i in character_animations) {
+        for (var j in character_animations[i]) {
+            character_animations[i][j].node.hide();
+            character_animations[i][j].reset();
+        }
+    }
+
+    idle_animation[0].node.show();
+    idle_animation[0].play();
+	character_layer.draw();
+}
+
+/// Change idle animation, so that the character graphics can be changed
+/// mid-game.
+/// @param animation_name The name of the animation, look the animation up
+///                       from character_animations[].
+function setIdleAnimation(animation_name) {
+    idle_animation = character_animations[animation_name];
+    stopCharacterAnimations(); // reset and play the new idle animation
+}
+
+/// Change speak animation, so that the character graphics can be changed
+/// mid-game.
+/// @param animation_name The name of the animation, look the animation up
+///                       from character_animations[].
+function setSpeakAnimation(animation_name) {
+    speak_animation = character_animations[animation_name];
+    stopCharacterAnimations(); // reset and play idle animation
 }
 
 //Load json from the server
@@ -1165,7 +1130,7 @@ function getJSON(json_file) {
 function createObject(o) {
 	window[o.id] = new Image();
 	window[o.id].onLoad = function() {
-		stage.get('#' + o.id)[0].setImage(window[o.id]);
+		getObject(o.id).image(window[o.id]);
 	}();
 	window[o.id].src = o.src;
 }
@@ -1176,10 +1141,10 @@ function createObject(o) {
 /// and adds a new one.
 /// @param item Item to be added to the inventory
 function inventoryAdd(item) {
+    item.show();
 	item.moveTo(inventory_layer);
-	item.clearImageHitRegion();
-	item.setScale(1);
-	item.setSize(80, 80);
+    item.clearCache();
+	item.size({width: 80, height: 80});
 
 	if (inventory_list.indexOf(item) > -1)
 		inventory_list.splice(inventory_list.indexOf(item), 1, item);
@@ -1191,28 +1156,29 @@ function inventoryAdd(item) {
     if (inventory_list.indexOf(item) > inventory_index + inventory_max - 1)
         inventory_index = Math.max(inventory_list.indexOf(item) + 1 - inventory_max, 0);
 
+    current_layer.draw();
 	redrawInventory();
 }
 
 /// Removing an item from the inventory. Dragged items are currently just
-/// destroyed & inventory is readrawn only after drag ends.
+/// hidden & inventory is readrawn only after drag ends.
 /// @param item Item to be removed from the inventory
 function inventoryRemove(item) {
 	item.hide();
 	item.moveTo(current_layer);
-	item.setDraggable(false);
+	item.draggable(false);
 	inventory_list.splice(inventory_list.indexOf(item), 1);
 	redrawInventory();
 }
 
-//Dragging an item from the inventory
+// Dragging an item from the inventory
 function inventoryDrag(item) {
 	item.moveTo(current_layer);
-	clearText(monologue);
-	stopTalking();
-	current_layer.moveToTop();
-	character_layer.moveToTop();
-	text_layer.moveToTop();
+	inventory_bar_layer.draw();
+    inventory_layer.draw();
+    clearText(monologue);
+    clearText(npc_monologue);
+    stopCharacterAnimations();
 }
 
 /// Redrawing inventory. Shows the items that should be visible according to
@@ -1220,7 +1186,7 @@ function inventoryDrag(item) {
 function redrawInventory() {
 	inventory_layer.getChildren().each(function(shape, i) {
 		shape.setAttr('visible', false);
-		shape.setDraggable(false);
+		shape.draggable(false);
 	});
 
     // If the left arrow is visible AND there's empty space to the right,
@@ -1230,25 +1196,22 @@ function redrawInventory() {
 
 	for(var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
 		shape = inventory_list[i];
-		if (shape.getAttr('category') != 'reward') {
-			shape.setAttr('category', 'usable');
-		}
-		shape.setDraggable(true);
-		shape.setX(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
-		shape.setY(stage.getHeight() - 90);
+		shape.draggable(true);
+		shape.x(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
+		shape.y(stage.height() - 90);
 		shape.setAttr('visible', true);
 	}
 
 	if(inventory_index > 0) {
-		stage.get('#inventory_left_arrow').show();
+		getObject("inventory_left_arrow").show();
 	} else {
-		stage.get('#inventory_left_arrow').hide();
+		getObject("inventory_left_arrow").hide();
 	}
 
 	if(inventory_index + inventory_max < inventory_list.length) {
-		stage.get('#inventory_right_arrow').show();
+		getObject("inventory_right_arrow").show();
 	} else {
-		stage.get('#inventory_right_arrow').hide();
+		getObject("inventory_right_arrow").hide();
 	}
 
 	inventory_bar_layer.draw();
