@@ -894,15 +894,15 @@ function handle_command(command) {
 
 /// Get an object from stage by it's id. Gives an error message in console with
 /// the looked up name if it is not found. Basically, a wrapper for
-/// stage.get(object_name) with error messaging, helpful with typos in jsons,
+/// stage.get(id) with error messaging, helpful with typos in jsons,
 /// and also gives some errors if an object required by the kiigame.js script
 /// itself is missing.
 /// @param object The name of the object to look up.
 /// @return Returns the object if it's found, or null if it isn't.
-function getObject(object_name) {
-    var object = stage.get('#' + object_name)[0];
+function getObject(id) {
+    var object = stage.get('#' + id)[0];
     if (object == null)
-        console.warn("Could not find object from stage with id " + object_name);
+        console.warn("Could not find object from stage with id " + id);
     return object;
 }
 
