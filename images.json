@@ -1099,8 +1099,7 @@
         {
             "attrs": {
                 "category": "start",
-                "id": "start_layer",
-                "object_name": "start_layer"
+                "id": "start_layer"
             },
             "children": [
                 {
@@ -1171,7 +1170,6 @@
             "attrs": {
                 "category": "end",
                 "id": "end_layer",
-                "object_name": "end_layer",
                 "visible": false
             },
             "children": [

@@ -337,7 +337,7 @@ function play_music(id) {
 		return;
 	}
 
-	var data = music_json[getObject(id).getAttr('object_name')];
+	var data = music_json[id];
 
 	// ID and music found from JSON?
 	if (!data || !data.music) {
