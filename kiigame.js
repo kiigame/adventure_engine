@@ -1,11 +1,11 @@
 //Get jsons from the server
 var images_json_text = getJSON('images.json');
-var objects_json = JSON.parse(getJSON('objects.json'));
 var texts_json = JSON.parse(getJSON('texts.json'));
 var interactions_json = JSON.parse(getJSON('interactions.json'));
 var character_animations_json = JSON.parse(getJSON('character_animations.json'));
 var sequences_json = JSON.parse(getJSON('sequences.json'));
 var music_json = JSON.parse(getJSON('music.json'));
+var menu_json = JSON.parse(getJSON('menu.json'));
 
 //Create stage and everything in it from json
 var stage = Konva.Node.create(images_json_text, 'container');
@@ -233,9 +233,9 @@ Other actions (such as "none") are regarded as non-functioning menu buttons
 Object menu_image - the menu image object with the items inside
 */
 function create_menu_action(menu_image) {
-	var menu_object = objects_json[menu_image.attrs.id];
+	var menu_object = menu_json[menu_image.attrs.id];
 	if (!menu_object) {
-		console.warn("Could not find objects.json entry for menu '", menu_image.attrs.id, "'");
+		console.warn("Could not find menu.json entry for menu '", menu_image.attrs.id, "'");
 		return;
 	}
 	
@@ -279,7 +279,7 @@ function create_menu_action(menu_image) {
 // string layerId - the ID of the layer we want to display the menu for
 function display_menu(layerId) {
 	hide_menu();
-	menu = typeof objects_json[layerId] !== undefined ? getObject(objects_json[layerId]["menu"]) : false;
+	menu = menu_json[layerId] !== undefined ? getObject(menu_json[layerId]["menu"]) : false;
 	if (!menu) {
 		return;
 	}
