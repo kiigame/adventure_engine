@@ -280,8 +280,9 @@ function create_menu_action(menu_image) {
 function display_menu(layerId) {
 	hide_menu();
 	menu = getObject(objects_json[layerId]["menu"]);
-	if (!menu)
+	if (!menu) {
 		return;
+	}
 
 	menu.show()
 	current_menu = menu;
