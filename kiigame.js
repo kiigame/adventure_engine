@@ -681,6 +681,7 @@ stage.on('dragmove', function(event) {
 			target.shadowColor('purple');
 			target.shadowOffset(0);
 			target.shadowBlur(20);
+			inventory_layer.draw();
 			
 			// Don't cause a mass of errors if no text found
 			try {
