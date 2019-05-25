@@ -599,6 +599,7 @@ stage.get('Image').on('dragstart', function(event) {
 	dragged_item = event.target;
 	inventoryDrag(dragged_item);
 });
+
 //While dragging events (use item on item or object)
 stage.on('dragmove', function(event) {
 	dragged_item = event.target;
@@ -647,6 +648,7 @@ stage.on('dragmove', function(event) {
 				}
 			}
 		}
+
 		// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
 		if (target == null) {
 			var leftArrow = getObject("inventory_left_arrow");
@@ -686,9 +688,10 @@ stage.on('dragmove', function(event) {
 			// Don't cause a mass of errors if no text found
 			try {
 				interaction_text.text(texts_json[target.id()].name);
+			} catch (e) {
+				// Do nothing
 			}
-			catch (e) {
-			}
+
 			interaction_text.x(dragged_item.x() + (dragged_item.width() / 2));
 			interaction_text.y(dragged_item.y() - 30);
 			interaction_text.offset({
@@ -696,9 +699,8 @@ stage.on('dragmove', function(event) {
 			});
 
 			text_layer.draw();
-
-			// If no target, clear the texts and highlights
 		} else {
+			// If no target, clear the texts and highlights
 			current_layer.getChildren().each(function(shape, i) {
 				shape.shadowBlur(0);
 			});
@@ -711,6 +713,7 @@ stage.on('dragmove', function(event) {
 		current_layer.draw();
 	}
 });
+
 //Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
 function checkIntersection(dragged_item, target) {
 	// If target is visible and of suitable category
@@ -1168,10 +1171,10 @@ function inventoryRemove(item) {
 	redrawInventory();
 }
 
-//Dragging an item from the inventory
+// Dragging an item from the inventory
 function inventoryDrag(item) {
-    item.moveTo(current_layer);
-    inventory_bar_layer.draw();
+	item.moveTo(current_layer);
+	inventory_bar_layer.draw();
     inventory_layer.draw();
     clearText(monologue);
     clearText(npc_monologue);
