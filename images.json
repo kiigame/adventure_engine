@@ -1,8 +1,8 @@
 {
     "attrs": {
-        "height": 643,
         "id": "Stage",
-        "width": 981
+        "width": 981,
+        "height": 643
     },
     "children": [
         {
@@ -83,7 +83,7 @@
                         "category": "furniture",
                         "id": "tag_on_wall",
                         "src": "images/tag_on_wall.png",
-                        "x": 890,
+                        "x": 930,
                         "y": 255,
                         "visible": true
                     },
@@ -116,7 +116,7 @@
                         "category": "furniture",
                         "id": "locker_room_2_door_to_wc_closed",
                         "src": "images/locker_room_2_door_to_wc_closed.png",
-                        "x": 117,
+                        "x": 123,
                         "y": 60,
                         "visible": true
                     },
@@ -128,7 +128,7 @@
                         "id": "locker_room_2_door_to_wc_open",
                         "src": "images/locker_room_2_door_to_wc_open.png",
                         "visible": false,
-                        "x": 117,
+                        "x": 123,
                         "y": 60
                     },
                     "className": "Image"
@@ -138,8 +138,19 @@
                         "category": "furniture",
                         "id": "locker_room_2_door_to_out",
                         "src": "images/locker_room_2_door_to_out.png",
-                        "x": 816,
+                        "x": 856,
                         "y": 83,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_2_blood",
+                        "src": "images/locker_room_2_blood.png",
+                        "x": 815,
+                        "y": 373,
                         "visible": true
                     },
                     "className": "Image"
@@ -149,7 +160,7 @@
                         "category": "furniture",
                         "id": "icehockey_jersey",
                         "src": "images/icehockey_jersey.png",
-                        "x": 616,
+                        "x": 651,
                         "y": 136,
                         "visible": true
                     },
@@ -157,16 +168,16 @@
                 },
                 {
                     "attrs": {
-                        "align": "center",
                         "category": "furniture",
-                        "fill": "white",
+                        "align": "center",
+                        "id": "jersey_number",
                         "fontFamily": "Chalkboard SE",
                         "fontSize": 30,
-                        "id": "jersey_number",
                         "stroke": "#53a3d1",
+                        "fill": "white",
                         "strokeWidth": 2,
                         "width": 55,
-                        "x": 642,
+                        "x": 677,
                         "y": 196,
                         "visible": true
                     },
@@ -177,9 +188,20 @@
                         "category": "furniture",
                         "id": "wall",
                         "src": "images/wall.png",
-                        "x": 300,
+                        "x": 320,
                         "y": 160,
                         "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "poster_onthewall",
+                        "src": "images/poster_onthewall.png",
+                        "visible": false,
+                        "x": 318,
+                        "y": 155
                     },
                     "className": "Image"
                 },
@@ -192,28 +214,6 @@
                         "x": 290,
                         "y": 345,
                         "visible": true
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
-                        "id": "locker_room_2_blood",
-                        "src": "images/locker_room_2_blood.png",
-                        "x": 775,
-                        "y": 373,
-                        "visible": true
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
-                        "id": "poster_onthewall",
-                        "src": "images/poster_onthewall.png",
-                        "visible": false,
-                        "x": 298,
-                        "y": 155
                     },
                     "className": "Image"
                 }
@@ -377,19 +377,30 @@
                         "id": "tactic_board_1",
                         "src": "images/tactic_board_1.png",
                         "visible": true,
-                        "x": 565,
-                        "y": 130
+                        "x": 590,
+                        "y": 120
                     },
                     "className": "Image"
                 },
                 {
                     "attrs": {
                         "category": "furniture",
-                        "id": "locker_room_1_blood",
-                        "src": "images/locker_room_1_blood.png",
-                        "x": 83,
-                        "y": 383,
-                        "visible": true
+                        "id": "tactic_board_2",
+                        "src": "images/tactic_board_2.png",
+                        "visible": false,
+                        "x": 590,
+                        "y": 120
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "tactic_board_3",
+                        "src": "images/tactic_board_3.png",
+                        "visible": false,
+                        "x": 590,
+                        "y": 120
                     },
                     "className": "Image"
                 },
@@ -415,28 +426,6 @@
                 },
                 {
                     "attrs": {
-                        "category": "furniture",
-                        "id": "tactic_board_2",
-                        "src": "images/tactic_board_2.png",
-                        "visible": false,
-                        "x": 565,
-                        "y": 130
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
-                        "id": "tactic_board_3",
-                        "src": "images/tactic_board_3.png",
-                        "visible": false,
-                        "x": 565,
-                        "y": 130
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
                         "category": "reward",
                         "id": "book_reward_2",
                         "src": "images/book_reward_2.png",
@@ -449,8 +438,19 @@
                         "category": "furniture",
                         "id": "locker_room_1_door_to_out",
                         "src": "images/locker_room_1_door_to_out.png",
-                        "x": 69,
+                        "x": 74,
                         "y": 102,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_1_blood",
+                        "src": "images/locker_room_1_blood.png",
+                        "x": 88,
+                        "y": 383,
                         "visible": true
                     },
                     "className": "Image"
@@ -460,7 +460,7 @@
                         "category": "furniture",
                         "id": "locker_room_1_door_to_shower_closed",
                         "src": "images/locker_room_1_door_to_shower_closed.png",
-                        "x": 865,
+                        "x": 910,
                         "y": 33,
                         "visible": true
                     },
@@ -472,8 +472,41 @@
                         "id": "locker_room_1_door_to_shower_open",
                         "src": "images/locker_room_1_door_to_shower_open.png",
                         "visible": false,
-                        "x": 865,
+                        "x": 910,
                         "y": 17
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_1_door_to_wc_closed",
+                        "src": "images/locker_room_1_door_to_wc_closed.png",
+                        "x": 811,
+                        "y": 72,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_1_door_to_wc_stinking",
+                        "src": "images/locker_room_1_door_to_wc_stinking.png",
+                        "visible": false,
+                        "x": 811,
+                        "y": 72
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_1_door_to_wc_open",
+                        "src": "images/locker_room_1_door_to_wc_open.png",
+                        "visible": false,
+                        "x": 811,
+                        "y": 72
                     },
                     "className": "Image"
                 },
@@ -491,42 +524,9 @@
                 {
                     "attrs": {
                         "category": "furniture",
-                        "id": "locker_room_1_door_to_wc_closed",
-                        "src": "images/locker_room_1_door_to_wc_closed.png",
-                        "x": 776,
-                        "y": 72,
-                        "visible": true
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
-                        "id": "locker_room_1_door_to_wc_stinking",
-                        "src": "images/locker_room_1_door_to_wc_stinking.png",
-                        "visible": false,
-                        "x": 776,
-                        "y": 72
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
-                        "id": "locker_room_1_door_to_wc_open",
-                        "src": "images/locker_room_1_door_to_wc_open.png",
-                        "visible": false,
-                        "x": 776,
-                        "y": 72
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
                         "id": "locker_closed",
                         "src": "images/locker_closed.png",
-                        "x": 150,
+                        "x": 160,
                         "y": 50,
                         "visible": true
                     },
@@ -538,7 +538,7 @@
                         "id": "locker_open",
                         "src": "images/locker_open.png",
                         "visible": false,
-                        "x": 150,
+                        "x": 160,
                         "y": 50
                     },
                     "className": "Image"
@@ -549,7 +549,7 @@
                         "id": "locker_empty",
                         "src": "images/locker_open.png",
                         "visible": false,
-                        "x": 150,
+                        "x": 160,
                         "y": 50
                     },
                     "className": "Image"
@@ -572,7 +572,7 @@
                         "id": "jacket_full",
                         "src": "images/jacket_full.png",
                         "visible": true,
-                        "x": 435,
+                        "x": 455,
                         "y": 130
                     },
                     "className": "Image"
@@ -583,7 +583,7 @@
                         "id": "jacket_empty",
                         "src": "images/jacket_empty.png",
                         "visible": false,
-                        "x": 435,
+                        "x": 455,
                         "y": 130
                     },
                     "className": "Image"
@@ -602,7 +602,7 @@
                         "category": "furniture",
                         "id": "garbagecan_empty",
                         "src": "images/garbagecan.png",
-                        "x": 5,
+                        "x": 15,
                         "y": 428,
                         "visible": true
                     },
@@ -614,7 +614,7 @@
                         "id": "garbagecan_teddy",
                         "src": "images/garbagecan_teddy.png",
                         "visible": false,
-                        "x": 5,
+                        "x": 15,
                         "y": 428
                     },
                     "className": "Image"
