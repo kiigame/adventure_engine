@@ -333,8 +333,10 @@ Play music
 string id - object ID from JSON with "music":"file name" attribute
  */
 function play_music(id) {
-	if (id == undefined)
+	if (id == undefined) {
 		return;
+	}
+
 	var data = music_json[getObject(id).getAttr('object_name')];
 
 	// ID and music found from JSON?
