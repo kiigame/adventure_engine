@@ -1,8 +1,8 @@
 {
     "attrs": {
-        "height": 643,
         "id": "Stage",
-        "width": 981
+        "width": 981,
+        "height": 643
     },
     "children": [
         {
