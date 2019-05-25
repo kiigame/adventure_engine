@@ -955,7 +955,6 @@
             "attrs": {
                 "category": "sequence",
                 "id": "outro",
-                "object_name": "outro",
                 "visible": false
             },
             "children": [
@@ -963,7 +962,6 @@
                     "attrs": {
                         "category": "sequence",
                         "id": "outro_1",
-                        "object_name": "outro",
                         "src": "images/outro_1.png"
                     },
                     "className": "Image"
@@ -975,7 +973,6 @@
             "attrs": {
                 "category": "sequence",
                 "id": "intro",
-                "object_name": "intro",
                 "visible": false
             },
             "children": [
