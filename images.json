@@ -83,7 +83,7 @@
                         "category": "furniture",
                         "id": "tag_on_wall",
                         "src": "images/tag_on_wall.png",
-                        "x": 890,
+                        "x": 930,
                         "y": 255,
                         "visible": true
                     },
@@ -116,7 +116,7 @@
                         "category": "furniture",
                         "id": "locker_room_2_door_to_wc_closed",
                         "src": "images/locker_room_2_door_to_wc_closed.png",
-                        "x": 117,
+                        "x": 123,
                         "y": 60,
                         "visible": true
                     },
@@ -128,7 +128,7 @@
                         "id": "locker_room_2_door_to_wc_open",
                         "src": "images/locker_room_2_door_to_wc_open.png",
                         "visible": false,
-                        "x": 117,
+                        "x": 123,
                         "y": 60
                     },
                     "className": "Image"
@@ -138,8 +138,19 @@
                         "category": "furniture",
                         "id": "locker_room_2_door_to_out",
                         "src": "images/locker_room_2_door_to_out.png",
-                        "x": 816,
+                        "x": 856,
                         "y": 83,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "locker_room_2_blood",
+                        "src": "images/locker_room_2_blood.png",
+                        "x": 815,
+                        "y": 373,
                         "visible": true
                     },
                     "className": "Image"
@@ -149,7 +160,7 @@
                         "category": "furniture",
                         "id": "icehockey_jersey",
                         "src": "images/icehockey_jersey.png",
-                        "x": 616,
+                        "x": 651,
                         "y": 136,
                         "visible": true
                     },
@@ -157,16 +168,16 @@
                 },
                 {
                     "attrs": {
-                        "align": "center",
                         "category": "furniture",
-                        "fill": "white",
+                        "align": "center",
+                        "id": "jersey_number",
                         "fontFamily": "Chalkboard SE",
                         "fontSize": 30,
-                        "id": "jersey_number",
                         "stroke": "#53a3d1",
+                        "fill": "white",
                         "strokeWidth": 2,
                         "width": 55,
-                        "x": 642,
+                        "x": 677,
                         "y": 196,
                         "visible": true
                     },
@@ -177,9 +188,20 @@
                         "category": "furniture",
                         "id": "wall",
                         "src": "images/wall.png",
-                        "x": 300,
+                        "x": 320,
                         "y": 160,
                         "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "poster_onthewall",
+                        "src": "images/poster_onthewall.png",
+                        "visible": false,
+                        "x": 318,
+                        "y": 155
                     },
                     "className": "Image"
                 },
@@ -192,28 +214,6 @@
                         "x": 290,
                         "y": 345,
                         "visible": true
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
-                        "id": "locker_room_2_blood",
-                        "src": "images/locker_room_2_blood.png",
-                        "x": 775,
-                        "y": 373,
-                        "visible": true
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "furniture",
-                        "id": "poster_onthewall",
-                        "src": "images/poster_onthewall.png",
-                        "visible": false,
-                        "x": 298,
-                        "y": 155
                     },
                     "className": "Image"
                 }
