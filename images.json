@@ -1131,8 +1131,7 @@
             "attrs": {
                 "category": "menu",
                 "id": "start_layer_menu",
-                "object_name": "start_layer_menu",
-				"visible": false
+                "visible": false
             },
             "children": [
                 {

@@ -233,7 +233,7 @@ Other actions (such as "none") are regarded as non-functioning menu buttons
 Object menu_image - the menu image object with the items inside
 */
 function create_menu_action(menu_image) {
-	var menu_object = objects_json[menu_image.attrs.object_name];
+	var menu_object = objects_json[menu_image.attrs.id];
 	if (!menu_object) {
 		console.warn("Could not find objects.json entry for menu '", menu_image.attrs.id, "'");
 		return;
