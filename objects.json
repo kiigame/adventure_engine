@@ -2,8 +2,7 @@
     "end_layer": {
     },
     "start_layer": {
-        "music": "start_layer",
-		"menu": "start_layer_menu"
+        "menu": "start_layer_menu"
     },
     "start_layer_menu": {
 		"items": {
