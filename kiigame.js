@@ -154,7 +154,7 @@ for (var i in character_animations) {
 var speak_animation = character_animations["speak"];
 var idle_animation = character_animations["idle"];
 
-//Creating all image objects from json file based on their attributes
+// Creating all image objects from json file based on their attributes
 for (var i = 0; i < images_json.children.length; i++) {
 	for (var j = 0; j < images_json.children[i].children.length; j++) {
 		if (images_json.children[i].children[j].className == 'Image') {
@@ -902,8 +902,9 @@ function handle_command(command) {
 /// @return Returns the object if it's found, or null if it isn't.
 function getObject(id) {
     var object = stage.get('#' + id)[0];
-    if (object == null)
-        console.warn("Could not find object from stage with id " + id);
+    if (object == null) {
+		console.warn("Could not find object from stage with id " + id);
+	}
     return object;
 }
 
