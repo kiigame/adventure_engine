@@ -79,16 +79,16 @@ var target;
 
 // Animation for fading the screen
 var fade_full = new Konva.Tween({
-	node : fade_layer_full,
-	duration : 0.6,
-	opacity : 1
+    node : fade_layer_full,
+    duration : 0.6,
+    opacity : 1
 });
 
 // Animation for fading the room portion of the screen
 var fade_room = new Konva.Tween({
-	node : fade_layer_room,
-	duration : 0.6,
-	opacity : 1
+    node : fade_layer_room,
+    duration : 0.6,
+    opacity : 1
 });
 
 // List of animated objects
@@ -134,8 +134,8 @@ for (var i in character_animations) {
                 var animation = null;
                 for (var k in character_animations) {
                     if (character_animations[k].indexOf(this) > -1) {
-						animation = character_animations[k];
-					}
+                        animation = character_animations[k];
+                    }
                 }
                 this.node.hide();
                 animation[0].node.show();
@@ -152,17 +152,17 @@ var idle_animation = character_animations["idle"];
 
 // Creating all image objects from json file based on their attributes
 for (var i = 0; i < images_json.children.length; i++) {
-	for (var j = 0; j < images_json.children[i].children.length; j++) {
-		if (images_json.children[i].children[j].className == 'Image') {
-			createObject(images_json.children[i].children[j].attrs);
-			object_attrs =images_json.children[i].children[j].attrs;
+    for (var j = 0; j < images_json.children[i].children.length; j++) {
+        if (images_json.children[i].children[j].className == 'Image') {
+            createObject(images_json.children[i].children[j].attrs);
+            object_attrs =images_json.children[i].children[j].attrs;
 
-			if (object_attrs.animated === true) {
+            if (object_attrs.animated === true) {
                 create_animation(getObject(object_attrs.id));
             }
-		}
-	}
-	if (images_json.children[i].attrs.category == 'menu') {
+        }
+    }
+    if (images_json.children[i].attrs.category == 'menu') {
         create_menu_action(images_json.children[i]);
     }
 }
@@ -190,43 +190,43 @@ if (stage.get("#start_layer")[0] != null) {
         stage.get('#splash_screen')[0].on('tap click', function(event) {
             stage.get('#splash_screen')[0].hide();
             if (stage.get('#start_layer_menu')[0] != null) {
-				display_start_menu();
-			} else {
-				do_transition(game_start_layer.id());
-			}
+                display_start_menu();
+            } else {
+                do_transition(game_start_layer.id());
+            }
         });
     } else { // no splash screen
         if (stage.get('#start_layer_menu')[0] != null) {
-			display_start_menu();
-		} else {
-			// start layer without splash or menu?!
-			do_transition(game_start_layer.id());
-		}
+            display_start_menu();
+        } else {
+            // start layer without splash or menu?!
+            do_transition(game_start_layer.id());
+        }
     }
 } else {
-	// no start layer
+    // no start layer
     do_transition(game_start_layer.id());
 }
 
 function create_animation (object) {
-	var attrs = object.getAttr("animation");
-	var animation = new Konva.Tween({
-		node: object,
-		x: attrs.x ? object.x() + attrs.x : object.x(),
-		y: attrs.y ? object.y() + attrs.y : object.y(),
-		width: attrs.width ? object.width() - 15 : object.width(),
-		easing: Konva.Easings.EaseInOut,
-		duration: attrs.duration,
+    var attrs = object.getAttr("animation");
+    var animation = new Konva.Tween({
+        node: object,
+        x: attrs.x ? object.x() + attrs.x : object.x(),
+        y: attrs.y ? object.y() + attrs.y : object.y(),
+        width: attrs.width ? object.width() - 15 : object.width(),
+        easing: Konva.Easings.EaseInOut,
+        duration: attrs.duration,
 
-		onFinish: function() {
-			animation.reverse();
-			setTimeout(function() {
-				animation.play();
-			}, attrs.duration * 1000);
-		}
-	});
+        onFinish: function() {
+            animation.reverse();
+            setTimeout(function() {
+                animation.play();
+            }, attrs.duration * 1000);
+        }
+    });
 
-	animated_objects.push(animation);
+    animated_objects.push(animation);
 }
 
 /*
@@ -236,100 +236,100 @@ Other actions (such as "none") are regarded as non-functioning menu buttons
 Object menu_image - the menu image object with the items inside
 */
 function create_menu_action(menu_image) {
-	var menu_object = menu_json[menu_image.attrs.id];
-	if (!menu_object) {
-		console.warn("Could not find menu.json entry for menu '", menu_image.attrs.id, "'");
-		return;
-	}
-	
-	// Go through the menu items to bind their actions
-	for (var i = 0; i < menu_image.children.length; i++) {
-		var item_id = menu_image.children[i].attrs.id;
-		var item_action = menu_object.items[item_id];
-		
-		var item = getObject(item_id);
-		// Don't override custom menu event listeners
-		if (item.eventListeners.click) {
+    var menu_object = menu_json[menu_image.attrs.id];
+    if (!menu_object) {
+        console.warn("Could not find menu.json entry for menu '", menu_image.attrs.id, "'");
+        return;
+    }
+
+    // Go through the menu items to bind their actions
+    for (var i = 0; i < menu_image.children.length; i++) {
+        var item_id = menu_image.children[i].attrs.id;
+        var item_action = menu_object.items[item_id];
+
+        var item = getObject(item_id);
+        // Don't override custom menu event listeners
+        if (item.eventListeners.click) {
             continue;
         }
-			
-		if (item_action == "start_game") {
-			item.on('tap click', function(event) {
+
+        if (item_action == "start_game") {
+            item.on('tap click', function(event) {
                 if (getObject("intro") != "") {
                     var intro_delay = play_sequence("intro", true);
                     setTimeout('do_transition(game_start_layer.id(), 0)', intro_delay);
                 } else {
-					// Assume intro layer has a transition to game_start_layer
-					do_transition(game_start_layer.id());
-				}
-			});
-		} else if (item_action == "credits") {
-			item.on('tap click', function(event) {
-				setMonologue(findMonologue(event.target.id()));
-			});
-		} else if (item_action == "main_menu") {
-			// TODO: Return to main menu after end of game.
-			item.on('tap click', function(event) {
-				getObject("end_texts").hide();
-				display_start_menu();
-			});
-		}
-	}
+                    // Assume intro layer has a transition to game_start_layer
+                    do_transition(game_start_layer.id());
+                }
+            });
+        } else if (item_action == "credits") {
+            item.on('tap click', function(event) {
+                setMonologue(findMonologue(event.target.id()));
+            });
+        } else if (item_action == "main_menu") {
+            // TODO: Return to main menu after end of game.
+            item.on('tap click', function(event) {
+                getObject("end_texts").hide();
+                display_start_menu();
+            });
+        }
+    }
 }
 
 // Display menu for the given layer
 // string layerId - the ID of the layer we want to display the menu for
 function display_menu(layerId) {
-	hide_menu();
-	menu = menu_json[layerId] !== undefined ? getObject(menu_json[layerId]["menu"]) : false;
-	if (!menu) {
-		return;
-	}
+    hide_menu();
+    menu = menu_json[layerId] !== undefined ? getObject(menu_json[layerId]["menu"]) : false;
+    if (!menu) {
+        return;
+    }
 
-	menu.show()
-	current_menu = menu;
+    menu.show()
+    current_menu = menu;
 }
 
 function hide_menu() {
-	if (!current_menu) {
+    if (!current_menu) {
         return;
     }
-		
-	menu.hide();
-	current_menu = null;
+
+    menu.hide();
+    current_menu = null;
 }
 
 // On window load we create image hit regions for our items on object layers
 // Loop backgrounds to create item hit regions and register mouseup event
 window.onload = function() {
-	stage.getChildren().each(function(o) {
-		if (o.getAttr('category') == 'room') {
-			o.getChildren().each(function(shape, i) {
-				if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
+    stage.getChildren().each(function(o) {
+        if (o.getAttr('category') == 'room') {
+            o.getChildren().each(function(shape, i) {
+                if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
                     shape.cache();
-					shape.drawHitFromCache();
-				}
-			});
+                    shape.drawHitFromCache();
+                }
+            });
 
-			o.on('mouseup touchend', function(event) {
-				handle_click(event);
-			});
-		}
-	});
+            o.on('mouseup touchend', function(event) {
+                handle_click(event);
+            });
+        }
+    });
 
-	stage.draw();
+    stage.draw();
     idle_animation[0].node.show();
-	idle_animation[0].play();
+    idle_animation[0].play();
 };
 
 // Display the start menu including "click" to proceed image
 function display_start_menu() {
-	start_layer.show();
-	display_menu("start_layer");
-	character_layer.show();
-	inventory_bar_layer.show();
-	stage.draw();
-	play_music('start_layer');
+    start_layer.show();
+    display_menu("start_layer");
+    character_layer.show();
+    inventory_bar_layer.show();
+    stage.draw();
+    play_music('start_layer');
 }
 
 /*
@@ -337,84 +337,84 @@ Play music
 string id - object ID from JSON with "music":"file name" attribute
  */
 function play_music(id) {
-	if (id == undefined) {
-		return;
-	}
+    if (id == undefined) {
+        return;
+    }
 
-	var data = music_json[id];
+    var data = music_json[id];
 
-	// ID and music found from JSON?
-	if (!data || !data.music) {
-		if (current_music) {
-			current_music.pause();
-			current_music = null;
-		}
-		return;
-	}
+    // ID and music found from JSON?
+    if (!data || !data.music) {
+        if (current_music) {
+            current_music.pause();
+            current_music = null;
+        }
+        return;
+    }
 
-	// If not already playing music or old/new songs are different
-	if (!current_music || current_music_source != data.music) {
-		var old_music = null;
-		if (current_music) {
-			old_music = current_music
-			current_music = new Audio(data.music);
-			current_music.volume = 0;
-		} else {
-			current_music = new Audio(data.music);
-			current_music.volume = 1;
-			data.music_loop === false ? current_music.loop = false : current_music.loop = true;
-		}
+    // If not already playing music or old/new songs are different
+    if (!current_music || current_music_source != data.music) {
+        var old_music = null;
+        if (current_music) {
+            old_music = current_music
+            current_music = new Audio(data.music);
+            current_music.volume = 0;
+        } else {
+            current_music = new Audio(data.music);
+            current_music.volume = 1;
+            data.music_loop === false ? current_music.loop = false : current_music.loop = true;
+        }
 
-		current_music.play();
-		
-		// Fade music volume if set so
-		if (data.music_fade === true) {
-		    current_music.faded = true;
-			
-			if (old_music) {
-				fade_interval_2 = setInterval(function() {
+        current_music.play();
+
+        // Fade music volume if set so
+        if (data.music_fade === true) {
+            current_music.faded = true;
+
+            if (old_music) {
+                fade_interval_2 = setInterval(function() {
                     // Audio API will throw exception when volume is maxed
                     try {
-                    	old_music.volume -= 0.05;
-                	} catch (e) {
-						old_music.pause();
-						clearInterval(fade_interval_2);
-                	}
-					
-					try {
-						current_music.volume += 0.05;
-                	} catch (e) {
-						old_music.volume = 1;
-                	}
-            	}, 200)
-			} else if (current_music) {
-            	fade_interval = setInterval(function() {
-                	// Audio API will throw exception when volume is maxed
-                	try {
-                    	current_music.volume += 0.05
-                	} catch (e) {
-                    	current_music.volume = 1;
-                    	clearInterval(fade_interval);
-                	}
-            	}, 200)
-			}
+                        old_music.volume -= 0.05;
+                    } catch (e) {
+                        old_music.pause();
+                        clearInterval(fade_interval_2);
+                    }
+
+                    try {
+                        current_music.volume += 0.05;
+                    } catch (e) {
+                        old_music.volume = 1;
+                    }
+                }, 200)
+            } else if (current_music) {
+                fade_interval = setInterval(function() {
+                    // Audio API will throw exception when volume is maxed
+                    try {
+                        current_music.volume += 0.05
+                    } catch (e) {
+                        current_music.volume = 1;
+                        clearInterval(fade_interval);
+                    }
+                }, 200)
+            }
         } else {
             current_music.faded = false;
             current_music.volume = 1;
-			
-			if (old_music) {
-				old_music.pause();
-			}
+
+            if (old_music) {
+                old_music.pause();
+            }
         }
-		current_music_source = data.music;
-	}
+        current_music_source = data.music;
+    }
 }
 
 function stop_music() {
-	if (current_music == null) {
+    if (current_music == null) {
         return;
     }
-   
+
     // Fade music volume if set so
     if (current_music.faded === true) {
         fade_interval = setInterval(function() {
@@ -428,8 +428,8 @@ function stop_music() {
             }
         }, 100)
     } else {
-		current_music.pause();
-	}
+        current_music.pause();
+    }
 }
 
 /// Plays a sequence defined in sequences.json
@@ -437,67 +437,67 @@ function stop_music() {
 /// @param monologue boolean Show sequence's examine text at the end of sequence
 /// @return The length of sequence in ms. Doesn't include the fade-in!
 function play_sequence(sequence, monologue) {
-	var delay = 700;
+    var delay = 700;
 
-	// Animation cycle for proper fading and drawing order
-	fade_full.reset();
-	fade_layer_full.show();
-	fade_full.play();
+    // Animation cycle for proper fading and drawing order
+    fade_full.reset();
+    fade_layer_full.show();
+    fade_full.play();
 
-	var old_layer = current_layer;
-	current_layer = getObject(sequence);
+    var old_layer = current_layer;
+    current_layer = getObject(sequence);
     var sequence_exit_text = monologue === true ? findMonologue(current_layer.id()) : null;
-	var object = sequences_json[current_layer.id()];
+    var object = sequences_json[current_layer.id()];
     var final_fade_duration = object.transition_length != null ? object.transition_length : 0;
 
-	var sequence_counter = 0;
-	var images_total = 0;
-	var image = null;
-	
-	play_music(sequence);
-	
-	for (var i in object.images) {
-		images_total++;
-		
-		var last_image = image;
-		image = getObject(object.images[i].id);
-		
-		(function(i, image, last_image) {
-			setTimeout(function() {
+    var sequence_counter = 0;
+    var images_total = 0;
+    var image = null;
+
+    play_music(sequence);
+
+    for (var i in object.images) {
+        images_total++;
+
+        var last_image = image;
+        image = getObject(object.images[i].id);
+
+        (function(i, image, last_image) {
+            setTimeout(function() {
                 current_layer.show();
-				old_layer.hide();
-				fade_layer_full.show();
-				hide_menu(); // So that the menu is hidden after first fadeout.
+                old_layer.hide();
+                fade_layer_full.show();
+                hide_menu(); // So that the menu is hidden after first fadeout.
                 character_layer.hide();
                 inventory_bar_layer.hide();
                 inventory_layer.hide();
-				fade_full.play();
+                fade_full.play();
 
-				if (last_image) {
-					last_image.hide();
-				}
-				image.show();
+                if (last_image) {
+                    last_image.hide();
+                }
+                image.show();
 
-				// Fade-in the image
-				var image_fade = object.images[i].do_fade;
-				if (image_fade === true) {
-					setTimeout(function() {
-						fade_full.reverse();
-						stage.draw();
-					}, 700);
-				} else {
-					// Immediately display the image
-					fade_full.reset();
-					stage.draw();
-				}
+                // Fade-in the image
+                var image_fade = object.images[i].do_fade;
+                if (image_fade === true) {
+                    setTimeout(function() {
+                        fade_full.reverse();
+                        stage.draw();
+                    }, 700);
+                } else {
+                    // Immediately display the image
+                    fade_full.reset();
+                    stage.draw();
+                }
 
-				sequence_counter += 1;
+                sequence_counter += 1;
 
-			}, delay);
-		})(i, image, last_image);
+            }, delay);
+        })(i, image, last_image);
 
-		delay = delay + object.images[i].show_time;
-	};
+        delay = delay + object.images[i].show_time;
+    };
 
     // After last image, do the final fade and set up exit monologue.
     if (final_fade_duration > 0) {
@@ -511,8 +511,8 @@ function play_sequence(sequence, monologue) {
                     fade_layer_full.hide();
                     fade_full.tween.duration = 600; // reset to default
                     if (monologue === true) {
-						setMonologue(sequence_exit_text);
-					}
+                        setMonologue(sequence_exit_text);
+                    }
                 }, final_fade_duration);
             }, final_fade_duration);
         }, delay);
@@ -521,8 +521,8 @@ function play_sequence(sequence, monologue) {
         delay = delay + final_fade_duration;
     }
 
-	// Return sequence delay
-	return delay;
+    // Return sequence delay
+    return delay;
 }
 
 /// Transition to a room.
@@ -531,12 +531,12 @@ function play_sequence(sequence, monologue) {
 /// @param comingFrom The room where the transition was started in. Sets up
 ///                   the monologue text.
 function do_transition(room_id, fade_time_param, comingFrom) {
-	var fade_time = fade_time_param;
+    var fade_time = fade_time_param;
 
-	// By default do fast fade
-	if (fade_time_param == null) {
-		var fade_time = 700;
-	}
+    // By default do fast fade
+    if (fade_time_param == null) {
+        var fade_time = 700;
+    }
 
     // Don't fade if duration is zero.
     if (fade_time != 0) {
@@ -545,212 +545,212 @@ function do_transition(room_id, fade_time_param, comingFrom) {
         fade_room.play();
     }
 
-	setTimeout(function() {
-		stop_music();
-		// Don't fade if duration is zero.
-		if (fade_time != 0) {
-			fade_room.reverse();
-		}
+    setTimeout(function() {
+        stop_music();
+        // Don't fade if duration is zero.
+        if (fade_time != 0) {
+            fade_room.reverse();
+        }
 
-		// may be null if no start_layer is defined
+        // may be null if no start_layer is defined
         if (current_layer != null) {
-			current_layer.hide();
-		}
+            current_layer.hide();
+        }
 
-		current_layer = getObject(room_id);
-		
-		// Play the animations of the room
-		for (var i in animated_objects) {
-			if (animated_objects[i].node.parent.id() == current_layer.id()) {
-				animated_objects[i].play();
-			} else if (animated_objects[i].anim.isRunning()) {
-				animated_objects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
-			}
-		}
-		
-		current_layer.show();
-		inventory_layer.show();
-		inventory_bar_layer.show();
-		character_layer.show();
-		stage.draw();
-		
-		setTimeout(function() {
-			fade_layer_room.hide();
-			play_music(current_layer.id());
-			if (comingFrom) {
-				setMonologue(findMonologue(comingFrom));
-			}
-		}, fade_time);
-	}, fade_time);
+        current_layer = getObject(room_id);
+
+        // Play the animations of the room
+        for (var i in animated_objects) {
+            if (animated_objects[i].node.parent.id() == current_layer.id()) {
+                animated_objects[i].play();
+            } else if (animated_objects[i].anim.isRunning()) {
+                animated_objects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
+            }
+        }
+
+        current_layer.show();
+        inventory_layer.show();
+        inventory_bar_layer.show();
+        character_layer.show();
+        stage.draw();
+
+        setTimeout(function() {
+            fade_layer_room.hide();
+            play_music(current_layer.id());
+            if (comingFrom) {
+                setMonologue(findMonologue(comingFrom));
+            }
+        }, fade_time);
+    }, fade_time);
 }
 
 // Mouse up and touch end events (picking up items from the environment
 // Mouse click and tap events (examine items in the inventory)
 inventory_layer.on('click tap', function(event) {
-	handle_click(event);
+    handle_click(event);
 });
 // Drag start events
 stage.get('Image').on('dragstart', function(event) {
-	dragged_item = event.target;
-	inventoryDrag(dragged_item);
+    dragged_item = event.target;
+    inventoryDrag(dragged_item);
 });
 
 // While dragging events (use item on item or object)
 stage.on('dragmove', function(event) {
-	dragged_item = event.target;
+    dragged_item = event.target;
 
-	if (!delayEnabled) {
-		// Setting a small delay to not spam intersection check on every moved pixel
-		setDelay(10);
+    if (!delayEnabled) {
+        // Setting a small delay to not spam intersection check on every moved pixel
+        setDelay(10);
 
-		// Loop through all the items on the current object layer
-		for (var i = 0; i < current_layer.children.length; i++) {
-			var object = (current_layer.getChildren())[i];
-			
-			if (object != undefined && object.getAttr('category') != 'room_background') {
-				// Break if still intersecting with the same target
-				if (target != null && checkIntersection(dragged_item, target)) {
-					break;
-				} else if (checkIntersection(dragged_item, object)) {
-					// If not, check for a new target
-					if (target != object) {
-						target = object;
-					}
-					break;
-				} else {
-					// No target, move on
-					target = null;
-				}
-			}
-		}
-		
-		// If no intersecting targets were found on object layer, check the inventory
-		if (target == null) {
-			// Loop through all the items on the inventory layer
-			for (var i = 0; i < inventory_layer.children.length; i++) {
-				var object = (inventory_layer.getChildren())[i];
-				if (object != undefined) {
-					// Look for intersecting targets
-					if (checkIntersection(dragged_item, object)) {
-						if (target != object) {
-							target = object;
-						}
-						break;
-					} else {
-						target = null;
-					}
-				}
-			}
-		}
+        // Loop through all the items on the current object layer
+        for (var i = 0; i < current_layer.children.length; i++) {
+            var object = (current_layer.getChildren())[i];
 
-		// Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
-		if (target == null) {
-			var leftArrow = getObject("inventory_left_arrow");
-			var rightArrow = getObject("inventory_right_arrow");
-			if (!dragDelayEnabled) {
-				if (checkIntersection(dragged_item, leftArrow)) {
-					dragDelayEnabled = true;
-					inventory_index--;
-					redrawInventory();
-					setTimeout('dragDelayEnabled = false;', dragDelay);
-				} else if (checkIntersection(dragged_item, rightArrow)) {
-					dragDelayEnabled = true;
-					inventory_index++;
-					redrawInventory();
-					setTimeout('dragDelayEnabled = false;', dragDelay);
-				} else {
-					target = null;
-				}
-			}
-			clearText(interaction_text);
-		}
-		
-		// If target is found, highlight it and show the interaction text
-		if (target != null) {
-			current_layer.getChildren().each(function(shape, i) {
-				shape.shadowBlur(0);
-			});
-			inventory_layer.getChildren().each(function(shape, i) {
-				shape.shadowBlur(0);
-			});
+            if (object != undefined && object.getAttr('category') != 'room_background') {
+                // Break if still intersecting with the same target
+                if (target != null && checkIntersection(dragged_item, target)) {
+                    break;
+                } else if (checkIntersection(dragged_item, object)) {
+                    // If not, check for a new target
+                    if (target != object) {
+                        target = object;
+                    }
+                    break;
+                } else {
+                    // No target, move on
+                    target = null;
+                }
+            }
+        }
+
+        // If no intersecting targets were found on object layer, check the inventory
+        if (target == null) {
+            // Loop through all the items on the inventory layer
+            for (var i = 0; i < inventory_layer.children.length; i++) {
+                var object = (inventory_layer.getChildren())[i];
+                if (object != undefined) {
+                    // Look for intersecting targets
+                    if (checkIntersection(dragged_item, object)) {
+                        if (target != object) {
+                            target = object;
+                        }
+                        break;
+                    } else {
+                        target = null;
+                    }
+                }
+            }
+        }
+
+        // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
+        if (target == null) {
+            var leftArrow = getObject("inventory_left_arrow");
+            var rightArrow = getObject("inventory_right_arrow");
+            if (!dragDelayEnabled) {
+                if (checkIntersection(dragged_item, leftArrow)) {
+                    dragDelayEnabled = true;
+                    inventory_index--;
+                    redrawInventory();
+                    setTimeout('dragDelayEnabled = false;', dragDelay);
+                } else if (checkIntersection(dragged_item, rightArrow)) {
+                    dragDelayEnabled = true;
+                    inventory_index++;
+                    redrawInventory();
+                    setTimeout('dragDelayEnabled = false;', dragDelay);
+                } else {
+                    target = null;
+                }
+            }
+            clearText(interaction_text);
+        }
+
+        // If target is found, highlight it and show the interaction text
+        if (target != null) {
+            current_layer.getChildren().each(function(shape, i) {
+                shape.shadowBlur(0);
+            });
+            inventory_layer.getChildren().each(function(shape, i) {
+                shape.shadowBlur(0);
+            });
             target.clearCache();
-			target.shadowColor('purple');
-			target.shadowOffset(0);
-			target.shadowBlur(20);
-			inventory_layer.draw();
-			
-			// Don't cause a mass of errors if no text found
-			try {
-				interaction_text.text(texts_json[target.id()].name);
-			} catch (e) {
-				// Do nothing
-			}
+            target.shadowColor('purple');
+            target.shadowOffset(0);
+            target.shadowBlur(20);
+            inventory_layer.draw();
 
-			interaction_text.x(dragged_item.x() + (dragged_item.width() / 2));
-			interaction_text.y(dragged_item.y() - 30);
-			interaction_text.offset({
-				x : interaction_text.width() / 2
-			});
+            // Don't cause a mass of errors if no text found
+            try {
+                interaction_text.text(texts_json[target.id()].name);
+            } catch (e) {
+                // Do nothing
+            }
 
-			text_layer.draw();
-		} else {
-			// If no target, clear the texts and highlights
-			current_layer.getChildren().each(function(shape, i) {
-				shape.shadowBlur(0);
-			});
-			inventory_layer.getChildren().each(function(shape, i) {
-				shape.shadowBlur(0);
-			});
-			clearText(interaction_text);
-		}
-		
-		current_layer.draw();
-	}
+            interaction_text.x(dragged_item.x() + (dragged_item.width() / 2));
+            interaction_text.y(dragged_item.y() - 30);
+            interaction_text.offset({
+                x : interaction_text.width() / 2
+            });
+
+            text_layer.draw();
+        } else {
+            // If no target, clear the texts and highlights
+            current_layer.getChildren().each(function(shape, i) {
+                shape.shadowBlur(0);
+            });
+            inventory_layer.getChildren().each(function(shape, i) {
+                shape.shadowBlur(0);
+            });
+            clearText(interaction_text);
+        }
+
+        current_layer.draw();
+    }
 });
 
 // Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
 function checkIntersection(dragged_item, target) {
-	// If target is visible and of suitable category
-	if (target.isVisible() && (target.getAttr('category') != undefined && target.getAttr('category') != 'secret')) {
-		// If horizontally inside
-		if (dragged_item.x() > target.x() && dragged_item.x() < (target.x() + target.width()) || (dragged_item.x() + dragged_item.width()) > target.x() && (dragged_item.x() + dragged_item.width()) < (target.x() + target.width())) {
-			// If vertically inside
-			if (dragged_item.y() > target.y() && dragged_item.y() < (target.y() + target.height()) || (dragged_item.y() + dragged_item.height()) > target.y() && (dragged_item.y() + dragged_item.height()) < (target.y() + target.height())) {
-				return true;
-			}
-		}
-	}
-	return false;
+    // If target is visible and of suitable category
+    if (target.isVisible() && (target.getAttr('category') != undefined && target.getAttr('category') != 'secret')) {
+        // If horizontally inside
+        if (dragged_item.x() > target.x() && dragged_item.x() < (target.x() + target.width()) || (dragged_item.x() + dragged_item.width()) > target.x() && (dragged_item.x() + dragged_item.width()) < (target.x() + target.width())) {
+            // If vertically inside
+            if (dragged_item.y() > target.y() && dragged_item.y() < (target.y() + target.height()) || (dragged_item.y() + dragged_item.height()) > target.y() && (dragged_item.y() + dragged_item.height()) < (target.y() + target.height())) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /// Stop character animations and clear monologue when clicked or touched
 /// anywhere on the screen.
 stage.on('touchstart mousedown', function(event) {
-	clearText(monologue);
+    clearText(monologue);
     clearText(npc_monologue);
-	stopCharacterAnimations();
+    stopCharacterAnimations();
 });
 
 /// Touch start and mouse down events (save the coordinates before dragging)
 inventory_layer.on('touchstart mousedown', function(event) {
-	x = event.target.x();
-	y = event.target.y();
+    x = event.target.x();
+    y = event.target.y();
 });
 
 /// Inventory arrow clicking events
 inventory_bar_layer.on('click tap', function(event) {
-	handle_click(event);
+    handle_click(event);
 });
 
 /// Drag end events for inventory items.
 stage.get('Image').on('dragend', function(event) {
-	var dragged_item = event.target;
+    var dragged_item = event.target;
 
-	// If nothing's under the dragged item
-	if (target == null) {
-		dragged_item.x(x);
-		dragged_item.y(y);
-	}
+    // If nothing's under the dragged item
+    if (target == null) {
+        dragged_item.x(x);
+        dragged_item.y(y);
+    }
     // Look up the possible interaction from interactions.json.
     else if (target.getAttr('category') == 'furniture' || target.getAttr('category') == 'item') {
         var commands;
@@ -760,40 +760,40 @@ stage.get('Image').on('dragend', function(event) {
         try {
             commands = interactions_json[dragged_item.id()][target.id()];
         } catch (e) {
-			// Do nothing
-		}
+            // Do nothing
+        }
 
-		// no dragend interaction defined: usual text
+        // no dragend interaction defined: usual text
         if (commands == null) {
-			 commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target.id()}}];
-		}
+             commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target.id()}}];
+        }
 
         handle_commands(commands);
     }
 
-	// Check if dragged item's destroyed, if not, add it to inventory
-	if (dragged_item.isVisible()) {
-		inventoryAdd(dragged_item);
-	}
+    // Check if dragged item's destroyed, if not, add it to inventory
+    if (dragged_item.isVisible()) {
+        inventoryAdd(dragged_item);
+    }
 
-	// Clearing the glow effects
-	current_layer.getChildren().each(function(shape, i) {
-		shape.shadowBlur(0);
-	});
-	inventory_layer.getChildren().each(function(shape, i) {
-		shape.shadowBlur(0);
-	});
-	// Clearing the texts
-	clearText(interaction_text);
+    // Clearing the glow effects
+    current_layer.getChildren().each(function(shape, i) {
+        shape.shadowBlur(0);
+    });
+    inventory_layer.getChildren().each(function(shape, i) {
+        shape.shadowBlur(0);
+    });
+    // Clearing the texts
+    clearText(interaction_text);
 
-	redrawInventory();
+    redrawInventory();
 });
 
 /// Handle click interactions on room objects, inventory items and inventory
 /// arrows.
 function handle_click(event) {
-	var target = event.target;
-	var target_category = target.getAttr('category');
+    var target = event.target;
+    var target_category = target.getAttr('category');
 
     if (target_category == 'furniture' || target_category == 'item') {
         var commands;
@@ -802,44 +802,44 @@ function handle_click(event) {
         try {
             commands = interactions_json[target.id()].click;
         } catch (e) {
-			// Do nothing
-		}
+            // Do nothing
+        }
 
-		// no click interaction defined: usual examine
+        // no click interaction defined: usual examine
         if (commands == null) {
-			commands = [{"command":"monologue", "textkey":{"object": target.id(), "string": "examine"}}];
-		}
+            commands = [{"command":"monologue", "textkey":{"object": target.id(), "string": "examine"}}];
+        }
 
         handle_commands(commands);
-	}
+    }
     // Pick up rewards
     else if (target_category == 'secret') {
-		setMonologue(findMonologue(target.id(), 'pickup'));
-		var rewardID = target.getAttr('reward');
-		inventoryAdd(getObject(rewardID));
-		rewards++;
+        setMonologue(findMonologue(target.id(), 'pickup'));
+        var rewardID = target.getAttr('reward');
+        inventoryAdd(getObject(rewardID));
+        rewards++;
         removeObject(target);
 
-		// To prevent multiple events happening at the same time
-		event.cancelBubble = true;
-	}
-	// Print examine texts for rewards
-	else if (target_category == 'reward') {
-		setMonologue(findMonologue(target.id()));
-	}
-	// Inventory arrow buttons
-	else if (target.getAttr('id') == 'inventory_left_arrow') {
-		if (target.getAttr('visible') == true) {
-			inventory_index--;
-			redrawInventory();
-		}
-	}
-	else if (target.getAttr('id') == 'inventory_right_arrow') {
-		if (target.getAttr('visible') == true) {
-			inventory_index++;
-			redrawInventory();
-		}
-	}
+        // To prevent multiple events happening at the same time
+        event.cancelBubble = true;
+    }
+    // Print examine texts for rewards
+    else if (target_category == 'reward') {
+        setMonologue(findMonologue(target.id()));
+    }
+    // Inventory arrow buttons
+    else if (target.getAttr('id') == 'inventory_left_arrow') {
+        if (target.getAttr('visible') == true) {
+            inventory_index--;
+            redrawInventory();
+        }
+    }
+    else if (target.getAttr('id') == 'inventory_right_arrow') {
+        if (target.getAttr('visible') == true) {
+            inventory_index++;
+            redrawInventory();
+        }
+    }
 }
 
 /// Loop through a list of interaction commands and execute them with
@@ -866,32 +866,32 @@ function handle_commands(commands) {
 function handle_command(command) {
     if (command.command == "monologue") {
         setMonologue(findMonologue(command.textkey.object, command.textkey.string));
-	} else if (command.command == "inventory_add") {
+    } else if (command.command == "inventory_add") {
         inventoryAdd(getObject(command.item));
-	} else if (command.command == "inventory_remove") {
+    } else if (command.command == "inventory_remove") {
         inventoryRemove(getObject(command.item));
-	} else if (command.command == "remove_object") {
+    } else if (command.command == "remove_object") {
         removeObject(getObject(command.object));
-	} else if (command.command == "add_object") {
+    } else if (command.command == "add_object") {
         addObject(getObject(command.object));
-	} else if (command.command == "play_ending") {
+    } else if (command.command == "play_ending") {
         play_ending(command.ending);
-	} else if (command.command == "do_transition") {
+    } else if (command.command == "do_transition") {
         do_transition(command.destination, command.length != null ? command.length : 700);
-	} else if (command.command == "play_character_animation") {
-		// Overrides default speak animation from setMonologue.
+    } else if (command.command == "play_character_animation") {
+        // Overrides default speak animation from setMonologue.
         playCharacterAnimation(character_animations[command.animation], command.length);
-	} else if (command.command == "play_sequence") {
+    } else if (command.command == "play_sequence") {
         play_sequence(command.sequence, command.monologue);
-	} else if (command.command == "set_idle_animation") {
+    } else if (command.command == "set_idle_animation") {
         setIdleAnimation(command.animation_name);
-	} else if (command.command == "set_speak_animation") {
+    } else if (command.command == "set_speak_animation") {
         setSpeakAnimation(command.animation_name);
-	} else if (command.command == "npc_monologue") {
+    } else if (command.command == "npc_monologue") {
         npcMonologue(getObject(command.npc), findMonologue(command.textkey.object, command.textkey.string));
-	} else {
-		console.warn("Unknown interaction command " + command.command);
-	}
+    } else {
+        console.warn("Unknown interaction command " + command.command);
+    }
 }
 
 /// Get an object from stage by it's id. Gives an error message in console with
@@ -904,8 +904,8 @@ function handle_command(command) {
 function getObject(id) {
     var object = stage.get('#' + id)[0];
     if (object == null) {
-		console.warn("Could not find object from stage with id " + id);
-	}
+        console.warn("Could not find object from stage with id " + id);
+    }
     return object;
 }
 
@@ -974,15 +974,15 @@ function play_ending(ending) {
 
 // Clearing the given text
 function clearText(text) {
-	text.text("");
+    text.text("");
 
-	if (text.id() == 'monologue') {
-		character_speech_bubble.hide();
-	} else if (text.id() == 'npc_monologue') {
+    if (text.id() == 'monologue') {
+        character_speech_bubble.hide();
+    } else if (text.id() == 'npc_monologue') {
         npc_speech_bubble.hide();
     }
 
-	text_layer.draw();
+    text_layer.draw();
 }
 
 /// Find monologue text in object. If a text is not found from texts_json by
@@ -994,37 +994,37 @@ function clearText(text) {
 ///            item-object interactions.
 /// @return The text found, or the default text.
 function findMonologue(object_id, key) {
-	if (key == null) {
-		key = 'examine';
-	}
+    if (key == null) {
+        key = 'examine';
+    }
 
     var text = null;
     try { // Might not find with object_id
         text = texts_json[object_id][key];
     } catch(e) {
-		// Do nothing
-	}
+        // Do nothing
+    }
 
-	// If no text found, use default text
-	if (!text || text.length == 0) {
-		// Item's own default
-		console.warn("No text " + key + " found for " + object_id);
-		try { // Might not find with object_id
+    // If no text found, use default text
+    if (!text || text.length == 0) {
+        // Item's own default
+        console.warn("No text " + key + " found for " + object_id);
+        try { // Might not find with object_id
             text = texts_json[object_id]['default'];
         } catch(e) {
-			// Do nothing
-		}
+            // Do nothing
+        }
 
-		if (!text) {
-			// Master default
-			console.warn("Default text not found for " + object_id + ". Using master default.");
-			try {
+        if (!text) {
+            // Master default
+            console.warn("Default text not found for " + object_id + ". Using master default.");
+            try {
                 text = texts_json["default"]["examine"];
             } catch (e) {
                 text = "Fallback default examine entry missing from texts.json!"; // crude
             }
-		}
-	}
+        }
+    }
 
     return text;
 }
@@ -1064,16 +1064,16 @@ function npcMonologue(npc, text) {
 /// Set monologue text.
 /// @param text The text to be shown in the monologue bubble.
 function setMonologue(text) {
-	monologue.setWidth('auto');
-	character_speech_bubble.show();
-	monologue.text(text);
-	if (monologue.width() > 524) {
-		monologue.width(524);
-		monologue.text(text);
-	}
+    monologue.setWidth('auto');
+    character_speech_bubble.show();
+    monologue.text(text);
+    if (monologue.width() > 524) {
+        monologue.width(524);
+        monologue.text(text);
+    }
 
-	character_speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
-	text_layer.draw();
+    character_speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
+    text_layer.draw();
 
     playCharacterAnimation(speak_animation, 3000);
 }
@@ -1087,18 +1087,18 @@ function playCharacterAnimation(animation, timeout) {
         idle_animation[i].node.hide();
         idle_animation[i].reset();
     }
-	animation[0].node.show();
-	animation[0].play();
+    animation[0].node.show();
+    animation[0].play();
 
-	character_layer.draw();
+    character_layer.draw();
 
-	clearTimeout(character_animation_timeout);
-	character_animation_timeout = setTimeout('stopCharacterAnimations();', timeout);
+    clearTimeout(character_animation_timeout);
+    character_animation_timeout = setTimeout('stopCharacterAnimations();', timeout);
 }
 
 ///Stop the characer animations, start idle animation
 function stopCharacterAnimations() {
-	for (var i in character_animations) {
+    for (var i in character_animations) {
         for (var j in character_animations[i]) {
             character_animations[i][j].node.hide();
             character_animations[i][j].reset();
@@ -1107,7 +1107,7 @@ function stopCharacterAnimations() {
 
     idle_animation[0].node.show();
     idle_animation[0].play();
-	character_layer.draw();
+    character_layer.draw();
 }
 
 /// Change idle animation, so that the character graphics can be changed
@@ -1130,20 +1130,20 @@ function setSpeakAnimation(animation_name) {
 
 // Load json from the server
 function getJSON(json_file) {
-	var request = new XMLHttpRequest();
-	request.open("GET", json_file, false);
-	request.send(null);
-	var json = request.responseText;
-	return json;
+    var request = new XMLHttpRequest();
+    request.open("GET", json_file, false);
+    request.send(null);
+    var json = request.responseText;
+    return json;
 }
 
 // Setting an image to the stage and scaling it based on relative values if they exist
 function createObject(o) {
-	window[o.id] = new Image();
-	window[o.id].onLoad = function() {
-		getObject(o.id).image(window[o.id]);
-	}();
-	window[o.id].src = o.src;
+    window[o.id] = new Image();
+    window[o.id].onLoad = function() {
+        getObject(o.id).image(window[o.id]);
+    }();
+    window[o.id].src = o.src;
 }
 
 /// Adding an item to the inventory. Adds new items, but also an item that
@@ -1153,41 +1153,41 @@ function createObject(o) {
 /// @param item Item to be added to the inventory
 function inventoryAdd(item) {
     item.show();
-	item.moveTo(inventory_layer);
+    item.moveTo(inventory_layer);
     item.clearCache();
-	item.size({width: 80, height: 80});
+    item.size({width: 80, height: 80});
 
-	if (inventory_list.indexOf(item) > -1) {
-		inventory_list.splice(inventory_list.indexOf(item), 1, item);
-	} else {
-		inventory_list.push(item);
-	}
+    if (inventory_list.indexOf(item) > -1) {
+        inventory_list.splice(inventory_list.indexOf(item), 1, item);
+    } else {
+        inventory_list.push(item);
+    }
 
     // The picked up item should be visible in the inventory. Scroll inventory
     // to the right if necessary.
     if (inventory_list.indexOf(item) > inventory_index + inventory_max - 1) {
-		inventory_index = Math.max(inventory_list.indexOf(item) + 1 - inventory_max, 0);
-	}
+        inventory_index = Math.max(inventory_list.indexOf(item) + 1 - inventory_max, 0);
+    }
 
     current_layer.draw();
-	redrawInventory();
+    redrawInventory();
 }
 
 /// Removing an item from the inventory. Dragged items are currently just
 /// hidden & inventory is readrawn only after drag ends.
 /// @param item Item to be removed from the inventory
 function inventoryRemove(item) {
-	item.hide();
-	item.moveTo(current_layer);
-	item.draggable(false);
-	inventory_list.splice(inventory_list.indexOf(item), 1);
-	redrawInventory();
+    item.hide();
+    item.moveTo(current_layer);
+    item.draggable(false);
+    inventory_list.splice(inventory_list.indexOf(item), 1);
+    redrawInventory();
 }
 
 // Dragging an item from the inventory
 function inventoryDrag(item) {
-	item.moveTo(current_layer);
-	inventory_bar_layer.draw();
+    item.moveTo(current_layer);
+    inventory_bar_layer.draw();
     inventory_layer.draw();
     clearText(monologue);
     clearText(npc_monologue);
@@ -1197,44 +1197,44 @@ function inventoryDrag(item) {
 /// Redrawing inventory. Shows the items that should be visible according to
 /// inventory_index and takes care of showing inventory arrows as necessary.
 function redrawInventory() {
-	inventory_layer.getChildren().each(function(shape, i) {
-		shape.setAttr('visible', false);
-		shape.draggable(false);
-	});
+    inventory_layer.getChildren().each(function(shape, i) {
+        shape.setAttr('visible', false);
+        shape.draggable(false);
+    });
 
     // If the left arrow is visible AND there's empty space to the right,
     // scroll the inventory to the left. This should happen when removing items.
     if (inventory_index + inventory_max > inventory_list.length) {
-		inventory_index = Math.max(inventory_list.length - inventory_max, 0);
-	}
+        inventory_index = Math.max(inventory_list.length - inventory_max, 0);
+    }
 
-	for (var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
-		shape = inventory_list[i];
-		shape.draggable(true);
-		shape.x(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
-		shape.y(stage.height() - 90);
-		shape.setAttr('visible', true);
-	}
+    for (var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
+        shape = inventory_list[i];
+        shape.draggable(true);
+        shape.x(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
+        shape.y(stage.height() - 90);
+        shape.setAttr('visible', true);
+    }
 
-	if (inventory_index > 0) {
-		getObject("inventory_left_arrow").show();
-	} else {
-		getObject("inventory_left_arrow").hide();
-	}
+    if (inventory_index > 0) {
+        getObject("inventory_left_arrow").show();
+    } else {
+        getObject("inventory_left_arrow").hide();
+    }
 
-	if (inventory_index + inventory_max < inventory_list.length) {
-		getObject("inventory_right_arrow").show();
-	} else {
-		getObject("inventory_right_arrow").hide();
-	}
+    if (inventory_index + inventory_max < inventory_list.length) {
+        getObject("inventory_right_arrow").show();
+    } else {
+        getObject("inventory_right_arrow").hide();
+    }
 
-	inventory_bar_layer.draw();
-	inventory_layer.draw();
-	current_layer.draw();
+    inventory_bar_layer.draw();
+    inventory_layer.draw();
+    current_layer.draw();
 }
 
 // Delay to be set after each intersection check
 function setDelay(delay) {
-	delayEnabled = true;
-	setTimeout('delayEnabled = false;', delay);
+    delayEnabled = true;
+    setTimeout('delayEnabled = false;', delay);
 }
