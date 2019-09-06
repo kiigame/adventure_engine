@@ -1,0 +1,20 @@
+{
+  "name": "@kiigame/adventure_engine",
+  "private": "true",
+  "version": "0.3.0",
+  "description": "Lightweight point & click adventure game engine",
+  "main": "kiigame.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evktalo/kiigame.git"
+  },
+  "author": "Eino Keskitalo",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/evktalo/kiigame/issues"
+  },
+  "homepage": "https://github.com/evktalo/kiigame#readme",
+  "dependencies": {
+    "konva": "^3.2.6"
+  }
+}
