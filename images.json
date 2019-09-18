@@ -221,7 +221,6 @@
         },
         {
         	"attrs": {
-                "category": "room",
                 "id": "object_layer_invisible",
                 "visible": false
         	},
