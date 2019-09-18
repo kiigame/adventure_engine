@@ -231,9 +231,7 @@
                         "category": "item",
                         "id": "airfreshener",
                         "src": "images/airfreshener.png",
-                        "visible": false,
-                        "x": 600,
-                        "y": 300
+                        "visible": false
                     },
                     "className": "Image"
                 },
@@ -242,9 +240,7 @@
                         "category": "item",
                         "id": "dnaanalyzer",
                         "src": "images/dnaanalyzer.png",
-                        "visible": false,
-                        "x": 500,
-                        "y": 400
+                        "visible": false
                     },
                     "className": "Image"
                 },
@@ -253,8 +249,6 @@
                         "category": "item",
                         "id": "marker",
                         "src": "images/marker.png",
-                        "x": 230,
-                        "y": 445,
                         "visible": false
                     },
                     "className": "Image"
@@ -264,8 +258,6 @@
                         "category": "item",
                         "id": "teddybear",
                         "src": "images/teddybear.png",
-                        "x": 370,
-                        "y": 360,
                         "visible": false
                     },
                     "className": "Image"
@@ -275,9 +267,7 @@
                         "category": "item",
                         "id": "teddybear_chewinggum",
                         "src": "images/teddybear_chewinggum.png",
-                        "visible": false,
-                        "x": 345,
-                        "y": 165
+                        "visible": false
                     },
                     "className": "Image"
                 },
@@ -286,9 +276,7 @@
                         "category": "item",
                         "id": "poster_withoutglue",
                         "src": "images/poster_withoutglue.png",
-                        "visible": false,
-                        "x": 215,
-                        "y": 473
+                        "visible": false
                     },
                     "className": "Image"
                 },
@@ -297,8 +285,6 @@
                         "category": "item",
                         "id": "tactic_board_wiper",
                         "src": "images/tactic_board_wiper.png",
-                        "x": 680,
-                        "y": 390,
                         "visible": false
                     },
                     "className": "Image"
@@ -308,8 +294,6 @@
                         "category": "item",
                         "id": "hairkeeper",
                         "src": "images/hairkeeper.png",
-                        "x": 454,
-                        "y": 209,
                         "visible": false
                     },
                     "className": "Image"
@@ -319,8 +303,6 @@
                         "category": "item",
                         "id": "cienibang",
                         "src": "images/cienibang.png",
-                        "x": 443,
-                        "y": 325,
                         "visible": false
                     },
                     "className": "Image"
@@ -330,9 +312,7 @@
                         "category": "item",
                         "id": "poster_withglue",
                         "src": "images/poster_withglue.png",
-                        "visible": false,
-                        "x": 450,
-                        "y": 300
+                        "visible": false
                     },
                     "className": "Image"
                 }
