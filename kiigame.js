@@ -52,8 +52,8 @@ var inventory_index = 0;
 var character_animation_timeout;
 
 // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
-var x;
-var y;
+var dragStartX;
+var dragStartY;
 
 // For limiting the amount of intersection checks
 var delayEnabled = false;
@@ -733,8 +733,8 @@ stage.on('touchstart mousedown', function(event) {
 
 /// Touch start and mouse down events (save the coordinates before dragging)
 inventory_layer.on('touchstart mousedown', function(event) {
-    x = event.target.x();
-    y = event.target.y();
+    dragStartX = event.target.x();
+    dragStartY = event.target.y();
 });
 
 /// Inventory arrow clicking events
@@ -748,8 +748,8 @@ stage.get('Image').on('dragend', function(event) {
 
     // If nothing's under the dragged item
     if (target == null) {
-        dragged_item.x(x);
-        dragged_item.y(y);
+        dragged_item.x(dragStartX);
+        dragged_item.y(dragStartY);
     }
     // Look up the possible interaction from interactions.json.
     else if (target.getAttr('category') == 'furniture' || target.getAttr('category') == 'item') {
