@@ -1,4 +1,4 @@
-var legends_json = JSON.parse(getJSON('legends.json'));
+var legends_json = JSON.parse(kiigame.getJSON('legends.json'));
 
 stage.get("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
@@ -33,8 +33,8 @@ stage.get('#start_game')[0].on('tap click', function(event) {
 stage.get('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
-	setMonologue(findMonologue('character_panic', 'text'));
-    playCharacterAnimation(character_animations["panic"], 6000);
+	kiigame.setMonologue(kiigame.findMonologue('character_panic', 'text'));
+    kiigame.playCharacterAnimation(character_animations["panic"], 6000);
 });
 
 // Listeners for the input screen buttons
@@ -158,8 +158,8 @@ input_layer.on('tap click', function(event) {
 		texts_json['icehockey_jersey']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
 		input_layer.hide();
 
-	    var intro_delay = play_sequence("intro", true);
-        setTimeout('do_transition(game_start_layer.id(), 0)', intro_delay);
+	    var intro_delay = kiigame.play_sequence("intro", true);
+        setTimeout('kiigame.do_transition(game_start_layer.id(), 0)', intro_delay);
 	}
 	// If no number, grey out buttons that can't be used
 	if (input_text.getText().length == 0) {
@@ -183,7 +183,7 @@ input_layer.on('tap click', function(event) {
 
 //Developer feature - shortcut menu from the empty menu button for testing purposes
 start_layer.on('mouseup touchend', function(event) {
-	handle_click(event);
+	kiigame.handle_click(event);
 });
 
 stage.get('#start_empty')[0].on('tap click', function(event) {
@@ -202,10 +202,10 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
     oikotie2.show();
     oikotie2.moveTo(start_layer);
 	oikotie2.on('click', function() {
-		inventoryAdd(stage.get('#poster_withoutglue')[0]);
-		inventoryAdd(stage.get('#poster_withglue')[0]);
-		inventoryAdd(stage.get('#airfreshener')[0]);
-		inventoryAdd(stage.get('#cienibang')[0]);
+		kiigame.inventoryAdd(stage.get('#poster_withoutglue')[0]);
+		kiigame.inventoryAdd(stage.get('#poster_withglue')[0]);
+		kiigame.inventoryAdd(stage.get('#airfreshener')[0]);
+		kiigame.inventoryAdd(stage.get('#cienibang')[0]);
         menu.hide();
 	});
 
