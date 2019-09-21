@@ -27,9 +27,6 @@ var text_layer;
 var fade_layer_full;
 var fade_layer_room;
 
-// Json object made from stage
-var images_json;
-
 // The amount of rewards found. LZ specific, TODO refactor
 var rewards = 0;
 
@@ -132,9 +129,6 @@ var kiigame = {
         this.getObject("inventory_bar").y(stage.height() - 100);
         this.getObject("inventory_bar").width(stage.width());
 
-        // Make a json object from the json string
-        images_json = stage.toObject();
-
         // Animation for fading the screen
         fade_full = new Konva.Tween({
             node : fade_layer_full,
@@ -203,11 +197,13 @@ var kiigame = {
         idle_animation = character_animations["idle"];
 
         // Creating all image objects from json file based on their attributes
+        var images_json = stage.toObject();
+
         for (var i = 0; i < images_json.children.length; i++) {
             for (var j = 0; j < images_json.children[i].children.length; j++) {
                 if (images_json.children[i].children[j].className == 'Image') {
                     this.createObject(images_json.children[i].children[j].attrs);
-                    object_attrs =images_json.children[i].children[j].attrs;
+                    object_attrs = images_json.children[i].children[j].attrs;
 
                     if (object_attrs.animated === true) {
                         this.create_animation(this.getObject(object_attrs.id));
