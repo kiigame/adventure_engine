@@ -116,9 +116,8 @@ var kiigame = {
             images_json['children'].splice(indexOfRoomFadeLayer, 0, room);
         });
 
-        var images_json_text = JSON.stringify(images_json);
-
         // Create stage and everything in it from json
+        var images_json_text = JSON.stringify(images_json);
         stage = Konva.Node.create(images_json_text, 'container');
 
         // Define variables from stage for easier use
