@@ -931,8 +931,9 @@ function removeObject(object) {
 /// Remove an object from the list of animated objects.
 /// @param id The id of the object to be de-animated.
 function removeAnimation(id) {
-    if (animated_objects.indexOf(id) > -1)
+    if (animated_objects.indexOf(id) > -1) {
         animated_objects.splice(animated_objects.indexOf(id), 1);
+    }
 }
 
 // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
