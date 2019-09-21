@@ -41,7 +41,7 @@ stage.get('#start')[0].on('tap click', function(event) {
 input_layer.on('tap click', function(event) {
 	target = event.target;
 	
-	selected = texts_json[target.getAttr('id')];
+	var selected = texts_json[target.getAttr('id')];
 	if (selected)
 	    selected = selected.name;
 	else
