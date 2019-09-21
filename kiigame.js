@@ -68,6 +68,8 @@ var dragDelayEnabled = false;
 var current_music;
 var current_music_source;
 
+// Menu
+var menu;
 // Track the currently shown menu
 var current_menu;
 
