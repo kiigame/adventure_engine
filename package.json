@@ -16,5 +16,11 @@
   "homepage": "https://github.com/evktalo/kiigame#readme",
   "dependencies": {
     "konva": "^3.2.6"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }
