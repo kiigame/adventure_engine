@@ -1,6 +1,5 @@
 // Global variables. TODO: refactor
 // JSONs got from the server
-var images_json_text;
 var texts_json; // also accessed from latkazombit.js
 var interactions_json;
 var character_animations_json;
@@ -96,7 +95,8 @@ var start_layer;
 var kiigame = {
     init : function() {        
         // Get jsons from the server
-        images_json_text = this.getJSON('images.json');
+        var images_json = JSON.parse(this.getJSON('images.json'));
+        var rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
         texts_json = JSON.parse(this.getJSON('texts.json'));
         interactions_json = JSON.parse(this.getJSON('interactions.json'));
         character_animations_json = JSON.parse(this.getJSON('character_animations.json'));
@@ -104,7 +104,20 @@ var kiigame = {
         music_json = JSON.parse(this.getJSON('music.json'));
         menu_json = JSON.parse(this.getJSON('menu.json'));
 
+        // Add rooms to images_json to create a stage. Add them before the room
+        // fade layer to ensure correct draw order.
+        var indexOfRoomFadeLayer = images_json['children'].indexOf(
+            images_json['children'].find(function(child){
+                return child.attrs.id === 'fade_layer_room';
+            })
+        );
+
+        rooms_json.forEach(function(room){
+            images_json['children'].splice(indexOfRoomFadeLayer, 0, room);
+        });
+
         // Create stage and everything in it from json
+        var images_json_text = JSON.stringify(images_json);
         stage = Konva.Node.create(images_json_text, 'container');
 
         // Define variables from stage for easier use
@@ -197,21 +210,21 @@ var kiigame = {
         idle_animation = character_animations["idle"];
 
         // Creating all image objects from json file based on their attributes
-        var images_json = stage.toObject();
+        var imageData = stage.toObject();
 
-        for (var i = 0; i < images_json.children.length; i++) {
-            for (var j = 0; j < images_json.children[i].children.length; j++) {
-                if (images_json.children[i].children[j].className == 'Image') {
-                    this.createObject(images_json.children[i].children[j].attrs);
-                    object_attrs = images_json.children[i].children[j].attrs;
+        for (var i = 0; i < imageData.children.length; i++) {
+            for (var j = 0; j < imageData.children[i].children.length; j++) {
+                if (imageData.children[i].children[j].className == 'Image') {
+                    this.createObject(imageData.children[i].children[j].attrs);
+                    object_attrs = imageData.children[i].children[j].attrs;
 
                     if (object_attrs.animated === true) {
                         this.create_animation(this.getObject(object_attrs.id));
                     }
                 }
             }
-            if (images_json.children[i].attrs.category == 'menu') {
-                this.create_menu_action(images_json.children[i]);
+            if (imageData.children[i].attrs.category == 'menu') {
+                this.create_menu_action(imageData.children[i]);
             }
         }
 
