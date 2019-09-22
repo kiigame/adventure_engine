@@ -1,7 +1,7 @@
 kiigame
 =======
 
-KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engine for web browsers. KGAE uses Konva: https://konvajs.org
+KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engine for web browsers. KGAE uses [Konva](https://konvajs.org), and Mocha and Chai for unit tests.
 
 The engine comes with an example game, Lätkäzombit: Pako hallista. The example game is in the Finnish language.
 
@@ -13,5 +13,7 @@ How to test locally on Linux
 The game is implemented as a web page. Therefore you need to run a web server on your machine to test it locally. Here are the steps:
 
  * Install and run Apache (for example see https://help.ubuntu.com/community/ApacheMySQLPHP)
+ * Install npm (TODO: add instructions)
  * Put the files (including folders) to your webserver directory (for example /var/www/)
+ * Run npm install to get dependencies
  * Open the kiigame.html in your browser (for example http://localhost/kiigame.html)
