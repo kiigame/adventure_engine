@@ -254,7 +254,7 @@ var kiigame = {
             kiigame.handle_click(event);
         });
         // Drag start events
-        stage.get('Image').on('dragstart', function(event) {
+        stage.find('Image').on('dragstart', function(event) {
             dragged_item = event.target;
             kiigame.inventoryDrag(dragged_item);
         });
@@ -392,7 +392,7 @@ var kiigame = {
         });
 
         /// Drag end events for inventory items.
-        stage.get('Image').on('dragend', function(event) {
+        stage.find('Image').on('dragend', function(event) {
             var dragged_item = event.target;
 
             // If nothing's under the dragged item
@@ -446,24 +446,24 @@ var kiigame = {
         });
 
         // Not using getObject (with its error messaging), because these are optional.
-        start_layer = stage.get("#start_layer")[0]; // TODO: get rid of start_layer
+        start_layer = stage.find("#start_layer")[0]; // TODO: get rid of start_layer
 
         // The optional start layer has optional splash screen and optional start menu.
         // TODO: Delay transition to game_start_layer?
-        if (stage.get("#start_layer")[0] != null) {
+        if (stage.find("#start_layer")[0] != null) {
             current_background = 'start_layer';
             current_layer = start_layer;
-            if (stage.get('#splash_screen')[0] != null) {
-                stage.get('#splash_screen')[0].on('tap click', function(event) {
-                    stage.get('#splash_screen')[0].hide();
-                    if (stage.get('#start_layer_menu')[0] != null) {
+            if (stage.find('#splash_screen')[0] != null) {
+                stage.find('#splash_screen')[0].on('tap click', function(event) {
+                    stage.find('#splash_screen')[0].hide();
+                    if (stage.find('#start_layer_menu')[0] != null) {
                         kiigame.display_start_menu();
                     } else {
                         kiigame.do_transition(game_start_layer.id());
                     }
                 });
             } else { // no splash screen
-                if (stage.get('#start_layer_menu')[0] != null) {
+                if (stage.find('#start_layer_menu')[0] != null) {
                     kiigame.display_start_menu();
                 } else {
                     // start layer without splash or menu?!
@@ -940,13 +940,13 @@ var kiigame = {
     },
     /// Get an object from stage by it's id. Gives an error message in console with
     /// the looked up name if it is not found. Basically, a wrapper for
-    /// stage.get(id) with error messaging, helpful with typos in jsons,
+    /// stage.find(id) with error messaging, helpful with typos in jsons,
     /// and also gives some errors if an object required by the kiigame.js script
     /// itself is missing.
     /// @param object The name of the object to look up.
     /// @return Returns the object if it's found, or null if it isn't.
     getObject : function (id) {
-        var object = stage.get('#' + id)[0];
+        var object = stage.find('#' + id)[0];
         if (object == null) {
             console.warn("Could not find object from stage with id " + id);
         }

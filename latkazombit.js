@@ -1,10 +1,10 @@
 var legends_json = JSON.parse(kiigame.getJSON('legends.json'));
 
-stage.get("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
-stage.get("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+stage.find("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
+stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 
-var input_text = stage.get('#input_text')[0];
-var input_layer = stage.get('#input_layer')[0];
+var input_text = stage.find('#input_text')[0];
+var input_layer = stage.find('#input_layer')[0];
 
 //For checking whether player has selected their jersey number
 var number_selected = false;
@@ -13,24 +13,24 @@ var number_selected = false;
 input_text.setText(texts_json['input_text']['text']);
 
 // Dirty removing of default event handler to allow using jersey input
-stage.get('#start_game')[0].eventListeners.click = [];
+stage.find('#start_game')[0].eventListeners.click = [];
 
 // On clicking the start game we open the choosing the jersey number
-stage.get('#start_game')[0].on('tap click', function(event) {
+stage.find('#start_game')[0].on('tap click', function(event) {
 	input_layer.show();
     // When default number is on, buttons shouldn't be grey when starting
-    stage.get('#button_ok').show();
-	stage.get('#button_ok_gray').hide();
-	stage.get('#button_back').show();
-	stage.get('#button_back_gray').hide();
-	stage.get('#button_0').show();
-	stage.get('#button_0_gray').hide();
+    stage.find('#button_ok').show();
+	stage.find('#button_ok_gray').hide();
+	stage.find('#button_back').show();
+	stage.find('#button_back_gray').hide();
+	stage.find('#button_0').show();
+	stage.find('#button_0_gray').hide();
 	input_layer.draw();
 	input_layer.moveToTop();
 });
 
 // Hidden feature, click the image on the start screen and get a funny reaction from the character
-stage.get('#start')[0].on('tap click', function(event) {
+stage.find('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
 	kiigame.setMonologue(kiigame.findMonologue('character_panic', 'text'));
@@ -153,7 +153,7 @@ input_layer.on('tap click', function(event) {
 		}
 		// OK
 	} else if (selected == 'OK' && input_text.getText().length > 0) {
-		stage.get('#jersey_number')[0].setText(input_text.getText());
+		stage.find('#jersey_number')[0].setText(input_text.getText());
 		texts_json['jersey_number']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
 		texts_json['icehockey_jersey']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
 		input_layer.hide();
@@ -163,19 +163,19 @@ input_layer.on('tap click', function(event) {
 	}
 	// If no number, grey out buttons that can't be used
 	if (input_text.getText().length == 0) {
-		stage.get('#button_ok').hide();
-		stage.get('#button_ok_gray').show();
-		stage.get('#button_back').hide();
-		stage.get('#button_back_gray').show();
-		stage.get('#button_0').hide();
-		stage.get('#button_0_gray').show();
+		stage.find('#button_ok').hide();
+		stage.find('#button_ok_gray').show();
+		stage.find('#button_back').hide();
+		stage.find('#button_back_gray').show();
+		stage.find('#button_0').hide();
+		stage.find('#button_0_gray').show();
 	} else {
-		stage.get('#button_ok').show();
-		stage.get('#button_ok_gray').hide();
-		stage.get('#button_back').show();
-		stage.get('#button_back_gray').hide();
-		stage.get('#button_0').show();
-		stage.get('#button_0_gray').hide();
+		stage.find('#button_ok').show();
+		stage.find('#button_ok_gray').hide();
+		stage.find('#button_back').show();
+		stage.find('#button_back_gray').hide();
+		stage.find('#button_0').show();
+		stage.find('#button_0_gray').hide();
 	}
 	input_layer.draw();
 
@@ -186,10 +186,10 @@ start_layer.on('mouseup touchend', function(event) {
 	kiigame.handle_click(event);
 });
 
-stage.get('#start_empty')[0].on('tap click', function(event) {
+stage.find('#start_empty')[0].on('tap click', function(event) {
 	event = event.target;
 
-	var oikotie = stage.get('#oikotie')[0];
+	var oikotie = stage.find('#oikotie')[0];
 	oikotie.x(50);
     oikotie.show();
 	oikotie.moveTo(start_layer);
@@ -197,15 +197,15 @@ stage.get('#start_empty')[0].on('tap click', function(event) {
         menu.hide();
     });
 
-    var oikotie2 = stage.get('#oikotie2')[0];
+    var oikotie2 = stage.find('#oikotie2')[0];
     oikotie2.x(200);
     oikotie2.show();
     oikotie2.moveTo(start_layer);
 	oikotie2.on('click', function() {
-		kiigame.inventoryAdd(stage.get('#poster_withoutglue')[0]);
-		kiigame.inventoryAdd(stage.get('#poster_withglue')[0]);
-		kiigame.inventoryAdd(stage.get('#airfreshener')[0]);
-		kiigame.inventoryAdd(stage.get('#cienibang')[0]);
+		kiigame.inventoryAdd(stage.find('#poster_withoutglue')[0]);
+		kiigame.inventoryAdd(stage.find('#poster_withglue')[0]);
+		kiigame.inventoryAdd(stage.find('#airfreshener')[0]);
+		kiigame.inventoryAdd(stage.find('#cienibang')[0]);
         menu.hide();
 	});
 
