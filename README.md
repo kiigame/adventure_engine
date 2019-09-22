@@ -14,6 +14,7 @@ The game is implemented as a web page. Therefore you need to run a web server on
 
  * Install and run Apache (for example see https://help.ubuntu.com/community/ApacheMySQLPHP)
  * Install npm (TODO: add instructions)
- * Put the files (including folders) to your webserver directory (for example /var/www/)
+ * Clone the repository (or just get the files)
  * Run npm install to get dependencies
+ * Put the files (including folders) to your webserver directory (for example /var/www/)
  * Open the kiigame.html in your browser (for example http://localhost/kiigame.html)
