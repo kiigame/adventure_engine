@@ -106,15 +106,12 @@ var kiigame = {
 
         // Add rooms to images_json to create a stage. Add them before the room
         // fade layer to ensure correct draw order.
-        var indexOfRoomFadeLayer = images_json['children'].indexOf(
-            images_json['children'].find(function(child){
-                return child.attrs.id === 'fade_layer_room';
-            })
+        var stageChildProcessor = new ChildProcessor();
+        images_json = stageChildProcessor.process(
+            images_json,
+            rooms_json,
+            'fade_layer_room'
         );
-
-        rooms_json.forEach(function(room){
-            images_json['children'].splice(indexOfRoomFadeLayer, 0, room);
-        });
 
         // Create stage and everything in it from json
         var images_json_text = JSON.stringify(images_json);
