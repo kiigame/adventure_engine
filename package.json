@@ -1,6 +1,6 @@
 {
   "name": "@kiigame/adventure_engine",
-  "private": "true",
+  "private": true,
   "version": "0.3.0",
   "description": "Lightweight point & click adventure game engine",
   "main": "kiigame.js",
