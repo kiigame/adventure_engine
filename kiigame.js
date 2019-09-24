@@ -93,7 +93,9 @@ var game_start_layer;
 var start_layer;
 
 var kiigame = {
-    init : function() {        
+    jsonGetter: null,
+    init : function(jsonGetter) {
+        this.jsonGetter = jsonGetter;
         // Get jsons from the server
         var images_json = JSON.parse(this.getJSON('images.json'));
         var rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
@@ -1161,11 +1163,7 @@ var kiigame = {
     },
     // Load json from the server
     getJSON : function (json_file) {
-        var request = new XMLHttpRequest();
-        request.open("GET", json_file, false);
-        request.send(null);
-        var json = request.responseText;
-        return json;
+        return this.jsonGetter.getJSON(json_file);
     },
     // Setting an image to the stage and scaling it based on relative values if they exist
     createObject : function (o) {
