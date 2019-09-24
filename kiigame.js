@@ -672,10 +672,10 @@ var kiigame = {
         }
     },
     /// Plays a sequence defined in sequences.json
-    /// @param sequence The sequence id in sequences.json
+    /// @param id The sequence id in sequences.json
     /// @param monologue boolean Show sequence's examine text at the end of sequence
     /// @return The length of sequence in ms. Doesn't include the fade-in!
-    play_sequence : function (sequence, monologue) {
+    play_sequence : function (id, monologue) {
         var delay = 700;
 
         // Animation cycle for proper fading and drawing order
@@ -684,24 +684,24 @@ var kiigame = {
         fade_full.play();
 
         var old_layer = current_layer;
-        current_layer = this.getObject(sequence);
+        current_layer = this.getObject(id);
         var sequence_exit_text = monologue === true ? this.findMonologue(current_layer.id()) : null;
-        var object = sequences_json[current_layer.id()];
-        var final_fade_duration = object.transition_length != null ? object.transition_length : 0;
+        var sequence = sequences_json[current_layer.id()];
+        var final_fade_duration = sequence.transition_length != null ? sequence.transition_length : 0;
 
-        var sequence_counter = 0;
-        var images_total = 0;
-        var image = null;
+        var sequenceCounter = 0;
+        var slidesTotal = 0;
+        var slide = null;
 
-        this.play_music(sequence);
+        this.play_music(id);
 
-        for (var i in object.images) {
-            images_total++;
+        for (var i in sequence.slides) {
+            slidesTotal++;
 
-            var last_image = image;
-            image = this.getObject(object.images[i].id);
+            var lastSlide = slide;
+            slide = this.getObject(sequence.slides[i].id);
 
-            (function(i, image, last_image) {
+            (function(i, slide, lastSlide) {
                 setTimeout(function() {
                     current_layer.show();
                     old_layer.hide();
@@ -712,33 +712,33 @@ var kiigame = {
                     inventory_layer.hide();
                     fade_full.play();
 
-                    if (last_image) {
-                        last_image.hide();
+                    if (lastSlide) {
+                        lastSlide.hide();
                     }
-                    image.show();
+                    slide.show();
 
-                    // Fade-in the image
-                    var image_fade = object.images[i].do_fade;
-                    if (image_fade === true) {
+                    // Fade-in the slide
+                    var slideFade = sequence.slides[i].do_fade;
+                    if (slideFade === true) {
                         setTimeout(function() {
                             fade_full.reverse();
                             stage.draw();
                         }, 700);
                     } else {
-                        // Immediately display the image
+                        // Immediately display the slide
                         fade_full.reset();
                         stage.draw();
                     }
 
-                    sequence_counter += 1;
+                    sequenceCounter += 1;
 
                 }, delay);
-            })(i, image, last_image);
+            })(i, slide, lastSlide);
 
-            delay = delay + object.images[i].show_time;
+            delay = delay + sequence.slides[i].show_time;
         };
 
-        // After last image, do the final fade and set up exit monologue.
+        // After last slide, do the final fade and set up exit monologue.
         if (final_fade_duration > 0) {
             setTimeout(function() {
                 fade_full.tween.duration = final_fade_duration;

@@ -1,6 +1,6 @@
 {
     "intro": {
-        "images": [ 
+        "slides": [
             {
                 "do_fade": true,
                 "id": "intro_1",
@@ -40,7 +40,7 @@
         "transition_length": 3000
     },
     "outro": {
-        "images": [
+        "slides": [
             {
                 "do_fade": true,
                 "id": "outro_1",
