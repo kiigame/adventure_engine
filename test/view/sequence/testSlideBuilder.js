@@ -70,5 +70,41 @@ describe('Test sequence SlideBuilder', function(){
         };
         var result = slideBuilder.build(slide, "intro_2");
         assert.deepEqual(expected, result);
+    }),
+    it('from text and image, build text and image wrapped in group', function(){
+        let slideBuilder = new SlideBuilder(textBuilderStub);
+
+        var expected = {
+            "attrs": {
+                "category": "sequence",
+                "id": "intro_42",
+                "height": 643,
+                "width": 981,
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "src": "images/intro_42.png"
+                    },
+                    "className": "Image"
+                },
+                {
+                    "text": "text"
+                }
+            ],
+            "className": "Group"
+        };
+        var slide = {
+            "do_fade": true,
+            "id": "intro_42",
+            "show_time": 4000,
+            "imageSrc": "images/intro_42.png",
+            "text": {
+                "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
+            }
+        };
+        var result = slideBuilder.build(slide, "intro_42");
+        assert.deepEqual(expected, result);
     });
 });
