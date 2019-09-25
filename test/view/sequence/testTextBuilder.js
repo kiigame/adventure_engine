@@ -6,7 +6,7 @@ describe('Test sequence TextBuilder', function(){
     it('it should build expected JSON object with Text data', function(){
         let textBuilder = new TextBuilder();
 
-        var expected =                         {
+        var expected = {
             "attrs": {
                 "text": "Kaikki ei kuitenkaan ollut niin kuin piti..",
                 "fontFamily": "Chalkboard SE",
