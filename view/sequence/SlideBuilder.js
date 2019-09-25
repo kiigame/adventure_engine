@@ -9,11 +9,6 @@ class SlideBuilder {
         var builtSlide = {
             "attrs": {}
         };
-        builtSlide.attrs.visible = false;
-        builtSlide.attrs.category = "sequence";
-        builtSlide.attrs.height = 643;
-        builtSlide.attrs.width = 981;
-        builtSlide.attrs.id = slideId;
 
         var background = {
             "attrs": {}
@@ -33,12 +28,18 @@ class SlideBuilder {
 
         if (slide.text) {
             builtSlide.className = "Group";
+            builtSlide.attrs.height = 643;
+            builtSlide.attrs.width = 981;    
             builtSlide.children = [];
             builtSlide.children.push(background);
             builtSlide.children.push(this.textBuilder.build(slide.text));
         } else {
             builtSlide = background;
         }
+
+        builtSlide.attrs.visible = false;
+        builtSlide.attrs.category = "sequence";
+        builtSlide.attrs.id = slideId;
 
         return builtSlide;
     }
