@@ -8,7 +8,7 @@ class TextBuilder {
         var builtText = {
             "attrs": {}
         };
-        builtText.attrs.text = text.text.text;
+        builtText.attrs.text = text.text;
         builtText.attrs.fontFamily = "Chalkboard SE";
         builtText.attrs.fontSize = 26;
         builtText.attrs.fill = "white";

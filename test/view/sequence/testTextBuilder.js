@@ -21,9 +21,7 @@ describe('Test sequence TextBuilder', function(){
             "className": "Text"
         };
         var text = {
-            "text": {
-                "text": "Kaikki ei kuitenkaan ollut niin kuin piti.."
-            }
+            "text": "Kaikki ei kuitenkaan ollut niin kuin piti.."
         };
         var result = textBuilder.build(text);
         assert.deepEqual(expected, result);
