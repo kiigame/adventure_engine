@@ -15,7 +15,7 @@ class SequenceBuilder {
         builtSequence.attrs.visible = false;
         builtSequence.attrs.id = key;
         for (let [index, slide] of slides.entries()) {
-            builtSequence.children.push(this.slideBuilder.build(slide, key + '_' + index));
+            builtSequence.children.push(this.slideBuilder.build(slide, key + '_' + (index + 1)));
         };
         return builtSequence;
     }

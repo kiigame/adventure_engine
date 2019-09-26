@@ -4,11 +4,26 @@ var assert = chai.assert;
 SequenceBuilder = require('../../../view/sequence/SequenceBuilder.js');
 SlideBuilder = require('../../../view/sequence/SlideBuilder.js');
 var slideBuilderStub = sinon.createStubInstance(SlideBuilder);
-slideBuilderStub.build.returns(
+slideBuilderStub.build.withArgs(
     {
-        "slide": "slide"
-    }
-);
+        "do_fade": true,
+        "id": "intro_1",
+        "show_time": 4000,
+        "text": {
+            "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
+        }
+    },
+    'intro_1'
+).returns({"slide": "intro_1"});
+slideBuilderStub.build.withArgs(
+    {
+        "do_fade": true,
+        "id": "intro_2",
+        "show_time": 5000,
+        "imageSrc": "images/intro_2.png"
+    },
+    'intro_2'
+).returns({"slide": "intro_2"});
 
 describe('Test SequenceBuilder', function(){
     it('build sequence with two slides', function(){
@@ -22,10 +37,10 @@ describe('Test SequenceBuilder', function(){
             },
             "children": [
                 {
-                    "slide": "slide"
+                    "slide": "intro_1"
                 },
                 {
-                    "slide": "slide"
+                    "slide": "intro_2"
                 }
             ],
             "className": "Layer"
