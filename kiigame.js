@@ -94,8 +94,11 @@ var start_layer;
 
 var kiigame = {
     jsonGetter: null,
-    init : function(jsonGetter) {
+    sequencesBuilder: null,
+    init : function(jsonGetter, sequencesBuilder) {
         this.jsonGetter = jsonGetter;
+        this.sequencesBuilder = sequencesBuilder;
+
         // Get jsons from the server
         var images_json = JSON.parse(this.getJSON('images.json'));
         var rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
@@ -106,13 +109,22 @@ var kiigame = {
         music_json = JSON.parse(this.getJSON('music.json'));
         menu_json = JSON.parse(this.getJSON('menu.json'));
 
-        // Add rooms to images_json to create a stage. Add them before the room
+        // Add rooms to images_json for stage building. Add them before the room
         // fade layer to ensure correct draw order.
         var stageChildProcessor = new ChildProcessor();
         images_json = stageChildProcessor.process(
             images_json,
             rooms_json,
             'fade_layer_room'
+        );
+
+        // Build an array of all the sequences out of sequences_json and merge them to
+        // images_json for stage building.
+        var builtSequences = this.sequencesBuilder.build(sequences_json);
+        images_json = stageChildProcessor.process(
+            images_json,
+            builtSequences,
+            'start_layer_menu' // TODO: Use fade_layer_full ?
         );
 
         // Create stage and everything in it from json

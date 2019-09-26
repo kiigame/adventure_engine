@@ -14,10 +14,21 @@
     <script src="node_modules/konva/konva.min.js"></script>
     <script src="util/JSONGetter.js"></script>
     <script src="view/stage/ChildProcessor.js"></script>
+    <script src="view/sequence/SequencesBuilder.js"></script>
+    <script src="view/sequence/SequenceBuilder.js"></script>
+    <script src="view/sequence/SlideBuilder.js"></script>
+    <script src="view/sequence/TextBuilder.js"></script>
     <script src="kiigame.js"></script>
     <script language="javascript">
         let jsonGetter = new JSONGetter();
-        kiigame.init(jsonGetter);
+        let sequencesBuilder = new SequencesBuilder(
+            new SequenceBuilder(
+                new SlideBuilder(
+                    new TextBuilder()
+                )
+            )
+        );
+        kiigame.init(jsonGetter, sequencesBuilder);
     </script>
     <script src="latkazombit.js"></script>
   </body>

@@ -4,32 +4,42 @@
             {
                 "do_fade": true,
                 "id": "intro_1",
-                "show_time": 4000
+                "show_time": 4000,
+                "text": {
+                    "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
+                }
             },
             {
                 "do_fade": true,
                 "id": "intro_2",
-                "show_time": 5000
+                "show_time": 5000,
+                "imageSrc": "images/intro_2.png"
             },
             {
                 "do_fade": true,
                 "id": "intro_3",
-                "show_time": 4500
+                "show_time": 4500,
+                "text": {
+                    "text": "Kaikki ei kuitenkaan ollut niin kuin piti.."
+                }
             },
             {
                 "do_fade": false,
                 "id": "intro_4",
-                "show_time": 1000
+                "show_time": 1000,
+                "imageSrc": "images/intro_4.png"
             },
             {
                 "do_fade": false,
                 "id": "intro_5",
-                "show_time": 1000
+                "show_time": 1000,
+                "imageSrc": "images/intro_5.png"
             },
             {
                 "do_fade": false,
                 "id": "intro_6",
-                "show_time": 1000
+                "show_time": 1000,
+                "imageSrc": "images/intro_6.png"
             },
             {
                 "do_fade": false,
@@ -44,7 +54,8 @@
             {
                 "do_fade": true,
                 "id": "outro_1",
-                "show_time": 4000
+                "show_time": 4000,
+                "imageSrc": "images/outro_1.png"
             }
         ]
     }
