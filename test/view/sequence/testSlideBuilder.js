@@ -106,5 +106,29 @@ describe('Test sequence SlideBuilder', function(){
         };
         var result = slideBuilder.build(slide, "intro_42");
         assert.deepEqual(expected, result);
+    }),
+    it('from no text or imageSrc, it should build a rect', function(){
+        let slideBuilder = new SlideBuilder(textBuilderStub);
+
+        var expected = {
+            "attrs": {
+                "category": "sequence",
+                "id": "intro_7",
+                "visible": false,
+                "x": 0,
+                "y": 0,
+                "fill": "black",
+                "height": 643,
+                "width": 981
+            },
+            "className": "Rect"
+        };
+        var slide = {
+            "do_fade": false,
+            "id": "intro_7",
+            "show_time": 1000
+        };
+        var result = slideBuilder.build(slide, "intro_7");
+        assert.deepEqual(expected, result);
     });
 });
