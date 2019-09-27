@@ -12,8 +12,7 @@ slideBuilderStub.build.withArgs(
         "text": {
             "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
         }
-    },
-    'intro_1'
+    }
 ).returns({"slide": "intro_1"});
 slideBuilderStub.build.withArgs(
     {
@@ -21,8 +20,7 @@ slideBuilderStub.build.withArgs(
         "id": "intro_2",
         "show_time": 5000,
         "imageSrc": "images/intro_2.png"
-    },
-    'intro_2'
+    }
 ).returns({"slide": "intro_2"});
 
 describe('Test SequenceBuilder', function(){

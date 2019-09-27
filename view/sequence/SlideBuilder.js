@@ -5,7 +5,7 @@ class SlideBuilder {
         this.textBuilder = textBuilder;
     }
 
-    build(slide, slideId) {
+    build(slide) {
         var builtSlide = {
             "attrs": {}
         };
@@ -39,7 +39,7 @@ class SlideBuilder {
 
         builtSlide.attrs.visible = false;
         builtSlide.attrs.category = "sequence";
-        builtSlide.attrs.id = slideId;
+        builtSlide.attrs.id = slide.id;
 
         return builtSlide;
     }

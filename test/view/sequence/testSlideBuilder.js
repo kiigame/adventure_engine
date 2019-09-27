@@ -47,7 +47,7 @@ describe('Test sequence SlideBuilder', function(){
                 "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
             }
         };
-        var result = slideBuilder.build(slide, "intro_1");
+        var result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     }),
     it('from only imageSrc, it should build an image', function(){
@@ -68,7 +68,7 @@ describe('Test sequence SlideBuilder', function(){
             "show_time": 5000,
             "imageSrc": "images/intro_2.png"
         };
-        var result = slideBuilder.build(slide, "intro_2");
+        var result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     }),
     it('from text and image, build text and image wrapped in group', function(){
@@ -104,7 +104,7 @@ describe('Test sequence SlideBuilder', function(){
                 "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
             }
         };
-        var result = slideBuilder.build(slide, "intro_42");
+        var result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     }),
     it('from no text or imageSrc, it should build a rect', function(){
@@ -128,7 +128,7 @@ describe('Test sequence SlideBuilder', function(){
             "id": "intro_7",
             "show_time": 1000
         };
-        var result = slideBuilder.build(slide, "intro_7");
+        var result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     });
 });
