@@ -175,16 +175,17 @@ var kiigame = {
         });
 
         // Load up frames from json to the character animations array.
-        for (var i in character_animations_json) {
+        var animation_data = character_animations_json.animations;
+        for (var i in animation_data) {
             var frames = [];
-            for (var j in character_animations_json[i].frames) {
+            for (var j in animation_data[i].frames) {
                 var frame = new Konva.Tween({
-                    node: this.getObject(character_animations_json[i].frames[j].node),
-                    duration: character_animations_json[i].frames[j].duration
+                    node: this.getObject(animation_data[i].frames[j].node),
+                    duration: animation_data[i].frames[j].duration
                 });
                 frames.push(frame);
             }
-            character_animations[character_animations_json[i].id] = frames;
+            character_animations[animation_data[i].id] = frames;
         }
 
         // Set up onFinish functions for each frame to show the next frame. In the case
