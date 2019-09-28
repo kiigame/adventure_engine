@@ -1,0 +1,92 @@
+[
+    {
+        "attrs": {
+            "category": "item",
+            "id": "airfreshener",
+            "src": "images/airfreshener.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "dnaanalyzer",
+            "src": "images/dnaanalyzer.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "marker",
+            "src": "images/marker.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "teddybear",
+            "src": "images/teddybear.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "teddybear_chewinggum",
+            "src": "images/teddybear_chewinggum.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "poster_withoutglue",
+            "src": "images/poster_withoutglue.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "tactic_board_wiper",
+            "src": "images/tactic_board_wiper.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "hairkeeper",
+            "src": "images/hairkeeper.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "cienibang",
+            "src": "images/cienibang.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "item",
+            "id": "poster_withglue",
+            "src": "images/poster_withglue.png",
+            "visible": false
+        },
+        "className": "Image"
+    }
+]

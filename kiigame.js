@@ -108,6 +108,7 @@ var kiigame = {
         sequences_json = JSON.parse(this.getJSON('sequences.json'));
         music_json = JSON.parse(this.getJSON('music.json'));
         menu_json = JSON.parse(this.getJSON('menu.json'));
+        var items_json = JSON.parse(this.getJSON('items.json'));
 
         // Add rooms to images_json for stage building. Add them before the room
         // fade layer to ensure correct draw order.
@@ -126,6 +127,12 @@ var kiigame = {
             builtSequences,
             'start_layer_menu' // TODO: Use fade_layer_full ?
         );
+
+        // Push items.json contents to correct layer.
+        var inventory_item_cache = images_json.children.find(function(child){
+            return child.attrs.id === 'inventory_item_cache';
+        });
+        inventory_item_cache.children.push.apply(inventory_item_cache.children, items_json);
 
         // Create stage and everything in it from json
         var images_json_text = JSON.stringify(images_json);
