@@ -2,7 +2,7 @@
 // JSONs got from the server
 var texts_json; // also accessed from latkazombit.js
 var interactions_json;
-var character_animations_json;
+var character_json;
 var sequences_json;
 var music_json;
 var menu_json;
@@ -104,7 +104,7 @@ var kiigame = {
         var rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
         texts_json = JSON.parse(this.getJSON('texts.json'));
         interactions_json = JSON.parse(this.getJSON('interactions.json'));
-        character_animations_json = JSON.parse(this.getJSON('character_animations.json'));
+        character_json = JSON.parse(this.getJSON('character.json'));
         sequences_json = JSON.parse(this.getJSON('sequences.json'));
         music_json = JSON.parse(this.getJSON('music.json'));
         menu_json = JSON.parse(this.getJSON('menu.json'));
@@ -143,7 +143,7 @@ var kiigame = {
         });
         character_layer_data.children.push.apply(
             character_layer_data.children,
-            character_animations_json.frames
+            character_json.frames
         );
 
         // Create stage and everything in it from json
@@ -187,7 +187,7 @@ var kiigame = {
         });
 
         // Load up frames from json to the character animations array.
-        var animation_data = character_animations_json.animations;
+        var animation_data = character_json.animations;
         for (var i in animation_data) {
             var frames = [];
             for (var j in animation_data[i].frames) {
