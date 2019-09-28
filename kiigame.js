@@ -132,7 +132,19 @@ var kiigame = {
         var inventory_item_cache = images_json.children.find(function(child){
             return child.attrs.id === 'inventory_item_cache';
         });
-        inventory_item_cache.children.push.apply(inventory_item_cache.children, items_json);
+        inventory_item_cache.children.push.apply(
+            inventory_item_cache.children,
+            items_json
+        );
+
+        // Push character animation frames to correct layer.
+        var character_layer_data = images_json.children.find(function(child){
+            return child.attrs.id === 'character_layer';
+        });
+        character_layer_data.children.push.apply(
+            character_layer_data.children,
+            character_animations_json.frames
+        );
 
         // Create stage and everything in it from json
         var images_json_text = JSON.stringify(images_json);
