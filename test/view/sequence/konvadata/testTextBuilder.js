@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-TextBuilder = require('../../../view/sequence/TextBuilder.js');
+TextBuilder = require('../../../../view/sequence/konvadata/TextBuilder.js');
 
 describe('Test sequence TextBuilder', function(){
     it('it should build expected JSON object with Text data', function(){

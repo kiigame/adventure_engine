@@ -1,8 +1,8 @@
 var chai = require('chai');
 var sinon = require('sinon');
 var assert = chai.assert;
-SequenceBuilder = require('../../../view/sequence/SequenceBuilder.js');
-SlideBuilder = require('../../../view/sequence/SlideBuilder.js');
+SequenceBuilder = require('../../../../view/sequence/konvadata/SequenceBuilder.js');
+SlideBuilder = require('../../../../view/sequence/konvadata/SlideBuilder.js');
 var slideBuilderStub = sinon.createStubInstance(SlideBuilder);
 slideBuilderStub.build.withArgs(
     {
