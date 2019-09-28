@@ -1,10 +1,10 @@
 var chai = require('chai');
 var assert = chai.assert;
-ChildProcessor = require('../../../view/stage/ChildProcessor.js');
+LayerAdder = require('../../../../view/stage/konvadata/LayerAdder.js');
 
-describe('Test stage ChildProcessor', function(){
+describe('Test stage LayerAdder', function(){
     it('should splice given object after specified layer', function(){
-        let processor = new ChildProcessor();
+        let layerAdder = new LayerAdder();
 
         var expected = {
             'children': [
@@ -67,7 +67,7 @@ describe('Test stage ChildProcessor', function(){
             }
         ];
         var beforeLayer = 'fade_layer_room';
-        var result = processor.process(imagesJson, newJson, beforeLayer);
+        var result = layerAdder.process(imagesJson, newJson, beforeLayer);
         assert.deepEqual(expected, result);
     });
 

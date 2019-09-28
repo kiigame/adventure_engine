@@ -112,8 +112,8 @@ var kiigame = {
 
         // Add rooms to images_json for stage building. Add them before the room
         // fade layer to ensure correct draw order.
-        var stageChildProcessor = new ChildProcessor();
-        images_json = stageChildProcessor.process(
+        var stageLayerAdder = new LayerAdder();
+        images_json = stageLayerAdder.process(
             images_json,
             rooms_json,
             'fade_layer_room'
@@ -122,7 +122,7 @@ var kiigame = {
         // Build an array of all the sequences out of sequences_json and merge them to
         // images_json for stage building.
         var builtSequences = this.sequencesBuilder.build(sequences_json);
-        images_json = stageChildProcessor.process(
+        images_json = stageLayerAdder.process(
             images_json,
             builtSequences,
             'start_layer_menu' // TODO: Use fade_layer_full ?
