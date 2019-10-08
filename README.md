@@ -22,7 +22,7 @@ The game is implemented as a web page. Therefore you need to run a web server on
 Running unit tests
 ------------------
 
-After installing with install npm, you should be able to run
+After installing with npm install, you should be able to run
 
  * npm test
  
