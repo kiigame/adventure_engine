@@ -90,7 +90,7 @@ var idle_animation;
 var current_layer;
 var current_background;
 var game_start_layer;
-var start_layer;
+var start_layer; // also accessed in latkazombit.js
 
 var kiigame = {
     jsonGetter: null,
