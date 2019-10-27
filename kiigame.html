@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
+    <meta charset="utf-8">
     <style>
       body {
         margin: 0px;
@@ -20,17 +21,6 @@
     <script src="view/sequence/konvadata/SlideBuilder.js"></script>
     <script src="view/sequence/konvadata/TextBuilder.js"></script>
     <script src="kiigame.js"></script>
-    <script language="javascript">
-        let jsonGetter = new JSONGetter();
-        let sequencesBuilder = new SequencesBuilder(
-            new SequenceBuilder(
-                new SlideBuilder(
-                    new TextBuilder()
-                )
-            )
-        );
-        kiigame.init(jsonGetter, sequencesBuilder);
-    </script>
     <script src="latkazombit.js"></script>
   </body>
   
