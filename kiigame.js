@@ -92,10 +92,8 @@ var current_background;
 var game_start_layer;
 var start_layer; // also accessed in latkazombit.js
 
-var kiigame = {
-    jsonGetter: null,
-    sequencesBuilder: null,
-    init : function(jsonGetter, sequencesBuilder) {
+class KiiGame {
+    constructor(jsonGetter, sequencesBuilder) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
 
@@ -243,7 +241,7 @@ var kiigame = {
             for (var j = 0; j < imageData.children[i].children.length; j++) {
                 if (imageData.children[i].children[j].className == 'Image') {
                     this.createObject(imageData.children[i].children[j].attrs);
-                    object_attrs = imageData.children[i].children[j].attrs;
+                    var object_attrs = imageData.children[i].children[j].attrs;
 
                     if (object_attrs.animated === true) {
                         this.create_animation(this.getObject(object_attrs.id));
@@ -268,26 +266,26 @@ var kiigame = {
                     });
 
                     o.on('mouseup touchend', function(event) {
-                        kiigame.handle_click(event);
-                    });
+                        this.handle_click(event);
+                    }.bind(this));
                 }
-            });
+            }.bind(this));
 
             stage.draw();
             idle_animation[0].node.show();
             idle_animation[0].play();
-        };
+        }.bind(this);
 
         // Mouse up and touch end events (picking up items from the environment
         // Mouse click and tap events (examine items in the inventory)
         inventory_layer.on('click tap', function(event) {
-            kiigame.handle_click(event);
-        });
+            this.handle_click(event);
+        }.bind(this));
         // Drag start events
         stage.find('Image').on('dragstart', function(event) {
             dragged_item = event.target;
-            kiigame.inventoryDrag(dragged_item);
-        });
+            this.inventoryDrag(dragged_item);
+        }.bind(this));
 
         // While dragging events (use item on item or object)
         stage.on('dragmove', function(event) {
@@ -295,7 +293,7 @@ var kiigame = {
 
             if (!delayEnabled) {
                 // Setting a small delay to not spam intersection check on every moved pixel
-                kiigame.setDelay(10);
+                this.setDelay(10);
 
                 // Loop through all the items on the current object layer
                 for (var i = 0; i < current_layer.children.length; i++) {
@@ -303,9 +301,9 @@ var kiigame = {
 
                     if (object != undefined && object.getAttr('category') != 'room_background') {
                         // Break if still intersecting with the same target
-                        if (target != null && kiigame.checkIntersection(dragged_item, target)) {
+                        if (target != null && this.checkIntersection(dragged_item, target)) {
                             break;
-                        } else if (kiigame.checkIntersection(dragged_item, object)) {
+                        } else if (this.checkIntersection(dragged_item, object)) {
                             // If not, check for a new target
                             if (target != object) {
                                 target = object;
@@ -325,7 +323,7 @@ var kiigame = {
                         var object = (inventory_layer.getChildren())[i];
                         if (object != undefined) {
                             // Look for intersecting targets
-                            if (kiigame.checkIntersection(dragged_item, object)) {
+                            if (this.checkIntersection(dragged_item, object)) {
                                 if (target != object) {
                                     target = object;
                                 }
@@ -339,24 +337,24 @@ var kiigame = {
 
                 // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
                 if (target == null) {
-                    var leftArrow = kiigame.getObject("inventory_left_arrow");
-                    var rightArrow = kiigame.getObject("inventory_right_arrow");
+                    var leftArrow = this.getObject("inventory_left_arrow");
+                    var rightArrow = this.getObject("inventory_right_arrow");
                     if (!dragDelayEnabled) {
-                        if (kiigame.checkIntersection(dragged_item, leftArrow)) {
+                        if (this.checkIntersection(dragged_item, leftArrow)) {
                             dragDelayEnabled = true;
                             inventory_index--;
-                            kiigame.redrawInventory();
+                            this.redrawInventory();
                             setTimeout('dragDelayEnabled = false;', dragDelay);
-                        } else if (kiigame.checkIntersection(dragged_item, rightArrow)) {
+                        } else if (this.checkIntersection(dragged_item, rightArrow)) {
                             dragDelayEnabled = true;
                             inventory_index++;
-                            kiigame.redrawInventory();
+                            this.redrawInventory();
                             setTimeout('dragDelayEnabled = false;', dragDelay);
                         } else {
                             target = null;
                         }
                     }
-                    kiigame.clearText(interaction_text);
+                    this.clearText(interaction_text);
                 }
 
                 // If target is found, highlight it and show the interaction text
@@ -395,20 +393,20 @@ var kiigame = {
                     inventory_layer.getChildren().each(function(shape, i) {
                         shape.shadowBlur(0);
                     });
-                    kiigame.clearText(interaction_text);
+                    this.clearText(interaction_text);
                 }
 
                 current_layer.draw();
             }
-        });
+        }.bind(this));
 
         /// Stop character animations and clear monologue when clicked or touched
         /// anywhere on the screen.
         stage.on('touchstart mousedown', function(event) {
-            kiigame.clearText(monologue);
-            kiigame.clearText(npc_monologue);
-            kiigame.stopCharacterAnimations();
-        });
+            this.clearText(monologue);
+            this.clearText(npc_monologue);
+            this.stopCharacterAnimations();
+        }.bind(this));
 
         /// Touch start and mouse down events (save the coordinates before dragging)
         inventory_layer.on('touchstart mousedown', function(event) {
@@ -418,8 +416,8 @@ var kiigame = {
 
         /// Inventory arrow clicking events
         inventory_bar_layer.on('click tap', function(event) {
-            kiigame.handle_click(event);
-        });
+            this.handle_click(event);
+        }.bind(this));
 
         /// Drag end events for inventory items.
         stage.find('Image').on('dragend', function(event) {
@@ -447,33 +445,33 @@ var kiigame = {
                     commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target.id()}}];
                 }
 
-                kiigame.handle_commands(commands);
+                this.handle_commands(commands);
             }
 
             // Check if dragged item's destroyed, if not, add it to inventory
             if (dragged_item.isVisible()) {
-                kiigame.inventoryAdd(dragged_item);
+                this.inventoryAdd(dragged_item);
             }
 
             // Clearing the glow effects
             current_layer.getChildren().each(function(shape, i) {
                 shape.shadowBlur(0);
-            });
+            }.bind(this));
             inventory_layer.getChildren().each(function(shape, i) {
                 shape.shadowBlur(0);
-            });
+            }.bind(this));
             // Clearing the texts
-            kiigame.clearText(interaction_text);
+            this.clearText(interaction_text);
 
-            kiigame.redrawInventory();
-        });
+            this.redrawInventory();
+        }.bind(this));
 
         // Set start layer
         stage.getChildren().each(function(o) {
             if (o.getAttr('category') === 'room' && o.getAttr('start') === true) {
                 game_start_layer = o;
             }
-        });
+        }.bind(this));
 
         // Not using getObject (with its error messaging), because these are optional.
         start_layer = stage.find("#start_layer")[0]; // TODO: get rid of start_layer
@@ -487,25 +485,26 @@ var kiigame = {
                 stage.find('#splash_screen')[0].on('tap click', function(event) {
                     stage.find('#splash_screen')[0].hide();
                     if (stage.find('#start_layer_menu')[0] != null) {
-                        kiigame.display_start_menu();
+                        this.display_start_menu();
                     } else {
-                        kiigame.do_transition(game_start_layer.id());
+                        this.do_transition(game_start_layer.id());
                     }
-                });
+                }.bind(this));
             } else { // no splash screen
                 if (stage.find('#start_layer_menu')[0] != null) {
-                    kiigame.display_start_menu();
+                    this.display_start_menu();
                 } else {
                     // start layer without splash or menu?!
-                    kiigame.do_transition(game_start_layer.id());
+                    this.do_transition(game_start_layer.id());
                 }
             }
         } else {
             // no start layer
-            kiigame.do_transition(game_start_layer.id());
+            this.do_transition(game_start_layer.id());
         }
-    },
-    create_animation : function (object) {
+    }
+
+    create_animation(object) {
         var attrs = object.getAttr("animation");
         var animation = new Konva.Tween({
             node: object,
@@ -524,14 +523,15 @@ var kiigame = {
         });
 
         animated_objects.push(animation);
-    },
+    }
+
     /*
     Create item actions such as "new game" for the given menu object
     Menus may have certain kinds of actions: start_game, credits, main_menu
     Other actions (such as "none") are regarded as non-functioning menu buttons
     Object menu_image - the menu image object with the items inside
     */
-    create_menu_action : function(menu_image) {
+    create_menu_action(menu_image) {
         var menu_object = menu_json[menu_image.attrs.id];
         if (!menu_object) {
             console.warn("Could not find menu.json entry for menu '", menu_image.attrs.id, "'");
@@ -551,30 +551,31 @@ var kiigame = {
 
             if (item_action == "start_game") {
                 item.on('tap click', function(event) {
-                    if (kiigame.getObject("intro") != "") {
-                        var intro_delay = kiigame.play_sequence("intro", true);
-                        setTimeout('kiigame.do_transition(game_start_layer.id(), 0)', intro_delay);
+                    if (this.getObject("intro") != "") {
+                        var intro_delay = this.play_sequence("intro", true);
+                        setTimeout('this.do_transition(game_start_layer.id(), 0)', intro_delay);
                     } else {
                         // Assume intro layer has a transition to game_start_layer
-                        kiigame.do_transition(game_start_layer.id());
+                        this.do_transition(game_start_layer.id());
                     }
-                });
+                }.bind(this));
             } else if (item_action == "credits") {
                 item.on('tap click', function(event) {
-                    kiigame.setMonologue(kiigame.findMonologue(event.target.id()));
-                });
+                    this.setMonologue(this.findMonologue(event.target.id()));
+                }.bind(this));
             } else if (item_action == "main_menu") {
                 // TODO: Return to main menu after end of game.
                 item.on('tap click', function(event) {
-                    kiigame.getObject("end_texts").hide();
-                    kiigame.display_start_menu();
-                });
+                    this.getObject("end_texts").hide();
+                    this.display_start_menu();
+                }.bind(this));
             }
         }
-    },
+    }
+
     // Display menu for the given layer
     // string layerId - the ID of the layer we want to display the menu for
-    display_menu : function(layerId) {
+    display_menu(layerId) {
         this.hide_menu();
         menu = menu_json[layerId] !== undefined ? this.getObject(menu_json[layerId]["menu"]) : false;
         if (!menu) {
@@ -583,29 +584,32 @@ var kiigame = {
 
         menu.show()
         current_menu = menu;
-    },
-    hide_menu : function() {
+    }
+
+    hide_menu() {
         if (!current_menu) {
             return;
         }
 
         menu.hide();
         current_menu = null;
-    },
+    }
+
     // Display the start menu including "click" to proceed image
-    display_start_menu : function () {
+    display_start_menu() {
         start_layer.show();
         this.display_menu("start_layer");
         character_layer.show();
         inventory_bar_layer.show();
         stage.draw();
         this.play_music('start_layer');
-    },
+    }
+
     /*
     Play music
     string id - object ID from JSON with "music":"file name" attribute
     */
-    play_music : function (id) {
+    play_music(id) {
         if (id == undefined) {
             return;
         }
@@ -641,7 +645,7 @@ var kiigame = {
                 current_music.faded = true;
 
                 if (old_music) {
-                    fade_interval_2 = setInterval(function() {
+                    var fade_interval_2 = setInterval(function() {
                         // Audio API will throw exception when volume is maxed
                         try {
                             old_music.volume -= 0.05;
@@ -657,7 +661,7 @@ var kiigame = {
                         }
                     }, 200)
                 } else if (current_music) {
-                    fade_interval = setInterval(function() {
+                    var fade_interval = setInterval(function() {
                         // Audio API will throw exception when volume is maxed
                         try {
                             current_music.volume += 0.05
@@ -677,15 +681,16 @@ var kiigame = {
             }
             current_music_source = data.music;
         }
-    },
-    stop_music : function () {
+    }
+
+    stop_music() {
         if (current_music == null) {
             return;
         }
 
         // Fade music volume if set so
         if (current_music.faded === true) {
-            fade_interval = setInterval(function() {
+            var fade_interval = setInterval(function() {
                 // Audio API will throw exception when volume is maxed
                 // or an crossfade interval may still be running
                 try {
@@ -694,16 +699,17 @@ var kiigame = {
                 } catch (e) {
                     clearInterval(fade_interval);
                 }
-            }, 100)
+            }.bind(this), 100)
         } else {
             current_music.pause();
         }
-    },
+    }
+
     /// Plays a sequence defined in sequences.json
     /// @param id The sequence id in sequences.json
     /// @param monologue boolean Show sequence's examine text at the end of sequence
     /// @return The length of sequence in ms. Doesn't include the fade-in!
-    play_sequence : function (id, monologue) {
+    play_sequence(id, monologue) {
         var delay = 700;
 
         // Animation cycle for proper fading and drawing order
@@ -734,7 +740,7 @@ var kiigame = {
                     current_layer.show();
                     old_layer.hide();
                     fade_layer_full.show();
-                    kiigame.hide_menu(); // So that the menu is hidden after first fadeout.
+                    this.hide_menu(); // So that the menu is hidden after first fadeout.
                     character_layer.hide();
                     inventory_bar_layer.hide();
                     inventory_layer.hide();
@@ -760,8 +766,8 @@ var kiigame = {
 
                     sequenceCounter += 1;
 
-                }, delay);
-            })(i, slide, lastSlide);
+                }.bind(this), delay);
+            }.bind(this))(i, slide, lastSlide);
 
             delay = delay + sequence.slides[i].show_time;
         };
@@ -778,11 +784,11 @@ var kiigame = {
                         fade_layer_full.hide();
                         fade_full.tween.duration = 600; // reset to default
                         if (monologue === true) {
-                            kiigame.setMonologue(sequence_exit_text);
+                            this.setMonologue(sequence_exit_text);
                         }
-                    }, final_fade_duration);
-                }, final_fade_duration);
-            }, delay);
+                    }.bind(this), final_fade_duration);
+                }.bind(this), final_fade_duration);
+            }.bind(this), delay);
 
             // Doesn't include the fade-in!
             delay = delay + final_fade_duration;
@@ -790,13 +796,14 @@ var kiigame = {
 
         // Return sequence delay
         return delay;
-    },
+    }
+
     /// Transition to a room.
     /// @param room_id The id of the room to transition to.
     /// @param fade_time_param The fade duration; if null, use a default.
     /// @param comingFrom The room where the transition was started in. Sets up
     ///                   the monologue text.
-    do_transition : function (room_id, fade_time_param, comingFrom) {
+    do_transition(room_id, fade_time_param, comingFrom) {
         var fade_time = fade_time_param;
 
         // By default do fast fade
@@ -812,7 +819,7 @@ var kiigame = {
         }
 
         setTimeout(function() {
-            kiigame.stop_music();
+            this.stop_music();
             // Don't fade if duration is zero.
             if (fade_time != 0) {
                 fade_room.reverse();
@@ -823,7 +830,7 @@ var kiigame = {
                 current_layer.hide();
             }
 
-            current_layer = kiigame.getObject(room_id);
+            current_layer = this.getObject(room_id);
 
             // Play the animations of the room
             for (var i in animated_objects) {
@@ -842,15 +849,16 @@ var kiigame = {
 
             setTimeout(function() {
                 fade_layer_room.hide();
-                kiigame.play_music(current_layer.id());
+                this.play_music(current_layer.id());
                 if (comingFrom) {
-                    kiigame.setMonologue(kiigame.findMonologue(comingFrom));
+                    this.setMonologue(this.findMonologue(comingFrom));
                 }
-            }, fade_time);
-        }, fade_time);
-    },
+            }.bind(this), fade_time);
+        }.bind(this), fade_time);
+    }
+
     // Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
-    checkIntersection : function(dragged_item, target) {
+    checkIntersection(dragged_item, target) {
         // If target is visible and of suitable category
         if (target.isVisible()&& (target.getAttr('category') != undefined && target.getAttr('category') != 'secret')) {
             // If horizontally inside
@@ -862,10 +870,11 @@ var kiigame = {
             }
         }
         return false;
-    },
+    }
+
     /// Handle click interactions on room objects, inventory items and inventory
     /// arrows.
-    handle_click : function (event) {
+    handle_click(event) {
         var target = event.target;
         var target_category = target.getAttr('category');
 
@@ -914,28 +923,30 @@ var kiigame = {
                 this.redrawInventory();
             }
         }
-    },
+    }
+
     /// Loop through a list of interaction commands and execute them with
     /// handle_command, with timeout if specified.
-    handle_commands : function (commands) {
+    handle_commands(commands) {
         for (var i in commands) {
             if (commands[i].timeout != null) {
                 (function(commands, i) {
                     setTimeout(function() {
-                        kiigame.handle_command(commands[i]);
-                    }, commands[i].timeout);
-                })(commands, i);
+                        this.handle_command(commands[i]);
+                    }.bind(this), commands[i].timeout);
+                }.bind(this))(commands, i);
             } else {
                 this.handle_command(commands[i]);
             }
         }
-    },
+    }
+
     /// Handle each interaction. Check what command is coming in, and do the thing.
     /// Timeouts are done in handle_commands. Order of commands in interactinos.json
     /// can be important: for instance, monologue plays the speaking animation, so
     /// play_character_animation should come after it, so that the speaking
     /// animation is stopped and the defined animation plays, and not vice versa.
-    handle_command : function (command) {
+    handle_command(command) {
         if (command.command == "monologue") {
             this.setMonologue(this.findMonologue(command.textkey.object, command.textkey.string));
         } else if (command.command == "inventory_add") {
@@ -967,7 +978,8 @@ var kiigame = {
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
-    },
+    }
+
     /// Get an object from stage by it's id. Gives an error message in console with
     /// the looked up name if it is not found. Basically, a wrapper for
     /// stage.find(id) with error messaging, helpful with typos in jsons,
@@ -975,39 +987,43 @@ var kiigame = {
     /// itself is missing.
     /// @param object The name of the object to look up.
     /// @return Returns the object if it's found, or null if it isn't.
-    getObject : function (id) {
+    getObject(id) {
         var object = stage.find('#' + id)[0];
         if (object == null) {
             console.warn("Could not find object from stage with id " + id);
         }
         return object;
-    },
+    }
+
     /// Add an object to the stage. Currently, this means setting its visibility
     /// to true. // TODO: Add animations & related parts.
     /// @param The object to be added.
-    addObject : function (object) {
+    addObject(object) {
         object.clearCache();
         object.show();
         object.cache();
         current_layer.draw();
-    },
+    }
+
     /// Remove an object from stage. Called after interactions that remove objects.
     /// The removed object is hidden. Handles animations.
     /// @param object The object to be destroyed.
-    removeObject : function (object) {
+    removeObject(object) {
         this.removeAnimation(object.id());
         object.hide();
         current_layer.draw();
-    },
+    }
+
     /// Remove an object from the list of animated objects.
     /// @param id The id of the object to be de-animated.
-    removeAnimation : function (id) {
+    removeAnimation(id) {
         if (animated_objects.indexOf(id) > -1) {
             animated_objects.splice(animated_objects.indexOf(id), 1);
         }
-    },
+    }
+
     // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
-    play_ending : function (ending) {
+    play_ending(ending) {
         fade_full.reset();
         fade_layer_full.show();
         fade_full.play();
@@ -1017,33 +1033,34 @@ var kiigame = {
             for (var i = inventory_layer.children.length-1; i >= 0; i--) {
                 var shape = inventory_layer.children[i];
                 if (shape.getAttr('category') != 'reward') {
-                    kiigame.inventoryRemove(shape);
+                    this.inventoryRemove(shape);
                 }
                 inventory_index = 0;
             }
 
-            kiigame.play_music(ending);
-            rewards_text = kiigame.getObject("rewards_text");
-            old_text = rewards_text.text();
+            this.play_music(ending);
+            var rewards_text = this.getObject("rewards_text");
+            var old_text = rewards_text.text();
             rewards_text.text(rewards + rewards_text.text());
 
             current_layer.hide(); // hide the sequence layer
-            current_layer = kiigame.getObject(ending);
+            current_layer = this.getObject(ending);
             current_layer.show();
             inventory_bar_layer.show();
             inventory_layer.show();
-            kiigame.display_menu(current_layer.id());
+            this.display_menu(current_layer.id());
             character_layer.show();
-            kiigame.getObject("end_texts").show();
+            this.getObject("end_texts").show();
             stage.draw();
             rewards_text.text(old_text);
 
             fade_full.reverse();
             setTimeout('fade_layer_full.hide();', 700);
-        }, 700);
-    },
+        }.bind(this), 700);
+    }
+
     // Clearing the given text
-    clearText : function (text) {
+    clearText(text) {
         text.text("");
 
         if (text.id() == 'monologue') {
@@ -1053,7 +1070,8 @@ var kiigame = {
         }
 
         text_layer.draw();
-    },
+    }
+
     /// Find monologue text in object. If a text is not found from texts_json by
     /// the parameter, return the default text for the object (if it exists), or
     /// the master default text.
@@ -1062,7 +1080,7 @@ var kiigame = {
     ///            default. Otherwise usually the name of the other object in
     ///            item-object interactions.
     /// @return The text found, or the default text.
-    findMonologue : function (object_id, key) {
+    findMonologue(object_id, key) {
         if (key == null) {
             key = 'examine';
         }
@@ -1096,12 +1114,13 @@ var kiigame = {
         }
 
         return text;
-    },
+    }
+
     /// Set NPC monologue text and position the NPC speech bubble to the desired
     /// NPC.
     /// @param npc The object in the stage that will have the speech bubble.
     /// @param text The text to be shown in the speech bubble.
-    npcMonologue : function (npc, text) {
+    npcMonologue(npc, text) {
         npc_monologue.setWidth('auto');
         npc_speech_bubble.show();
         npc_monologue.text(text);
@@ -1126,10 +1145,11 @@ var kiigame = {
         npc_speech_bubble.y(npc.y() + (npc.height()/3));
 
         text_layer.draw();
-    },
+    }
+
     /// Set monologue text.
     /// @param text The text to be shown in the monologue bubble.
-    setMonologue : function (text) {
+    setMonologue(text) {
         monologue.setWidth('auto');
         character_speech_bubble.show();
         monologue.text(text);
@@ -1142,11 +1162,12 @@ var kiigame = {
         text_layer.draw();
 
         this.playCharacterAnimation(speak_animation, 3000);
-    },
+    }
+
     /// Play a character animation
     /// @param animation The animation to play.
     /// @param timeout The time in ms until the character returns to idle animation.
-    playCharacterAnimation : function (animation, timeout) {
+    playCharacterAnimation(animation, timeout) {
         this.stopCharacterAnimations();
         for (var i in idle_animation) {
             idle_animation[i].node.hide();
@@ -1158,10 +1179,13 @@ var kiigame = {
         character_layer.draw();
 
         clearTimeout(character_animation_timeout);
-        character_animation_timeout = setTimeout('kiigame.stopCharacterAnimations();', timeout);
-    },
+        character_animation_timeout = setTimeout(function() {
+            this.stopCharacterAnimations();
+        }.bind(this), timeout);
+    }
+
     ///Stop the characer animations, start idle animation
-    stopCharacterAnimations : function () {
+    stopCharacterAnimations() {
         for (var i in character_animations) {
             for (var j in character_animations[i]) {
                 character_animations[i][j].node.hide();
@@ -1172,41 +1196,46 @@ var kiigame = {
         idle_animation[0].node.show();
         idle_animation[0].play();
         character_layer.draw();
-    },
+    }
+
     /// Change idle animation, so that the character graphics can be changed
     /// mid-game.
     /// @param animation_name The name of the animation, look the animation up
     ///                       from character_animations[].
-    setIdleAnimation : function (animation_name) {
+    setIdleAnimation(animation_name) {
         idle_animation = character_animations[animation_name];
         this.stopCharacterAnimations(); // reset and play the new idle animation
-    },
+    }
+
     /// Change speak animation, so that the character graphics can be changed
     /// mid-game.
     /// @param animation_name The name of the animation, look the animation up
     ///                       from character_animations[].
-    setSpeakAnimation : function (animation_name) {
+    setSpeakAnimation(animation_name) {
         speak_animation = character_animations[animation_name];
         this.stopCharacterAnimations(); // reset and play idle animation
-    },
+    }
+
     // Load json from the server
-    getJSON : function (json_file) {
+    getJSON(json_file) {
         return this.jsonGetter.getJSON(json_file);
-    },
+    }
+
     // Setting an image to the stage and scaling it based on relative values if they exist
-    createObject : function (o) {
+    createObject(o) {
         window[o.id] = new Image();
         window[o.id].onLoad = function() {
-            kiigame.getObject(o.id).image(window[o.id]);
-        }();
+            this.getObject(o.id).image(window[o.id]);
+        }.bind(this)();
         window[o.id].src = o.src;
-    },
+    }
+
     /// Adding an item to the inventory. Adds new items, but also an item that
     /// has been dragged out of the inventory is put back with this function.
     /// XXX: May become problematic if interaction both returns the dragged item
     /// and adds a new one.
     /// @param item Item to be added to the inventory
-    inventoryAdd : function (item) {
+    inventoryAdd(item) {
         item.show();
         item.moveTo(inventory_layer);
         item.clearCache();
@@ -1226,29 +1255,32 @@ var kiigame = {
 
         current_layer.draw();
         this.redrawInventory();
-    },
+    }
+
     /// Removing an item from the inventory. Dragged items are currently just
     /// hidden & inventory is readrawn only after drag ends.
     /// @param item Item to be removed from the inventory
-    inventoryRemove : function (item) {
+    inventoryRemove(item) {
         item.hide();
         item.moveTo(current_layer);
         item.draggable(false);
         inventory_list.splice(inventory_list.indexOf(item), 1);
         this.redrawInventory();
-    },
+    }
+
     // Dragging an item from the inventory
-    inventoryDrag : function (item) {
+    inventoryDrag(item) {
         item.moveTo(current_layer);
         inventory_bar_layer.draw();
         inventory_layer.draw();
         this.clearText(monologue);
         this.clearText(npc_monologue);
         this.stopCharacterAnimations();
-    },
+    }
+
     /// Redrawing inventory. Shows the items that should be visible according to
     /// inventory_index and takes care of showing inventory arrows as necessary.
-    redrawInventory : function () {
+    redrawInventory() {
         inventory_layer.getChildren().each(function(shape, i) {
             shape.setAttr('visible', false);
             shape.draggable(false);
@@ -1261,7 +1293,7 @@ var kiigame = {
         }
 
         for (var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
-            shape = inventory_list[i];
+            var shape = inventory_list[i];
             shape.draggable(true);
             shape.x(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
             shape.y(stage.height() - 90);
@@ -1283,10 +1315,24 @@ var kiigame = {
         inventory_bar_layer.draw();
         inventory_layer.draw();
         current_layer.draw();
-    },
+    }
+
     // Delay to be set after each intersection check
-    setDelay : function (delay) {
+    setDelay(delay) {
         delayEnabled = true;
         setTimeout('delayEnabled = false;', delay);
     }
+    
 }
+
+
+let jsonGetter = new JSONGetter();
+let sequencesBuilder = new SequencesBuilder(
+    new SequenceBuilder(
+        new SlideBuilder(
+            new TextBuilder()
+        )
+    )
+);
+let kiigame = new KiiGame(jsonGetter, sequencesBuilder);
+
