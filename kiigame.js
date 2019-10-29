@@ -68,7 +68,7 @@ var current_music;
 var current_music_source;
 
 // Menu
-export var menu;
+export var menu; // also accessed in latkazombit.js
 // Track the currently shown menu
 var current_menu;
 
@@ -88,7 +88,7 @@ var fade_room;
 var animated_objects = [];
 
 // Create character animations.
-var character_animations = [];
+export var character_animations = []; // also accessed in latkazombit.js
 
 // Default character animations
 var speak_animation;
@@ -97,7 +97,7 @@ var idle_animation;
 // Variable for saving the current room (for changing backgrounds and object layers)
 var current_layer;
 var current_background;
-export var game_start_layer;
+export var game_start_layer; // also accessed in latkazombit.js
 export var start_layer; // also accessed in latkazombit.js
 
 export class KiiGame {

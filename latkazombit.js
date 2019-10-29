@@ -3,7 +3,8 @@ import kiigame, {
     texts_json,
     game_start_layer,
     start_layer,
-    menu
+    menu,
+    character_animations
 } from './kiigame.js';
 
 var legends_json = JSON.parse(kiigame.getJSON('legends.json'));
