@@ -255,40 +255,40 @@ class KiiGame {
 
         // On window load we create image hit regions for our items on object layers
         // Loop backgrounds to create item hit regions and register mouseup event
-        window.onload = function() {
-            stage.getChildren().each(function(o) {
+        window.onload = () => {
+            stage.getChildren().each((o) => {
                 if (o.getAttr('category') == 'room') {
-                    o.getChildren().each(function(shape, i) {
+                    o.getChildren().each((shape, i) => {
                         if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
                             shape.cache();
                             shape.drawHitFromCache();
                         }
                     });
 
-                    o.on('mouseup touchend', function(event) {
+                    o.on('mouseup touchend', (event) => {
                         this.handle_click(event);
-                    }.bind(this));
+                    });
                 }
-            }.bind(this));
+            });
 
             stage.draw();
             idle_animation[0].node.show();
             idle_animation[0].play();
-        }.bind(this);
+        };
 
         // Mouse up and touch end events (picking up items from the environment
         // Mouse click and tap events (examine items in the inventory)
-        inventory_layer.on('click tap', function(event) {
+        inventory_layer.on('click tap', (event) => {
             this.handle_click(event);
-        }.bind(this));
+        });
         // Drag start events
-        stage.find('Image').on('dragstart', function(event) {
+        stage.find('Image').on('dragstart', (event) => {
             dragged_item = event.target;
             this.inventoryDrag(dragged_item);
-        }.bind(this));
+        });
 
         // While dragging events (use item on item or object)
-        stage.on('dragmove', function(event) {
+        stage.on('dragmove', (event) => {
             dragged_item = event.target;
 
             if (!delayEnabled) {
@@ -359,10 +359,10 @@ class KiiGame {
 
                 // If target is found, highlight it and show the interaction text
                 if (target != null) {
-                    current_layer.getChildren().each(function(shape, i) {
+                    current_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
-                    inventory_layer.getChildren().each(function(shape, i) {
+                    inventory_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
                     target.clearCache();
@@ -387,10 +387,10 @@ class KiiGame {
                     text_layer.draw();
                 } else {
                     // If no target, clear the texts and highlights
-                    current_layer.getChildren().each(function(shape, i) {
+                    current_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
-                    inventory_layer.getChildren().each(function(shape, i) {
+                    inventory_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
                     this.clearText(interaction_text);
@@ -398,29 +398,29 @@ class KiiGame {
 
                 current_layer.draw();
             }
-        }.bind(this));
+        });
 
         /// Stop character animations and clear monologue when clicked or touched
         /// anywhere on the screen.
-        stage.on('touchstart mousedown', function(event) {
+        stage.on('touchstart mousedown', (event) => {
             this.clearText(monologue);
             this.clearText(npc_monologue);
             this.stopCharacterAnimations();
-        }.bind(this));
+        });
 
         /// Touch start and mouse down events (save the coordinates before dragging)
-        inventory_layer.on('touchstart mousedown', function(event) {
+        inventory_layer.on('touchstart mousedown', (event) => {
             dragStartX = event.target.x();
             dragStartY = event.target.y();
         });
 
         /// Inventory arrow clicking events
-        inventory_bar_layer.on('click tap', function(event) {
+        inventory_bar_layer.on('click tap', (event) => {
             this.handle_click(event);
-        }.bind(this));
+        });
 
         /// Drag end events for inventory items.
-        stage.find('Image').on('dragend', function(event) {
+        stage.find('Image').on('dragend', (event) => {
             var dragged_item = event.target;
 
             // If nothing's under the dragged item
@@ -454,24 +454,24 @@ class KiiGame {
             }
 
             // Clearing the glow effects
-            current_layer.getChildren().each(function(shape, i) {
+            current_layer.getChildren().each((shape, i) => {
                 shape.shadowBlur(0);
-            }.bind(this));
-            inventory_layer.getChildren().each(function(shape, i) {
+            });
+            inventory_layer.getChildren().each((shape, i) => {
                 shape.shadowBlur(0);
-            }.bind(this));
+            });
             // Clearing the texts
             this.clearText(interaction_text);
 
             this.redrawInventory();
-        }.bind(this));
+        });
 
         // Set start layer
-        stage.getChildren().each(function(o) {
+        stage.getChildren().each((o) => {
             if (o.getAttr('category') === 'room' && o.getAttr('start') === true) {
                 game_start_layer = o;
             }
-        }.bind(this));
+        });
 
         // Not using getObject (with its error messaging), because these are optional.
         start_layer = stage.find("#start_layer")[0]; // TODO: get rid of start_layer
@@ -482,14 +482,14 @@ class KiiGame {
             current_background = 'start_layer';
             current_layer = start_layer;
             if (stage.find('#splash_screen')[0] != null) {
-                stage.find('#splash_screen')[0].on('tap click', function(event) {
+                stage.find('#splash_screen')[0].on('tap click', (event) => {
                     stage.find('#splash_screen')[0].hide();
                     if (stage.find('#start_layer_menu')[0] != null) {
                         this.display_start_menu();
                     } else {
                         this.do_transition(game_start_layer.id());
                     }
-                }.bind(this));
+                });
             } else { // no splash screen
                 if (stage.find('#start_layer_menu')[0] != null) {
                     this.display_start_menu();
@@ -514,9 +514,9 @@ class KiiGame {
             easing: Konva.Easings.EaseInOut,
             duration: attrs.duration,
 
-            onFinish: function() {
+            onFinish: () => {
                 animation.reverse();
-                setTimeout(function() {
+                setTimeout(() => {
                     animation.play();
                 }, attrs.duration * 1000);
             }
@@ -550,7 +550,7 @@ class KiiGame {
             }
 
             if (item_action == "start_game") {
-                item.on('tap click', function(event) {
+                item.on('tap click', (event) => {
                     if (this.getObject("intro") != "") {
                         var intro_delay = this.play_sequence("intro", true);
                         setTimeout('this.do_transition(game_start_layer.id(), 0)', intro_delay);
@@ -558,17 +558,17 @@ class KiiGame {
                         // Assume intro layer has a transition to game_start_layer
                         this.do_transition(game_start_layer.id());
                     }
-                }.bind(this));
+                });
             } else if (item_action == "credits") {
-                item.on('tap click', function(event) {
+                item.on('tap click', (event) => {
                     this.setMonologue(this.findMonologue(event.target.id()));
-                }.bind(this));
+                });
             } else if (item_action == "main_menu") {
                 // TODO: Return to main menu after end of game.
-                item.on('tap click', function(event) {
+                item.on('tap click', (event) => {
                     this.getObject("end_texts").hide();
                     this.display_start_menu();
-                }.bind(this));
+                });
             }
         }
     }
@@ -645,7 +645,7 @@ class KiiGame {
                 current_music.faded = true;
 
                 if (old_music) {
-                    var fade_interval_2 = setInterval(function() {
+                    var fade_interval_2 = setInterval(() => {
                         // Audio API will throw exception when volume is maxed
                         try {
                             old_music.volume -= 0.05;
@@ -661,7 +661,7 @@ class KiiGame {
                         }
                     }, 200)
                 } else if (current_music) {
-                    var fade_interval = setInterval(function() {
+                    var fade_interval = setInterval(() => {
                         // Audio API will throw exception when volume is maxed
                         try {
                             current_music.volume += 0.05
@@ -690,7 +690,7 @@ class KiiGame {
 
         // Fade music volume if set so
         if (current_music.faded === true) {
-            var fade_interval = setInterval(function() {
+            var fade_interval = setInterval(() => {
                 // Audio API will throw exception when volume is maxed
                 // or an crossfade interval may still be running
                 try {
@@ -699,7 +699,7 @@ class KiiGame {
                 } catch (e) {
                     clearInterval(fade_interval);
                 }
-            }.bind(this), 100)
+            }, 100)
         } else {
             current_music.pause();
         }
@@ -735,8 +735,8 @@ class KiiGame {
             var lastSlide = slide;
             slide = this.getObject(sequence.slides[i].id);
 
-            (function(i, slide, lastSlide) {
-                setTimeout(function() {
+            var displaySlide = (i, slide, lastSlide) => {
+                setTimeout(() => {
                     current_layer.show();
                     old_layer.hide();
                     fade_layer_full.show();
@@ -754,7 +754,7 @@ class KiiGame {
                     // Fade-in the slide
                     var slideFade = sequence.slides[i].do_fade;
                     if (slideFade === true) {
-                        setTimeout(function() {
+                        setTimeout(() => {
                             fade_full.reverse();
                             stage.draw();
                         }, 700);
@@ -766,29 +766,30 @@ class KiiGame {
 
                     sequenceCounter += 1;
 
-                }.bind(this), delay);
-            }.bind(this))(i, slide, lastSlide);
+                }, delay);
+            }
+            displaySlide(i, slide, lastSlide);
 
             delay = delay + sequence.slides[i].show_time;
         };
 
         // After last slide, do the final fade and set up exit monologue.
         if (final_fade_duration > 0) {
-            setTimeout(function() {
+            setTimeout(() => {
                 fade_full.tween.duration = final_fade_duration;
                 fade_full.play();
 
-                setTimeout(function() {
+                setTimeout(() => {
                     fade_full.reverse();
-                    setTimeout(function() {
+                    setTimeout(() => {
                         fade_layer_full.hide();
                         fade_full.tween.duration = 600; // reset to default
                         if (monologue === true) {
                             this.setMonologue(sequence_exit_text);
                         }
-                    }.bind(this), final_fade_duration);
-                }.bind(this), final_fade_duration);
-            }.bind(this), delay);
+                    }, final_fade_duration);
+                }, final_fade_duration);
+            }, delay);
 
             // Doesn't include the fade-in!
             delay = delay + final_fade_duration;
@@ -818,7 +819,7 @@ class KiiGame {
             fade_room.play();
         }
 
-        setTimeout(function() {
+        setTimeout(() => {
             this.stop_music();
             // Don't fade if duration is zero.
             if (fade_time != 0) {
@@ -847,14 +848,14 @@ class KiiGame {
             character_layer.show();
             stage.draw();
 
-            setTimeout(function() {
+            setTimeout(() => {
                 fade_layer_room.hide();
                 this.play_music(current_layer.id());
                 if (comingFrom) {
                     this.setMonologue(this.findMonologue(comingFrom));
                 }
-            }.bind(this), fade_time);
-        }.bind(this), fade_time);
+            }, fade_time);
+        }, fade_time);
     }
 
     // Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
@@ -930,11 +931,11 @@ class KiiGame {
     handle_commands(commands) {
         for (var i in commands) {
             if (commands[i].timeout != null) {
-                (function(commands, i) {
-                    setTimeout(function() {
+                ((commands, i) => {
+                    setTimeout(() => {
                         this.handle_command(commands[i]);
-                    }.bind(this), commands[i].timeout);
-                }.bind(this))(commands, i);
+                    }, commands[i].timeout);
+                })(commands, i);
             } else {
                 this.handle_command(commands[i]);
             }
@@ -1028,7 +1029,7 @@ class KiiGame {
         fade_layer_full.show();
         fade_full.play();
 
-        setTimeout(function() {
+        setTimeout(() => {
             // Clear inventory except rewards
             for (var i = inventory_layer.children.length-1; i >= 0; i--) {
                 var shape = inventory_layer.children[i];
@@ -1056,7 +1057,7 @@ class KiiGame {
 
             fade_full.reverse();
             setTimeout('fade_layer_full.hide();', 700);
-        }.bind(this), 700);
+        }, 700);
     }
 
     // Clearing the given text
@@ -1179,9 +1180,9 @@ class KiiGame {
         character_layer.draw();
 
         clearTimeout(character_animation_timeout);
-        character_animation_timeout = setTimeout(function() {
+        character_animation_timeout = setTimeout(() => {
             this.stopCharacterAnimations();
-        }.bind(this), timeout);
+        }, timeout);
     }
 
     ///Stop the characer animations, start idle animation
@@ -1224,9 +1225,9 @@ class KiiGame {
     // Setting an image to the stage and scaling it based on relative values if they exist
     createObject(o) {
         window[o.id] = new Image();
-        window[o.id].onLoad = function() {
+        window[o.id].onLoad = (() => {
             this.getObject(o.id).image(window[o.id]);
-        }.bind(this)();
+        })();
         window[o.id].src = o.src;
     }
 
@@ -1281,7 +1282,7 @@ class KiiGame {
     /// Redrawing inventory. Shows the items that should be visible according to
     /// inventory_index and takes care of showing inventory arrows as necessary.
     redrawInventory() {
-        inventory_layer.getChildren().each(function(shape, i) {
+        inventory_layer.getChildren().each((shape, i) => {
             shape.setAttr('visible', false);
             shape.draggable(false);
         });
