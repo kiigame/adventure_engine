@@ -1348,3 +1348,5 @@ export class KiiGame {
     }
     
 }
+
+export default KiiGame;
