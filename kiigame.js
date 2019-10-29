@@ -1,6 +1,14 @@
+import JSONGetter from './util/JSONGetter.js';
+import LayerAdder from './view/stage/konvadata/LayerAdder.js';
+import LayerChildAdder from './view/stage/konvadata/LayerChildAdder.js';
+import SequencesBuilder from './view/sequence/konvadata/SequencesBuilder.js';
+import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
+import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
+import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
+
 // Global variables. TODO: refactor
 // JSONs got from the server
-var texts_json; // also accessed from latkazombit.js
+export var texts_json; // also accessed from latkazombit.js
 var interactions_json;
 var character_json;
 var sequences_json;
@@ -8,7 +16,7 @@ var music_json;
 var menu_json;
 
 // Konva root node that includes all the images created from data
-var stage; // also accessed from latkazombit.js
+export var stage; // also accessed from latkazombit.js
 
 // Define variables from stage for easier use
 
@@ -60,7 +68,7 @@ var current_music;
 var current_music_source;
 
 // Menu
-var menu;
+export var menu;
 // Track the currently shown menu
 var current_menu;
 
@@ -89,10 +97,10 @@ var idle_animation;
 // Variable for saving the current room (for changing backgrounds and object layers)
 var current_layer;
 var current_background;
-var game_start_layer;
-var start_layer; // also accessed in latkazombit.js
+export var game_start_layer;
+export var start_layer; // also accessed in latkazombit.js
 
-class KiiGame {
+export class KiiGame {
     constructor(jsonGetter, sequencesBuilder) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
@@ -1338,4 +1346,4 @@ let sequencesBuilder = new SequencesBuilder(
     )
 );
 let kiigame = new KiiGame(jsonGetter, sequencesBuilder);
-
+export default kiigame;

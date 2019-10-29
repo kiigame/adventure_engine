@@ -21,4 +21,4 @@ class SequenceBuilder {
     }
 }
 
-module.exports = SequenceBuilder;
+export default SequenceBuilder;

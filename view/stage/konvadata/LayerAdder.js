@@ -27,4 +27,4 @@ class LayerAdder {
     }
 }
 
-module.exports = LayerAdder;
+export default LayerAdder;

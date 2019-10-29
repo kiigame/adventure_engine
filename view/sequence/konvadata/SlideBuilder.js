@@ -45,4 +45,4 @@ class SlideBuilder {
     }
 }
 
-module.exports = SlideBuilder;
+export default SlideBuilder;
