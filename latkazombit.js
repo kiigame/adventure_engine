@@ -1,4 +1,5 @@
-import kiigame, {
+import {
+    KiiGame,
     stage,
     texts_json,
     game_start_layer,
@@ -6,6 +7,8 @@ import kiigame, {
     menu,
     character_animations
 } from './kiigame.js';
+
+let kiigame = new KiiGame();
 
 var legends_json = JSON.parse(kiigame.getJSON('legends.json'));
 

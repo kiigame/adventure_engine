@@ -101,9 +101,22 @@ export var game_start_layer; // also accessed in latkazombit.js
 export var start_layer; // also accessed in latkazombit.js
 
 export class KiiGame {
-    constructor(jsonGetter, sequencesBuilder) {
+    constructor(jsonGetter = null, sequencesBuilder = null) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
+
+        if (this.jsonGetter === null) {
+            this.jsonGetter = new JSONGetter();
+        }
+        if (this.sequencesBuilder === null) {
+            this.sequencesBuilder = new SequencesBuilder(
+                new SequenceBuilder(
+                    new SlideBuilder(
+                        new TextBuilder()
+                    )
+                )
+            );
+        }
 
         // Get jsons from the server
         var images_json = JSON.parse(this.getJSON('images.json'));
@@ -1335,15 +1348,3 @@ export class KiiGame {
     }
     
 }
-
-
-let jsonGetter = new JSONGetter();
-let sequencesBuilder = new SequencesBuilder(
-    new SequenceBuilder(
-        new SlideBuilder(
-            new TextBuilder()
-        )
-    )
-);
-let kiigame = new KiiGame(jsonGetter, sequencesBuilder);
-export default kiigame;
