@@ -344,12 +344,12 @@ class KiiGame {
                             dragDelayEnabled = true;
                             inventory_index--;
                             this.redrawInventory();
-                            setTimeout('dragDelayEnabled = false;', dragDelay);
+                            setTimeout(() => dragDelayEnabled = false, dragDelay);
                         } else if (this.checkIntersection(dragged_item, rightArrow)) {
                             dragDelayEnabled = true;
                             inventory_index++;
                             this.redrawInventory();
-                            setTimeout('dragDelayEnabled = false;', dragDelay);
+                            setTimeout(() => dragDelayEnabled = false, dragDelay);
                         } else {
                             target = null;
                         }
@@ -553,7 +553,9 @@ class KiiGame {
                 item.on('tap click', (event) => {
                     if (this.getObject("intro") != "") {
                         var intro_delay = this.play_sequence("intro", true);
-                        setTimeout('this.do_transition(game_start_layer.id(), 0)', intro_delay);
+                        setTimeout(() => {
+                            this.do_transition(game_start_layer.id(), 0)
+                        }, intro_delay);
                     } else {
                         // Assume intro layer has a transition to game_start_layer
                         this.do_transition(game_start_layer.id());
@@ -1056,7 +1058,7 @@ class KiiGame {
             rewards_text.text(old_text);
 
             fade_full.reverse();
-            setTimeout('fade_layer_full.hide();', 700);
+            setTimeout(() => fade_layer_full.hide(), 700);
         }, 700);
     }
 
@@ -1321,7 +1323,7 @@ class KiiGame {
     // Delay to be set after each intersection check
     setDelay(delay) {
         delayEnabled = true;
-        setTimeout('delayEnabled = false;', delay);
+        setTimeout(() => delayEnabled = false, delay);
     }
     
 }
