@@ -1,8 +1,10 @@
-var chai = require('chai');
-var sinon = require('sinon');
+import chai from 'chai';
+import sinon from 'sinon';
+import SequencesBuilder from '../../../../view/sequence/konvadata/SequencesBuilder.js';
+import SequenceBuilder from '../../../../view/sequence/konvadata/SequenceBuilder.js';
+
 var assert = chai.assert;
-SequencesBuilder = require('../../../../view/sequence/konvadata/SequencesBuilder.js');
-SequenceBuilder = require('../../../../view/sequence/konvadata/SequenceBuilder.js');
+
 var sequenceBuilderStub = sinon.createStubInstance(SequenceBuilder);
 sequenceBuilderStub.build.withArgs([], "intro").returns({ "data": "intro"});
 sequenceBuilderStub.build.withArgs([], "outro").returns({ "data": "outro"});
