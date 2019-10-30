@@ -12,4 +12,4 @@ class JSONGetter {
     }
 }
 
-module.exports = JSONGetter;
+export default JSONGetter;

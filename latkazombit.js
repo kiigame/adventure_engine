@@ -1,3 +1,15 @@
+import {
+    KiiGame,
+    stage,
+    texts_json,
+    game_start_layer,
+    start_layer,
+    menu,
+    character_animations
+} from './kiigame.js';
+
+let kiigame = new KiiGame();
+
 var legends_json = JSON.parse(kiigame.getJSON('legends.json'));
 
 stage.find("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
@@ -39,7 +51,7 @@ stage.find('#start')[0].on('tap click', function(event) {
 
 // Listeners for the input screen buttons
 input_layer.on('tap click', function(event) {
-	target = event.target;
+	var target = event.target;
 	
 	var selected = texts_json[target.getAttr('id')];
 	if (selected)
@@ -159,7 +171,7 @@ input_layer.on('tap click', function(event) {
 		input_layer.hide();
 
 	    var intro_delay = kiigame.play_sequence("intro", true);
-        setTimeout('kiigame.do_transition(game_start_layer.id(), 0)', intro_delay);
+        setTimeout(() => kiigame.do_transition(game_start_layer.id(), 0), intro_delay);
 	}
 	// If no number, grey out buttons that can't be used
 	if (input_text.getText().length == 0) {

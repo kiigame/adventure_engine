@@ -20,10 +20,11 @@
   "devDependencies": {
     "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
+    "esm": "^3.2.25",
     "mocha": "^6.2.0",
     "sinon": "^7.5.0"
   },
   "scripts": {
-    "test": "mocha test/**/*.js"
+    "test": "mocha -r esm test/**/*.js"
   }
 }

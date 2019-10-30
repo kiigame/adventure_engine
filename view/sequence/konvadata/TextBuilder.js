@@ -22,4 +22,4 @@ class TextBuilder {
     }
 }
 
-module.exports = TextBuilder;
+export default TextBuilder;

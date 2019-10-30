@@ -1,8 +1,10 @@
-var chai = require('chai');
-var sinon = require('sinon');
+import chai from 'chai';
+import sinon from 'sinon';
+import SequenceBuilder from '../../../../view/sequence/konvadata/SequenceBuilder.js';
+import SlideBuilder from '../../../../view/sequence/konvadata/SlideBuilder.js';
+
 var assert = chai.assert;
-SequenceBuilder = require('../../../../view/sequence/konvadata/SequenceBuilder.js');
-SlideBuilder = require('../../../../view/sequence/konvadata/SlideBuilder.js');
+
 var slideBuilderStub = sinon.createStubInstance(SlideBuilder);
 slideBuilderStub.build.withArgs(
     {
