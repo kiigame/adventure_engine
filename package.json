@@ -31,8 +31,8 @@
     "sinon": "^7.5.0"
   },
   "scripts": {
-    "build": "rollup -c --config --configBuild",
-    "dev": "rollup -c --config --configDev",
+    "build": "./node_modules/.bin/rollup -c --config --configBuild",
+    "dev": "./node_modules/.bin/rollup -c --config --configDev",
     "test": "mocha -r esm test/**/*.js"
   },
   "files": [
