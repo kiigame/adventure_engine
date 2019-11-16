@@ -1,3 +1,5 @@
+import Konva from 'konva';
+
 import JSONGetter from './util/JSONGetter.js';
 import LayerAdder from './view/stage/konvadata/LayerAdder.js';
 import LayerChildAdder from './view/stage/konvadata/LayerChildAdder.js';
@@ -1348,5 +1350,3 @@ export class KiiGame {
     }
     
 }
-
-export default KiiGame;
