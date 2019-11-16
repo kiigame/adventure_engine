@@ -17,14 +17,19 @@ The game is implemented as a web page. Therefore you need to run a web server on
  * Clone the repository (or just get the files)
  * Run `npm install` to get dependencies
  * Run `npm run dev` to build a development bundle. The bundle is built to the `public/` directory.
- * Put the files (including folders) to your webserver directory (for example /var/www/)
- * Open the kiigame.html in your browser (for example http://localhost/public/kiigame.html)
+ * Put the files (including folders) to your webserver directory (for example `/var/www/`)
+ * Open `kiigame.html` in your browser (for example `http://localhost/public/kiigame.html`)
 
 Running unit tests
 ------------------
 
-After installing with npm install, you should be able to run
+After installing with `npm install`, you should be able to run
 
- * npm test
+ * `npm test`
  
 in the project root to run the unit tests.
+
+Building the library bundle
+---------------------------
+
+`npm run build` builds the library bundle to `dist/`.
