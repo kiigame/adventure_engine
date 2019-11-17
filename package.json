@@ -8,14 +8,14 @@
   "browser": "dist/kiigame.umd.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evktalo/kiigame.git"
+    "url": "git+https://github.com/kiigame/adventure_engine.git"
   },
   "author": "Eino Keskitalo",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/evktalo/kiigame/issues"
+    "url": "https://github.com/kiigame/adventure_engine/issues"
   },
-  "homepage": "https://github.com/evktalo/kiigame#readme",
+  "homepage": "https://github.com/kiigame/adventure_engine#readme",
   "dependencies": {
     "konva": "^3.2.6"
   },
