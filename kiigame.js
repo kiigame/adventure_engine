@@ -277,27 +277,7 @@ export class KiiGame {
         }
 
         // On window load we create image hit regions for our items on object layers
-        // Loop backgrounds to create item hit regions and register mouseup event
-        window.onload = () => {
-            stage.getChildren().each((o) => {
-                if (o.getAttr('category') == 'room') {
-                    o.getChildren().each((shape, i) => {
-                        if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
-                            shape.cache();
-                            shape.drawHitFromCache();
-                        }
-                    });
-
-                    o.on('mouseup touchend', (event) => {
-                        this.handle_click(event);
-                    });
-                }
-            });
-
-            stage.draw();
-            idle_animation[0].node.show();
-            idle_animation[0].play();
-        };
+        window.onload = () => { this.init_hit_regions() };
 
         // Mouse up and touch end events (picking up items from the environment
         // Mouse click and tap events (examine items in the inventory)
@@ -526,6 +506,30 @@ export class KiiGame {
             this.do_transition(game_start_layer.id());
         }
     }
+
+    // Create image hit regions for our items on object layers
+    // Loop backgrounds to create item hit regions and register mouseup event
+    init_hit_regions() {
+        stage.getChildren().each((o) => {
+            if (o.getAttr('category') == 'room') {
+                o.getChildren().each((shape, i) => {
+                    if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
+                        shape.cache();
+                        shape.drawHitFromCache();
+                    }
+                });
+
+                o.on('mouseup touchend', (event) => {
+                    this.handle_click(event);
+                });
+            }
+        });
+
+        stage.draw();
+        idle_animation[0].node.show();
+        idle_animation[0].play();
+    }
+
 
     create_animation(object) {
         var attrs = object.getAttr("animation");
