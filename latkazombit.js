@@ -16,7 +16,7 @@ var input_layer = stage.find('#input_layer')[0];
 var number_selected = false;
 
 // Default player number
-input_text.setText(kiigame.texts_json['input_text']['text']);
+input_text.setText(texts_json['input_text']['text']);
 
 // Dirty removing of default event handler to allow using jersey input
 stage.find('#start_game')[0].eventListeners.click = [];
@@ -47,7 +47,7 @@ stage.find('#start')[0].on('tap click', function(event) {
 input_layer.on('tap click', function(event) {
 	var target = event.target;
 	
-	var selected = kiigame.texts_json[target.getAttr('id')];
+	var selected = texts_json[target.getAttr('id')];
 	if (selected)
 	    selected = selected.name;
 	else
