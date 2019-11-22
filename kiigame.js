@@ -9,98 +9,10 @@ import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
 import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
 
 // Global variables. TODO: refactor
-// JSONs got from the server
-export var texts_json; // also accessed from latkazombit.js
-var interactions_json;
-var character_json;
-var sequences_json;
-var music_json;
-var menu_json;
-
-// Konva root node that includes all the images created from data
-export var stage; // also accessed from latkazombit.js
-
-// Define variables from stage for easier use
-
-// Texts & layers
-var monologue;
-var character_speech_bubble;
-var npc_monologue;
-var npc_speech_bubble;
-var interaction_text;
-
-var inventory_layer;
-var inventory_bar_layer;
-var character_layer;
-var text_layer;
-var fade_layer_full;
-var fade_layer_room;
 
 // The amount of rewards found. LZ specific, TODO refactor
 var rewards = 0;
 
-// List of items in the inventory. inventory_list.length gives the item amount.
-var inventory_list = [];
-// Offset from left for drawing inventory items starting from proper position
-var offsetFromLeft = 50;
-// How many items the inventory can show at a time (7 with current settings)
-var inventory_max = 7;
-// The item number where the shown items start from
-// (how many items from the beginning are not shown)
-var inventory_index = 0;
-
-// Timeout event for showing character animation for certain duration
-var character_animation_timeout;
-
-// Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
-var dragStartX;
-var dragStartY;
-
-// For limiting the amount of intersection checks
-var delayEnabled = false;
-
-// For limiting the speed of inventory browsing when dragging an item
-var dragDelay = 500;
-var dragDelayEnabled = false;
-
-// Music
-// Different browsers and different browser versions support different formats. MP3 should work with in all the major
-// browsers in current versions.
-var current_music;
-var current_music_source;
-
-// Menu
-export var menu; // also accessed in latkazombit.js
-// Track the currently shown menu
-var current_menu;
-
-// The item dragged from the inventory
-var dragged_item;
-
-// Intersection target (object below dragged item)
-var target;
-
-// Animation for fading the screen
-var fade_full;
-
-// Animation for fading the room portion of the screen
-var fade_room;
-
-// List of animated objects
-var animated_objects = [];
-
-// Create character animations.
-export var character_animations = []; // also accessed in latkazombit.js
-
-// Default character animations
-var speak_animation;
-var idle_animation;
-
-// Variable for saving the current room (for changing backgrounds and object layers)
-var current_layer;
-var current_background;
-export var game_start_layer; // also accessed in latkazombit.js
-export var start_layer; // also accessed in latkazombit.js
 
 export class KiiGame {
     constructor(jsonGetter = null, sequencesBuilder = null) {
@@ -120,91 +32,161 @@ export class KiiGame {
             );
         }
 
+        var self = this;
+
+        // Define variables from stage for easier use
+
+        // Texts & layers
+
+        // List of items in the inventory. inventory_list.length gives the item amount.
+        this.inventory_list = [];
+        // Offset from left for drawing inventory items starting from proper position
+        this.offsetFromLeft = 50;
+        // How many items the inventory can show at a time (7 with current settings)
+        this.inventory_max = 7;
+        // The item number where the shown items start from
+        // (how many items from the beginning are not shown)
+        this.inventory_index = 0;
+
+        // Timeout event for showing character animation for certain duration
+        this.character_animation_timeout;
+
+        // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
+        this.dragStartX;
+        this.dragStartY;
+
+        // For limiting the amount of intersection checks
+        this.delayEnabled = false;
+
+        // For limiting the speed of inventory browsing when dragging an item
+        this.dragDelay = 500;
+        this.dragDelayEnabled = false;
+
+        // Music
+        // Different browsers and different browser versions support different formats. MP3 should work with in all the major
+        // browsers in current versions.
+        this.current_music;
+        this.current_music_source;
+
+        // Menu
+        this.menu; // also accessed in latkazombit.js
+        // Track the currently shown menu
+        this.current_menu;
+
+        // The item dragged from the inventory
+        this.dragged_item;
+
+        // Intersection target (object below dragged item)
+        this.target;
+
+        // Animation for fading the screen
+        this.fade_full;
+
+        // Animation for fading the room portion of the screen
+        this.fade_room;
+
+        // Default character animations
+        this.speak_animation;
+        this.idle_animation;
+
+        // Variable for saving the current room (for changing backgrounds and object layers)
+        this.current_layer;
+        this.current_background;
+        this.game_start_layer; // also accessed in latkazombit.js
+        this.start_layer; // also accessed in latkazombit.js
+
+
+        // List of animated objects
+        this.animated_objects = [];
+
+        // List of character animations.
+        this.character_animations = []; // also accessed in latkazombit.js
+
         // Get jsons from the server
-        var images_json = JSON.parse(this.getJSON('images.json'));
-        var rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
-        texts_json = JSON.parse(this.getJSON('texts.json'));
-        interactions_json = JSON.parse(this.getJSON('interactions.json'));
-        character_json = JSON.parse(this.getJSON('character.json'));
-        sequences_json = JSON.parse(this.getJSON('sequences.json'));
-        music_json = JSON.parse(this.getJSON('music.json'));
-        menu_json = JSON.parse(this.getJSON('menu.json'));
-        var items_json = JSON.parse(this.getJSON('items.json'));
+        this.images_json = JSON.parse(this.getJSON('images.json'));
+        this.rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
+        this.texts_json = JSON.parse(this.getJSON('texts.json'));
+        this.interactions_json = JSON.parse(this.getJSON('interactions.json'));
+        this.character_json = JSON.parse(this.getJSON('character.json'));
+        this.sequences_json = JSON.parse(this.getJSON('sequences.json'));
+        this.music_json = JSON.parse(this.getJSON('music.json'));
+        this.menu_json = JSON.parse(this.getJSON('menu.json'));
+        this.items_json = JSON.parse(this.getJSON('items.json'));
 
         // Add rooms to images_json for stage building. Add them before the room
         // fade layer to ensure correct draw order.
         var stageLayerAdder = new LayerAdder();
-        images_json = stageLayerAdder.process(
-            images_json,
-            rooms_json,
+        this.images_json = stageLayerAdder.process(
+            this.images_json,
+            this.rooms_json,
             'fade_layer_room'
         );
 
         // Build an array of all the sequences out of sequences_json and merge them to
         // images_json for stage building.
-        var builtSequences = this.sequencesBuilder.build(sequences_json);
-        images_json = stageLayerAdder.process(
-            images_json,
+        var builtSequences = this.sequencesBuilder.build(this.sequences_json);
+        this.images_json = stageLayerAdder.process(
+            this.images_json,
             builtSequences,
             'start_layer_menu' // TODO: Use fade_layer_full ?
         );
 
         // Push items.json contents to correct layer.
         var stageLayerChildAdder = new LayerChildAdder();
-        images_json = stageLayerChildAdder.add(
-            images_json,
-            items_json,
+        this.images_json = stageLayerChildAdder.add(
+            this.images_json,
+            this.items_json,
             'inventory_item_cache'
         );
         // Push character animation frames to correct layer.
-        images_json = stageLayerChildAdder.add(
-            images_json,
-            character_json.frames,
+        this.images_json = stageLayerChildAdder.add(
+            this.images_json,
+            this.character_json.frames,
             'character_layer'
         );
 
         // Create stage and everything in it from json
-        var images_json_text = JSON.stringify(images_json);
-        stage = Konva.Node.create(images_json_text, 'container');
+        this.images_json_text = JSON.stringify(this.images_json);
+        this.stage = Konva.Node.create(this.images_json_text, 'container');
 
         // Define variables from stage for easier use
 
         // Texts & layers
-        monologue = this.getObject("monologue");
-        character_speech_bubble = this.getObject("character_speech_bubble");
-        npc_monologue = this.getObject("npc_monologue");
-        npc_speech_bubble = this.getObject("npc_speech_bubble");
-        interaction_text = this.getObject("interaction_text");
+        this.monologue = this.getObject("monologue");
+        this.character_speech_bubble = this.getObject("character_speech_bubble");
+        this.npc_monologue = this.getObject("npc_monologue");
+        this.npc_speech_bubble = this.getObject("npc_speech_bubble");
+        this.interaction_text = this.getObject("interaction_text");
 
-        inventory_layer = this.getObject("inventory_layer");
-        inventory_bar_layer = this.getObject("inventory_bar_layer");
-        character_layer = this.getObject("character_layer");
-        text_layer = this.getObject("text_layer");
-        fade_layer_full = this.getObject("fade_layer_full");
-        fade_layer_room = this.getObject("fade_layer_room");
+        this.inventory_layer = this.getObject("inventory_layer");
+        this.inventory_bar_layer = this.getObject("inventory_bar_layer");
+        this.character_layer = this.getObject("character_layer");
+        this.text_layer = this.getObject("text_layer");
+        this.fade_layer_full = this.getObject("fade_layer_full");
+        this.fade_layer_room = this.getObject("fade_layer_room");
 
         // Scale background and UI elements
-        this.getObject("black_screen_full").size({width: stage.width(), height: stage.height()});
-        this.getObject("black_screen_room").size({width: stage.width(), height: stage.height() - 100});
-        this.getObject("inventory_bar").y(stage.height() - 100);
-        this.getObject("inventory_bar").width(stage.width());
+        this.getObject("black_screen_full").size({width: this.stage.width(), height: this.stage.height()});
+        this.getObject("black_screen_room").size({width: this.stage.width(), height: this.stage.height() - 100});
+        this.getObject("inventory_bar").y(this.stage.height() - 100);
+        this.getObject("inventory_bar").width(this.stage.width());
 
         // Animation for fading the screen
-        fade_full = new Konva.Tween({
-            node : fade_layer_full,
+        this.fade_full = new Konva.Tween({
+            node : this.fade_layer_full,
             duration : 0.6,
             opacity : 1
         });
 
         // Animation for fading the room portion of the screen
-        fade_room = new Konva.Tween({
-            node : fade_layer_room,
+        this.fade_room = new Konva.Tween({
+            node : this.fade_layer_room,
             duration : 0.6,
             opacity : 1
         });
 
         // Load up frames from json to the character animations array.
-        var animation_data = character_json.animations;
+        var animation_data = this.character_json.animations;
         for (var i in animation_data) {
             var frames = [];
             for (var j in animation_data[i].frames) {
@@ -214,51 +196,48 @@ export class KiiGame {
                 });
                 frames.push(frame);
             }
-            character_animations[animation_data[i].id] = frames;
+           this.character_animations[animation_data[i].id] = frames;
         }
 
         // Set up onFinish functions for each frame to show the next frame. In the case
         // of the last of the frames, show the first frame.
-        for (var i in character_animations) {
-            for (var j = 0; j < character_animations[i].length; j++) {
-                if (character_animations[i].length > j+1) {
-                    character_animations[i][j].onFinish = function() {
-                        var animation = null;
-                        var frame_index = null;
-                        for (var k in character_animations) {
-                            if (character_animations[k].indexOf(this) > -1) {
-                                animation = character_animations[k];
-                                frame_index = character_animations[k].indexOf(this);
+        for (var i in this.character_animations) {
+            for (var j = 0; j < this.character_animations[i].length; j++) {
+                if (this.character_animations[i].length > j+1) {
+                    this.character_animations[i][j].onFinish = function() {
+                        for (var k in self.character_animations) {
+                            if (self.character_animations[k].indexOf(this) > -1) {
+                                var animation = self.character_animations[k];
+                                var frame_index = self.character_animations[k].indexOf(this);
+                                this.node.hide();
+                                animation[frame_index+1].node.show();
+                                this.reset();
+                                animation[frame_index+1].play();
                             }
                         }
-                        this.node.hide();
-                        animation[frame_index+1].node.show();
-                        this.reset();
-                        animation[frame_index+1].play();
                     }
                 } else {
-                    character_animations[i][j].onFinish = function() {
-                        var animation = null;
-                        for (var k in character_animations) {
-                            if (character_animations[k].indexOf(this) > -1) {
-                                animation = character_animations[k];
+                    this.character_animations[i][j].onFinish = function() {
+                        for (var k in self.character_animations) {
+                            if (self.character_animations[k].indexOf(this) > -1) {
+                                var animation = self.character_animations[k];
+                                this.node.hide();
+                                animation[0].node.show();
+                                this.reset();
+                                animation[0].play();
                             }
                         }
-                        this.node.hide();
-                        animation[0].node.show();
-                        this.reset();
-                        animation[0].play();
                     }
                 }
             }
         }
 
         // Default character animations
-        speak_animation = character_animations["speak"];
-        idle_animation = character_animations["idle"];
+        this.speak_animation = this.character_animations["speak"];
+        this.idle_animation = this.character_animations["idle"];
 
         // Creating all image objects from json file based on their attributes
-        var imageData = stage.toObject();
+        var imageData = this.stage.toObject();
 
         for (var i = 0; i < imageData.children.length; i++) {
             for (var j = 0; j < imageData.children[i].children.length; j++) {
@@ -281,171 +260,171 @@ export class KiiGame {
 
         // Mouse up and touch end events (picking up items from the environment
         // Mouse click and tap events (examine items in the inventory)
-        inventory_layer.on('click tap', (event) => {
+        this.inventory_layer.on('click tap', (event) => {
             this.handle_click(event);
         });
         // Drag start events
-        stage.find('Image').on('dragstart', (event) => {
-            dragged_item = event.target;
-            this.inventoryDrag(dragged_item);
+        this.stage.find('Image').on('dragstart', (event) => {
+            this.dragged_item = event.target;
+            this.inventoryDrag(this.dragged_item);
         });
 
         // While dragging events (use item on item or object)
-        stage.on('dragmove', (event) => {
-            dragged_item = event.target;
+        this.stage.on('dragmove', (event) => {
+            this.dragged_item = event.target;
 
-            if (!delayEnabled) {
+            if (!this.delayEnabled) {
                 // Setting a small delay to not spam intersection check on every moved pixel
                 this.setDelay(10);
 
                 // Loop through all the items on the current object layer
-                for (var i = 0; i < current_layer.children.length; i++) {
-                    var object = (current_layer.getChildren())[i];
+                for (var i = 0; i < this.current_layer.children.length; i++) {
+                    var object = (this.current_layer.getChildren())[i];
 
                     if (object != undefined && object.getAttr('category') != 'room_background') {
                         // Break if still intersecting with the same target
-                        if (target != null && this.checkIntersection(dragged_item, target)) {
+                        if (this.target != null && this.checkIntersection(this.dragged_item, this.target)) {
                             break;
-                        } else if (this.checkIntersection(dragged_item, object)) {
+                        } else if (this.checkIntersection(this.dragged_item, object)) {
                             // If not, check for a new target
-                            if (target != object) {
-                                target = object;
+                            if (this.target != object) {
+                                this.target = object;
                             }
                             break;
                         } else {
                             // No target, move on
-                            target = null;
+                            this.target = null;
                         }
                     }
                 }
 
                 // If no intersecting targets were found on object layer, check the inventory
-                if (target == null) {
+                if (this.target == null) {
                     // Loop through all the items on the inventory layer
-                    for (var i = 0; i < inventory_layer.children.length; i++) {
-                        var object = (inventory_layer.getChildren())[i];
+                    for (var i = 0; i < this.inventory_layer.children.length; i++) {
+                        var object = (this.inventory_layer.getChildren())[i];
                         if (object != undefined) {
                             // Look for intersecting targets
-                            if (this.checkIntersection(dragged_item, object)) {
-                                if (target != object) {
-                                    target = object;
+                            if (this.checkIntersection(this.dragged_item, object)) {
+                                if (this.target != object) {
+                                    this.target = object;
                                 }
                                 break;
                             } else {
-                                target = null;
+                                this.target = null;
                             }
                         }
                     }
                 }
 
                 // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
-                if (target == null) {
+                if (this.target == null) {
                     var leftArrow = this.getObject("inventory_left_arrow");
                     var rightArrow = this.getObject("inventory_right_arrow");
-                    if (!dragDelayEnabled) {
-                        if (this.checkIntersection(dragged_item, leftArrow)) {
-                            dragDelayEnabled = true;
-                            inventory_index--;
+                    if (!this.dragDelayEnabled) {
+                        if (this.checkIntersection(this.dragged_item, leftArrow)) {
+                            this.dragDelayEnabled = true;
+                            this.inventory_index--;
                             this.redrawInventory();
-                            setTimeout(() => dragDelayEnabled = false, dragDelay);
-                        } else if (this.checkIntersection(dragged_item, rightArrow)) {
-                            dragDelayEnabled = true;
-                            inventory_index++;
+                            setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
+                        } else if (this.checkIntersection(this.dragged_item, rightArrow)) {
+                            this.dragDelayEnabled = true;
+                            this.inventory_index++;
                             this.redrawInventory();
-                            setTimeout(() => dragDelayEnabled = false, dragDelay);
+                            setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
                         } else {
-                            target = null;
+                            this.target = null;
                         }
                     }
-                    this.clearText(interaction_text);
+                    this.clearText(this.interaction_text);
                 }
 
                 // If target is found, highlight it and show the interaction text
-                if (target != null) {
-                    current_layer.getChildren().each((shape, i) => {
+                if (this.target != null) {
+                    this.current_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
-                    inventory_layer.getChildren().each((shape, i) => {
+                    this.inventory_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
-                    target.clearCache();
-                    target.shadowColor('purple');
-                    target.shadowOffset(0);
-                    target.shadowBlur(20);
-                    inventory_layer.draw();
+                    this.target.clearCache();
+                    this.target.shadowColor('purple');
+                    this.target.shadowOffset({x: 0, y: 0});
+                    this.target.shadowBlur(20);
+                    this.inventory_layer.draw();
 
                     // Don't cause a mass of errors if no text found
                     try {
-                        interaction_text.text(texts_json[target.id()].name);
+                        this.interaction_text.text(this.texts_json[this.target.id()].name);
                     } catch (e) {
                         // Do nothing
                     }
 
-                    interaction_text.x(dragged_item.x() + (dragged_item.width() / 2));
-                    interaction_text.y(dragged_item.y() - 30);
-                    interaction_text.offset({
-                        x : interaction_text.width() / 2
+                    this.interaction_text.x(this.dragged_item.x() + (this.dragged_item.width() / 2));
+                    this.interaction_text.y(this.dragged_item.y() - 30);
+                    this.interaction_text.offset({
+                        x : this.interaction_text.width() / 2
                     });
 
-                    text_layer.draw();
+                    this.text_layer.draw();
                 } else {
                     // If no target, clear the texts and highlights
-                    current_layer.getChildren().each((shape, i) => {
+                    this.current_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
-                    inventory_layer.getChildren().each((shape, i) => {
+                    this.inventory_layer.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
-                    this.clearText(interaction_text);
+                    this.clearText(this.interaction_text);
                 }
 
-                current_layer.draw();
+                this.current_layer.draw();
             }
         });
 
         /// Stop character animations and clear monologue when clicked or touched
         /// anywhere on the screen.
-        stage.on('touchstart mousedown', (event) => {
-            this.clearText(monologue);
-            this.clearText(npc_monologue);
+        this.stage.on('touchstart mousedown', (event) => {
+            this.clearText(this.monologue);
+            this.clearText(this.npc_monologue);
             this.stopCharacterAnimations();
         });
 
         /// Touch start and mouse down events (save the coordinates before dragging)
-        inventory_layer.on('touchstart mousedown', (event) => {
-            dragStartX = event.target.x();
-            dragStartY = event.target.y();
+        this.inventory_layer.on('touchstart mousedown', (event) => {
+            this.dragStartX = event.target.x();
+            this.dragStartY = event.target.y();
         });
 
         /// Inventory arrow clicking events
-        inventory_bar_layer.on('click tap', (event) => {
+        this.inventory_bar_layer.on('click tap', (event) => {
             this.handle_click(event);
         });
 
         /// Drag end events for inventory items.
-        stage.find('Image').on('dragend', (event) => {
+        this.stage.find('Image').on('dragend', (event) => {
             var dragged_item = event.target;
 
             // If nothing's under the dragged item
-            if (target == null) {
-                dragged_item.x(dragStartX);
-                dragged_item.y(dragStartY);
+            if (this.target == null) {
+                dragged_item.x(this.dragStartX);
+                dragged_item.y(this.dragStartY);
             }
             // Look up the possible interaction from interactions.json.
-            else if (target.getAttr('category') == 'furniture' || target.getAttr('category') == 'item') {
+            else if (this.target.getAttr('category') == 'furniture' || this.target.getAttr('category') == 'item') {
                 var commands;
 
                 // Not all dragged_items have an entry in interactions_json, or have
                 // anything specified for target_item.
                 try {
-                    commands = interactions_json[dragged_item.id()][target.id()];
+                    commands = this.interactions_json[dragged_item.id()][this.target.id()];
                 } catch (e) {
                     // Do nothing
                 }
 
                 // no dragend interaction defined: usual text
                 if (commands == null) {
-                    commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": target.id()}}];
+                    commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": this.target.id()}}];
                 }
 
                 this.handle_commands(commands);
@@ -457,60 +436,60 @@ export class KiiGame {
             }
 
             // Clearing the glow effects
-            current_layer.getChildren().each((shape, i) => {
+            this.current_layer.getChildren().each((shape, i) => {
                 shape.shadowBlur(0);
             });
-            inventory_layer.getChildren().each((shape, i) => {
+            this.inventory_layer.getChildren().each((shape, i) => {
                 shape.shadowBlur(0);
             });
             // Clearing the texts
-            this.clearText(interaction_text);
+            this.clearText(this.interaction_text);
 
             this.redrawInventory();
         });
 
         // Set start layer
-        stage.getChildren().each((o) => {
+        this.stage.getChildren().each((o) => {
             if (o.getAttr('category') === 'room' && o.getAttr('start') === true) {
-                game_start_layer = o;
+                this.game_start_layer = o;
             }
         });
 
         // Not using getObject (with its error messaging), because these are optional.
-        start_layer = stage.find("#start_layer")[0]; // TODO: get rid of start_layer
+        this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
 
         // The optional start layer has optional splash screen and optional start menu.
         // TODO: Delay transition to game_start_layer?
-        if (stage.find("#start_layer")[0] != null) {
-            current_background = 'start_layer';
-            current_layer = start_layer;
-            if (stage.find('#splash_screen')[0] != null) {
-                stage.find('#splash_screen')[0].on('tap click', (event) => {
-                    stage.find('#splash_screen')[0].hide();
-                    if (stage.find('#start_layer_menu')[0] != null) {
+        if (this.stage.find("#start_layer")[0] != null) {
+            this.current_background = 'start_layer';
+            this.current_layer = this.start_layer;
+            if (this.stage.find('#splash_screen')[0] != null) {
+                this.stage.find('#splash_screen')[0].on('tap click', (event) => {
+                    this.stage.find('#splash_screen')[0].hide();
+                    if (this.stage.find('#start_layer_menu')[0] != null) {
                         this.display_start_menu();
                     } else {
-                        this.do_transition(game_start_layer.id());
+                        this.do_transition(this.game_start_layer.id());
                     }
                 });
             } else { // no splash screen
-                if (stage.find('#start_layer_menu')[0] != null) {
+                if (this.stage.find('#start_layer_menu')[0] != null) {
                     this.display_start_menu();
                 } else {
                     // start layer without splash or menu?!
-                    this.do_transition(game_start_layer.id());
+                    this.do_transition(this.game_start_layer.id());
                 }
             }
         } else {
             // no start layer
-            this.do_transition(game_start_layer.id());
+            this.do_transition(this.game_start_layer.id());
         }
     }
 
     // Create image hit regions for our items on object layers
     // Loop backgrounds to create item hit regions and register mouseup event
     init_hit_regions() {
-        stage.getChildren().each((o) => {
+        this.stage.getChildren().each((o) => {
             if (o.getAttr('category') == 'room') {
                 o.getChildren().each((shape, i) => {
                     if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
@@ -525,9 +504,9 @@ export class KiiGame {
             }
         });
 
-        stage.draw();
-        idle_animation[0].node.show();
-        idle_animation[0].play();
+        this.stage.draw();
+        this.idle_animation[0].node.show();
+        this.idle_animation[0].play();
     }
 
 
@@ -549,7 +528,7 @@ export class KiiGame {
             }
         });
 
-        animated_objects.push(animation);
+        this.animated_objects.push(animation);
     }
 
     /*
@@ -559,7 +538,7 @@ export class KiiGame {
     Object menu_image - the menu image object with the items inside
     */
     create_menu_action(menu_image) {
-        var menu_object = menu_json[menu_image.attrs.id];
+        var menu_object = this.menu_json[menu_image.attrs.id];
         if (!menu_object) {
             console.warn("Could not find menu.json entry for menu '", menu_image.attrs.id, "'");
             return;
@@ -581,11 +560,11 @@ export class KiiGame {
                     if (this.getObject("intro") != "") {
                         var intro_delay = this.play_sequence("intro", true);
                         setTimeout(() => {
-                            this.do_transition(game_start_layer.id(), 0)
+                            this.do_transition(this.game_start_layer.id(), 0)
                         }, intro_delay);
                     } else {
                         // Assume intro layer has a transition to game_start_layer
-                        this.do_transition(game_start_layer.id());
+                        this.do_transition(this.game_start_layer.id());
                     }
                 });
             } else if (item_action == "credits") {
@@ -606,31 +585,31 @@ export class KiiGame {
     // string layerId - the ID of the layer we want to display the menu for
     display_menu(layerId) {
         this.hide_menu();
-        menu = menu_json[layerId] !== undefined ? this.getObject(menu_json[layerId]["menu"]) : false;
-        if (!menu) {
+        this.menu = this.menu_json[layerId] !== undefined ? this.getObject(this.menu_json[layerId]["menu"]) : false;
+        if (!this.menu) {
             return;
         }
 
-        menu.show()
-        current_menu = menu;
+        this.menu.show()
+        this.current_menu = this.menu;
     }
 
     hide_menu() {
-        if (!current_menu) {
+        if (!this.current_menu) {
             return;
         }
 
-        menu.hide();
-        current_menu = null;
+        this.menu.hide();
+        this.current_menu = null;
     }
 
     // Display the start menu including "click" to proceed image
     display_start_menu() {
-        start_layer.show();
+        this.start_layer.show();
         this.display_menu("start_layer");
-        character_layer.show();
-        inventory_bar_layer.show();
-        stage.draw();
+        this.character_layer.show();
+        this.inventory_bar_layer.show();
+        this.stage.draw();
         this.play_music('start_layer');
     }
 
@@ -643,35 +622,35 @@ export class KiiGame {
             return;
         }
 
-        var data = music_json[id];
+        var data = this.music_json[id];
 
         // ID and music found from JSON?
         if (!data || !data.music) {
-            if (current_music) {
-                current_music.pause();
-                current_music = null;
+            if (this.current_music) {
+                this.current_music.pause();
+                this.current_music = null;
             }
             return;
         }
 
         // If not already playing music or old/new songs are different
-        if (!current_music || current_music_source != data.music) {
+        if (!this.current_music || this.current_music_source != data.music) {
             var old_music = null;
-            if (current_music) {
-                old_music = current_music
-                current_music = new Audio(data.music);
-                current_music.volume = 0;
+            if (this.current_music) {
+                old_music = this.current_music
+                this.current_music = new Audio(data.music);
+                this.current_music.volume = 0;
             } else {
-                current_music = new Audio(data.music);
-                current_music.volume = 1;
-                data.music_loop === false ? current_music.loop = false : current_music.loop = true;
+                this.current_music = new Audio(data.music);
+                this.current_music.volume = 1;
+                data.music_loop === false ? this.current_music.loop = false : this.current_music.loop = true;
             }
 
-            current_music.play();
+            this.current_music.play();
 
             // Fade music volume if set so
             if (data.music_fade === true) {
-                current_music.faded = true;
+                this.current_music.faded = true;
 
                 if (old_music) {
                     var fade_interval_2 = setInterval(() => {
@@ -684,53 +663,53 @@ export class KiiGame {
                         }
 
                         try {
-                            current_music.volume += 0.05;
+                            this.current_music.volume += 0.05;
                         } catch (e) {
                             old_music.volume = 1;
                         }
                     }, 200)
-                } else if (current_music) {
+                } else if (this.current_music) {
                     var fade_interval = setInterval(() => {
                         // Audio API will throw exception when volume is maxed
                         try {
-                            current_music.volume += 0.05
+                            this.current_music.volume += 0.05
                         } catch (e) {
-                            current_music.volume = 1;
+                            this.current_music.volume = 1;
                             clearInterval(fade_interval);
                         }
                     }, 200)
                 }
             } else {
-                current_music.faded = false;
-                current_music.volume = 1;
+                this.current_music.faded = false;
+                this.current_music.volume = 1;
 
                 if (old_music) {
                     old_music.pause();
                 }
             }
-            current_music_source = data.music;
+            this.current_music_source = data.music;
         }
     }
 
     stop_music() {
-        if (current_music == null) {
+        if (this.current_music == null) {
             return;
         }
 
         // Fade music volume if set so
-        if (current_music.faded === true) {
+        if (this.current_music.faded === true) {
             var fade_interval = setInterval(() => {
                 // Audio API will throw exception when volume is maxed
                 // or an crossfade interval may still be running
                 try {
-                    current_music.volume -= 0.05
-                    current_music.pause();
+                    this.current_music.volume -= 0.05
+                    this.current_music.pause();
                 } catch (e) {
                     clearInterval(fade_interval);
                 }
             }, 100)
         } else {
-            current_music.pause();
+            this.current_music.pause();
         }
     }
 
@@ -742,14 +721,14 @@ export class KiiGame {
         var delay = 700;
 
         // Animation cycle for proper fading and drawing order
-        fade_full.reset();
-        fade_layer_full.show();
-        fade_full.play();
+        this.fade_full.reset();
+        this.fade_layer_full.show();
+        this.fade_full.play();
 
-        var old_layer = current_layer;
-        current_layer = this.getObject(id);
-        var sequence_exit_text = monologue === true ? this.findMonologue(current_layer.id()) : null;
-        var sequence = sequences_json[current_layer.id()];
+        var old_layer = this.current_layer;
+        this.current_layer = this.getObject(id);
+        var sequence_exit_text = monologue === true ? this.findMonologue(this.current_layer.id()) : null;
+        var sequence = this.sequences_json[this.current_layer.id()];
         var final_fade_duration = sequence.transition_length != null ? sequence.transition_length : 0;
 
         var sequenceCounter = 0;
@@ -766,14 +745,14 @@ export class KiiGame {
 
             var displaySlide = (i, slide, lastSlide) => {
                 setTimeout(() => {
-                    current_layer.show();
+                    this.current_layer.show();
                     old_layer.hide();
-                    fade_layer_full.show();
+                    this.fade_layer_full.show();
                     this.hide_menu(); // So that the menu is hidden after first fadeout.
-                    character_layer.hide();
-                    inventory_bar_layer.hide();
-                    inventory_layer.hide();
-                    fade_full.play();
+                    this.character_layer.hide();
+                    this.inventory_bar_layer.hide();
+                    this.inventory_layer.hide();
+                    this.fade_full.play();
 
                     if (lastSlide) {
                         lastSlide.hide();
@@ -784,13 +763,13 @@ export class KiiGame {
                     var slideFade = sequence.slides[i].do_fade;
                     if (slideFade === true) {
                         setTimeout(() => {
-                            fade_full.reverse();
-                            stage.draw();
+                            this.fade_full.reverse();
+                            this.stage.draw();
                         }, 700);
                     } else {
                         // Immediately display the slide
-                        fade_full.reset();
-                        stage.draw();
+                        this.fade_full.reset();
+                        this.stage.draw();
                     }
 
                     sequenceCounter += 1;
@@ -805,14 +784,14 @@ export class KiiGame {
         // After last slide, do the final fade and set up exit monologue.
         if (final_fade_duration > 0) {
             setTimeout(() => {
-                fade_full.tween.duration = final_fade_duration;
-                fade_full.play();
+                this.fade_full.tween.duration = final_fade_duration;
+                this.fade_full.play();
 
                 setTimeout(() => {
-                    fade_full.reverse();
+                    this.fade_full.reverse();
                     setTimeout(() => {
-                        fade_layer_full.hide();
-                        fade_full.tween.duration = 600; // reset to default
+                        this.fade_layer_full.hide();
+                        this.fade_full.tween.duration = 600; // reset to default
                         if (monologue === true) {
                             this.setMonologue(sequence_exit_text);
                         }
@@ -843,43 +822,43 @@ export class KiiGame {
 
         // Don't fade if duration is zero.
         if (fade_time != 0) {
-            fade_room.tween.duration = fade_time;
-            fade_layer_room.show();
-            fade_room.play();
+            this.fade_room.tween.duration = fade_time;
+            this.fade_layer_room.show();
+            this.fade_room.play();
         }
 
         setTimeout(() => {
             this.stop_music();
             // Don't fade if duration is zero.
             if (fade_time != 0) {
-                fade_room.reverse();
+                this.fade_room.reverse();
             }
 
             // may be null if no start_layer is defined
-            if (current_layer != null) {
-                current_layer.hide();
+            if (this.current_layer != null) {
+                this.current_layer.hide();
             }
 
-            current_layer = this.getObject(room_id);
+            this.current_layer = this.getObject(room_id);
 
             // Play the animations of the room
-            for (var i in animated_objects) {
-                if (animated_objects[i].node.parent.id() == current_layer.id()) {
-                    animated_objects[i].play();
-                } else if (animated_objects[i].anim.isRunning()) {
-                    animated_objects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
+            for (var i in this.animated_objects) {
+                if (this.animated_objects[i].node.parent.id() == this.current_layer.id()) {
+                    this.animated_objects[i].play();
+                } else if (this.animated_objects[i].anim.isRunning()) {
+                    this.animated_objects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
                 }
             }
 
-            current_layer.show();
-            inventory_layer.show();
-            inventory_bar_layer.show();
-            character_layer.show();
-            stage.draw();
+            this.current_layer.show();
+            this.inventory_layer.show();
+            this.inventory_bar_layer.show();
+            this.character_layer.show();
+            this.stage.draw();
 
             setTimeout(() => {
-                fade_layer_room.hide();
-                this.play_music(current_layer.id());
+                this.fade_layer_room.hide();
+                this.play_music(this.current_layer.id());
                 if (comingFrom) {
                     this.setMonologue(this.findMonologue(comingFrom));
                 }
@@ -913,7 +892,7 @@ export class KiiGame {
 
             // Not all clicked items have their entry in interactions_json.
             try {
-                commands = interactions_json[target.id()].click;
+                commands = this.interactions_json[target.id()].click;
             } catch (e) {
                 // Do nothing
             }
@@ -943,13 +922,13 @@ export class KiiGame {
         // Inventory arrow buttons
         else if (target.getAttr('id') == 'inventory_left_arrow') {
             if (target.getAttr('visible') == true) {
-                inventory_index--;
+                this.inventory_index--;
                 this.redrawInventory();
             }
         }
         else if (target.getAttr('id') == 'inventory_right_arrow') {
             if (target.getAttr('visible') == true) {
-                inventory_index++;
+                this.inventory_index++;
                 this.redrawInventory();
             }
         }
@@ -993,7 +972,7 @@ export class KiiGame {
             this.do_transition(command.destination, command.length != null ? command.length : 700);
         } else if (command.command == "play_character_animation") {
             // Overrides default speak animation from setMonologue.
-            this.playCharacterAnimation(character_animations[command.animation], command.length);
+            this.playCharacterAnimation(this.character_animations[command.animation], command.length);
         } else if (command.command == "play_sequence") {
             this.play_sequence(command.sequence, command.monologue);
         } else if (command.command == "set_idle_animation") {
@@ -1018,7 +997,7 @@ export class KiiGame {
     /// @param object The name of the object to look up.
     /// @return Returns the object if it's found, or null if it isn't.
     getObject(id) {
-        var object = stage.find('#' + id)[0];
+        var object = this.stage.find('#' + id)[0];
         if (object == null) {
             console.warn("Could not find object from stage with id " + id);
         }
@@ -1032,7 +1011,7 @@ export class KiiGame {
         object.clearCache();
         object.show();
         object.cache();
-        current_layer.draw();
+        this.current_layer.draw();
     }
 
     /// Remove an object from stage. Called after interactions that remove objects.
@@ -1041,31 +1020,31 @@ export class KiiGame {
     removeObject(object) {
         this.removeAnimation(object.id());
         object.hide();
-        current_layer.draw();
+        this.current_layer.draw();
     }
 
     /// Remove an object from the list of animated objects.
     /// @param id The id of the object to be de-animated.
     removeAnimation(id) {
-        if (animated_objects.indexOf(id) > -1) {
-            animated_objects.splice(animated_objects.indexOf(id), 1);
+        if (this.animated_objects.indexOf(id) > -1) {
+            this.animated_objects.splice(this.animated_objects.indexOf(id), 1);
         }
     }
 
     // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
     play_ending(ending) {
-        fade_full.reset();
-        fade_layer_full.show();
-        fade_full.play();
+        this.fade_full.reset();
+        this.fade_layer_full.show();
+        this.fade_full.play();
 
         setTimeout(() => {
             // Clear inventory except rewards
-            for (var i = inventory_layer.children.length-1; i >= 0; i--) {
-                var shape = inventory_layer.children[i];
+            for (var i = this.inventory_layer.children.length-1; i >= 0; i--) {
+                var shape = this.inventory_layer.children[i];
                 if (shape.getAttr('category') != 'reward') {
                     this.inventoryRemove(shape);
                 }
-                inventory_index = 0;
+                this.inventory_index = 0;
             }
 
             this.play_music(ending);
@@ -1073,19 +1052,19 @@ export class KiiGame {
             var old_text = rewards_text.text();
             rewards_text.text(rewards + rewards_text.text());
 
-            current_layer.hide(); // hide the sequence layer
-            current_layer = this.getObject(ending);
-            current_layer.show();
-            inventory_bar_layer.show();
-            inventory_layer.show();
-            this.display_menu(current_layer.id());
-            character_layer.show();
+            this.current_layer.hide(); // hide the sequence layer
+            this.current_layer = this.getObject(ending);
+            this.current_layer.show();
+            this.inventory_bar_layer.show();
+            this.inventory_layer.show();
+            this.display_menu(this.current_layer.id());
+            this.character_layer.show();
             this.getObject("end_texts").show();
-            stage.draw();
+            this.stage.draw();
             rewards_text.text(old_text);
 
-            fade_full.reverse();
-            setTimeout(() => fade_layer_full.hide(), 700);
+            this.fade_full.reverse();
+            setTimeout(() => this.fade_layer_full.hide(), 700);
         }, 700);
     }
 
@@ -1094,12 +1073,12 @@ export class KiiGame {
         text.text("");
 
         if (text.id() == 'monologue') {
-            character_speech_bubble.hide();
+            this.character_speech_bubble.hide();
         } else if (text.id() == 'npc_monologue') {
-            npc_speech_bubble.hide();
+            this.npc_speech_bubble.hide();
         }
 
-        text_layer.draw();
+        this.text_layer.draw();
     }
 
     /// Find monologue text in object. If a text is not found from texts_json by
@@ -1117,7 +1096,7 @@ export class KiiGame {
 
         var text = null;
         try { // Might not find with object_id
-            text = texts_json[object_id][key];
+            text = this.texts_json[object_id][key];
         } catch(e) {
             // Do nothing
         }
@@ -1127,7 +1106,7 @@ export class KiiGame {
             // Item's own default
             console.warn("No text " + key + " found for " + object_id);
             try { // Might not find with object_id
-                text = texts_json[object_id]['default'];
+                text = this.texts_json[object_id]['default'];
             } catch(e) {
                 // Do nothing
             }
@@ -1136,7 +1115,7 @@ export class KiiGame {
                 // Master default
                 console.warn("Default text not found for " + object_id + ". Using master default.");
                 try {
-                    text = texts_json["default"]["examine"];
+                    text = this.texts_json["default"]["examine"];
                 } catch (e) {
                     text = "Fallback default examine entry missing from texts.json!"; // crude
                 }
@@ -1151,47 +1130,47 @@ export class KiiGame {
     /// @param npc The object in the stage that will have the speech bubble.
     /// @param text The text to be shown in the speech bubble.
     npcMonologue(npc, text) {
-        npc_monologue.setWidth('auto');
-        npc_speech_bubble.show();
-        npc_monologue.text(text);
+        this.npc_monologue.setWidth('auto');
+        this.npc_speech_bubble.show();
+        this.npc_monologue.text(text);
 
         var npc_tag = this.getObject("npc_tag");
-        if (npc.x() + npc.width() > (stage.width()/2)) {
+        if (npc.x() + npc.width() > (this.stage.width()/2)) {
             npc_tag.pointerDirection("right");
-            if (npc_monologue.width() > npc.x() - 100) {
-                npc_monologue.width(npc.x() - 100);
+            if (this.npc_monologue.width() > npc.x() - 100) {
+                this.npc_monologue.width(npc.x() - 100);
             }
-            npc_monologue.text(text);
-            npc_speech_bubble.x(npc.x());
+            this.npc_monologue.text(text);
+            this.npc_speech_bubble.x(npc.x());
         } else {
             npc_tag.pointerDirection("left");
-            if (npc_monologue.width() > stage.width() - (npc.x() + npc.width() + 100)) {
-                npc_monologue.width(stage.width() - (npc.x() + npc.width() + 100));
+            if (this.npc_monologue.width() > this.stage.width() - (npc.x() + npc.width() + 100)) {
+                this.npc_monologue.width(this.stage.width() - (npc.x() + npc.width() + 100));
             }
-            npc_monologue.text(text);
-            npc_speech_bubble.x(npc.x() + npc.width());
+            this.npc_monologue.text(text);
+            this.npc_speech_bubble.x(npc.x() + npc.width());
         }
 
-        npc_speech_bubble.y(npc.y() + (npc.height()/3));
+        this.npc_speech_bubble.y(npc.y() + (npc.height()/3));
 
-        text_layer.draw();
+        this.text_layer.draw();
     }
 
     /// Set monologue text.
     /// @param text The text to be shown in the monologue bubble.
     setMonologue(text) {
-        monologue.setWidth('auto');
-        character_speech_bubble.show();
-        monologue.text(text);
-        if (monologue.width() > 524) {
-            monologue.width(524);
-            monologue.text(text);
+        this.monologue.setWidth('auto');
+        this.character_speech_bubble.show();
+        this.monologue.text(text);
+        if (this.monologue.width() > 524) {
+            this.monologue.width(524);
+            this.monologue.text(text);
         }
 
-        character_speech_bubble.y(stage.height() - 100 - 15 - monologue.height() / 2);
-        text_layer.draw();
+        this.character_speech_bubble.y(this.stage.height() - 100 - 15 - this.monologue.height() / 2);
+        this.text_layer.draw();
 
-        this.playCharacterAnimation(speak_animation, 3000);
+        this.playCharacterAnimation(this.speak_animation, 3000);
     }
 
     /// Play a character animation
@@ -1199,50 +1178,50 @@ export class KiiGame {
     /// @param timeout The time in ms until the character returns to idle animation.
     playCharacterAnimation(animation, timeout) {
         this.stopCharacterAnimations();
-        for (var i in idle_animation) {
-            idle_animation[i].node.hide();
-            idle_animation[i].reset();
+        for (var i in this.idle_animation) {
+            this.idle_animation[i].node.hide();
+            this.idle_animation[i].reset();
         }
         animation[0].node.show();
         animation[0].play();
 
-        character_layer.draw();
+        this.character_layer.draw();
 
-        clearTimeout(character_animation_timeout);
-        character_animation_timeout = setTimeout(() => {
+        clearTimeout(this.character_animation_timeout);
+        this.character_animation_timeout = setTimeout(() => {
             this.stopCharacterAnimations();
         }, timeout);
     }
 
     ///Stop the characer animations, start idle animation
     stopCharacterAnimations() {
-        for (var i in character_animations) {
-            for (var j in character_animations[i]) {
-                character_animations[i][j].node.hide();
-                character_animations[i][j].reset();
+        for (var i in this.character_animations) {
+            for (var j in this.character_animations[i]) {
+                this.character_animations[i][j].node.hide();
+                this.character_animations[i][j].reset();
             }
         }
 
-        idle_animation[0].node.show();
-        idle_animation[0].play();
-        character_layer.draw();
+        this.idle_animation[0].node.show();
+        this.idle_animation[0].play();
+        this.character_layer.draw();
     }
 
     /// Change idle animation, so that the character graphics can be changed
     /// mid-game.
     /// @param animation_name The name of the animation, look the animation up
-    ///                       from character_animations[].
+    ///                       from this.character_animations[].
     setIdleAnimation(animation_name) {
-        idle_animation = character_animations[animation_name];
+        this.idle_animation = this.character_animations[animation_name];
         this.stopCharacterAnimations(); // reset and play the new idle animation
     }
 
     /// Change speak animation, so that the character graphics can be changed
     /// mid-game.
     /// @param animation_name The name of the animation, look the animation up
-    ///                       from character_animations[].
+    ///                       from this.character_animations[].
     setSpeakAnimation(animation_name) {
-        speak_animation = character_animations[animation_name];
+        this.speak_animation = this.character_animations[animation_name];
         this.stopCharacterAnimations(); // reset and play idle animation
     }
 
@@ -1267,23 +1246,23 @@ export class KiiGame {
     /// @param item Item to be added to the inventory
     inventoryAdd(item) {
         item.show();
-        item.moveTo(inventory_layer);
+        item.moveTo(this.inventory_layer);
         item.clearCache();
         item.size({width: 80, height: 80});
 
-        if (inventory_list.indexOf(item) > -1) {
-            inventory_list.splice(inventory_list.indexOf(item), 1, item);
+        if (this.inventory_list.indexOf(item) > -1) {
+            this.inventory_list.splice(this.inventory_list.indexOf(item), 1, item);
         } else {
-            inventory_list.push(item);
+            this.inventory_list.push(item);
         }
 
         // The picked up item should be visible in the inventory. Scroll inventory
         // to the right if necessary.
-        if (inventory_list.indexOf(item) > inventory_index + inventory_max - 1) {
-            inventory_index = Math.max(inventory_list.indexOf(item) + 1 - inventory_max, 0);
+        if (this.inventory_list.indexOf(item) > this.inventory_index + this.inventory_max - 1) {
+            this.inventory_index = Math.max(this.inventory_list.indexOf(item) + 1 - this.inventory_max, 0);
         }
 
-        current_layer.draw();
+        this.current_layer.draw();
         this.redrawInventory();
     }
 
@@ -1292,65 +1271,65 @@ export class KiiGame {
     /// @param item Item to be removed from the inventory
     inventoryRemove(item) {
         item.hide();
-        item.moveTo(current_layer);
+        item.moveTo(this.current_layer);
         item.draggable(false);
-        inventory_list.splice(inventory_list.indexOf(item), 1);
+        this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
         this.redrawInventory();
     }
 
     // Dragging an item from the inventory
     inventoryDrag(item) {
-        item.moveTo(current_layer);
-        inventory_bar_layer.draw();
-        inventory_layer.draw();
-        this.clearText(monologue);
-        this.clearText(npc_monologue);
+        item.moveTo(this.current_layer);
+        this.inventory_bar_layer.draw();
+        this.inventory_layer.draw();
+        this.clearText(this.monologue);
+        this.clearText(this.npc_monologue);
         this.stopCharacterAnimations();
     }
 
     /// Redrawing inventory. Shows the items that should be visible according to
     /// inventory_index and takes care of showing inventory arrows as necessary.
     redrawInventory() {
-        inventory_layer.getChildren().each((shape, i) => {
+        this.inventory_layer.getChildren().each((shape, i) => {
             shape.setAttr('visible', false);
             shape.draggable(false);
         });
 
         // If the left arrow is visible AND there's empty space to the right,
         // scroll the inventory to the left. This should happen when removing items.
-        if (inventory_index + inventory_max > inventory_list.length) {
-            inventory_index = Math.max(inventory_list.length - inventory_max, 0);
+        if (this.inventory_index + this.inventory_max > this.inventory_list.length) {
+            this.inventory_index = Math.max(this.inventory_list.length - this.inventory_max, 0);
         }
 
-        for (var i = inventory_index; i < Math.min(inventory_index + inventory_max, inventory_list.length); i++) {
-            var shape = inventory_list[i];
+        for (var i = this.inventory_index; i < Math.min(this.inventory_index + this.inventory_max, this.inventory_list.length); i++) {
+            var shape = this.inventory_list[i];
             shape.draggable(true);
-            shape.x(offsetFromLeft + (inventory_list.indexOf(shape) - inventory_index) * 100);
-            shape.y(stage.height() - 90);
+            shape.x(this.offsetFromLeft + (this.inventory_list.indexOf(shape) - this.inventory_index) * 100);
+            shape.y(this.stage.height() - 90);
             shape.setAttr('visible', true);
         }
 
-        if (inventory_index > 0) {
+        if (this.inventory_index > 0) {
             this.getObject("inventory_left_arrow").show();
         } else {
             this.getObject("inventory_left_arrow").hide();
         }
 
-        if (inventory_index + inventory_max < inventory_list.length) {
+        if (this.inventory_index + this.inventory_max < this.inventory_list.length) {
             this.getObject("inventory_right_arrow").show();
         } else {
             this.getObject("inventory_right_arrow").hide();
         }
 
-        inventory_bar_layer.draw();
-        inventory_layer.draw();
-        current_layer.draw();
+        this.inventory_bar_layer.draw();
+        this.inventory_layer.draw();
+        this.current_layer.draw();
     }
 
     // Delay to be set after each intersection check
     setDelay(delay) {
-        delayEnabled = true;
-        setTimeout(() => delayEnabled = false, delay);
+        this.delayEnabled = true;
+        setTimeout(() => this.delayEnabled = false, delay);
     }
     
 }

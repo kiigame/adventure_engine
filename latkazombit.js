@@ -1,14 +1,8 @@
-import {
-    KiiGame,
-    stage,
-    texts_json,
-    game_start_layer,
-    start_layer,
-    menu,
-    character_animations
-} from './kiigame.js';
+import { KiiGame } from './kiigame.js';
 
 let kiigame = new KiiGame();
+let stage = kiigame.stage;
+let texts_json = kiigame.texts_json;
 
 var legends_json = JSON.parse(kiigame.getJSON('legends.json'));
 
@@ -22,7 +16,7 @@ var input_layer = stage.find('#input_layer')[0];
 var number_selected = false;
 
 // Default player number
-input_text.setText(texts_json['input_text']['text']);
+input_text.setText(kiigame.texts_json['input_text']['text']);
 
 // Dirty removing of default event handler to allow using jersey input
 stage.find('#start_game')[0].eventListeners.click = [];
@@ -46,14 +40,14 @@ stage.find('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
 	kiigame.setMonologue(kiigame.findMonologue('character_panic', 'text'));
-    kiigame.playCharacterAnimation(character_animations["panic"], 6000);
+    kiigame.playCharacterAnimation(kiigame.character_animations["panic"], 6000);
 });
 
 // Listeners for the input screen buttons
 input_layer.on('tap click', function(event) {
 	var target = event.target;
 	
-	var selected = texts_json[target.getAttr('id')];
+	var selected = kiigame.texts_json[target.getAttr('id')];
 	if (selected)
 	    selected = selected.name;
 	else
@@ -171,7 +165,7 @@ input_layer.on('tap click', function(event) {
 		input_layer.hide();
 
 	    var intro_delay = kiigame.play_sequence("intro", true);
-        setTimeout(() => kiigame.do_transition(game_start_layer.id(), 0), intro_delay);
+        setTimeout(() => kiigame.do_transition(kiigame.game_start_layer.id(), 0), intro_delay);
 	}
 	// If no number, grey out buttons that can't be used
 	if (input_text.getText().length == 0) {
@@ -194,7 +188,7 @@ input_layer.on('tap click', function(event) {
 });
 
 //Developer feature - shortcut menu from the empty menu button for testing purposes
-start_layer.on('mouseup touchend', function(event) {
+kiigame.start_layer.on('mouseup touchend', function(event) {
 	kiigame.handle_click(event);
 });
 
@@ -204,21 +198,21 @@ stage.find('#start_empty')[0].on('tap click', function(event) {
 	var oikotie = stage.find('#oikotie')[0];
 	oikotie.x(50);
     oikotie.show();
-	oikotie.moveTo(start_layer);
+	oikotie.moveTo(kiigame.start_layer);
     oikotie.on('click', function() {
-        menu.hide();
+        kiigame.menu.hide();
     });
 
     var oikotie2 = stage.find('#oikotie2')[0];
     oikotie2.x(200);
     oikotie2.show();
-    oikotie2.moveTo(start_layer);
+    oikotie2.moveTo(kiigame.start_layer);
 	oikotie2.on('click', function() {
 		kiigame.inventoryAdd(stage.find('#poster_withoutglue')[0]);
 		kiigame.inventoryAdd(stage.find('#poster_withglue')[0]);
 		kiigame.inventoryAdd(stage.find('#airfreshener')[0]);
 		kiigame.inventoryAdd(stage.find('#cienibang')[0]);
-        menu.hide();
+        kiigame.menu.hide();
 	});
 
 	stage.draw();
