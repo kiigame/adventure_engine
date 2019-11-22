@@ -8,8 +8,6 @@ import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
 import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
 import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
 
-// Global variables. TODO: refactor
-
 // The amount of rewards found. LZ specific, TODO refactor
 var rewards = 0;
 
@@ -32,6 +30,7 @@ export class KiiGame {
             );
         }
 
+        // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
 
         // Define variables from stage for easier use
@@ -79,11 +78,21 @@ export class KiiGame {
         // Intersection target (object below dragged item)
         this.target;
 
+        // Animations
         // Animation for fading the screen
         this.fade_full;
 
         // Animation for fading the room portion of the screen
         this.fade_room;
+
+        // List of animated objects
+        this.animated_objects = [];
+
+        // List of character animations.
+        this.character_animations = []; // also accessed in latkazombit.js
+
+        // Timeout event for showing character animation for certain duration
+        this.character_animation_timeout;
 
         // Default character animations
         this.speak_animation;
@@ -94,7 +103,6 @@ export class KiiGame {
         this.current_background;
         this.game_start_layer; // also accessed in latkazombit.js
         this.start_layer; // also accessed in latkazombit.js
-
 
         // List of animated objects
         this.animated_objects = [];
@@ -205,6 +213,8 @@ export class KiiGame {
             for (var j = 0; j < this.character_animations[i].length; j++) {
                 if (this.character_animations[i].length > j+1) {
                     this.character_animations[i][j].onFinish = function() {
+                        // `this` refers to the character_animations object,
+                        // `self` refers to the engine object
                         for (var k in self.character_animations) {
                             if (self.character_animations[k].indexOf(this) > -1) {
                                 var animation = self.character_animations[k];
