@@ -8,9 +8,6 @@ import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
 import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
 import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
 
-// The amount of rewards found. LZ specific, TODO refactor
-var rewards = 0;
-
 
 export class KiiGame {
     constructor(jsonGetter = null, sequencesBuilder = null) {
@@ -32,6 +29,9 @@ export class KiiGame {
 
         // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
+
+        // The amount of rewards found. LZ specific, TODO refactor
+        this.rewards = 0;
 
         // Define variables from stage for easier use
 
@@ -919,7 +919,7 @@ export class KiiGame {
             this.setMonologue(this.findMonologue(target.id(), 'pickup'));
             var rewardID = target.getAttr('reward');
             this.inventoryAdd(this.getObject(rewardID));
-            rewards++;
+            this.rewards++;
             this.removeObject(target);
 
             // To prevent multiple events happening at the same time
@@ -1060,7 +1060,7 @@ export class KiiGame {
             this.play_music(ending);
             var rewards_text = this.getObject("rewards_text");
             var old_text = rewards_text.text();
-            rewards_text.text(rewards + rewards_text.text());
+            rewards_text.text(this.rewards + rewards_text.text());
 
             this.current_layer.hide(); // hide the sequence layer
             this.current_layer = this.getObject(ending);
