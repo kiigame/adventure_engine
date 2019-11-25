@@ -33,10 +33,6 @@ export class KiiGame {
         // The amount of rewards found. LZ specific, TODO refactor
         this.rewards = 0;
 
-        // Define variables from stage for easier use
-
-        // Texts & layers
-
         // List of items in the inventory. inventory_list.length gives the item amount.
         this.inventory_list = [];
         // Offset from left for drawing inventory items starting from proper position
