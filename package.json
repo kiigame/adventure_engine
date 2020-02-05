@@ -1,7 +1,6 @@
 {
   "name": "@kiigame/adventure_engine",
-  "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Lightweight point & click adventure game engine",
   "main": "dist/kiigame.cjs.js",
   "module": "dist/kiigame.esm.js",
