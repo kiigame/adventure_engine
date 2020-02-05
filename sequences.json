@@ -1,51 +1,62 @@
 {
     "intro": {
-        "images": {
-            "1": {
+        "slides": [
+            {
                 "do_fade": true,
                 "id": "intro_1",
-                "show_time": 4000
+                "show_time": 4000,
+                "text": {
+                    "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
+                }
             },
-            "2": {
+            {
                 "do_fade": true,
                 "id": "intro_2",
-                "show_time": 5000
+                "show_time": 5000,
+                "imageSrc": "images/intro_2.png"
             },
-            "3": {
+            {
                 "do_fade": true,
                 "id": "intro_3",
-                "show_time": 4500
+                "show_time": 4500,
+                "text": {
+                    "text": "Kaikki ei kuitenkaan ollut niin kuin piti.."
+                }
             },
-            "4": {
+            {
                 "do_fade": false,
                 "id": "intro_4",
-                "show_time": 1000
+                "show_time": 1000,
+                "imageSrc": "images/intro_4.png"
             },
-            "5": {
+            {
                 "do_fade": false,
                 "id": "intro_5",
-                "show_time": 1000
+                "show_time": 1000,
+                "imageSrc": "images/intro_5.png"
             },
-            "6": {
+            {
                 "do_fade": false,
                 "id": "intro_6",
-                "show_time": 1000
+                "show_time": 1000,
+                "imageSrc": "images/intro_6.png"
             },
-            "7": {
+            {
                 "do_fade": false,
                 "id": "intro_7",
                 "show_time": 1000
             }
-        },
+        ],
         "transition_length": 3000
     },
     "outro": {
-        "images": {
-            "1": {
+        "slides": [
+            {
                 "do_fade": true,
                 "id": "outro_1",
-                "show_time": 4000
+                "show_time": 4000,
+                "imageSrc": "images/outro_1.png"
             }
-        }
+        ]
     }
 }

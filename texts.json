@@ -972,10 +972,6 @@
         "name": "Peili",
 		"examine": "Oih miten komea karju peilissä onkaan. Näyttää aivan kädelliseltä, kreikkalaiselta jumalpatsaalta. Kuinka olenkaan itseni näin komeaksi päästänyt."
     },
-    "wc_1_mirror": {
-        "name": "Peili",
-        "examine": "Oih miten komea karju peilissä onkaan. Näyttää aivan kädelliseltä, kreikkalaiselta jumalpatsaalta. Kuinka olenkaan itseni näin komeaksi päästänyt."
-    },
     "hairkeeper_floor": {
         "name": "Hiuskeepperi",
         "pickup": "Koutsilla on unohtunut jotain tänne. Nappaanpa mukaan."

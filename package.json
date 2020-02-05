@@ -1,0 +1,41 @@
+{
+  "name": "@kiigame/adventure_engine",
+  "private": true,
+  "version": "0.3.0",
+  "description": "Lightweight point & click adventure game engine",
+  "main": "dist/kiigame.cjs.js",
+  "module": "dist/kiigame.esm.js",
+  "browser": "dist/kiigame.umd.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiigame/adventure_engine.git"
+  },
+  "author": "Eino Keskitalo",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/kiigame/adventure_engine/issues"
+  },
+  "homepage": "https://github.com/kiigame/adventure_engine#readme",
+  "dependencies": {
+    "konva": "^3.2.6"
+  },
+  "devDependencies": {
+    "@types/sinon-chai": "^3.2.3",
+    "chai": "^4.2.0",
+    "esm": "^3.2.25",
+    "mocha": "^6.2.0",
+    "rollup": "^1.27.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy": "^3.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "sinon": "^7.5.0"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/rollup -c --config --configBuild",
+    "dev": "./node_modules/.bin/rollup -c --config --configDev",
+    "test": "mocha -r esm test/**/*.js"
+  },
+  "files": [
+    "dist"
+  ]
+}
