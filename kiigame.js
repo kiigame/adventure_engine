@@ -14,7 +14,7 @@ export class KiiGame {
     constructor(
         jsonGetter = null,
         sequencesBuilder = null,
-        clicResolvers = [],
+        clickResolvers = [],
         dragResolvers = [],
         interactions = null
     ) {
