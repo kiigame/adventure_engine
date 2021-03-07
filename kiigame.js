@@ -917,7 +917,7 @@ export class KiiGame {
         var target_category = target.getAttr('category');
 
         var clickResolver = this.clickResolvers.filter(clickResolver => {
-            return clickResolver.getTargetCategory() == target_category;
+            return clickResolver.getTargetCategory() === target_category;
         });
 
         if (clickResolver) {
