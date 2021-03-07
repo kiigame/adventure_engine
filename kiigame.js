@@ -986,7 +986,7 @@ export class KiiGame {
         } else if (command.command == "set_speak_animation") {
             this.setSpeakAnimation(command.animation_name);
         } else if (command.command == "npc_monologue") {
-            nthis.pcMonologue(
+            this.npcMonologue(
                 this.getObject(command.npc),
                 this.findMonologue(command.textkey.object, command.textkey.string)
             );
