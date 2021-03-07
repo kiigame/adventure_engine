@@ -446,9 +446,9 @@ export class KiiGame {
             else {
                 var target_category = this.target.getAttr('category');
 
-                var dragResolver = this.dragResolvers.filter(dragResolver => {
+                var dragResolver = this.dragResolvers.filter(function(dragResolver) {
                     return dragResolver.getTargetCategory() == target_category;
-                });
+                }).pop();
 
                 if (dragResolver) {
                     this.handle_commands(dragResolver.resolveCommands(
