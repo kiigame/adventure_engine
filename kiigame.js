@@ -918,7 +918,7 @@ export class KiiGame {
 
         var clickResolver = this.clickResolvers.filter(function(clickResolver) {
             return clickResolver.getTargetCategory() === target_category;
-        });
+        }).pop();
 
         if (clickResolver) {
             this.handle_commands(clickResolver.resolveCommands(this.interactions, target));
