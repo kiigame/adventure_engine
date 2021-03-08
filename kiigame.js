@@ -9,7 +9,7 @@ import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
 import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
 import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
 import Interactions from './model/Interactions.js';
-import HitRegionInitializer from '.view/stage/HitRegionInitializer.js';
+import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 
 export class KiiGame {
     constructor(
