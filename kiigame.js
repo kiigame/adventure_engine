@@ -455,7 +455,7 @@ export class KiiGame {
                         this.interactions,
                         this.target.id(),
                         dragged_item.id(),
-                        this.target.id()
+                        dragged_item.id()
                     ));
                 }
             }
