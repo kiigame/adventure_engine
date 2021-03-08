@@ -214,30 +214,12 @@
                 },
                 {
                     "attrs": {
-                        "category": "reward",
-                        "id": "book_reward_3",
-                        "src": "images/book_reward_3.png",
-                        "visible": false
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
                         "category": "secret",
                         "id": "reward_1",
                         "reward": "book_reward_1",
                         "src": "images/reward_1.png",
                         "x": 480,
                         "y": 61
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "reward",
-                        "id": "book_reward_2",
-                        "src": "images/book_reward_2.png",
-                        "visible": false
                     },
                     "className": "Image"
                 },
@@ -393,15 +375,6 @@
                         "visible": false,
                         "x": 455,
                         "y": 130
-                    },
-                    "className": "Image"
-                },
-                {
-                    "attrs": {
-                        "category": "reward",
-                        "id": "book_reward_1",
-                        "src": "images/book_reward_1.png",
-                        "visible": false
                     },
                     "className": "Image"
                 },

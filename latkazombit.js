@@ -7,7 +7,8 @@ let kiigame = new KiiGame(
     [
         new DefaultInteractionResolver('item'),
         new DefaultInteractionResolver('furniture'),
-        new DefaultInteractionResolver('reward')
+        new DefaultInteractionResolver('reward'),
+        new DefaultInteractionResolver('secret')
     ]
 );
 let stage = kiigame.stage;
