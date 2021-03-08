@@ -9,6 +9,7 @@ import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
 import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
 import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
 import Interactions from './model/Interactions.js';
+import HitRegionInitializer from '.view/stage/HitRegionInitializer.js';
 
 export class KiiGame {
     constructor(
@@ -16,13 +17,15 @@ export class KiiGame {
         sequencesBuilder = null,
         clickResolvers = [],
         dragResolvers = [],
-        interactions = null
+        interactions = null,
+        hitRegionInitializer = null
     ) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
         this.clickResolvers = clickResolvers;
         this.dragResolvers = dragResolvers;
         this.interactions = interactions;
+        this.hitRegionInitializer = hitRegionInitializer;
 
         if (this.jsonGetter === null) {
             this.jsonGetter = new JSONGetter();
@@ -52,6 +55,9 @@ export class KiiGame {
             this.interactions = new Interactions(
                 JSON.parse(this.getJSON('interactions.json'))
             );
+        }
+        if (this.hitRegionInitializer === null) {
+            this.hitRegionInitializer = new HitRegionInitializer();
         }
 
         // Alternative variable for `this` to allow reference even when it's shadowed
@@ -285,7 +291,10 @@ export class KiiGame {
         }
 
         // On window load we create image hit regions for our items on object layers
-        window.onload = () => { this.init_hit_regions() };
+        window.onload = () => {
+            this.hitRegionInitializer.initHitRegions(this, this.stage);
+            this.readyStage();
+        };
 
         // Mouse up and touch end events (picking up items from the environment
         // Mouse click and tap events (examine items in the inventory)
@@ -513,24 +522,8 @@ export class KiiGame {
         }
     }
 
-    // Create image hit regions for our items on object layers
-    // Loop backgrounds to create item hit regions and register mouseup event
-    init_hit_regions() {
-        this.stage.getChildren().each((o) => {
-            if (o.getAttr('category') == 'room') {
-                o.getChildren().each((shape, i) => {
-                    if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
-                        shape.cache();
-                        shape.drawHitFromCache();
-                    }
-                });
-
-                o.on('mouseup touchend', (event) => {
-                    this.handle_click(event);
-                });
-            }
-        });
-
+    // Draw the stage and start animations
+    readyStage() {
         this.stage.draw();
         this.idle_animation[0].node.show();
         this.idle_animation[0].play();
