@@ -1,5 +1,7 @@
 import { KiiGame } from './kiigame.js';
 import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
+import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
+import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 
 let kiigame = new KiiGame(
     null,
@@ -9,7 +11,12 @@ let kiigame = new KiiGame(
         new DefaultInteractionResolver('furniture'),
         new DefaultInteractionResolver('reward'),
         new DefaultInteractionResolver('secret')
-    ]
+    ],
+    [],
+    null,
+    new HitRegionInitializer(
+        new HitRegionFilter(['secret'], ['Image'])
+    )
 );
 let stage = kiigame.stage;
 let texts_json = kiigame.texts_json;
