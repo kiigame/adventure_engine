@@ -10,6 +10,7 @@ import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
 import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
 import Interactions from './model/Interactions.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
+import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 
 export class KiiGame {
     constructor(
@@ -57,7 +58,9 @@ export class KiiGame {
             );
         }
         if (this.hitRegionInitializer === null) {
-            this.hitRegionInitializer = new HitRegionInitializer();
+            this.hitRegionInitializer = new HitRegionInitializer(
+                new HitRegionFilter([], ['Image'])
+            );
         }
 
         // Alternative variable for `this` to allow reference even when it's shadowed

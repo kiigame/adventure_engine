@@ -2,7 +2,8 @@
  * Initialize hit regions in the stage.
  */
 class HitRegionInitializer {
-    constructor() {
+    constructor(hitRegionFilter) {
+        this.hitRegionFilter = hitRegionFilter;
     }
 
     initHitRegions(engine, stage)
@@ -10,7 +11,7 @@ class HitRegionInitializer {
         stage.getChildren().each((o) => {
             if (o.getAttr('category') == 'room') {
                 o.getChildren().each((shape, i) => {
-                    if (shape.getAttr('category') != 'secret' && shape.className == 'Image') {
+                    if (this.hitRegionFilter.filter(shape)) {
                         shape.cache();
                         shape.drawHitFromCache();
                     }
