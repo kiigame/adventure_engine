@@ -57,9 +57,6 @@ export class KiiGame {
         // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
 
-        // The amount of rewards found. LZ specific, TODO refactor
-        this.rewards = 0;
-
         // List of items in the inventory. inventory_list.length gives the item amount.
         this.inventory_list = [];
         // Offset from left for drawing inventory items starting from proper position
@@ -916,11 +913,6 @@ export class KiiGame {
         var target = event.target;
         var target_category = target.getAttr('category');
 
-        // TODO refactor into latkazombit.js -> rewards count can be done at game end?
-        if (target_category == 'secret') {
-            this.rewards++;
-        }
-
         var clickResolver = this.clickResolvers.filter(function(clickResolver) {
             return clickResolver.getTargetCategory() === target_category;
         }).pop();
@@ -1067,7 +1059,8 @@ export class KiiGame {
             this.play_music(ending);
             var rewards_text = this.getObject("rewards_text");
             var old_text = rewards_text.text();
-            rewards_text.text(this.rewards + rewards_text.text());
+            var rewardsCount = this.inventory_layer.children.length;
+            rewards_text.text(rewardsCount + rewards_text.text());
 
             this.current_layer.hide(); // hide the sequence layer
             this.current_layer = this.getObject(ending);
