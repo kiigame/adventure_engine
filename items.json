@@ -88,5 +88,32 @@
             "visible": false
         },
         "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "reward",
+            "id": "book_reward_1",
+            "src": "images/book_reward_1.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "reward",
+            "id": "book_reward_2",
+            "src": "images/book_reward_2.png",
+            "visible": false
+        },
+        "className": "Image"
+    },
+    {
+        "attrs": {
+            "category": "reward",
+            "id": "book_reward_3",
+            "src": "images/book_reward_3.png",
+            "visible": false
+        },
+        "className": "Image"
     }
 ]
