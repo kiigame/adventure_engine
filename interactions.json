@@ -613,6 +613,54 @@
             }
         ]
     },
+    "reward_1": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "reward_1", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "book_reward_1"
+            },
+            {
+                "command": "remove_object",
+                "object": "reward_1"
+            }
+        ]
+    },
+    "reward_2": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "reward_2", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "book_reward_2"
+            },
+            {
+                "command": "remove_object",
+                "object": "reward_2"
+            }
+        ]
+    },
+    "reward_3": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {"object": "reward_3", "string": "pickup"}
+            },
+            {
+                "command": "inventory_add",
+                "item": "book_reward_3"
+            },
+            {
+                "command": "remove_object",
+                "object": "reward_3"
+            }
+        ]
+    },
     "oikotie": {"click": [{"command": "play_sequence","sequence": "outro","monologue": false},{"command": "play_ending", "ending": "end_layer", "timeout": 4700}]},
     "oikotie2": {"click":[{"command":"do_transition","destination":"object_layer_locker_room_2"}]}
 }

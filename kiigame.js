@@ -916,6 +916,11 @@ export class KiiGame {
         var target = event.target;
         var target_category = target.getAttr('category');
 
+        // TODO refactor into latkazombit.js -> rewards count can be done at game end?
+        if (target_category == 'secret') {
+            this.rewards++;
+        }
+
         var clickResolver = this.clickResolvers.filter(function(clickResolver) {
             return clickResolver.getTargetCategory() === target_category;
         }).pop();
@@ -943,20 +948,6 @@ export class KiiGame {
                 this.redrawInventory();
                 return;
             }
-        }
-
-        // TODO: Refactor into clickResolvers in latkazombit.js
-        // Everything else except this.rewards++ can be put into interactions.js and use DefaultInteractionResolver
-        // rewards count can be done at game end?
-        if (target_category == 'secret') {
-            this.setMonologue(this.findMonologue(target.id(), 'pickup'));
-            var rewardID = target.getAttr('reward');
-            this.inventoryAdd(this.getObject(rewardID));
-            this.rewards++;
-            this.removeObject(target);
-
-            // To prevent multiple events happening at the same time
-            event.cancelBubble = true;
         }
     }
 
