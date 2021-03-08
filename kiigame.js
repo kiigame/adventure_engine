@@ -453,9 +453,9 @@ export class KiiGame {
                 if (dragResolver) {
                     this.handle_commands(dragResolver.resolveCommands(
                         this.interactions,
-                        this.target.id(),
                         dragged_item.id(),
-                        dragged_item.id()
+                        this.target.id(),
+                        this.target.id()
                     ));
                 }
             }

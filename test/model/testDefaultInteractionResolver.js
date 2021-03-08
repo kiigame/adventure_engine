@@ -54,8 +54,8 @@ describe('Test DefaultInteractionResolver', function() {
         var target = '1';
         var draggedItem = '2';
 
-        var expected = [{"command":"monologue", "textkey":{"object": "1", "string": "2"}}];
-        var result = defaultInteractionResolver.resolveCommands(interactionsStub, target, draggedItem, draggedItem);
+        var expected = [{"command":"monologue", "textkey":{"object": "2", "string": "1"}}];
+        var result = defaultInteractionResolver.resolveCommands(interactionsStub, draggedItem, target, target);
         assert.deepEqual(expected, result);
     });
 
@@ -66,7 +66,7 @@ describe('Test DefaultInteractionResolver', function() {
         var target = '1';
         var draggedItem = '2';
         var expected = 'something';
-        var result = defaultInteractionResolver.resolveCommands(interactionsStub, target, draggedItem, draggedItem);
+        var result = defaultInteractionResolver.resolveCommands(interactionsStub, draggedItem, target, target);
         assert.deepEqual(expected, result);
     });
 });
