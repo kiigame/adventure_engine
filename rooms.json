@@ -149,7 +149,6 @@
                     "attrs": {
                         "category": "secret",
                         "id": "reward_3",
-                        "reward": "book_reward_3",
                         "src": "images/reward_3.png",
                         "x": 290,
                         "y": 345,
@@ -216,7 +215,6 @@
                     "attrs": {
                         "category": "secret",
                         "id": "reward_1",
-                        "reward": "book_reward_1",
                         "src": "images/reward_1.png",
                         "x": 480,
                         "y": 61
@@ -646,7 +644,6 @@
                     "attrs": {
                         "category": "secret",
                         "id": "reward_2",
-                        "reward": "book_reward_2",
                         "src": "images/reward_2.png",
                         "x": 635,
                         "y": 233
