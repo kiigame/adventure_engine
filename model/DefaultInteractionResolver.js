@@ -18,8 +18,10 @@ class DefaultInteractionResolver {
      * @param string defaultString (examine or dragged item)
      */
     resolveCommands(interactions, targetId, action = 'click', defaultString = 'examine') {
+        console.log(targetId + " " + action + " " + defaultString);
         var commands;
         commands = interactions.getCommands(targetId, action);
+        console.log(commands);
 
         // no interaction for the action defined: usual text
         if (commands === null) {
