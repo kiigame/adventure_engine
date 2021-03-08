@@ -958,11 +958,6 @@ export class KiiGame {
             // To prevent multiple events happening at the same time
             event.cancelBubble = true;
         }
-        // Print examine texts for rewards
-        // TODO: Refactor into its own clickResolver that can use DefaultInteractionResolver
-        else if (target_category == 'reward') {
-            this.setMonologue(this.findMonologue(target.id()));
-        }
     }
 
     /// Loop through a list of interaction commands and execute them with

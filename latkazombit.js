@@ -1,6 +1,15 @@
 import { KiiGame } from './kiigame.js';
+import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
 
-let kiigame = new KiiGame();
+let kiigame = new KiiGame(
+    null,
+    null,
+    [
+        new DefaultInteractionResolver('item'),
+        new DefaultInteractionResolver('furniture'),
+        new DefaultInteractionResolver('reward')
+    ]
+);
 let stage = kiigame.stage;
 let texts_json = kiigame.texts_json;
 
