@@ -7,12 +7,22 @@ import SequencesBuilder from './view/sequence/konvadata/SequencesBuilder.js';
 import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
 import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
 import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
-
+import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
+import Interactions from './model/Interactions.js';
 
 export class KiiGame {
-    constructor(jsonGetter = null, sequencesBuilder = null) {
+    constructor(
+        jsonGetter = null,
+        sequencesBuilder = null,
+        clickResolvers = [],
+        dragResolvers = [],
+        interactions = null
+    ) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
+        this.clickResolvers = clickResolvers;
+        this.dragResolvers = dragResolvers;
+        this.interactions = interactions;
 
         if (this.jsonGetter === null) {
             this.jsonGetter = new JSONGetter();
@@ -24,6 +34,23 @@ export class KiiGame {
                         new TextBuilder()
                     )
                 )
+            );
+        }
+        if (this.clickResolvers.length == 0) {
+            this.clickResolvers.push(
+                new DefaultInteractionResolver('furniture'),
+                new DefaultInteractionResolver('item')
+            );
+        }
+        if (this.dragResolvers.length == 0) {
+            this.dragResolvers.push(
+                new DefaultInteractionResolver('furniture'),
+                new DefaultInteractionResolver('item')
+            );
+        }
+        if (this.interactions === null) {
+            this.interactions = new Interactions(
+                JSON.parse(this.getJSON('interactions.json'))
             );
         }
 
@@ -110,7 +137,6 @@ export class KiiGame {
         this.images_json = JSON.parse(this.getJSON('images.json'));
         this.rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
         this.texts_json = JSON.parse(this.getJSON('texts.json'));
-        this.interactions_json = JSON.parse(this.getJSON('interactions.json'));
         this.character_json = JSON.parse(this.getJSON('character.json'));
         this.sequences_json = JSON.parse(this.getJSON('sequences.json'));
         this.music_json = JSON.parse(this.getJSON('music.json'));
@@ -417,23 +443,21 @@ export class KiiGame {
                 dragged_item.y(this.dragStartY);
             }
             // Look up the possible interaction from interactions.json.
-            else if (this.target.getAttr('category') == 'furniture' || this.target.getAttr('category') == 'item') {
-                var commands;
+            else {
+                var target_category = this.target.getAttr('category');
 
-                // Not all dragged_items have an entry in interactions_json, or have
-                // anything specified for target_item.
-                try {
-                    commands = this.interactions_json[dragged_item.id()][this.target.id()];
-                } catch (e) {
-                    // Do nothing
+                var dragResolver = this.dragResolvers.filter(function(dragResolver) {
+                    return dragResolver.getTargetCategory() == target_category;
+                }).pop();
+
+                if (dragResolver) {
+                    this.handle_commands(dragResolver.resolveCommands(
+                        this.interactions,
+                        dragged_item.id(),
+                        this.target.id(),
+                        this.target.id()
+                    ));
                 }
-
-                // no dragend interaction defined: usual text
-                if (commands == null) {
-                    commands = [{"command":"monologue", "textkey":{"object": dragged_item.id(), "string": this.target.id()}}];
-                }
-
-                this.handle_commands(commands);
             }
 
             // Check if dragged item's destroyed, if not, add it to inventory
@@ -514,7 +538,6 @@ export class KiiGame {
         this.idle_animation[0].node.show();
         this.idle_animation[0].play();
     }
-
 
     create_animation(object) {
         var attrs = object.getAttr("animation");
@@ -893,25 +916,39 @@ export class KiiGame {
         var target = event.target;
         var target_category = target.getAttr('category');
 
-        if (target_category == 'furniture' || target_category == 'item') {
-            var commands;
+        var clickResolver = this.clickResolvers.filter(function(clickResolver) {
+            return clickResolver.getTargetCategory() === target_category;
+        }).pop();
 
-            // Not all clicked items have their entry in interactions_json.
-            try {
-                commands = this.interactions_json[target.id()].click;
-            } catch (e) {
-                // Do nothing
-            }
-
-            // no click interaction defined: usual examine
-            if (commands == null) {
-                commands = [{"command":"monologue", "textkey":{"object": target.id(), "string": "examine"}}];
-            }
-
-            this.handle_commands(commands);
+        if (clickResolver) {
+            this.handle_commands(clickResolver.resolveCommands(
+                this.interactions,
+                target.id()
+            ));
+            return;
         }
-        // Pick up rewards
-        else if (target_category == 'secret') {
+
+        // Inventory arrow buttons
+        if (target.getAttr('id') == 'inventory_left_arrow') {
+            if (target.getAttr('visible') == true) {
+                this.inventory_index--;
+                this.redrawInventory();
+                return;
+            }
+        }
+
+        if (target.getAttr('id') == 'inventory_right_arrow') {
+            if (target.getAttr('visible') == true) {
+                this.inventory_index++;
+                this.redrawInventory();
+                return;
+            }
+        }
+
+        // TODO: Refactor into clickResolvers in latkazombit.js
+        // Everything else except this.rewards++ can be put into interactions.js and use DefaultInteractionResolver
+        // rewards count can be done at game end?
+        if (target_category == 'secret') {
             this.setMonologue(this.findMonologue(target.id(), 'pickup'));
             var rewardID = target.getAttr('reward');
             this.inventoryAdd(this.getObject(rewardID));
@@ -922,21 +959,9 @@ export class KiiGame {
             event.cancelBubble = true;
         }
         // Print examine texts for rewards
+        // TODO: Refactor into its own clickResolver that can use DefaultInteractionResolver
         else if (target_category == 'reward') {
             this.setMonologue(this.findMonologue(target.id()));
-        }
-        // Inventory arrow buttons
-        else if (target.getAttr('id') == 'inventory_left_arrow') {
-            if (target.getAttr('visible') == true) {
-                this.inventory_index--;
-                this.redrawInventory();
-            }
-        }
-        else if (target.getAttr('id') == 'inventory_right_arrow') {
-            if (target.getAttr('visible') == true) {
-                this.inventory_index++;
-                this.redrawInventory();
-            }
         }
     }
 
