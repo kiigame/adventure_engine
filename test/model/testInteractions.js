@@ -21,6 +21,16 @@ describe('Test Interactions', function() {
         var action = 'click';
         var expected = null;
         var result = interactions.getCommands(entity, action);
-        assert.deepEqual(expected, result);
+        assert.strictEqual(expected, result);
+    });
+
+    it('will return null when json lookup produces no result', function() {
+        var json = "{\"1\": {\"click\": [{\"command\": \"monologue\",\"textkey\": {\"object\": \"1\", \"string\": \"examine\"}}]}}";
+        let interactions = new Interactions(JSON.parse(json));
+        var entity = '2';
+        var action = 'teddy bear';
+        var expected = null;
+        var result = interactions.getCommands(entity, action);
+        assert.strictEqual(expected, result);
     });
 });
