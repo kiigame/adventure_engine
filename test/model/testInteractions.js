@@ -1,5 +1,4 @@
 import chai from 'chai';
-import sinon from 'sinon';
 import Interactions from '../../model/Interactions.js';
 
 var assert = chai.assert;

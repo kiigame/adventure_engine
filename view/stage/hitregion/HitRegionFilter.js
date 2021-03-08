@@ -9,11 +9,11 @@ class HitRegionFilter {
 
     filter(shape)
     {
-        if (shape.getAttr('category') in this.categoriesToExclude) {
+        if (this.categoriesToExclude.includes(shape.getAttr('category'))) {
             return false;
         }
 
-        if (!shape.className in this.shapeClassesToInclude) {
+        if (!this.shapeClassesToInclude.includes(shape.className)) {
             return false;
         }
 
