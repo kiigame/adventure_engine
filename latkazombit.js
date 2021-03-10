@@ -22,7 +22,7 @@ let kiigame = new KiiGame(
     ),
     new Intersection(
         new VisibilityValidator(),
-        new CategoryValidator('secret')
+        new CategoryValidator(['secret'])
     )
 );
 let stage = kiigame.stage;
