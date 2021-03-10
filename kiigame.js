@@ -1046,7 +1046,6 @@ export class KiiGame {
 
             this.play_music(ending);
             var rewards_text = this.getObject("rewards_text");
-            var old_text = rewards_text.text();
             var rewardsCount = this.inventory_layer.children.length;
             rewards_text.text(rewardsCount + rewards_text.text());
 
@@ -1055,11 +1054,9 @@ export class KiiGame {
             this.current_layer.show();
             this.inventory_bar_layer.show();
             this.inventory_layer.show();
-            this.display_menu(this.current_layer.id());
             this.character_layer.show();
             this.getObject("end_texts").show();
             this.stage.draw();
-            rewards_text.text(old_text);
 
             this.fade_full.reverse();
             setTimeout(() => this.fade_layer_full.hide(), 700);
