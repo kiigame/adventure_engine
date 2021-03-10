@@ -606,12 +606,6 @@ export class KiiGame {
                 item.on('tap click', (event) => {
                     this.setMonologue(this.findMonologue(event.target.id()));
                 });
-            } else if (item_action == "main_menu") {
-                // TODO: Return to main menu after end of game.
-                item.on('tap click', (event) => {
-                    this.getObject("end_texts").hide();
-                    this.display_start_menu();
-                });
             }
         }
     }
