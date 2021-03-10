@@ -159,11 +159,10 @@
             },
             {
                 "command": "inventory_remove",
-                "item": "poster_withoutglue"
-            },
-            {
-                "command": "inventory_remove",
-                "item": "hairkeeper"
+                "item": [
+                    "poster_withoutglue",
+                    "hairkeeper"
+                ]
             },
             {
                 "command": "inventory_add",
@@ -439,9 +438,8 @@
                 "command": "inventory_remove",
                 "item": [
                     "teddybear_chewinggum",
-                    "poster_withglue",
+                    "tactic_board_wiper",
                     "marker",
-                    "hairkeeper",
                     "dnaanalyzer",
                     "cienibang",
                     "airfreshener"

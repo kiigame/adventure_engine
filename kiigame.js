@@ -1041,15 +1041,6 @@ export class KiiGame {
     // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
     play_ending(ending) {
         setTimeout(() => {
-            // Clear inventory except rewards
-            for (var i = this.inventory_layer.children.length-1; i >= 0; i--) {
-                var shape = this.inventory_layer.children[i];
-                if (shape.getAttr('category') != 'reward') {
-                    this.inventoryRemove(shape);
-                }
-                this.inventory_index = 0;
-            }
-
             // Show count of rewards on the screen
             var rewards_text = this.getObject("rewards_text");
             var rewardsCount = this.inventory_layer.children.length;
