@@ -9,5 +9,8 @@
     },
     "outro": {
         "music": "audio/loppu_musax_mono_20131213.ogg"
+    },
+    "end_layer": {
+        "music": "audio/loppu_musax_mono_20131213.ogg"
     }
 }

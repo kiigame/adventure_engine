@@ -214,6 +214,13 @@ input_layer.on('tap click', function(event) {
 
 });
 
+// When poster on the wall is clicked (the final step of the game), count rewards in invetory.
+stage.find('#poster_onthewall')[0].on('tap click', function(event) {
+    var rewards_text = kiigame.getObject("rewards_text");
+    var rewardsCount = kiigame.inventory_layer.children.length;
+    rewards_text.text(rewardsCount + rewards_text.text());
+});
+
 //Developer feature - shortcut menu from the empty menu button for testing purposes
 kiigame.start_layer.on('mouseup touchend', function(event) {
 	kiigame.handle_click(event);

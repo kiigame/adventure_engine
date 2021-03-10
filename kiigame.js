@@ -969,8 +969,6 @@ export class KiiGame {
             this.removeObject(this.getObject(command.object));
         } else if (command.command == "add_object") {
             this.addObject(this.getObject(command.object));
-        } else if (command.command == "play_ending") {
-            this.play_ending(command.ending);
         } else if (command.command == "do_transition") {
             this.do_transition(command.destination, command.length != null ? command.length : 700);
         } else if (command.command == "play_character_animation") {
@@ -1036,16 +1034,6 @@ export class KiiGame {
         if (this.animated_objects.indexOf(id) > -1) {
             this.animated_objects.splice(this.animated_objects.indexOf(id), 1);
         }
-    }
-
-    // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
-    play_ending(ending) {
-        setTimeout(() => {
-            // Show count of rewards on the screen
-            var rewards_text = this.getObject("rewards_text");
-            var rewardsCount = this.inventory_layer.children.length;
-            rewards_text.text(rewardsCount + rewards_text.text());
-        }, 700);
     }
 
     // Clearing the given text
