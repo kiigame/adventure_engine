@@ -958,10 +958,9 @@ export class KiiGame {
         } else if (command.command == "inventory_add") {
             this.inventoryAdd(this.getObject(command.item));
         } else if (command.command == "inventory_remove") {
-            console.log(command.item);
             if (Array.isArray(command.item)) {
                 for (let item of command.item) {
-                    this.inventoryRemove(this.getObject(command.item));
+                    this.inventoryRemove(this.getObject(item));
                 }
             } else {
                 this.inventoryRemove(this.getObject(command.item));
@@ -1248,16 +1247,14 @@ export class KiiGame {
     }
 
     /// Removing an item from the inventory. Dragged items are currently just
-    /// hidden & inventory is readrawn only after drag ends. Only remove visible items.
+    /// hidden & inventory is readrawn only after drag ends.
     /// @param item Item to be removed from the inventory
     inventoryRemove(item) {
-        if (item.isVisible()) {
-            item.hide();
-            item.moveTo(this.current_layer);
-            item.draggable(false);
-            this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
-            this.redrawInventory();
-        }
+        item.hide();
+        item.moveTo(this.current_layer);
+        item.draggable(false);
+        this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
+        this.redrawInventory();
     }
 
     // Dragging an item from the inventory
