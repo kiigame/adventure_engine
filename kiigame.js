@@ -11,6 +11,9 @@ import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
 import Interactions from './model/Interactions.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
+import Intersection from './view/Intersection.js';
+import VisibilityValidator from './view/intersection/VisibilityValidator.js';
+import CategoryValidator from './view/intersection/CategoryValidator.js';
 
 export class KiiGame {
     constructor(
@@ -19,7 +22,8 @@ export class KiiGame {
         clickResolvers = [],
         dragResolvers = [],
         interactions = null,
-        hitRegionInitializer = null
+        hitRegionInitializer = null,
+        intersection = null
     ) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
@@ -27,6 +31,7 @@ export class KiiGame {
         this.dragResolvers = dragResolvers;
         this.interactions = interactions;
         this.hitRegionInitializer = hitRegionInitializer;
+        this.intersection = intersection;
 
         if (this.jsonGetter === null) {
             this.jsonGetter = new JSONGetter();
@@ -60,6 +65,14 @@ export class KiiGame {
         if (this.hitRegionInitializer === null) {
             this.hitRegionInitializer = new HitRegionInitializer(
                 new HitRegionFilter([], ['Image'])
+            );
+        }
+        if (this.intersection === null) {
+            this.intersection = new Intersection(
+                [
+                    new VisibilityValidator(),
+                    new CategoryValidator()
+                ]
             );
         }
 
@@ -324,9 +337,9 @@ export class KiiGame {
 
                     if (object != undefined && object.getAttr('category') != 'room_background') {
                         // Break if still intersecting with the same target
-                        if (this.target != null && this.checkIntersection(this.dragged_item, this.target)) {
+                        if (this.target != null && this.intersection.check(this.dragged_item, this.target)) {
                             break;
-                        } else if (this.checkIntersection(this.dragged_item, object)) {
+                        } else if (this.intersection.check(this.dragged_item, object)) {
                             // If not, check for a new target
                             if (this.target != object) {
                                 this.target = object;
@@ -346,7 +359,7 @@ export class KiiGame {
                         var object = (this.inventory_layer.getChildren())[i];
                         if (object != undefined) {
                             // Look for intersecting targets
-                            if (this.checkIntersection(this.dragged_item, object)) {
+                            if (this.intersection.check(this.dragged_item, object)) {
                                 if (this.target != object) {
                                     this.target = object;
                                 }
@@ -363,12 +376,12 @@ export class KiiGame {
                     var leftArrow = this.getObject("inventory_left_arrow");
                     var rightArrow = this.getObject("inventory_right_arrow");
                     if (!this.dragDelayEnabled) {
-                        if (this.checkIntersection(this.dragged_item, leftArrow)) {
+                        if (this.intersection.check(this.dragged_item, leftArrow)) {
                             this.dragDelayEnabled = true;
                             this.inventory_index--;
                             this.redrawInventory();
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
-                        } else if (this.checkIntersection(this.dragged_item, rightArrow)) {
+                        } else if (this.intersection.check(this.dragged_item, rightArrow)) {
                             this.dragDelayEnabled = true;
                             this.inventory_index++;
                             this.redrawInventory();
@@ -886,21 +899,6 @@ export class KiiGame {
                 }
             }, fade_time);
         }, fade_time);
-    }
-
-    // Basic intersection check; checking whether corners of the dragged item are inside the area of the intersecting object
-    checkIntersection(dragged_item, target) {
-        // If target is visible and of suitable category
-        if (target.isVisible()&& (target.getAttr('category') != undefined && target.getAttr('category') != 'secret')) {
-            // If horizontally inside
-            if (dragged_item.x() > target.x() && dragged_item.x() < (target.x() + target.width()) || (dragged_item.x() + dragged_item.width()) > target.x() && (dragged_item.x() + dragged_item.width()) < (target.x() + target.width())) {
-                // If vertically inside
-                if (dragged_item.y() > target.y() && dragged_item.y() < (target.y() + target.height()) || (dragged_item.y() + dragged_item.height()) > target.y() && (dragged_item.y() + dragged_item.height()) < (target.y() + target.height())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /// Handle click interactions on room objects, inventory items and inventory
