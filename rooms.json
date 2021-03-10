@@ -708,6 +708,38 @@
                 }
             ],
             "className": "Layer"
+        },
+        {
+            "attrs": {
+                "category": "end",
+                "id": "end_layer",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "id": "end_picture",
+                        "src": "images/end_picture_0.png"
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "id": "rewards_text",
+                        "fill": "white",
+                        "fontFamily": "Chalkboard SE",
+                        "fontSize": 26,
+                        "fontStyle": "bold",
+                        "stroke": "grey",
+                        "strokeWidth": 1,
+                        "text": "/3 piilotettua kirjaa l\u00f6ydetty",
+                        "x": 340,
+                        "y": 580
+                    },
+                    "className": "Text"
+                }
+            ],
+            "className": "Layer"
         }
     ]
 }

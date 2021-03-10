@@ -981,6 +981,10 @@ export class KiiGame {
                 this.getObject(command.npc),
                 this.findMonologue(command.textkey.object, command.textkey.string)
             );
+        } else if (command.comman == "play_music") {
+            this.play_music(command.music);
+        } else if (command.command == "stop_music") {
+            this.stop_music();
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
@@ -1030,10 +1034,6 @@ export class KiiGame {
 
     // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
     play_ending(ending) {
-        this.fade_full.reset();
-        this.fade_layer_full.show();
-        this.fade_full.play();
-
         setTimeout(() => {
             // Clear inventory except rewards
             for (var i = this.inventory_layer.children.length-1; i >= 0; i--) {
@@ -1044,22 +1044,10 @@ export class KiiGame {
                 this.inventory_index = 0;
             }
 
-            this.play_music(ending);
+            // Show count of rewards on the screen
             var rewards_text = this.getObject("rewards_text");
             var rewardsCount = this.inventory_layer.children.length;
             rewards_text.text(rewardsCount + rewards_text.text());
-
-            this.current_layer.hide(); // hide the sequence layer
-            this.current_layer = this.getObject(ending);
-            this.current_layer.show();
-            this.inventory_bar_layer.show();
-            this.inventory_layer.show();
-            this.character_layer.show();
-            this.getObject("end_texts").show();
-            this.stage.draw();
-
-            this.fade_full.reverse();
-            setTimeout(() => this.fade_layer_full.hide(), 700);
         }, 700);
     }
 
