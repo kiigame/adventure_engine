@@ -64,5 +64,49 @@ describe('Test Intersection', function() {
         var result = intersection.check(draggedStub, targetStub);
         assert.deepEqual(result, true);
     });
+    it('will return true without validators (empty array) and if the items fully overlap', function() {
+        let intersection = new Intersection([]);
+        // TODO mock with sinon
+        function ShapeStub(x, y, height, width) {
+            this.x = function() {
+                return x;
+            }
+            this.y = function() {
+                return y;
+            }
+            this.width = function() {
+                return width;
+            }
+            this.height = function() {
+                return height;
+            }
+        };
+        var targetStub = new ShapeStub(10, 10, 100, 100);
+        var draggedStub = new ShapeStub(11, 11, 50, 50);
+        var result = intersection.check(draggedStub, targetStub);
+        assert.deepEqual(result, true);
+    });
+    it('will return true without validators (null) and if the items fully overlap', function() {
+        let intersection = new Intersection();
+        // TODO mock with sinon
+        function ShapeStub(x, y, height, width) {
+            this.x = function() {
+                return x;
+            }
+            this.y = function() {
+                return y;
+            }
+            this.width = function() {
+                return width;
+            }
+            this.height = function() {
+                return height;
+            }
+        };
+        var targetStub = new ShapeStub(10, 10, 100, 100);
+        var draggedStub = new ShapeStub(11, 11, 50, 50);
+        var result = intersection.check(draggedStub, targetStub);
+        assert.deepEqual(result, true);
+    });
     // TODO: More test cases
 });

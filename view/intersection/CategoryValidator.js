@@ -2,6 +2,9 @@
  */
 class CategoryValidator {
     constructor(categoriesToInvalidate) {
+        if (categoriesToInvalidate === null || categoriesToInvalidate === undefined) {
+            categoriesToInvalidate = [];
+        }
         this.categoryToInvalidate = categoriesToInvalidate;
     }
 

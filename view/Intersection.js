@@ -2,6 +2,9 @@
  */
 class Intersection {
     constructor(validators) {
+        if (validators === null || validators === undefined) {
+            validators = [];
+        }
         this.validators = validators;
     }
 

@@ -60,4 +60,32 @@ describe('Test CategoryValidator', function() {
         var result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, false);
     });
+    it('will return true if no excluded categories are set (null) and category is defined', function() {
+        // TODO: Stub with sinon
+        function ShapeStub() {
+            this.getAttr = function (attrName) {
+                if (attrName === 'category') {
+                    return 'includedCategory';
+                }
+            }
+        };
+        var targetStub = new ShapeStub();
+        let categoryValidator = new CategoryValidator();
+        var result = categoryValidator.validate(targetStub);
+        assert.deepEqual(result, true);
+    });
+    it('will return true if no excluded categories are set (empty array) and category is defined', function() {
+        // TODO: Stub with sinon
+        function ShapeStub() {
+            this.getAttr = function (attrName) {
+                if (attrName === 'category') {
+                    return 'includedCategory';
+                }
+            }
+        };
+        var targetStub = new ShapeStub();
+        let categoryValidator = new CategoryValidator([]);
+        var result = categoryValidator.validate(targetStub);
+        assert.deepEqual(result, true);
+    });
 });

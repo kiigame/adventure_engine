@@ -21,8 +21,10 @@ let kiigame = new KiiGame(
         new HitRegionFilter(['secret'], ['Image'])
     ),
     new Intersection(
-        new VisibilityValidator(),
-        new CategoryValidator(['secret'])
+        [
+            new VisibilityValidator(),
+            new CategoryValidator(['secret'])
+        ]
     )
 );
 let stage = kiigame.stage;
