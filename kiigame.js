@@ -1247,14 +1247,16 @@ export class KiiGame {
     }
 
     /// Removing an item from the inventory. Dragged items are currently just
-    /// hidden & inventory is readrawn only after drag ends.
+    /// hidden & inventory is readrawn only after drag ends. Only remove visible items.
     /// @param item Item to be removed from the inventory
     inventoryRemove(item) {
-        item.hide();
-        item.moveTo(this.current_layer);
-        item.draggable(false);
-        this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
-        this.redrawInventory();
+        if (item.isVisible()) {
+            item.hide();
+            item.moveTo(this.current_layer);
+            item.draggable(false);
+            this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
+            this.redrawInventory();
+        }
     }
 
     // Dragging an item from the inventory
