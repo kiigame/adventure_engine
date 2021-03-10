@@ -5,6 +5,7 @@ import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 import Intersection from './view/Intersection.js';
 import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
+import JSONGetter from './util/JSONGetter.js';
 
 let kiigame = new KiiGame(
     null,
@@ -30,7 +31,7 @@ let kiigame = new KiiGame(
 let stage = kiigame.stage;
 let texts_json = kiigame.texts_json;
 
-var legends_json = JSON.parse(kiigame.getJSON('legends.json'));
+var legends_json = JSON.parse(new JSONGetter().getJSON('legends.json'));
 
 stage.find("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
