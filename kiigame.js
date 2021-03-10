@@ -985,10 +985,6 @@ export class KiiGame {
                 this.getObject(command.npc),
                 this.findMonologue(command.textkey.object, command.textkey.string)
             );
-        } else if (command.comman == "play_music") {
-            this.play_music(command.music);
-        } else if (command.command == "stop_music") {
-            this.stop_music();
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
