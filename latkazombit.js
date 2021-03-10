@@ -2,6 +2,8 @@ import { KiiGame } from './kiigame.js';
 import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
+import VisibilityValidator from './view/intersection/VisibilityValidator.js';
+import CategoryValidator from './view/intersection/CategoryValidator.js';
 
 let kiigame = new KiiGame(
     null,
@@ -16,6 +18,10 @@ let kiigame = new KiiGame(
     null,
     new HitRegionInitializer(
         new HitRegionFilter(['secret'], ['Image'])
+    ),
+    new Intersection(
+        new VisibilityValidator(),
+        new CategoryValidator('secret')
     )
 );
 let stage = kiigame.stage;
