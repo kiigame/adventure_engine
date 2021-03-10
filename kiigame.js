@@ -958,7 +958,13 @@ export class KiiGame {
         } else if (command.command == "inventory_add") {
             this.inventoryAdd(this.getObject(command.item));
         } else if (command.command == "inventory_remove") {
-            this.inventoryRemove(this.getObject(command.item));
+            if (Array.isArray(command.item)) {
+                for (let item of command.item) {
+                    this.inventoryRemove(this.getObject(command.item));
+                }
+            } else {
+                this.inventoryRemove(this.getObject(command.item));
+            }
         } else if (command.command == "remove_object") {
             this.removeObject(this.getObject(command.object));
         } else if (command.command == "add_object") {

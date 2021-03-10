@@ -434,6 +434,19 @@
                 "command": "do_transition",
                 "destination": "end_layer",
                 "timeout": 4700
+            },
+            {
+                "command": "inventory_remove",
+                "item": [
+                    "teddybear_chewinggum",
+                    "poster_withglue",
+                    "marker",
+                    "hairkeeper",
+                    "dnaanalyzer",
+                    "cienibang",
+                    "airfreshener"
+                ],
+                "timeout": 4700
             }
         ]
     },
