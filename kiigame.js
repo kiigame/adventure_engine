@@ -606,12 +606,6 @@ export class KiiGame {
                 item.on('tap click', (event) => {
                     this.setMonologue(this.findMonologue(event.target.id()));
                 });
-            } else if (item_action == "main_menu") {
-                // TODO: Return to main menu after end of game.
-                item.on('tap click', (event) => {
-                    this.getObject("end_texts").hide();
-                    this.display_start_menu();
-                });
             }
         }
     }
@@ -964,13 +958,17 @@ export class KiiGame {
         } else if (command.command == "inventory_add") {
             this.inventoryAdd(this.getObject(command.item));
         } else if (command.command == "inventory_remove") {
-            this.inventoryRemove(this.getObject(command.item));
+            if (Array.isArray(command.item)) {
+                for (let item of command.item) {
+                    this.inventoryRemove(this.getObject(item));
+                }
+            } else {
+                this.inventoryRemove(this.getObject(command.item));
+            }
         } else if (command.command == "remove_object") {
             this.removeObject(this.getObject(command.object));
         } else if (command.command == "add_object") {
             this.addObject(this.getObject(command.object));
-        } else if (command.command == "play_ending") {
-            this.play_ending(command.ending);
         } else if (command.command == "do_transition") {
             this.do_transition(command.destination, command.length != null ? command.length : 700);
         } else if (command.command == "play_character_animation") {
@@ -987,6 +985,10 @@ export class KiiGame {
                 this.getObject(command.npc),
                 this.findMonologue(command.textkey.object, command.textkey.string)
             );
+        } else if (command.comman == "play_music") {
+            this.play_music(command.music);
+        } else if (command.command == "stop_music") {
+            this.stop_music();
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
@@ -1032,44 +1034,6 @@ export class KiiGame {
         if (this.animated_objects.indexOf(id) > -1) {
             this.animated_objects.splice(this.animated_objects.indexOf(id), 1);
         }
-    }
-
-    // Play the hardcoded end sequence and show the correct end screen based on the number of rewards found
-    play_ending(ending) {
-        this.fade_full.reset();
-        this.fade_layer_full.show();
-        this.fade_full.play();
-
-        setTimeout(() => {
-            // Clear inventory except rewards
-            for (var i = this.inventory_layer.children.length-1; i >= 0; i--) {
-                var shape = this.inventory_layer.children[i];
-                if (shape.getAttr('category') != 'reward') {
-                    this.inventoryRemove(shape);
-                }
-                this.inventory_index = 0;
-            }
-
-            this.play_music(ending);
-            var rewards_text = this.getObject("rewards_text");
-            var old_text = rewards_text.text();
-            var rewardsCount = this.inventory_layer.children.length;
-            rewards_text.text(rewardsCount + rewards_text.text());
-
-            this.current_layer.hide(); // hide the sequence layer
-            this.current_layer = this.getObject(ending);
-            this.current_layer.show();
-            this.inventory_bar_layer.show();
-            this.inventory_layer.show();
-            this.display_menu(this.current_layer.id());
-            this.character_layer.show();
-            this.getObject("end_texts").show();
-            this.stage.draw();
-            rewards_text.text(old_text);
-
-            this.fade_full.reverse();
-            setTimeout(() => this.fade_layer_full.hide(), 700);
-        }, 700);
     }
 
     // Clearing the given text
@@ -1271,14 +1235,16 @@ export class KiiGame {
     }
 
     /// Removing an item from the inventory. Dragged items are currently just
-    /// hidden & inventory is readrawn only after drag ends.
+    /// hidden & inventory is readrawn only after drag ends. Only remove visibile items.
     /// @param item Item to be removed from the inventory
     inventoryRemove(item) {
-        item.hide();
-        item.moveTo(this.current_layer);
-        item.draggable(false);
-        this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
-        this.redrawInventory();
+        if (item.isVisible()) {
+            item.hide();
+            item.moveTo(this.current_layer);
+            item.draggable(false);
+            this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
+            this.redrawInventory();
+        }
     }
 
     // Dragging an item from the inventory
