@@ -10,7 +10,7 @@ class Intersection {
 
     check(draggedItem, target) {
         for (let validator of this.validators) {
-            if (!validator.validate()) {
+            if (!validator.validate(target)) {
                 return false;
             }
         }
