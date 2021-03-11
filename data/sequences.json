@@ -56,6 +56,11 @@
                 "id": "outro_1",
                 "show_time": 4000,
                 "imageSrc": "data/images/outro_1.png"
+            },
+            {
+                "do_fade": true,
+                "id": "outro_2",
+                "show_time": 1000
             }
         ]
     }
