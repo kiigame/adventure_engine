@@ -676,7 +676,7 @@ export class KiiGame {
                 this.current_music.volume = 1;
             }
 
-            data.music_loop === false ? this.current_music.loop = false : this.current_music.loop = true;
+            this.current_music.loop = data.music_loop === false ? false : true;
             this.current_music.play();
 
             // Fade music volume if set so
