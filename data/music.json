@@ -3,8 +3,7 @@
         "music": "data/audio/alku_musax_mono_20131213.ogg"
     },
     "intro": {
-        "music": "data/audio/intro_mono_20131213.ogg",
-        "music_fade": true
+        "music": "data/audio/intro_mono_20131213.ogg"
     },
     "outro": {
         "music": "data/audio/loppu_musax_mono_20131213.ogg"
