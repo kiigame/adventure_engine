@@ -34,6 +34,7 @@ export class KiiGame {
         this.interactions = interactions;
         this.hitRegionInitializer = hitRegionInitializer;
         this.intersection = intersection;
+        this.music = music;
 
         if (this.jsonGetter === null) {
             this.jsonGetter = new JSONGetter();
