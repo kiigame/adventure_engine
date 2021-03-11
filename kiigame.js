@@ -59,7 +59,7 @@ export class KiiGame {
         }
         if (this.interactions === null) {
             this.interactions = new Interactions(
-                JSON.parse(this.getJSON('interactions.json'))
+                JSON.parse(this.getJSON('data/interactions.json'))
             );
         }
         if (this.hitRegionInitializer === null) {
@@ -153,14 +153,14 @@ export class KiiGame {
         this.character_animations = []; // also accessed in latkazombit.js
 
         // Get jsons from the server
-        this.images_json = JSON.parse(this.getJSON('images.json'));
-        this.rooms_json = JSON.parse(this.getJSON('rooms.json'))['rooms'];
-        this.texts_json = JSON.parse(this.getJSON('texts.json'));
-        this.character_json = JSON.parse(this.getJSON('character.json'));
-        this.sequences_json = JSON.parse(this.getJSON('sequences.json'));
-        this.music_json = JSON.parse(this.getJSON('music.json'));
-        this.menu_json = JSON.parse(this.getJSON('menu.json'));
-        this.items_json = JSON.parse(this.getJSON('items.json'));
+        this.images_json = JSON.parse(this.getJSON('data/images.json'));
+        this.rooms_json = JSON.parse(this.getJSON('data/rooms.json'))['rooms'];
+        this.texts_json = JSON.parse(this.getJSON('data/texts.json'));
+        this.character_json = JSON.parse(this.getJSON('data/character.json'));
+        this.sequences_json = JSON.parse(this.getJSON('data/sequences.json'));
+        this.music_json = JSON.parse(this.getJSON('data/music.json'));
+        this.menu_json = JSON.parse(this.getJSON('data/menu.json'));
+        this.items_json = JSON.parse(this.getJSON('data/items.json'));
 
         // Add rooms to images_json for stage building. Add them before the room
         // fade layer to ensure correct draw order.

@@ -31,7 +31,7 @@ let kiigame = new KiiGame(
 let stage = kiigame.stage;
 let texts_json = kiigame.texts_json;
 
-var legends_json = JSON.parse(new JSONGetter().getJSON('legends.json'));
+var legends_json = JSON.parse(new JSONGetter().getJSON('data/legends.json'));
 
 stage.find("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
