@@ -642,10 +642,13 @@ export class KiiGame {
         this.play_music('start_layer');
     }
 
-    /*
-    Play music
-    string id - object ID from JSON with "music":"file name" attribute
-    */
+    /**
+     * Play music.
+     * Stops previous music if no music is found for this id. Note that moving to a room and
+     * playing a sequence always call this; if you want the music to continue, it needs to be
+     * the same as in previous room/sequence.
+     * @param string id - object ID from JSON with "music":"file name" attribute
+     */
     play_music(id) {
         if (id == undefined) {
             return;
@@ -656,8 +659,7 @@ export class KiiGame {
         // ID and music found from JSON?
         if (!data || !data.music) {
             if (this.current_music) {
-                this.current_music.pause();
-                this.current_music = null;
+                this.stop_music();
             }
             return;
         }
@@ -735,6 +737,7 @@ export class KiiGame {
                     this.current_music.pause();
                 } catch (e) {
                     clearInterval(fade_interval);
+                    this.current_music = null;
                 }
             }, 100)
         } else {
@@ -857,7 +860,6 @@ export class KiiGame {
         }
 
         setTimeout(() => {
-            this.stop_music();
             // Don't fade if duration is zero.
             if (fade_time != 0) {
                 this.fade_room.reverse();
