@@ -547,7 +547,8 @@ export class KiiGame {
     }
 
     handleJsonException(e) {
-        document.write("Error fetching json data: " + e);
+        alert("Error fetching json data: " + e);
+        die();
     }
 
     // Draw the stage and start animations

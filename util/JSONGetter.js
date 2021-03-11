@@ -8,7 +8,7 @@ class JSONGetter {
         request.open("GET", json_file, false);
         request.send(null);
         if (request.status != 200) {
-            throw(request.status + ": " + request.statusText);
+            throw("File: " + json_file + " status: " + request.status + ": " + request.statusText);
         }
         var json = request.responseText;
         return json;
