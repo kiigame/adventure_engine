@@ -1,15 +1,18 @@
 {
     "start_layer": {
         "music": "data/audio/alku_musax_mono_20131213.ogg",
-        "music_fade": true
+        "fade": true,
+        "loop": true
     },
     "intro": {
         "music": "data/audio/intro_mono_20131213.ogg"
     },
     "outro": {
-        "music": "data/audio/loppu_musax_mono_20131213.ogg"
+        "music": "data/audio/loppu_musax_mono_20131213.ogg",
+        "loop": true
     },
     "end_layer": {
-        "music": "data/audio/loppu_musax_mono_20131213.ogg"
+        "music": "data/audio/loppu_musax_mono_20131213.ogg",
+        "loop": true
     }
 }

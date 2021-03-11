@@ -15,6 +15,7 @@ import Intersection from './view/Intersection.js';
 import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import Music from './view/Music.js';
+import AudioFactory from './view/music/AudioFactory.js';
 
 export class KiiGame {
     constructor(
@@ -80,7 +81,8 @@ export class KiiGame {
         }
         if (this.music === null) {
             this.music = new Music(
-                new JSONGetter()
+                JSON.parse(this.getJSON('data/music.json')),
+                new AudioFactory()
             );
         }
 
