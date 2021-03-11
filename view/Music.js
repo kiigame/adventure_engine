@@ -60,17 +60,8 @@ class Music {
         }
 
         // Loop and fade settings may change when playing the same music in different rooms
-        if (data.loop === true) {
-            this.current_music.loop = true;
-        } else {
-            this.current_music.loop = false;
-        }
-
-        if (data.fade === true) {
-            this.current_music.fade = true;
-        } else {
-            this.current_music.fade = false;
-        }
+        this.current_music.loop = data.loop === true ? true : false;
+        this.current_music.fade = data.fade === true ? true : false;
     }
 
     /**
