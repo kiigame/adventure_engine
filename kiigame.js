@@ -655,6 +655,7 @@ export class KiiGame {
         }
 
         var data = this.music_json[id];
+        console.log("in play music, id: " + id + " data.music: " + data.music + " current music source: " + this.current_music_source);
 
         // ID and music found from JSON?
         if (!data || !data.music) {
