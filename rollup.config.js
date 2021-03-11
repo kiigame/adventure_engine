@@ -41,9 +41,9 @@ export const dev = {
         copy({
             targets: [
                 { src: 'kiigame.html', dest: 'public/' },
-                { src: '*.json', dest: 'public/' },
-                { src: 'audio/**/*', dest: 'public/audio/' },
-                { src: 'images/**/*', dest: 'public/images/' },
+                { src: 'data/*.json', dest: 'public/data/' },
+                { src: 'data/audio/**/*', dest: 'public/data/audio/' },
+                { src: 'data/images/**/*', dest: 'public/data/images/' },
                 { src: 'util/**/*', dest: 'public/util/' },
                 { src: 'view/**/*', dest: 'public/view/' }
             ]
