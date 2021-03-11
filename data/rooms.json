@@ -711,7 +711,7 @@
         },
         {
             "attrs": {
-                "category": "end",
+                "category": "room",
                 "id": "end_layer",
                 "visible": false
             },

@@ -642,10 +642,13 @@ export class KiiGame {
         this.play_music('start_layer');
     }
 
-    /*
-    Play music
-    string id - object ID from JSON with "music":"file name" attribute
-    */
+    /**
+     * Play music.
+     * Stops previous music if no music is found for this id. Note that moving to a room and
+     * playing a sequence always call this; if you want the music to continue, it needs to be
+     * the same as in previous room/sequence.
+     * @param string id - object ID from JSON with "music":"file name" attribute
+     */
     play_music(id) {
         if (id == undefined) {
             return;
@@ -653,11 +656,10 @@ export class KiiGame {
 
         var data = this.music_json[id];
 
-        // ID and music found from JSON?
+        // If no new music is to be played, stop the old music.
         if (!data || !data.music) {
             if (this.current_music) {
-                this.current_music.pause();
-                this.current_music = null;
+                this.stop_music(this.current_music);
             }
             return;
         }
@@ -666,9 +668,10 @@ export class KiiGame {
         if (!this.current_music || this.current_music_source != data.music) {
             var old_music = null;
             if (this.current_music) {
-                old_music = this.current_music
+                old_music = this.current_music;
                 this.current_music = new Audio(data.music);
                 this.current_music.volume = 0;
+                this.stop_music(old_music);
             } else {
                 this.current_music = new Audio(data.music);
                 this.current_music.volume = 1;
@@ -679,67 +682,47 @@ export class KiiGame {
 
             // Fade music volume if set so
             if (data.music_fade === true) {
-                this.current_music.faded = true;
-
-                if (old_music) {
-                    var fade_interval_2 = setInterval(() => {
-                        // Audio API will throw exception when volume is maxed
-                        try {
-                            old_music.volume -= 0.05;
-                        } catch (e) {
-                            old_music.pause();
-                            clearInterval(fade_interval_2);
-                        }
-
-                        try {
-                            this.current_music.volume += 0.05;
-                        } catch (e) {
-                            old_music.volume = 1;
-                        }
-                    }, 200)
-                } else if (this.current_music) {
-                    var fade_interval = setInterval(() => {
-                        // Audio API will throw exception when volume is maxed
-                        try {
-                            this.current_music.volume += 0.05
-                        } catch (e) {
-                            this.current_music.volume = 1;
-                            clearInterval(fade_interval);
-                        }
-                    }, 200)
-                }
-            } else {
-                this.current_music.faded = false;
+                this.current_music.fade = true;
+                var fade_interval = setInterval(() => {
+                    // Audio API will throw exception when volume is maxed
+                    try {
+                        this.current_music.volume += 0.05
+                    } catch (e) {
+                        this.current_music.volume = 1;
+                        clearInterval(fade_interval);
+                    }
+                }, 200)
+           } else {
+                this.current_music.fade = false;
                 this.current_music.volume = 1;
-
-                if (old_music) {
-                    old_music.pause();
-                }
             }
+
             this.current_music_source = data.music;
         }
     }
 
-    stop_music() {
-        if (this.current_music == null) {
+    stop_music(music) {
+        if (music == null) {
             return;
         }
 
-        // Fade music volume if set so
-        if (this.current_music.faded === true) {
-            var fade_interval = setInterval(() => {
+        // Fade music out if fade is set to true
+        if (music.fade === true) {
+            var fade_interval = setInterval((music) => {
                 // Audio API will throw exception when volume is maxed
                 // or an crossfade interval may still be running
                 try {
-                    this.current_music.volume -= 0.05
-                    this.current_music.pause();
+                    music.volume -= 0.05;
                 } catch (e) {
                     clearInterval(fade_interval);
+                    music.pause();
                 }
-            }, 100)
+            }, 100, music)
         } else {
-            this.current_music.pause();
+            music.pause();
         }
+
+        music = null;
     }
 
     /// Plays a sequence defined in sequences.json
@@ -838,15 +821,13 @@ export class KiiGame {
 
     /// Transition to a room.
     /// @param room_id The id of the room to transition to.
-    /// @param fade_time_param The fade duration; if null, use a default.
+    /// @param fade_time The fade duration; if null, use a default.
     /// @param comingFrom The room where the transition was started in. Sets up
     ///                   the monologue text.
-    do_transition(room_id, fade_time_param, comingFrom) {
-        var fade_time = fade_time_param;
-
+    do_transition(room_id, fade_time, comingFrom) {
         // By default do fast fade
-        if (fade_time_param == null) {
-            var fade_time = 700;
+        if (fade_time === null) {
+            fade_time = 700;
         }
 
         // Don't fade if duration is zero.
@@ -857,7 +838,6 @@ export class KiiGame {
         }
 
         setTimeout(() => {
-            this.stop_music();
             // Don't fade if duration is zero.
             if (fade_time != 0) {
                 this.fade_room.reverse();
