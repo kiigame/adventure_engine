@@ -14,6 +14,8 @@ import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 import Intersection from './view/Intersection.js';
 import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
+import Music from './view/Music.js';
+import AudioFactory from './view/music/AudioFactory.js';
 
 export class KiiGame {
     constructor(
@@ -23,7 +25,8 @@ export class KiiGame {
         dragResolvers = [],
         interactions = null,
         hitRegionInitializer = null,
-        intersection = null
+        intersection = null,
+        music = null
     ) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
@@ -32,6 +35,7 @@ export class KiiGame {
         this.interactions = interactions;
         this.hitRegionInitializer = hitRegionInitializer;
         this.intersection = intersection;
+        this.music = music;
 
         if (this.jsonGetter === null) {
             this.jsonGetter = new JSONGetter();
@@ -75,6 +79,12 @@ export class KiiGame {
                 ]
             );
         }
+        if (this.music === null) {
+            this.music = new Music(
+                JSON.parse(this.getJSON('data/music.json')),
+                new AudioFactory()
+            );
+        }
 
         // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
@@ -102,12 +112,6 @@ export class KiiGame {
         // For limiting the speed of inventory browsing when dragging an item
         this.dragDelay = 500;
         this.dragDelayEnabled = false;
-
-        // Music
-        // Different browsers and different browser versions support different formats. MP3 should work with in all the major
-        // browsers in current versions.
-        this.current_music;
-        this.current_music_source;
 
         // Menu
         this.menu; // also accessed in latkazombit.js
@@ -158,7 +162,6 @@ export class KiiGame {
         this.texts_json = JSON.parse(this.getJSON('data/texts.json'));
         this.character_json = JSON.parse(this.getJSON('data/character.json'));
         this.sequences_json = JSON.parse(this.getJSON('data/sequences.json'));
-        this.music_json = JSON.parse(this.getJSON('data/music.json'));
         this.menu_json = JSON.parse(this.getJSON('data/menu.json'));
         this.items_json = JSON.parse(this.getJSON('data/items.json'));
 
@@ -639,89 +642,7 @@ export class KiiGame {
         this.character_layer.show();
         this.inventory_bar_layer.show();
         this.stage.draw();
-        this.play_music('start_layer');
-    }
-
-    /**
-     * Play music.
-     * Stops previous music if no music is found for this id. Note that moving to a room and
-     * playing a sequence always call this; if you want the music to continue, it needs to be
-     * the same as in previous room/sequence.
-     * @param string id - object ID from JSON with "music":"file name" attribute
-     */
-    play_music(id) {
-        if (id == undefined) {
-            return;
-        }
-
-        var data = this.music_json[id];
-
-        // If no new music is to be played, stop the old music.
-        if (!data || !data.music) {
-            if (this.current_music) {
-                this.stop_music(this.current_music);
-            }
-            return;
-        }
-
-        // If not already playing music or old/new songs are different
-        if (!this.current_music || this.current_music_source != data.music) {
-            if (this.current_music) {
-                var old_music = this.current_music;
-                this.current_music = new Audio(data.music);
-                this.current_music.volume = 0;
-                this.stop_music(old_music);
-            } else {
-                this.current_music = new Audio(data.music);
-                this.current_music.volume = 1;
-            }
-
-            this.current_music.loop = data.music_loop === false ? false : true;
-            this.current_music.play();
-
-            // Fade music volume if set so
-            if (data.music_fade === true) {
-                this.current_music.fade = true;
-                var fade_interval = setInterval(() => {
-                    // Audio API will throw exception when volume is maxed
-                    try {
-                        this.current_music.volume += 0.05
-                    } catch (e) {
-                        this.current_music.volume = 1;
-                        clearInterval(fade_interval);
-                    }
-                }, 200)
-           } else {
-                this.current_music.fade = false;
-                this.current_music.volume = 1;
-            }
-
-            this.current_music_source = data.music;
-        }
-    }
-
-    stop_music(music) {
-        if (music == null) {
-            return;
-        }
-
-        // Fade music out if fade is set to true
-        if (music.fade === true) {
-            var fade_interval = setInterval((music) => {
-                // Audio API will throw exception when volume is maxed
-                // or an crossfade interval may still be running
-                try {
-                    music.volume -= 0.05;
-                } catch (e) {
-                    clearInterval(fade_interval);
-                    music.pause();
-                }
-            }, 100, music)
-        } else {
-            music.pause();
-        }
-
-        music = null;
+        this.music.playMusic('start_layer');
     }
 
     /// Plays a sequence defined in sequences.json
@@ -746,7 +667,7 @@ export class KiiGame {
         var slidesTotal = 0;
         var slide = null;
 
-        this.play_music(id);
+        this.music.playMusic(id);
 
         for (var i in sequence.slides) {
             slidesTotal++;
@@ -866,7 +787,7 @@ export class KiiGame {
 
             setTimeout(() => {
                 this.fade_layer_room.hide();
-                this.play_music(this.current_layer.id());
+                this.music.playMusic(this.current_layer.id());
                 if (comingFrom) {
                     this.setMonologue(this.findMonologue(comingFrom));
                 }
