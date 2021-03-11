@@ -655,7 +655,6 @@ export class KiiGame {
         }
 
         var data = this.music_json[id];
-        console.log("in play music, id: " + id + " data.music: " + data.music + " current music source: " + this.current_music_source);
 
         // ID and music found from JSON?
         if (!data || !data.music) {
@@ -665,7 +664,6 @@ export class KiiGame {
             return;
         }
 
-        console.log("in play music, id: " + id + " data.music: " + data.music + " current music source: " + this.current_music_source);
         // If not already playing music or old/new songs are different
         if (!this.current_music || this.current_music_source != data.music) {
             var old_music = null;
@@ -843,15 +841,13 @@ export class KiiGame {
 
     /// Transition to a room.
     /// @param room_id The id of the room to transition to.
-    /// @param fade_time_param The fade duration; if null, use a default.
+    /// @param fade_time The fade duration; if null, use a default.
     /// @param comingFrom The room where the transition was started in. Sets up
     ///                   the monologue text.
-    do_transition(room_id, fade_time_param, comingFrom) {
-        var fade_time = fade_time_param;
-
+    do_transition(room_id, fade_time, comingFrom) {
         // By default do fast fade
-        if (fade_time_param == null) {
-            var fade_time = 700;
+        if (fade_time === null) {
+            fade_time = 700;
         }
 
         // Don't fade if duration is zero.
