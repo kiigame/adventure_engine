@@ -14,7 +14,7 @@
                 {
                     "attrs": {
                         "id": "inventory_bar",
-                        "src": "images/inventory_bar.png",
+                        "src": "data/images/inventory_bar.png",
                         "y": 543
                     },
                     "className": "Image"
@@ -78,7 +78,7 @@
                     "attrs": {
                         "height": 543,
                         "id": "black_screen_room",
-                        "src": "images/black.png",
+                        "src": "data/images/black.png",
                         "width": 1024
                     },
                     "className": "Image"
@@ -96,7 +96,7 @@
                     "attrs": {
                         "height": 543,
                         "id": "start",
-                        "src": "images/start.png",
+                        "src": "data/images/start.png",
                         "width": 724
                     },
                     "className": "Image"
@@ -105,7 +105,7 @@
                     "attrs": {
                         "height": 643,
                         "id": "splash_screen",
-                        "src": "images/splash_screen.png",
+                        "src": "data/images/splash_screen.png",
                         "width": 1024
                     },
                     "className": "Image"
@@ -124,7 +124,7 @@
                     "attrs": {
                         "height": 300,
                         "id": "start_game",
-                        "src": "images/start_game.png",
+                        "src": "data/images/start_game.png",
                         "width": 257,
                         "x": 724,
                         "y": 0
@@ -135,7 +135,7 @@
                     "attrs": {
                         "height": 93,
                         "id": "start_credits",
-                        "src": "images/start_credits.png",
+                        "src": "data/images/start_credits.png",
                         "width": 257,
                         "x": 724,
                         "y": 300
@@ -146,7 +146,7 @@
                     "attrs": {
                         "height": 150,
                         "id": "start_empty",
-                        "src": "images/start_empty.png",
+                        "src": "data/images/start_empty.png",
                         "width": 257,
                         "x": 724,
                         "y": 393
@@ -167,7 +167,7 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "oikotie",
-                        "src": "images/shower_door_to_locker_room_1.png",
+                        "src": "data/images/shower_door_to_locker_room_1.png",
                         "x": 691,
                         "y": 136
                     },
@@ -177,7 +177,7 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "oikotie2",
-                        "src": "images/shower_door_to_locker_room_1.png",
+                        "src": "data/images/shower_door_to_locker_room_1.png",
                         "x": 691,
                         "y": 136
                     },
@@ -196,7 +196,7 @@
                 {
                     "attrs": {
                         "id": "input_background",
-                        "src": "images/input_background.png",
+                        "src": "data/images/input_background.png",
                         "x": 200,
                         "y": 50
                     },
@@ -205,7 +205,7 @@
                 {
                     "attrs": {
                         "id": "button_6",
-                        "src": "images/button_6.png",
+                        "src": "data/images/button_6.png",
                         "x": 392,
                         "y": 191
                     },
@@ -214,7 +214,7 @@
                 {
                     "attrs": {
                         "id": "button_9",
-                        "src": "images/button_9.png",
+                        "src": "data/images/button_9.png",
                         "x": 392,
                         "y": 277
                     },
@@ -223,7 +223,7 @@
                 {
                     "attrs": {
                         "id": "button_8",
-                        "src": "images/button_8.png",
+                        "src": "data/images/button_8.png",
                         "x": 306,
                         "y": 277
                     },
@@ -232,7 +232,7 @@
                 {
                     "attrs": {
                         "id": "button_5",
-                        "src": "images/button_5.png",
+                        "src": "data/images/button_5.png",
                         "x": 306,
                         "y": 191
                     },
@@ -241,7 +241,7 @@
                 {
                     "attrs": {
                         "id": "button_4",
-                        "src": "images/button_4.png",
+                        "src": "data/images/button_4.png",
                         "x": 220,
                         "y": 191
                     },
@@ -250,7 +250,7 @@
                 {
                     "attrs": {
                         "id": "jersey",
-                        "src": "images/icehockey_jersey.png",
+                        "src": "data/images/icehockey_jersey.png",
                         "x": 530,
                         "y": 125
                     },
@@ -259,7 +259,7 @@
                 {
                     "attrs": {
                         "id": "button_ok_gray",
-                        "src": "images/button_ok_gray.png",
+                        "src": "data/images/button_ok_gray.png",
                         "visible": true,
                         "x": 500,
                         "y": 277
@@ -269,7 +269,7 @@
                 {
                     "attrs": {
                         "id": "button_1",
-                        "src": "images/button_1.png",
+                        "src": "data/images/button_1.png",
                         "x": 220,
                         "y": 105
                     },
@@ -278,7 +278,7 @@
                 {
                     "attrs": {
                         "id": "button_0",
-                        "src": "images/button_0.png",
+                        "src": "data/images/button_0.png",
                         "x": 220,
                         "y": 363
                     },
@@ -287,7 +287,7 @@
                 {
                     "attrs": {
                         "id": "button_3",
-                        "src": "images/button_3.png",
+                        "src": "data/images/button_3.png",
                         "x": 392,
                         "y": 105
                     },
@@ -296,7 +296,7 @@
                 {
                     "attrs": {
                         "id": "button_2",
-                        "src": "images/button_2.png",
+                        "src": "data/images/button_2.png",
                         "x": 306,
                         "y": 105
                     },
@@ -321,7 +321,7 @@
                 {
                     "attrs": {
                         "id": "button_ok",
-                        "src": "images/button_ok.png",
+                        "src": "data/images/button_ok.png",
                         "x": 500,
                         "y": 277
                     },
@@ -330,7 +330,7 @@
                 {
                     "attrs": {
                         "id": "button_back_gray",
-                        "src": "images/button_back_gray.png",
+                        "src": "data/images/button_back_gray.png",
                         "visible": true,
                         "x": 305,
                         "y": 363
@@ -340,7 +340,7 @@
                 {
                     "attrs": {
                         "id": "button_7",
-                        "src": "images/button_7.png",
+                        "src": "data/images/button_7.png",
                         "x": 220,
                         "y": 277
                     },
@@ -349,7 +349,7 @@
                 {
                     "attrs": {
                         "id": "button_0_gray",
-                        "src": "images/button_0_gray.png",
+                        "src": "data/images/button_0_gray.png",
                         "visible": true,
                         "x": 220,
                         "y": 363
@@ -359,7 +359,7 @@
                 {
                     "attrs": {
                         "id": "button_back",
-                        "src": "images/button_back.png",
+                        "src": "data/images/button_back.png",
                         "x": 305,
                         "y": 363
                     },
@@ -480,7 +480,7 @@
                     "attrs": {
                         "height": 543,
                         "id": "black_screen_full",
-                        "src": "images/black.png",
+                        "src": "data/images/black.png",
                         "width": 1024
                     },
                     "className": "Image"
