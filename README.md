@@ -7,6 +7,8 @@ KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engin
 
 The engine comes with an example game, [Lätkäzombit: Pako hallista](https://kgae.netlify.com/). The example game is in the Finnish language.
 
+There is an editor to create games using KGAE: check out [kged here](https://github.com/kiigame/kged).
+
 Take a look at the adventure creation guide: https://github.com/evktalo/kiigame/wiki/Adventure-creation-guide
 
 How to test locally on Linux
