@@ -3,7 +3,7 @@
         {
             "attrs": {
                 "id": "character_idle_1",
-                "src": "images/character_idle_1.png",
+                "src": "data/images/character_idle_1.png",
                 "x": 764,
                 "y": 443,
                 "visible": true
@@ -13,7 +13,7 @@
         {
             "attrs": {
                 "id": "character_idle_2",
-                "src": "images/character_idle_2.png",
+                "src": "data/images/character_idle_2.png",
                 "visible": false,
                 "x": 764,
                 "y": 443
@@ -23,7 +23,7 @@
         {
             "attrs": {
                 "id": "character_speak_1",
-                "src": "images/character_speak_1.png",
+                "src": "data/images/character_speak_1.png",
                 "visible": false,
                 "x": 764,
                 "y": 443
@@ -33,7 +33,7 @@
         {
             "attrs": {
                 "id": "character_speak_2",
-                "src": "images/character_speak_2.png",
+                "src": "data/images/character_speak_2.png",
                 "visible": false,
                 "x": 764,
                 "y": 443
@@ -43,7 +43,7 @@
         {
             "attrs": {
                 "id": "character_panic",
-                "src": "images/character_panic.png",
+                "src": "data/images/character_panic.png",
                 "visible": false,
                 "x": 764,
                 "y": 443

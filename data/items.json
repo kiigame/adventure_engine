@@ -3,7 +3,7 @@
         "attrs": {
             "category": "item",
             "id": "airfreshener",
-            "src": "images/airfreshener.png",
+            "src": "data/images/airfreshener.png",
             "visible": false
         },
         "className": "Image"
@@ -12,7 +12,7 @@
         "attrs": {
             "category": "item",
             "id": "dnaanalyzer",
-            "src": "images/dnaanalyzer.png",
+            "src": "data/images/dnaanalyzer.png",
             "visible": false
         },
         "className": "Image"
@@ -21,7 +21,7 @@
         "attrs": {
             "category": "item",
             "id": "marker",
-            "src": "images/marker.png",
+            "src": "data/images/marker.png",
             "visible": false
         },
         "className": "Image"
@@ -30,7 +30,7 @@
         "attrs": {
             "category": "item",
             "id": "teddybear",
-            "src": "images/teddybear.png",
+            "src": "data/images/teddybear.png",
             "visible": false
         },
         "className": "Image"
@@ -39,7 +39,7 @@
         "attrs": {
             "category": "item",
             "id": "teddybear_chewinggum",
-            "src": "images/teddybear_chewinggum.png",
+            "src": "data/images/teddybear_chewinggum.png",
             "visible": false
         },
         "className": "Image"
@@ -48,7 +48,7 @@
         "attrs": {
             "category": "item",
             "id": "poster_withoutglue",
-            "src": "images/poster_withoutglue.png",
+            "src": "data/images/poster_withoutglue.png",
             "visible": false
         },
         "className": "Image"
@@ -57,7 +57,7 @@
         "attrs": {
             "category": "item",
             "id": "tactic_board_wiper",
-            "src": "images/tactic_board_wiper.png",
+            "src": "data/images/tactic_board_wiper.png",
             "visible": false
         },
         "className": "Image"
@@ -66,7 +66,7 @@
         "attrs": {
             "category": "item",
             "id": "hairkeeper",
-            "src": "images/hairkeeper.png",
+            "src": "data/images/hairkeeper.png",
             "visible": false
         },
         "className": "Image"
@@ -75,7 +75,7 @@
         "attrs": {
             "category": "item",
             "id": "cienibang",
-            "src": "images/cienibang.png",
+            "src": "data/images/cienibang.png",
             "visible": false
         },
         "className": "Image"
@@ -84,7 +84,7 @@
         "attrs": {
             "category": "item",
             "id": "poster_withglue",
-            "src": "images/poster_withglue.png",
+            "src": "data/images/poster_withglue.png",
             "visible": false
         },
         "className": "Image"
@@ -93,7 +93,7 @@
         "attrs": {
             "category": "reward",
             "id": "book_reward_1",
-            "src": "images/book_reward_1.png",
+            "src": "data/images/book_reward_1.png",
             "visible": false
         },
         "className": "Image"
@@ -102,7 +102,7 @@
         "attrs": {
             "category": "reward",
             "id": "book_reward_2",
-            "src": "images/book_reward_2.png",
+            "src": "data/images/book_reward_2.png",
             "visible": false
         },
         "className": "Image"
@@ -111,7 +111,7 @@
         "attrs": {
             "category": "reward",
             "id": "book_reward_3",
-            "src": "images/book_reward_3.png",
+            "src": "data/images/book_reward_3.png",
             "visible": false
         },
         "className": "Image"
