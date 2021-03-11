@@ -664,6 +664,7 @@ export class KiiGame {
             return;
         }
 
+        console.log("in play music, id: " + id + " data.music: " + data.music + " current music source: " + this.current_music_source);
         // If not already playing music or old/new songs are different
         if (!this.current_music || this.current_music_source != data.music) {
             var old_music = null;
