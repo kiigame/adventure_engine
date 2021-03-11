@@ -59,7 +59,7 @@ export class KiiGame {
         }
         if (this.interactions === null) {
             this.interactions = new Interactions(
-                JSON.parse(this.getJSON('data\\interactions.json'))
+                JSON.parse(this.getJSON('data/interactions.json'))
             );
         }
         if (this.hitRegionInitializer === null) {
