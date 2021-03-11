@@ -708,7 +708,7 @@ export class KiiGame {
 
         // Fade music out if fade is set to true
         if (music.fade === true) {
-            var fade_interval = setInterval(() => {
+            var fade_interval = setInterval((music) => {
                 // Audio API will throw exception when volume is maxed
                 // or an crossfade interval may still be running
                 try {
