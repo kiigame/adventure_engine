@@ -1,6 +1,7 @@
 {
     "start_layer": {
-        "music": "data/audio/alku_musax_mono_20131213.ogg"
+        "music": "data/audio/alku_musax_mono_20131213.ogg",
+        "music_fade": true
     },
     "intro": {
         "music": "data/audio/intro_mono_20131213.ogg"
