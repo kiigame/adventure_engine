@@ -60,7 +60,7 @@ stage.find('#start_game')[0].on('tap click', function(event) {
 	stage.find('#button_0_gray').hide();
 	input_layer.draw();
     input_layer.moveToTop();
-    kiigame.stop_music(kiigame.current_music);
+    kiigame.music.stopMusic(kiigame.music.getCurrentMusic());
 });
 
 // Hidden feature, click the image on the start screen and get a funny reaction from the character
