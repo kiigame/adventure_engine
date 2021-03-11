@@ -717,7 +717,7 @@ export class KiiGame {
                     clearInterval(fade_interval);
                     music.pause();
                 }
-            }, 100)
+            }, 100, music)
         } else {
             music.pause();
         }
