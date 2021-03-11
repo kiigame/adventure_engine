@@ -666,18 +666,17 @@ export class KiiGame {
 
         // If not already playing music or old/new songs are different
         if (!this.current_music || this.current_music_source != data.music) {
-            var old_music = null;
             if (this.current_music) {
-                old_music = this.current_music;
+                var old_music = this.current_music;
                 this.current_music = new Audio(data.music);
                 this.current_music.volume = 0;
                 this.stop_music(old_music);
             } else {
                 this.current_music = new Audio(data.music);
                 this.current_music.volume = 1;
-                data.music_loop === false ? this.current_music.loop = false : this.current_music.loop = true;
             }
 
+            data.music_loop === false ? this.current_music.loop = false : this.current_music.loop = true;
             this.current_music.play();
 
             // Fade music volume if set so
