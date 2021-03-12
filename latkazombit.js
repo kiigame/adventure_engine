@@ -29,7 +29,6 @@ let kiigame = new KiiGame(
     )
 );
 let stage = kiigame.stage;
-let texts_json = kiigame.texts_json;
 
 var legends_json = JSON.parse(new JSONGetter().getJSON('data/legends.json'));
 
@@ -43,7 +42,7 @@ var input_layer = stage.find('#input_layer')[0];
 var number_selected = false;
 
 // Default player number
-input_text.setText(texts_json['input_text']['text']);
+input_text.setText(kiigame.text.getText('input_text', 'text');
 
 // Dirty removing of default event handler to allow using jersey input
 stage.find('#start_game')[0].eventListeners.click = [];
@@ -67,7 +66,7 @@ stage.find('#start_game')[0].on('tap click', function(event) {
 stage.find('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
-	kiigame.setMonologue(kiigame.findMonologue('character_panic', 'text'));
+	kiigame.setMonologue(kiigame.text.getText('character_panic', 'text'));
     kiigame.playCharacterAnimation(kiigame.character_animations["panic"], 6000);
 });
 
@@ -75,11 +74,10 @@ stage.find('#start')[0].on('tap click', function(event) {
 input_layer.on('tap click', function(event) {
 	var target = event.target;
 	
-	var selected = texts_json[target.getAttr('id')];
-	if (selected)
-	    selected = selected.name;
-	else
-	    return;
+    var selected = kiigame.text.getName(target.getAttr('id'));
+    if (!selected) {
+        return;
+    }
 	
 	// Number buttons
 	if (parseInt(selected) >= 0 && parseInt(selected) <= 9) {
@@ -179,17 +177,17 @@ input_layer.on('tap click', function(event) {
 					}
 				}
 				break;
-		}
-		// Backspace
+        }
+    // Backspace
 	} else if (selected == 'Pyyhi') {
 		if (input_text.getText().length > 0) {
 			input_text.setText(input_text.getText().slice(0, -1));
 		}
-		// OK
+    // OK
 	} else if (selected == 'OK' && input_text.getText().length > 0) {
 		stage.find('#jersey_number')[0].setText(input_text.getText());
-		texts_json['jersey_number']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
-		texts_json['icehockey_jersey']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
+		kiigame.text.setText('jersey_number', 'examine', kiigame.text.getText('input_text', 'wikistart') + input_text.getText() + kiigame.text.getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
+		kiigame.text.setText('icehockey_jersey', 'examine', kiigame.text.getText('input_text', 'wikistart') + input_text.getText() + kiigame.text.getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
 		input_layer.hide();
 
         kiigame.handle_commands(new DefaultInteractionResolver().resolveCommands(

@@ -16,6 +16,7 @@ import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import Music from './view/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
+import Text from './model/Text.js';
 
 export class KiiGame {
     constructor(
@@ -26,7 +27,8 @@ export class KiiGame {
         interactions = null,
         hitRegionInitializer = null,
         intersection = null,
-        music = null
+        music = null,
+        text = null
     ) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
@@ -36,6 +38,7 @@ export class KiiGame {
         this.hitRegionInitializer = hitRegionInitializer;
         this.intersection = intersection;
         this.music = music;
+        this.text = text;
 
         if (this.jsonGetter === null) {
             this.jsonGetter = new JSONGetter();
@@ -83,6 +86,11 @@ export class KiiGame {
             this.music = new Music(
                 JSON.parse(this.getJSON('data/music.json')),
                 new AudioFactory()
+            );
+        }
+        if (this.text === null) {
+            this.text = new Text(
+                JSON.parse(this.getJSON('data/texts.json'))
             );
         }
 
@@ -159,7 +167,6 @@ export class KiiGame {
         // Get jsons from the server
         this.images_json = JSON.parse(this.getJSON('data/images.json'));
         this.rooms_json = JSON.parse(this.getJSON('data/rooms.json'))['rooms'];
-        this.texts_json = JSON.parse(this.getJSON('data/texts.json'));
         this.character_json = JSON.parse(this.getJSON('data/character.json'));
         this.sequences_json = JSON.parse(this.getJSON('data/sequences.json'));
         this.menu_json = JSON.parse(this.getJSON('data/menu.json'));
@@ -410,12 +417,7 @@ export class KiiGame {
                     this.target.shadowBlur(20);
                     this.inventory_layer.draw();
 
-                    // Don't cause a mass of errors if no text found
-                    try {
-                        this.interaction_text.text(this.texts_json[this.target.id()].name);
-                    } catch (e) {
-                        // Do nothing
-                    }
+                    this.interaction_text.text(this.text.getName(this.target.id()));
 
                     this.interaction_text.x(this.dragged_item.x() + (this.dragged_item.width() / 2));
                     this.interaction_text.y(this.dragged_item.y() - 30);
@@ -600,7 +602,7 @@ export class KiiGame {
                 });
             } else if (item_action == "credits") {
                 item.on('tap click', (event) => {
-                    this.setMonologue(this.findMonologue(event.target.id()));
+                    this.setMonologue(this.text.getText(event.target.id()));
                 });
             }
         }
@@ -837,7 +839,7 @@ export class KiiGame {
     /// animation is stopped and the defined animation plays, and not vice versa.
     handle_command(command) {
         if (command.command == "monologue") {
-            this.setMonologue(this.findMonologue(command.textkey.object, command.textkey.string));
+            this.setMonologue(this.text.getText(command.textkey.object, command.textkey.string));
         } else if (command.command == "inventory_add") {
             this.inventoryAdd(this.getObject(command.item));
         } else if (command.command == "inventory_remove") {
@@ -866,7 +868,7 @@ export class KiiGame {
         } else if (command.command == "npc_monologue") {
             this.npcMonologue(
                 this.getObject(command.npc),
-                this.findMonologue(command.textkey.object, command.textkey.string)
+                this.text.getText(command.textkey.object, command.textkey.string)
             );
         } else {
             console.warn("Unknown interaction command " + command.command);
@@ -926,50 +928,6 @@ export class KiiGame {
         }
 
         this.text_layer.draw();
-    }
-
-    /// Find monologue text in object. If a text is not found from texts_json by
-    /// the parameter, return the default text for the object (if it exists), or
-    /// the master default text.
-    /// @param object_id The id of the object which's texts are looked up.
-    /// @param key The key to look up the text with. If null, set to 'examine' by
-    ///            default. Otherwise usually the name of the other object in
-    ///            item-object interactions.
-    /// @return The text found, or the default text.
-    findMonologue(object_id, key) {
-        if (key == null) {
-            key = 'examine';
-        }
-
-        var text = null;
-        try { // Might not find with object_id
-            text = this.texts_json[object_id][key];
-        } catch(e) {
-            // Do nothing
-        }
-
-        // If no text found, use default text
-        if (!text || text.length == 0) {
-            // Item's own default
-            console.warn("No text " + key + " found for " + object_id);
-            try { // Might not find with object_id
-                text = this.texts_json[object_id]['default'];
-            } catch(e) {
-                // Do nothing
-            }
-
-            if (!text) {
-                // Master default
-                console.warn("Default text not found for " + object_id + ". Using master default.");
-                try {
-                    text = this.texts_json["default"]["examine"];
-                } catch (e) {
-                    text = "Fallback default examine entry missing from texts.json!"; // crude
-                }
-            }
-        }
-
-        return text;
     }
 
     /// Set NPC monologue text and position the NPC speech bubble to the desired
