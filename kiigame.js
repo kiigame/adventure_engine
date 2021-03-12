@@ -595,15 +595,8 @@ export class KiiGame {
 
             if (item_action == "start_game") {
                 item.on('tap click', (event) => {
-                    if (this.getObject("intro") != "") {
-                        var intro_delay = this.play_sequence("intro", true);
-                        setTimeout(() => {
-                            this.do_transition(this.game_start_layer.id(), 0)
-                        }, intro_delay);
-                    } else {
-                        // Assume intro layer has a transition to game_start_layer
-                        this.do_transition(this.game_start_layer.id());
-                    }
+                    var resolver = new DefaultInteractionResolver();
+                    this.handle_commands(resolver.resolveCommands(this.interactions, 'start_game'));
                 });
             } else if (item_action == "credits") {
                 item.on('tap click', (event) => {
@@ -647,9 +640,8 @@ export class KiiGame {
 
     /// Plays a sequence defined in sequences.json
     /// @param id The sequence id in sequences.json
-    /// @param monologue boolean Show sequence's examine text at the end of sequence
     /// @return The length of sequence in ms. Doesn't include the fade-in!
-    play_sequence(id, monologue) {
+    play_sequence(id) {
         var delay = 700;
 
         // Animation cycle for proper fading and drawing order
@@ -659,7 +651,6 @@ export class KiiGame {
 
         var old_layer = this.current_layer;
         this.current_layer = this.getObject(id);
-        var sequence_exit_text = monologue === true ? this.findMonologue(this.current_layer.id()) : null;
         var sequence = this.sequences_json[this.current_layer.id()];
         var final_fade_duration = sequence.transition_length != null ? sequence.transition_length : 0;
 
@@ -713,7 +704,7 @@ export class KiiGame {
             delay = delay + sequence.slides[i].show_time;
         };
 
-        // After last slide, do the final fade and set up exit monologue.
+        // After last slide, do the final fade
         if (final_fade_duration > 0) {
             setTimeout(() => {
                 this.fade_full.tween.duration = final_fade_duration;
@@ -724,9 +715,6 @@ export class KiiGame {
                     setTimeout(() => {
                         this.fade_layer_full.hide();
                         this.fade_full.tween.duration = 600; // reset to default
-                        if (monologue === true) {
-                            this.setMonologue(sequence_exit_text);
-                        }
                     }, final_fade_duration);
                 }, final_fade_duration);
             }, delay);
@@ -870,7 +858,7 @@ export class KiiGame {
             // Overrides default speak animation from setMonologue.
             this.playCharacterAnimation(this.character_animations[command.animation], command.length);
         } else if (command.command == "play_sequence") {
-            this.play_sequence(command.sequence, command.monologue);
+            this.play_sequence(command.sequence);
         } else if (command.command == "set_idle_animation") {
             this.setIdleAnimation(command.animation_name);
         } else if (command.command == "set_speak_animation") {
