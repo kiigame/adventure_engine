@@ -192,8 +192,10 @@ input_layer.on('tap click', function(event) {
 		texts_json['icehockey_jersey']['examine'] = texts_json['input_text']['wikistart'] + input_text.getText() + texts_json['input_text']['wikiend'] + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia;
 		input_layer.hide();
 
-	    var intro_delay = kiigame.play_sequence("intro", true);
-        setTimeout(() => kiigame.do_transition(kiigame.game_start_layer.id(), 0), intro_delay);
+        kiigame.handle_commands(new DefaultInteractionResolver().resolveCommands(
+            kiigame.interactions,
+            'start_game'
+        ));
 	}
 	// If no number, grey out buttons that can't be used
 	if (input_text.getText().length == 0) {

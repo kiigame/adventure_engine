@@ -1,4 +1,22 @@
 {
+    "start_game": {
+        "click": [
+            {
+                "command": "play_sequence",
+                "sequence": "intro"
+            },
+            {
+                "command": "do_transition",
+                "destination": "object_layer_locker_room_1",
+                "timeout": 21000
+            },
+            {
+                "command": "monologue",
+                "textkey": {"object": "intro", "string": "examine"},
+                "timeout": 24000
+            }
+        ]
+    },
     "airfreshener": {
         "locker_room_1_door_to_wc_stinking": [
             {
@@ -426,8 +444,7 @@
         "click": [
             {
                 "command": "play_sequence",
-                "sequence": "outro",
-                "monologue": false
+                "sequence": "outro"
             },
             {
                 "command": "do_transition",
@@ -672,6 +689,6 @@
             }
         ]
     },
-    "oikotie": {"click": [{"command": "play_sequence","sequence": "outro","monologue": false},{"command": "do_transition", "destination": "end_layer", "timeout": 5700}]},
+    "oikotie": {"click": [{"command": "play_sequence","sequence": "outro"},{"command": "do_transition", "destination": "end_layer", "timeout": 5700}]},
     "oikotie2": {"click":[{"command":"do_transition","destination":"object_layer_locker_room_2"}]}
 }
