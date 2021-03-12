@@ -13,7 +13,7 @@
             {
                 "command": "monologue",
                 "textkey": {"object": "intro", "string": "examine"},
-                "timeout": 22700
+                "timeout": 25000
             }
         ]
     },
