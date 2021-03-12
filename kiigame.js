@@ -742,9 +742,7 @@ export class KiiGame {
     /// Transition to a room.
     /// @param room_id The id of the room to transition to.
     /// @param fade_time The fade duration; if null, use a default.
-    /// @param comingFrom The room where the transition was started in. Sets up
-    ///                   the monologue text.
-    do_transition(room_id, fade_time, comingFrom) {
+    do_transition(room_id, fade_time) {
         // By default do fast fade
         if (fade_time === null) {
             fade_time = 700;
@@ -788,9 +786,6 @@ export class KiiGame {
             setTimeout(() => {
                 this.fade_layer_room.hide();
                 this.music.playMusic(this.current_layer.id());
-                if (comingFrom) {
-                    this.setMonologue(this.findMonologue(comingFrom));
-                }
             }, fade_time);
         }, fade_time);
     }
