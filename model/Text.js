@@ -4,6 +4,9 @@ class Text {
     }
 
     setText(id, key, text) {
+        if (!this.texts[id]) {
+            this.texts[id] = [];
+        }
         this.texts[id][key] = text;
     }
 
