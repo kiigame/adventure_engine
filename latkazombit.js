@@ -42,7 +42,7 @@ var input_layer = stage.find('#input_layer')[0];
 var number_selected = false;
 
 // Default player number
-input_text.setText(kiigame.text.getText('input_text', 'text');
+input_text.setText(kiigame.text.getText('input_text', 'text'));
 
 // Dirty removing of default event handler to allow using jersey input
 stage.find('#start_game')[0].eventListeners.click = [];
