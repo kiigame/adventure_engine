@@ -11,7 +11,7 @@ class Text {
         var name = '';
         // Don't cause a mass of errors if no text found
         try {
-            name = this.texts[this.target.id()].name;
+            name = this.texts[id].name;
         } catch (e) {
             // Do nothing
         }
