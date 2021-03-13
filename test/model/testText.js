@@ -3,7 +3,7 @@ import Text from '../../model/Text.js';
 
 var assert = chai.assert;
 
-describe('Test Text', function() {
+describe('Test Text getName function', function() {
     it('returns the name of the object if it exists', function() {
         var json = "{\"object\": {\"key1\": \"Hello\", \"key2\": \"More hello\", \"name\": \"ObjectName\"}}";
         var text = new Text(JSON.parse(json));
@@ -16,6 +16,9 @@ describe('Test Text', function() {
         var result = text.getName('otherObject');
         assert.deepEqual(result, '');
     });
+});
+
+describe('Test Text getText function', function() {
     it('getText returns examine text of the object if called without specific key', function() {
         var json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}}";
         var text = new Text(JSON.parse(json));
@@ -28,24 +31,33 @@ describe('Test Text', function() {
         var result = text.getText('object', 'key1');
         assert.deepEqual(result, 'Hello');
     });
-    it('getText returns default examine when called with nonexisting key for the object and no default text for the object exists', function() {
-        var json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}, \"default\": {\"examine\": \"Default examine\"}}";
-        var text = new Text(JSON.parse(json));
-        var result = text.getText('object', 'key2');
-        assert.deepEqual(result, 'Default examine');
-    });
-    it('getText returns error text if default examine is missing from texts.json', function() {
-        var json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}}";
-        var text = new Text(JSON.parse(json));
-        var result = text.getText('object', 'key2');
-        assert.deepEqual(result, 'Fallback default examine entry missing from texts.json!');
-    });
     it('getText returns object default text when called with nonexisting key for the object', function() {
         var json = "{\"object\": {\"default\": \"Hello default\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}, \"default\": {\"examine\": \"Default examine\"}}";
         var text = new Text(JSON.parse(json));
         var result = text.getText('object', 'key2');
         assert.deepEqual(result, 'Hello default');
     });
+    it('getText returns default master examine when called with nonexisting key for the object and no default text for the object exists', function() {
+        var json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}, \"default\": {\"examine\": \"Default examine\"}}";
+        var text = new Text(JSON.parse(json));
+        var result = text.getText('object', 'key2');
+        assert.deepEqual(result, 'Default examine');
+    });
+    it('getText returns error text if default section is missing from texts.json', function() {
+        var json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}}";
+        var text = new Text(JSON.parse(json));
+        var result = text.getText('object', 'key2');
+        assert.deepEqual(result, 'Fallback default examine entry missing from texts.json!');
+    });
+    it('getText returns error text if default section is there but the examine key is missing from texts.json', function() {
+        var json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}, \"default\": {\"hexamine\": \"Default hexamine\"}}";
+        var text = new Text(JSON.parse(json));
+        var result = text.getText('object', 'key2');
+        assert.deepEqual(result, 'Fallback default examine entry missing from texts.json!');
+    });
+});
+
+describe('Test Text setText function', function() {
     it('setText successfully sets text to existing object with new key', function() {
         var json = "{\"object\": {\"default\": \"Hello default\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}, \"default\": {\"examine\": \"Default examine\"}}";
         var text = new Text(JSON.parse(json));

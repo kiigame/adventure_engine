@@ -36,34 +36,34 @@ class Text {
         }
 
         var text = null;
-        try { // Might not find with object_id
-            text = this.texts[object_id][key];
-        } catch(e) {
-            // Do nothing
+        if (!this.texts[object_id]) {
+            return this.getDefaultExamine();
         }
+
+        text = this.texts[object_id][key];
 
         // If no text found, use default text
         if (!text || text.length == 0) {
             // Item's own default
             console.warn("No text " + key + " found for " + object_id);
-            try { // Might not find with object_id
-                text = this.texts[object_id]['default'];
-            } catch(e) {
-                // Do nothing
-            }
+            text = this.texts[object_id]['default'];
 
             if (!text) {
                 // Master default
                 console.warn("Default text not found for " + object_id + ". Using master default.");
-                try {
-                    text = this.texts["default"]["examine"];
-                } catch (e) {
-                    text = "Fallback default examine entry missing from texts.json!"; // crude
-                }
+                text = this.getDefaultExamine();
             }
         }
 
         return text;
+    }
+
+    getDefaultExamine() {
+        if (!this.texts['default'] || !this.texts['default']['examine']) {
+            return "Fallback default examine entry missing from texts.json!"; // crude
+        }
+
+        return this.texts["default"]["examine"];
     }
 }
 
