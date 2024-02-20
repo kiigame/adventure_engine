@@ -1,5 +1,6 @@
 {
   "name": "@kiigame/adventure_engine",
+  "type": "module",
   "version": "0.4.1",
   "description": "Lightweight point & click adventure game engine",
   "main": "dist/kiigame.cjs.js",
@@ -32,7 +33,7 @@
   "scripts": {
     "build": "./node_modules/.bin/rollup -c --config --configBuild",
     "dev": "./node_modules/.bin/rollup -c --config --configDev",
-    "test": "mocha -r esm"
+    "test": "mocha -r esm 'test/**/*.js'"
   },
   "files": [
     "dist"
