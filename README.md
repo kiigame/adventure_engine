@@ -37,3 +37,8 @@ Building the library bundle
 ---------------------------
 
 `npm run build` builds the library bundle to `dist/`.
+
+Development
+-----------
+
+ * This project uses [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
