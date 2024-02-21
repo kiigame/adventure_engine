@@ -18,6 +18,10 @@ import Music from './view/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
 
+// TODO: Move DI up
+import "reflect-metadata";
+import { container, TYPES } from "./inversify.config.js";
+
 export class KiiGame {
     constructor(
         jsonGetter = null,
@@ -44,11 +48,11 @@ export class KiiGame {
             this.jsonGetter = new JSONGetter();
         }
         if (this.sequencesBuilder === null) {
+            // TODO: Move DI up
+            const slideBuilder = container.get(TYPES.SlideBuilder);
             this.sequencesBuilder = new SequencesBuilder(
                 new SequenceBuilder(
-                    new SlideBuilder(
-                        new TextBuilder()
-                    )
+                    slideBuilder
                 )
             );
         }
