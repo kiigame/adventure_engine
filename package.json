@@ -22,20 +22,20 @@
   "devDependencies": {
     "@commitlint/cli": "^18.6.1",
     "@commitlint/config-conventional": "^18.6.2",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
     "esm": "^3.2.25",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
-    "rollup": "^1.27.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-copy": "^3.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup": "^4.12.0",
+    "rollup-plugin-copy": "^3.5.0",
     "sinon": "^7.5.0"
   },
   "scripts": {
-    "build": "./node_modules/.bin/rollup -c --config --configBuild",
-    "dev": "./node_modules/.bin/rollup -c --config --configDev",
+    "build": "./node_modules/.bin/rollup --config --configBuild",
+    "dev": "./node_modules/.bin/rollup --config --configDev",
     "test": "mocha -r esm 'test/**/*.js'",
     "prepare": "husky install"
   },
