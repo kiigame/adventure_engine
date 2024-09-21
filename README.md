@@ -9,7 +9,7 @@ KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engin
  * [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and [commitlint](https://commitlint.js.org/#/)
  * [InversifyJS](https://inversify.io/) for dependency injection
 
-The engine comes with an example game, [Lätkäzombit: Pako hallista](https://kgae.netlify.com/). The example game is in the Finnish language.
+The engine comes with an example game, [Lätkäzombit: Pako hallista](https://kgae.netlify.app/). The example game is in the Finnish language.
 
 There is an editor to create games using KGAE: check out [kged here](https://github.com/kiigame/kged).
 
