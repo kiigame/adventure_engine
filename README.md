@@ -1,6 +1,7 @@
 # KiiGame Adventure Engine
 
-[![Node CI](https://github.com/kiigame/adventure_engine/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/kiigame/adventure_engine/actions?query=branch%3Adevelop) [![Netlify Status](https://api.netlify.com/api/v1/badges/697d2167-ec6d-4d1a-98dd-9ae075af4fd5/deploy-status)](https://app.netlify.com/sites/kgae/deploys)
+![Node CI](https://github.com/kiigame/adventure_engine/actions/workflows/nodejs.yml/badge.svg?branch=main)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/697d2167-ec6d-4d1a-98dd-9ae075af4fd5/deploy-status)](https://app.netlify.com/sites/kgae/deploys)
 
 KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engine for web browsers. KGAE uses:
  * [Konva](https://konvajs.org)
