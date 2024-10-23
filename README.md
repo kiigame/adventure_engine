@@ -6,9 +6,9 @@
 KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engine for web browsers. KGAE uses:
  * [Konva](https://konvajs.org)
  * Mocha, Chai and Sinon.JS for unit tests
- * [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and [commitlint](https://commitlint.js.org/#/)
+ * [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [commitlint](https://commitlint.js.org/#/)
  * [InversifyJS](https://inversify.io/) for dependency injection
- * [Semantic versioning](https://semver.org/)
+ * [Semantic Versioning](https://semver.org/)
 
 The engine comes with an example game, [Lätkäzombit: Pako hallista](https://kgae.netlify.app/). The example game is in the Finnish language.
 
