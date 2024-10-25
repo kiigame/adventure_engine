@@ -5,8 +5,6 @@ import LayerAdder from './view/stage/konvadata/LayerAdder.js';
 import LayerChildAdder from './view/stage/konvadata/LayerChildAdder.js';
 import SequencesBuilder from './view/sequence/konvadata/SequencesBuilder.js';
 import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
-import SlideBuilder from './view/sequence/konvadata/SlideBuilder.js';
-import TextBuilder from './view/sequence/konvadata/TextBuilder.js';
 import DefaultInteractionResolver from './model/DefaultInteractionResolver.js';
 import Interactions from './model/Interactions.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
