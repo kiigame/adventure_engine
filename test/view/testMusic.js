@@ -10,8 +10,12 @@ describe('Test Music', function() {
     it('playing undefined music does not crash', function() {
         function AudioStub() {};
         audioFactoryStub.create.returns(new AudioStub());
-        var json = "{\"layer\": {\"music\": \"music.ogg\"}}";
-        let music = new Music(JSON.parse(json), audioFactoryStub);
+        var json = {
+            "layer": {
+                "music": "music.ogg",
+            },
+        };
+        let music = new Music(json, audioFactoryStub);
         music.playMusic(undefined);
         var result = music.getCurrentMusic();
         assert.deepEqual(result, null);
@@ -23,8 +27,12 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = "{\"layer\": {\"music\": \"music.ogg\"}}";
-        let music = new Music(JSON.parse(json), audioFactoryStub);
+        var json = {
+            "layer": {
+                "music": "music.ogg",
+            },
+        };
+        let music = new Music(json, audioFactoryStub);
         music.playMusic('layer');
         var result = music.getCurrentMusic();
         assert.isNotNull(result);
@@ -39,8 +47,14 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = "{\"layer\": {\"music\": \"music.ogg\", \"fade\": false, \"loop\": false}}";
-        let music = new Music(JSON.parse(json), audioFactoryStub);
+        var json = {
+            "layer": {
+                "music": "music.ogg",
+                "fade": false,
+                "loop": false,
+            },
+        };
+        let music = new Music(json, audioFactoryStub);
         music.playMusic('layer');
         var result = music.getCurrentMusic();
         assert.isNotNull(result);
@@ -55,8 +69,14 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = "{\"layer\": {\"music\": \"music.ogg\", \"fade\": true, \"loop\": true}}";
-        let music = new Music(JSON.parse(json), audioFactoryStub);
+        var json = {
+            "layer": {
+                "music": "music.ogg",
+                "fade": true,
+                "loop": true,
+            },
+        };
+        let music = new Music(json, audioFactoryStub);
         music.playMusic('layer');
         var result = music.getCurrentMusic();
         assert.isNotNull(result);
@@ -72,8 +92,16 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = "{\"loop\": {\"music\": \"music.ogg\", \"loop\": true}, \"noloop\": {\"music\": \"music.ogg\"}}";
-        let music = new Music(JSON.parse(json), audioFactoryStub);
+        var json = {
+            "loop": {
+                "music": "music.ogg",
+                "loop": true,
+            },
+            "noloop": {
+                "music": "music.ogg"
+            }
+        };
+        let music = new Music(json, audioFactoryStub);
         music.playMusic('loop');
         music.playMusic('noloop');
         var result = music.getCurrentMusic();
@@ -86,8 +114,16 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = "{\"loop\": {\"music\": \"music.ogg\", \"loop\": true}, \"noloop\": {\"music\": \"music.ogg\", \"loop\": false}}";
-        let music = new Music(JSON.parse(json), audioFactoryStub);
+        var json = {
+            "loop": {
+                "music": "music.ogg",
+                "loop": true,
+            },
+            "noloop": {
+                "music": "music.ogg"
+            }
+        };
+        let music = new Music(json, audioFactoryStub);
         music.playMusic('loop');
         music.playMusic('noloop');
         var result = music.getCurrentMusic();
