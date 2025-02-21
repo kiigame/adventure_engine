@@ -3,21 +3,21 @@ import sinon from 'sinon';
 import Music from '../../view/Music.js';
 import AudioFactory from '../../view/music/AudioFactory.js';
 
-var assert = chai.assert;
-var audioFactoryStub = sinon.createStubInstance(AudioFactory);
+const assert = chai.assert;
+const audioFactoryStub = sinon.createStubInstance(AudioFactory);
 
 describe('Test Music', function() {
     it('playing undefined music does not crash', function() {
         function AudioStub() {};
         audioFactoryStub.create.returns(new AudioStub());
-        var json = {
+        const json = {
             "layer": {
                 "music": "music.ogg",
             },
         };
-        let music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub);
         music.playMusic(undefined);
-        var result = music.getCurrentMusic();
+        const result = music.getCurrentMusic();
         assert.deepEqual(result, null);
     });
     it('starting music without loop and fade data have neither loop nor fade', function() {
@@ -27,14 +27,14 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = {
+        const json = {
             "layer": {
                 "music": "music.ogg",
             },
         };
-        let music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub);
         music.playMusic('layer');
-        var result = music.getCurrentMusic();
+        const result = music.getCurrentMusic();
         assert.isNotNull(result);
         assert.isFalse(result.loop);
         assert.isFalse(result.fade);
@@ -47,16 +47,16 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = {
+        const json = {
             "layer": {
                 "music": "music.ogg",
                 "fade": false,
                 "loop": false,
             },
         };
-        let music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub);
         music.playMusic('layer');
-        var result = music.getCurrentMusic();
+        const result = music.getCurrentMusic();
         assert.isNotNull(result);
         assert.isFalse(result.loop);
         assert.isFalse(result.fade);
@@ -69,16 +69,16 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = {
+        const json = {
             "layer": {
                 "music": "music.ogg",
                 "fade": true,
                 "loop": true,
             },
         };
-        let music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub);
         music.playMusic('layer');
-        var result = music.getCurrentMusic();
+        const result = music.getCurrentMusic();
         assert.isNotNull(result);
         assert.isTrue(result.loop);
         assert.isTrue(result.fade);
@@ -92,7 +92,7 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = {
+        const json = {
             "loop": {
                 "music": "music.ogg",
                 "loop": true,
@@ -101,10 +101,10 @@ describe('Test Music', function() {
                 "music": "music.ogg"
             }
         };
-        let music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub);
         music.playMusic('loop');
         music.playMusic('noloop');
-        var result = music.getCurrentMusic();
+        const result = music.getCurrentMusic();
         assert.isFalse(result.loop);
     });
     it('in two subsequent rooms with same music, respect if the second room explicitly sets looping to false', function() {
@@ -114,7 +114,7 @@ describe('Test Music', function() {
             }
         };
         audioFactoryStub.create.returns(new AudioStub());
-        var json = {
+        const json = {
             "loop": {
                 "music": "music.ogg",
                 "loop": true,
@@ -123,10 +123,10 @@ describe('Test Music', function() {
                 "music": "music.ogg"
             }
         };
-        let music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub);
         music.playMusic('loop');
         music.playMusic('noloop');
-        var result = music.getCurrentMusic();
+        const result = music.getCurrentMusic();
         assert.isFalse(result.loop);
     });
     // TODO: More test cases
