@@ -17,7 +17,6 @@ import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
 
 // TODO: Move DI up
-import "reflect-metadata";
 import { container, TYPES } from "./inversify.config.js";
 
 export class KiiGame {
