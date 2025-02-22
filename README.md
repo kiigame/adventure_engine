@@ -7,7 +7,7 @@ KiiGame Adventure Engine is a HTML5/JavaScript based simple adventure game engin
  * Node.js and npm
  * [Konva](https://konvajs.org)
  * Mocha, Chai and Sinon.JS for unit tests
- * [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [commitlint](https://commitlint.js.org/#/)
+ * [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), [commitlint](https://commitlint.js.org/#/) and [commitlint-plugin-tense](https://github.com/actuallydamo/commitlint-plugin-tense)
  * [InversifyJS](https://inversify.io/) for dependency injection
  * [Semantic Versioning](https://semver.org/)
 

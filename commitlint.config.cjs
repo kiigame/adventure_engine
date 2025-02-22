@@ -10,7 +10,9 @@ module.exports = {
       {
         allowedTenses: ['present-imperative'],
         firstOnly: true,
-        allowlist: [],
+        allowlist: [
+          'mention',
+        ],
       }
     ]
   }
