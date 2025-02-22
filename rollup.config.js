@@ -40,7 +40,7 @@ export const dev = {
         commonjs(),
         copy({
             targets: [
-                { src: 'kiigame.html', dest: 'public/' },
+                { src: 'index.html', dest: 'public/' },
                 { src: 'data/*.json', dest: 'public/data/' },
                 { src: 'data/audio/**/*', dest: 'public/data/audio/' },
                 { src: 'data/images/**/*', dest: 'public/data/images/' },
