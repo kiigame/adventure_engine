@@ -1040,9 +1040,9 @@ export class KiiGame {
     // Setting an image to the stage and scaling it based on relative values if they exist
     createObject(o) {
         window[o.id] = new Image();
-        window[o.id].onload = (() => {
+        window[o.id].onload = () => {
             this.getObject(o.id).image(window[o.id]);
-        })();
+        };
         window[o.id].src = o.src;
     }
 
