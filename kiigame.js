@@ -15,6 +15,7 @@ import CategoryValidator from './view/intersection/CategoryValidator.js';
 import Music from './view/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
+import GameEventEmitter from './events/GameEventEmitter.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -30,7 +31,8 @@ export class KiiGame {
         hitRegionInitializer = null,
         intersection = null,
         music = null,
-        text = null
+        text = null,
+        gameEventEmitter = new GameEventEmitter(),
     ) {
         this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
@@ -41,6 +43,7 @@ export class KiiGame {
         this.intersection = intersection;
         this.music = music;
         this.text = text;
+        this.gameEventEmitter = gameEventEmitter;
 
         if (this.jsonGetter === null) {
             this.jsonGetter = new JSONGetter();
@@ -543,6 +546,44 @@ export class KiiGame {
             // no start layer
             this.do_transition(this.game_start_layer.id());
         }
+
+        // Set up event listeners for the gameplay commands
+        this.gameEventEmitter.on('monologue', (text) => {
+            this.setMonologue(text);
+        });
+        this.gameEventEmitter.on('inventory_add', (item) => {
+            this.inventoryAdd(item);
+        });
+        this.gameEventEmitter.on('inventory_remove', (item) => {
+            this.inventoryRemove(item);
+        });
+        this.gameEventEmitter.on('remove_object', (object) => {
+            this.removeObject(object);
+        });
+        this.gameEventEmitter.on('add_object', (object) => {
+            this.addObject(object);
+        });
+        this.gameEventEmitter.on('do_transition', ({room_id, fade_time}) => {
+            this.do_transition(room_id, fade_time);
+        });
+        // Overriding default speaking animation from setMonologue from the same
+        // interaction assumes: setMonologue is called first, and that events get
+        // fired and handled in the same order ...
+        this.gameEventEmitter.on('play_character_animation', ({animation, duration}) => {
+            this.playCharacterAnimation(animation, duration);
+        });
+        this.gameEventEmitter.on('play_sequence', (sequence_id) => {
+            this.play_sequence(sequence_id);
+        });
+        this.gameEventEmitter.on('set_idle_animation', (animation_id) => {
+            this.setIdleAnimation(animation_id);
+        });
+        this.gameEventEmitter.on('set_speak_animation', (animation_id) => {
+            this.setSpeakAnimation(animation_id);
+        });
+        this.gameEventEmitter.on('npc_monologue', (npc, text) => {
+            this.npcMonologue(npc, text);
+        });
     }
 
     // Draw the stage and start animations
@@ -841,37 +882,45 @@ export class KiiGame {
     /// animation is stopped and the defined animation plays, and not vice versa.
     handle_command(command) {
         if (command.command == "monologue") {
-            this.setMonologue(this.text.getText(command.textkey.object, command.textkey.string));
+            const text = this.text.getText(command.textkey.object, command.textkey.string);
+            this.gameEventEmitter.emit('monologue', text);
         } else if (command.command == "inventory_add") {
-            this.inventoryAdd(this.getObject(command.item));
+            const item = this.getObject(command.item);
+            this.gameEventEmitter.emit('inventory_add', item);
         } else if (command.command == "inventory_remove") {
             if (Array.isArray(command.item)) {
-                for (let item of command.item) {
-                    this.inventoryRemove(this.getObject(item));
+                for (let itemId of command.item) {
+                    const item = this.getObject(itemId);
+                    this.gameEventEmitter.emit('inventory_remove', item);
                 }
             } else {
-                this.inventoryRemove(this.getObject(command.item));
+                const item = this.getObject(command.item);
+                this.gameEventEmitter.emit('inventory_remove', item);
             }
         } else if (command.command == "remove_object") {
-            this.removeObject(this.getObject(command.object));
+            const object = this.getObject(command.object);
+            this.gameEventEmitter.emit('remove_object', object);
         } else if (command.command == "add_object") {
-            this.addObject(this.getObject(command.object));
+            const object = this.getObject(command.object);
+            this.gameEventEmitter.emit('add_object', object);
         } else if (command.command == "do_transition") {
-            this.do_transition(command.destination, command.length != null ? command.length : 700);
+            const fade_time = command.length != null ? command.length : 700;
+            const room_id = command.destination;
+            this.gameEventEmitter.emit('do_transition', {room_id, fade_time});
         } else if (command.command == "play_character_animation") {
-            // Overrides default speak animation from setMonologue.
-            this.playCharacterAnimation(this.character_animations[command.animation], command.length);
+            const animation = this.character_animations[command.animation];
+            const duration = command.length;
+            this.gameEventEmitter.emit('play_character_animation', {animation, duration});
         } else if (command.command == "play_sequence") {
-            this.play_sequence(command.sequence);
+            this.gameEventEmitter.emit('play_sequence', command.sequence);
         } else if (command.command == "set_idle_animation") {
-            this.setIdleAnimation(command.animation_name);
+            this.gameEventEmitter.emit('set_idle_animation', command.animation);
         } else if (command.command == "set_speak_animation") {
-            this.setSpeakAnimation(command.animation_name);
+            this.gameEventEmitter.emit('set_speak_animation', command.animation);
         } else if (command.command == "npc_monologue") {
-            this.npcMonologue(
-                this.getObject(command.npc),
-                this.text.getText(command.textkey.object, command.textkey.string)
-            );
+            const npc = this.getObject(command.npc);
+            const text = this.text.getText(command.textkey.object, command.textkey.string);
+            this.gameEventEmitter.emit('npc_monologue', npc, text);
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
@@ -932,10 +981,13 @@ export class KiiGame {
         this.text_layer.draw();
     }
 
-    /// Set NPC monologue text and position the NPC speech bubble to the desired
-    /// NPC.
-    /// @param npc The object in the stage that will have the speech bubble.
-    /// @param text The text to be shown in the speech bubble.
+    /**
+     * Set NPC monologue text and position the NPC speech bubble to the
+     * desired NPC.
+     * @param {*} npc  The object in the stage that will
+     *                 have the speech bubble.
+     * @param {*} text The text to be shown in the speech bubble.
+     */
     npcMonologue(npc, text) {
         this.npc_monologue.setWidth('auto');
         this.npc_speech_bubble.show();
@@ -976,14 +1028,15 @@ export class KiiGame {
 
         this.character_speech_bubble.y(this.stage.height() - 100 - 15 - this.monologue.height() / 2);
         this.text_layer.draw();
-
         this.playCharacterAnimation(this.speak_animation, 3000);
     }
 
-    /// Play a character animation
-    /// @param animation The animation to play.
-    /// @param timeout The time in ms until the character returns to idle animation.
-    playCharacterAnimation(animation, timeout) {
+    /**
+     * Play a character animation.
+     * @param {*} animation The animation to play.
+     * @param {*} duration The time in ms until the character returns to idle animation.
+     */
+    playCharacterAnimation(animation, duration) {
         this.stopCharacterAnimations();
         for (var i in this.idle_animation) {
             this.idle_animation[i].node.hide();
@@ -997,7 +1050,7 @@ export class KiiGame {
         clearTimeout(this.character_animation_timeout);
         this.character_animation_timeout = setTimeout(() => {
             this.stopCharacterAnimations();
-        }, timeout);
+        }, duration);
     }
 
     ///Stop the characer animations, start idle animation
