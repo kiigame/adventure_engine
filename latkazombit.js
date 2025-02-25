@@ -6,6 +6,9 @@ import Intersection from './view/Intersection.js';
 import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
+import GameEventEmitter from './events/GameEventEmitter.js';
+
+const gameEventEmitter = new GameEventEmitter();
 
 let kiigame = new KiiGame(
     null,
@@ -26,7 +29,10 @@ let kiigame = new KiiGame(
             new VisibilityValidator(),
             new CategoryValidator(['secret'])
         ]
-    )
+    ),
+	null,
+	null,
+	gameEventEmitter,
 );
 let stage = kiigame.stage;
 
@@ -66,8 +72,8 @@ stage.find('#start_game')[0].on('tap click', function(event) {
 stage.find('#start')[0].on('tap click', function(event) {
 	event = event.target;
 
-	kiigame.setMonologue(kiigame.text.getText('character_panic', 'text'));
-    kiigame.playCharacterAnimation(kiigame.character_animations["panic"], 6000);
+	gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
+	gameEventEmitter.emit('playCharacterAnimation', kiigame.character_animations["panic"], 6000);
 });
 
 // Listeners for the input screen buttons
@@ -248,10 +254,10 @@ stage.find('#start_empty')[0].on('tap click', function(event) {
     oikotie2.show();
     oikotie2.moveTo(kiigame.start_layer);
 	oikotie2.on('click', function() {
-		kiigame.inventoryAdd(stage.find('#poster_withoutglue')[0]);
-		kiigame.inventoryAdd(stage.find('#poster_withglue')[0]);
-		kiigame.inventoryAdd(stage.find('#airfreshener')[0]);
-		kiigame.inventoryAdd(stage.find('#cienibang')[0]);
+		gameEventEmitter.emit('inventory_add', stage.find('#poster_withoutglue')[0]);
+		gameEventEmitter.emit('inventory_add', stage.find('#poster_withglue')[0]);
+		gameEventEmitter.emit('inventory_add', stage.find('#airfreshener')[0]);
+		gameEventEmitter.emit('inventory_add', stage.find('#cienibang')[0]);
         kiigame.menu.hide();
 	});
 
