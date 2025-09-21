@@ -17,25 +17,25 @@
   },
   "homepage": "https://github.com/kiigame/adventure_engine#readme",
   "dependencies": {
-    "inversify": "^6.0.2",
-    "konva": "^3.2.6",
-    "reflect-metadata": "^0.2.1"
+    "inversify": "6.2.2",
+    "konva": "3.4.1",
+    "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.6.1",
-    "@commitlint/config-conventional": "^18.6.2",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@types/sinon-chai": "^3.2.3",
-    "chai": "^4.2.0",
-    "commitlint-plugin-tense": "^1.0.4",
-    "esm": "^3.2.25",
-    "http-server": "^14.1.1",
-    "husky": "^9.1.7",
-    "mocha": "^10.2.0",
-    "rollup": "^4.12.0",
-    "rollup-plugin-copy": "^3.5.0",
-    "sinon": "^7.5.0"
+    "@commitlint/cli": "18.6.1",
+    "@commitlint/config-conventional": "18.6.3",
+    "@rollup/plugin-commonjs": "25.0.8",
+    "@rollup/plugin-node-resolve": "15.3.1",
+    "@types/sinon-chai": "3.2.12",
+    "chai": "4.5.0",
+    "commitlint-plugin-tense": "1.0.4",
+    "esm": "3.2.25",
+    "http-server": "14.1.1",
+    "husky": "9.1.7",
+    "mocha": "10.8.2",
+    "rollup": "4.34.8",
+    "rollup-plugin-copy": "3.5.0",
+    "sinon": "7.5.0"
   },
   "scripts": {
     "prepare": "husky",
