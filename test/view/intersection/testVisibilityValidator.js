@@ -1,7 +1,5 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import VisibilityValidator from '../../../view/intersection/VisibilityValidator.js';
-
-var assert = chai.assert;
 
 describe('Test VisibilityValidator', function() {
     it('will return true if target has visibility', function() {

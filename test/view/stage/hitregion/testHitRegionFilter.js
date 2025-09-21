@@ -1,7 +1,5 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import HitRegionFilter from '../../../../view/stage/hitregion/HitRegionFilter.js';
-
-var assert = chai.assert;
 
 describe('Test filtering for hit regions for Konva shapes', function() {
     it('Lätkäzombit secret will should not have a hit region', function() {

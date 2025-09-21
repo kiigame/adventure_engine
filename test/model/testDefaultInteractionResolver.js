@@ -1,9 +1,7 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import sinon from 'sinon';
 import DefaultInteractionResolver from '../../model/DefaultInteractionResolver.js';
 import Interactions from '../../model/Interactions.js';
-
-var assert = chai.assert;
 
 var interactionsStub = sinon.createStubInstance(Interactions);
 

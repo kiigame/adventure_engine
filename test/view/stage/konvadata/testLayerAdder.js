@@ -1,7 +1,5 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import LayerAdder from '../../../../view/stage/konvadata/LayerAdder.js';
-
-var assert = chai.assert;
 
 describe('Test stage LayerAdder', function(){
     it('should splice given object after specified layer', function(){

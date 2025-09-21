@@ -1,7 +1,5 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import LayerChildAdder from '../../../../view/stage/konvadata/LayerChildAdder.js';
-
-var assert = chai.assert;
 
 describe('Test stage LayerChildAdder', function(){
     it('should add children to the specified layer', function(){

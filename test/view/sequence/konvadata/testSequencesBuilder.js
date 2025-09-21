@@ -1,9 +1,7 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import sinon from 'sinon';
 import SequencesBuilder from '../../../../view/sequence/konvadata/SequencesBuilder.js';
 import SequenceBuilder from '../../../../view/sequence/konvadata/SequenceBuilder.js';
-
-var assert = chai.assert;
 
 var sequenceBuilderStub = sinon.createStubInstance(SequenceBuilder);
 sequenceBuilderStub.build.withArgs([], "intro").returns({ "data": "intro"});

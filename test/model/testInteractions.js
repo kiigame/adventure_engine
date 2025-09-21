@@ -1,7 +1,5 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import Interactions from '../../model/Interactions.js';
-
-var assert = chai.assert;
 
 describe('Test Interactions', function() {
     it('will return the single click command', function() {

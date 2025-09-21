@@ -1,7 +1,5 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import TextBuilder from '../../../../view/sequence/konvadata/TextBuilder.js';
-
-var assert = chai.assert;
 
 describe('Test sequence TextBuilder', function(){
     it('it should build expected JSON object with Text data', function(){

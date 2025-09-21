@@ -1,9 +1,8 @@
-import chai from 'chai';
+import { assert } from 'chai';
 import sinon from 'sinon';
 import Music from '../../view/Music.js';
 import AudioFactory from '../../view/music/AudioFactory.js';
 
-const assert = chai.assert;
 const audioFactoryStub = sinon.createStubInstance(AudioFactory);
 
 describe('Test Music', function() {
