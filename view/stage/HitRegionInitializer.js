@@ -12,8 +12,13 @@ class HitRegionInitializer {
             if (o.getAttr('category') == 'room') {
                 o.getChildren().each((shape, i) => {
                     if (this.hitRegionFilter.filter(shape)) {
-                        shape.cache();
-                        shape.drawHitFromCache();
+                        try {
+                            shape.cache();
+                            shape.drawHitFromCache();
+                        } catch (e) {
+                            console.log(`Error processing hit region for shape ${shape.attrs.id}`);
+                            throw e;
+                        }
                     }
                 });
 
