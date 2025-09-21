@@ -35,7 +35,7 @@
     "mocha": "11.7.2",
     "rollup": "4.52.0",
     "rollup-plugin-copy": "3.5.0",
-    "sinon": "7.5.0"
+    "sinon": "21.0.0"
   },
   "scripts": {
     "prepare": "husky",
