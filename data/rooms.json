@@ -550,6 +550,7 @@
                         "category": "furniture",
                         "id": "cieni_eyes",
                         "src": "data/images/cieni_eyes.png",
+                        "width": 72,
                         "x": 220,
                         "y": 415,
                         "visible": true
