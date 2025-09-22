@@ -7,23 +7,13 @@ import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
 import GameEventEmitter from './events/GameEventEmitter.js';
-import Interactions from './model/Interactions.js';
-import Music from './view/Music.js';
-import AudioFactory from './view/music/AudioFactory.js';
-import Text from './model/Text.js';
 
 const jsonGetter = new JSONGetter();
-const interactionsJson = JSON.parse(jsonGetter.getJSON('data/interactions.json'));
-const interactions = new Interactions(interactionsJson);
-const music = new Music(
-    JSON.parse(jsonGetter.getJSON('data/music.json')),
-    new AudioFactory()
-);
-const text = new Text(
-    JSON.parse(jsonGetter.getJSON('data/texts.json'))
-);
 
 // Get jsons from the server
+const interactions_json = JSON.parse(jsonGetter.getJSON('data/interactions.json'));
+const music_json = JSON.parse(jsonGetter.getJSON('data/music.json'));
+const text_json = JSON.parse(jsonGetter.getJSON('data/texts.json'));
 const images_json = JSON.parse(jsonGetter.getJSON('data/images.json'));
 const rooms_json = JSON.parse(jsonGetter.getJSON('data/rooms.json'))['rooms'];
 const character_json = JSON.parse(jsonGetter.getJSON('data/character.json'));
@@ -42,7 +32,6 @@ let kiigame = new KiiGame(
         new DefaultInteractionResolver('secret')
     ],
     [],
-    interactions,
     new HitRegionInitializer(
         new HitRegionFilter(['secret'], ['Image'])
     ),
@@ -52,9 +41,10 @@ let kiigame = new KiiGame(
             new CategoryValidator(['secret'])
         ]
     ),
-    music,
-    text,
     gameEventEmitter,
+    interactions_json,
+    music_json,
+    text_json,
     images_json,
     rooms_json,
     character_json,

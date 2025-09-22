@@ -26,12 +26,12 @@ export class KiiGame {
         sequencesBuilder = null,
         clickResolvers = [],
         dragResolvers = [],
-        interactions,
         hitRegionInitializer = null,
         intersection = null,
-        music,
-        text,
         gameEventEmitter = new GameEventEmitter(),
+        interactions_json,
+        music_json,
+        text_json,
         images_json,
         rooms_json,
         character_json,
@@ -42,18 +42,9 @@ export class KiiGame {
         this.sequencesBuilder = sequencesBuilder;
         this.clickResolvers = clickResolvers;
         this.dragResolvers = dragResolvers;
-        this.interactions = interactions;
         this.hitRegionInitializer = hitRegionInitializer;
         this.intersection = intersection;
-        this.music = music;
-        this.text = text;
         this.gameEventEmitter = gameEventEmitter;
-        this.images_json = images_json;
-        this.rooms_json = rooms_json;
-        this.character_json = character_json;
-        this.sequences_json = sequences_json;
-        this.menu_json = menu_json;
-        this.items_json = items_json;
 
         if (this.sequencesBuilder === null) {
             // TODO: Move DI up
@@ -89,6 +80,15 @@ export class KiiGame {
                 ]
             );
         }
+        this.interactions = new Interactions(interactions_json);
+        this.music = new Music(music_json, new AudioFactory());
+        this.text = new Text(text_json);
+        this.images_json = images_json;
+        this.rooms_json = rooms_json;
+        this.character_json = character_json;
+        this.sequences_json = sequences_json;
+        this.menu_json = menu_json;
+        this.items_json = items_json;
 
         // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
