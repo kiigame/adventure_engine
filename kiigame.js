@@ -23,18 +23,22 @@ import { container, TYPES } from "./inversify.config.js";
 
 export class KiiGame {
     constructor(
-        jsonGetter = null,
         sequencesBuilder = null,
         clickResolvers = [],
         dragResolvers = [],
-        interactions = null,
+        interactions,
         hitRegionInitializer = null,
         intersection = null,
-        music = null,
-        text = null,
+        music,
+        text,
         gameEventEmitter = new GameEventEmitter(),
+        images_json,
+        rooms_json,
+        character_json,
+        sequences_json,
+        menu_json,
+        items_json,
     ) {
-        this.jsonGetter = jsonGetter;
         this.sequencesBuilder = sequencesBuilder;
         this.clickResolvers = clickResolvers;
         this.dragResolvers = dragResolvers;
@@ -44,10 +48,13 @@ export class KiiGame {
         this.music = music;
         this.text = text;
         this.gameEventEmitter = gameEventEmitter;
+        this.images_json = images_json;
+        this.rooms_json = rooms_json;
+        this.character_json = character_json;
+        this.sequences_json = sequences_json;
+        this.menu_json = menu_json;
+        this.items_json = items_json;
 
-        if (this.jsonGetter === null) {
-            this.jsonGetter = new JSONGetter();
-        }
         if (this.sequencesBuilder === null) {
             // TODO: Move DI up
             const slideBuilder = container.get(TYPES.SlideBuilder);
@@ -69,11 +76,6 @@ export class KiiGame {
                 new DefaultInteractionResolver('item')
             );
         }
-        if (this.interactions === null) {
-            this.interactions = new Interactions(
-                JSON.parse(this.getJSON('data/interactions.json'))
-            );
-        }
         if (this.hitRegionInitializer === null) {
             this.hitRegionInitializer = new HitRegionInitializer(
                 new HitRegionFilter([], ['Image'])
@@ -85,17 +87,6 @@ export class KiiGame {
                     new VisibilityValidator(),
                     new CategoryValidator()
                 ]
-            );
-        }
-        if (this.music === null) {
-            this.music = new Music(
-                JSON.parse(this.getJSON('data/music.json')),
-                new AudioFactory()
-            );
-        }
-        if (this.text === null) {
-            this.text = new Text(
-                JSON.parse(this.getJSON('data/texts.json'))
             );
         }
 
@@ -168,14 +159,6 @@ export class KiiGame {
 
         // List of character animations.
         this.character_animations = []; // also accessed in latkazombit.js
-
-        // Get jsons from the server
-        this.images_json = JSON.parse(this.getJSON('data/images.json'));
-        this.rooms_json = JSON.parse(this.getJSON('data/rooms.json'))['rooms'];
-        this.character_json = JSON.parse(this.getJSON('data/character.json'));
-        this.sequences_json = JSON.parse(this.getJSON('data/sequences.json'));
-        this.menu_json = JSON.parse(this.getJSON('data/menu.json'));
-        this.items_json = JSON.parse(this.getJSON('data/items.json'));
 
         // Add rooms to images_json for stage building. Add them before the room
         // fade layer to ensure correct draw order.
@@ -1083,11 +1066,6 @@ export class KiiGame {
     setSpeakAnimation(animation_name) {
         this.speak_animation = this.character_animations[animation_name];
         this.stopCharacterAnimations(); // reset and play idle animation
-    }
-
-    // Load json from the server
-    getJSON(json_file) {
-        return this.jsonGetter.getJSON(json_file);
     }
 
     // Setting an image to the stage and scaling it based on relative values if they exist
