@@ -24,7 +24,7 @@ describe('Test stage LayerAdder', function(){
                 },
                 {
                     attrs: {
-                        id: 'fade_layer_room'
+                        id: 'fader_room'
                     }
                 },
                 {
@@ -43,7 +43,7 @@ describe('Test stage LayerAdder', function(){
                 },
                 {
                     attrs: {
-                        id: 'fade_layer_room'
+                        id: 'fader_room'
                     }
                 },
                 {
@@ -65,7 +65,7 @@ describe('Test stage LayerAdder', function(){
                 }
             }
         ];
-        var beforeLayer = 'fade_layer_room';
+        var beforeLayer = 'fader_room';
         var result = layerAdder.process(imagesJson, newJson, beforeLayer);
         assert.deepEqual(expected, result);
     });

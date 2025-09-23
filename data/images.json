@@ -87,7 +87,7 @@
         },
         {
             "attrs": {
-                "id": "fade_layer_room",
+                "id": "fader_room",
                 "opacity": 0,
                 "visible": false
             },
@@ -490,7 +490,7 @@
         },
         {
             "attrs": {
-                "id": "fade_layer_full",
+                "id": "fader_full",
                 "opacity": 0,
                 "visible": false
             },

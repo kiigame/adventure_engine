@@ -166,7 +166,7 @@ export class KiiGame {
         this.images_json = stageLayerAdder.process(
             this.images_json,
             this.rooms_json,
-            'fade_layer_room'
+            'fader_room'
         );
 
         // Build an array of all the sequences out of sequences_json and merge them to
@@ -175,7 +175,7 @@ export class KiiGame {
         this.images_json = stageLayerAdder.process(
             this.images_json,
             builtSequences,
-            'start_layer_menu' // TODO: Use fade_layer_full ?
+            'start_layer_menu' // TODO: Use fader_full ?
         );
 
         // Push items.json contents to correct layer.
@@ -209,8 +209,8 @@ export class KiiGame {
         this.inventory_bar_layer = this.getObject("inventory_bar_layer");
         this.character_layer = this.getObject("character_layer");
         this.text_layer = this.getObject("text_layer");
-        this.fade_layer_full = this.getObject("fade_layer_full");
-        this.fade_layer_room = this.getObject("fade_layer_room");
+        this.fader_full = this.getObject("fader_full");
+        this.fader_room = this.getObject("fader_room");
 
         // Scale background and UI elements
         this.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
@@ -220,14 +220,14 @@ export class KiiGame {
 
         // Animation for fading the screen
         this.fade_full = new Konva.Tween({
-            node: this.fade_layer_full,
+            node: this.fader_full,
             duration: 0.6,
             opacity: 1
         });
 
         // Animation for fading the room portion of the screen
         this.fade_room = new Konva.Tween({
-            node: this.fade_layer_room,
+            node: this.fader_room,
             duration: 0.6,
             opacity: 1
         });
@@ -674,7 +674,7 @@ export class KiiGame {
 
         // Animation cycle for proper fading and drawing order
         this.fade_full.reset();
-        this.fade_layer_full.show();
+        this.fader_full.show();
         this.fade_full.play();
 
         var old_layer = this.current_layer;
@@ -698,7 +698,7 @@ export class KiiGame {
                 setTimeout(() => {
                     this.current_layer.show();
                     old_layer.hide();
-                    this.fade_layer_full.show();
+                    this.fader_full.show();
                     this.hide_menu(); // So that the menu is hidden after first fadeout.
                     this.character_layer.hide();
                     this.inventory_bar_layer.hide();
@@ -741,7 +741,7 @@ export class KiiGame {
                 setTimeout(() => {
                     this.fade_full.reverse();
                     setTimeout(() => {
-                        this.fade_layer_full.hide();
+                        this.fader_full.hide();
                         this.fade_full.tween.duration = 600; // reset to default
                     }, final_fade_duration);
                 }, final_fade_duration);
@@ -767,7 +767,7 @@ export class KiiGame {
         // Don't fade if duration is zero.
         if (fade_time != 0) {
             this.fade_room.tween.duration = fade_time;
-            this.fade_layer_room.show();
+            this.fader_room.show();
             this.fade_room.play();
         }
 
@@ -800,7 +800,7 @@ export class KiiGame {
             this.stage.draw();
 
             setTimeout(() => {
-                this.fade_layer_room.hide();
+                this.fader_room.hide();
                 this.music.playMusic(this.current_layer.id());
             }, fade_time);
         }, fade_time);
