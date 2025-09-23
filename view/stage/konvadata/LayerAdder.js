@@ -13,12 +13,12 @@ class LayerAdder {
      */
     process(imagesJson, newLayers, nextLayerId) {
         var indexOfNextLayer = imagesJson['children'].indexOf(
-            imagesJson['children'].find(function(child){
+            imagesJson['children'].find(function (child) {
                 return child.attrs.id === nextLayerId;
             })
         );
 
-        newLayers.forEach(function(newLayer){
+        newLayers.forEach(function (newLayer) {
             imagesJson['children'].splice(indexOfNextLayer, 0, newLayer);
             indexOfNextLayer++; // The nextLayer index has moved
         });
