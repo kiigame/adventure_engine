@@ -213,23 +213,23 @@ export class KiiGame {
         this.fade_layer_room = this.getObject("fade_layer_room");
 
         // Scale background and UI elements
-        this.getObject("black_screen_full").size({width: this.stage.width(), height: this.stage.height()});
-        this.getObject("black_screen_room").size({width: this.stage.width(), height: this.stage.height() - 100});
+        this.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
+        this.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
         this.getObject("inventory_bar").y(this.stage.height() - 100);
         this.getObject("inventory_bar").width(this.stage.width());
 
         // Animation for fading the screen
         this.fade_full = new Konva.Tween({
-            node : this.fade_layer_full,
-            duration : 0.6,
-            opacity : 1
+            node: this.fade_layer_full,
+            duration: 0.6,
+            opacity: 1
         });
 
         // Animation for fading the room portion of the screen
         this.fade_room = new Konva.Tween({
-            node : this.fade_layer_room,
-            duration : 0.6,
-            opacity : 1
+            node: this.fade_layer_room,
+            duration: 0.6,
+            opacity: 1
         });
 
         // Load up frames from json to the character animations array.
@@ -243,15 +243,15 @@ export class KiiGame {
                 });
                 frames.push(frame);
             }
-           this.character_animations[animation_data[i].id] = frames;
+            this.character_animations[animation_data[i].id] = frames;
         }
 
         // Set up onFinish functions for each frame to show the next frame. In the case
         // of the last of the frames, show the first frame.
         for (var i in this.character_animations) {
             for (var j = 0; j < this.character_animations[i].length; j++) {
-                if (this.character_animations[i].length > j+1) {
-                    this.character_animations[i][j].onFinish = function() {
+                if (this.character_animations[i].length > j + 1) {
+                    this.character_animations[i][j].onFinish = function () {
                         // `this` refers to the character_animations object,
                         // `self` refers to the engine object
                         for (var k in self.character_animations) {
@@ -259,14 +259,14 @@ export class KiiGame {
                                 var animation = self.character_animations[k];
                                 var frame_index = self.character_animations[k].indexOf(this);
                                 this.node.hide();
-                                animation[frame_index+1].node.show();
+                                animation[frame_index + 1].node.show();
                                 this.reset();
-                                animation[frame_index+1].play();
+                                animation[frame_index + 1].play();
                             }
                         }
                     }
                 } else {
-                    this.character_animations[i][j].onFinish = function() {
+                    this.character_animations[i][j].onFinish = function () {
                         for (var k in self.character_animations) {
                             if (self.character_animations[k].indexOf(this) > -1) {
                                 var animation = self.character_animations[k];
@@ -401,7 +401,7 @@ export class KiiGame {
                     });
                     this.target.clearCache();
                     this.target.shadowColor('purple');
-                    this.target.shadowOffset({x: 0, y: 0});
+                    this.target.shadowOffset({ x: 0, y: 0 });
                     this.target.shadowBlur(20);
                     this.inventory_layer.draw();
 
@@ -410,7 +410,7 @@ export class KiiGame {
                     this.interaction_text.x(this.dragged_item.x() + (this.dragged_item.width() / 2));
                     this.interaction_text.y(this.dragged_item.y() - 30);
                     this.interaction_text.offset({
-                        x : this.interaction_text.width() / 2
+                        x: this.interaction_text.width() / 2
                     });
 
                     this.text_layer.draw();
@@ -461,7 +461,7 @@ export class KiiGame {
             else {
                 var target_category = this.target.getAttr('category');
 
-                var dragResolver = this.dragResolvers.filter(function(dragResolver) {
+                var dragResolver = this.dragResolvers.filter(function (dragResolver) {
                     return dragResolver.getTargetCategory() == target_category;
                 }).pop();
 
@@ -546,13 +546,13 @@ export class KiiGame {
         this.gameEventEmitter.on('add_object', (object) => {
             this.addObject(object);
         });
-        this.gameEventEmitter.on('do_transition', ({room_id, fade_time}) => {
+        this.gameEventEmitter.on('do_transition', ({ room_id, fade_time }) => {
             this.do_transition(room_id, fade_time);
         });
         // Overriding default speaking animation from setMonologue from the same
         // interaction assumes: setMonologue is called first, and that events get
         // fired and handled in the same order ...
-        this.gameEventEmitter.on('play_character_animation', ({animation, duration}) => {
+        this.gameEventEmitter.on('play_character_animation', ({ animation, duration }) => {
             this.playCharacterAnimation(animation, duration);
         });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
@@ -812,7 +812,7 @@ export class KiiGame {
         var target = event.target;
         var target_category = target.getAttr('category');
 
-        var clickResolver = this.clickResolvers.filter(function(clickResolver) {
+        var clickResolver = this.clickResolvers.filter(function (clickResolver) {
             return clickResolver.getTargetCategory() === target_category;
         }).pop();
 
@@ -889,11 +889,11 @@ export class KiiGame {
         } else if (command.command == "do_transition") {
             const fade_time = command.length != null ? command.length : 700;
             const room_id = command.destination;
-            this.gameEventEmitter.emit('do_transition', {room_id, fade_time});
+            this.gameEventEmitter.emit('do_transition', { room_id, fade_time });
         } else if (command.command == "play_character_animation") {
             const animation = this.character_animations[command.animation];
             const duration = command.length;
-            this.gameEventEmitter.emit('play_character_animation', {animation, duration});
+            this.gameEventEmitter.emit('play_character_animation', { animation, duration });
         } else if (command.command == "play_sequence") {
             this.gameEventEmitter.emit('play_sequence', command.sequence);
         } else if (command.command == "set_idle_animation") {
@@ -977,7 +977,7 @@ export class KiiGame {
         this.npc_monologue.text(text);
 
         var npc_tag = this.getObject("npc_tag");
-        if (npc.x() + npc.width() > (this.stage.width()/2)) {
+        if (npc.x() + npc.width() > (this.stage.width() / 2)) {
             npc_tag.pointerDirection("right");
             if (this.npc_monologue.width() > npc.x() - 100) {
                 this.npc_monologue.width(npc.x() - 100);
@@ -993,7 +993,7 @@ export class KiiGame {
             this.npc_speech_bubble.x(npc.x() + npc.width());
         }
 
-        this.npc_speech_bubble.y(npc.y() + (npc.height()/3));
+        this.npc_speech_bubble.y(npc.y() + (npc.height() / 3));
 
         this.text_layer.draw();
     }
@@ -1086,7 +1086,7 @@ export class KiiGame {
         item.show();
         item.moveTo(this.inventory_layer);
         item.clearCache();
-        item.size({width: 80, height: 80});
+        item.size({ width: 80, height: 80 });
 
         if (this.inventory_list.indexOf(item) > -1) {
             this.inventory_list.splice(this.inventory_list.indexOf(item), 1, item);
@@ -1171,5 +1171,4 @@ export class KiiGame {
         this.delayEnabled = true;
         setTimeout(() => this.delayEnabled = false, delay);
     }
-    
 }
