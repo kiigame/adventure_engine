@@ -21,6 +21,18 @@ const sequences_json = JSON.parse(jsonGetter.getJSON('data/sequences.json'));
 const menu_json = JSON.parse(jsonGetter.getJSON('data/menu.json'));
 const items_json = JSON.parse(jsonGetter.getJSON('data/items.json'));
 
+const gameData = {
+    interactions_json: interactions_json,
+    music_json: music_json,
+    text_json: text_json,
+    images_json: images_json,
+    rooms_json: rooms_json,
+    character_json: character_json,
+    sequences_json: sequences_json,
+    menu_json: menu_json,
+    items_json: items_json,
+};
+
 const gameEventEmitter = new GameEventEmitter();
 
 let kiigame = new KiiGame(
@@ -42,15 +54,7 @@ let kiigame = new KiiGame(
         ]
     ),
     gameEventEmitter,
-    interactions_json,
-    music_json,
-    text_json,
-    images_json,
-    rooms_json,
-    character_json,
-    sequences_json,
-    menu_json,
-    items_json,
+    gameData,
 );
 let stage = kiigame.stage;
 

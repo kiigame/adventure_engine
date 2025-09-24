@@ -28,15 +28,7 @@ export class KiiGame {
         hitRegionInitializer = null,
         intersection = null,
         gameEventEmitter = new GameEventEmitter(),
-        interactions_json,
-        music_json,
-        text_json,
-        images_json,
-        rooms_json,
-        character_json,
-        sequences_json,
-        menu_json,
-        items_json,
+        gameData = {},
     ) {
         this.sequencesBuilder = sequencesBuilder;
         this.clickResolvers = clickResolvers;
@@ -79,15 +71,15 @@ export class KiiGame {
                 ]
             );
         }
-        this.interactions = new Interactions(interactions_json);
-        this.music = new Music(music_json, new AudioFactory());
-        this.text = new Text(text_json);
-        this.images_json = images_json;
-        this.rooms_json = rooms_json;
-        this.character_json = character_json;
-        this.sequences_json = sequences_json;
-        this.menu_json = menu_json;
-        this.items_json = items_json;
+        this.interactions = new Interactions(gameData.interactions_json);
+        this.music = new Music(gameData.music_json, new AudioFactory());
+        this.text = new Text(gameData.text_json);
+        this.images_json = gameData.images_json;
+        this.rooms_json = gameData.rooms_json;
+        this.character_json = gameData.character_json;
+        this.sequences_json = gameData.sequences_json;
+        this.menu_json = gameData.menu_json;
+        this.items_json = gameData.items_json;
 
         // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
