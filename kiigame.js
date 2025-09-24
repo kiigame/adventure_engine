@@ -74,12 +74,9 @@ export class KiiGame {
         this.interactions = new Interactions(gameData.interactions_json);
         this.music = new Music(gameData.music_json, new AudioFactory());
         this.text = new Text(gameData.text_json);
-        this.images_json = gameData.images_json;
-        this.rooms_json = gameData.rooms_json;
-        this.character_json = gameData.character_json;
+        let layerJson = gameData.images_json;
         this.sequences_json = gameData.sequences_json;
         this.menu_json = gameData.menu_json;
-        this.items_json = gameData.items_json;
 
         // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
@@ -154,38 +151,40 @@ export class KiiGame {
         // Add rooms to images_json for stage building. Add them before the room
         // fade layer to ensure correct draw order.
         var stageLayerAdder = new LayerAdder();
-        this.images_json = stageLayerAdder.process(
-            this.images_json,
-            this.rooms_json,
+        layerJson = stageLayerAdder.process(
+            layerJson,
+            gameData.rooms_json,
             'fader_room'
         );
 
         // Build an array of all the sequences out of sequences_json and merge them to
         // images_json for stage building.
         var builtSequences = this.sequencesBuilder.build(this.sequences_json);
-        this.images_json = stageLayerAdder.process(
-            this.images_json,
+        layerJson = stageLayerAdder.process(
+            layerJson,
             builtSequences,
             'start_layer_menu' // TODO: Use fader_full ?
         );
 
         // Push items.json contents to correct layer.
         var stageLayerChildAdder = new LayerChildAdder();
-        this.images_json = stageLayerChildAdder.add(
-            this.images_json,
-            this.items_json,
+        layerJson = stageLayerChildAdder.add(
+            layerJson,
+            gameData.items_json,
             'inventory_item_cache'
         );
         // Push character animation frames to correct layer.
-        this.images_json = stageLayerChildAdder.add(
-            this.images_json,
-            this.character_json.frames,
+        layerJson = stageLayerChildAdder.add(
+            layerJson,
+            gameData.character_json.frames,
             'character_layer'
         );
 
         // Create stage and everything in it from json
-        this.images_json_text = JSON.stringify(this.images_json);
-        this.stage = Konva.Node.create(this.images_json_text, 'container');
+        this.stage = Konva.Node.create(
+            JSON.stringify(layerJson),
+            'container'
+        );
 
         // Define variables from stage for easier use
 
@@ -224,11 +223,11 @@ export class KiiGame {
         });
 
         // Load up frames from json to the character animations array.
-        var animation_data = this.character_json.animations;
-        for (var i in animation_data) {
-            var frames = [];
-            for (var j in animation_data[i].frames) {
-                var frame = new Konva.Tween({
+        const animation_data = gameData.character_json.animations;
+        for (const i in animation_data) {
+            const frames = [];
+            for (const j in animation_data[i].frames) {
+                const frame = new Konva.Tween({
                     node: this.getObject(animation_data[i].frames[j].node),
                     duration: animation_data[i].frames[j].duration
                 });
