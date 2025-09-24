@@ -1,4 +1,5 @@
 {
+    "startRoomId": "locker_room_1",
     "rooms": [
         {
             "attrs": {
@@ -163,7 +164,6 @@
             "attrs": {
                 "category": "room",
                 "id": "object_layer_locker_room_1",
-                "start": true,
                 "visible": false
             },
             "children": [

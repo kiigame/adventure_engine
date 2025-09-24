@@ -483,13 +483,6 @@ export class KiiGame {
             this.redrawInventory();
         });
 
-        // Set start layer
-        this.stage.getChildren().each((o) => {
-            if (o.getAttr('category') === 'room' && o.getAttr('start') === true) {
-                this.game_start_layer = o;
-            }
-        });
-
         // Not using getObject (with its error messaging), because these are optional.
         this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
 
@@ -504,7 +497,7 @@ export class KiiGame {
                     if (this.stage.find('#start_layer_menu')[0] != null) {
                         this.display_start_menu();
                     } else {
-                        this.do_transition(this.game_start_layer.id());
+                        this.do_transition(gameData.startRoomId);
                     }
                 });
             } else { // no splash screen
@@ -512,12 +505,12 @@ export class KiiGame {
                     this.display_start_menu();
                 } else {
                     // start layer without splash or menu?!
-                    this.do_transition(this.game_start_layer.id());
+                    this.do_transition(gameData.startRoomId);
                 }
             }
         } else {
             // no start layer
-            this.do_transition(this.game_start_layer.id());
+            this.do_transition(gameData.startRoomId);
         }
 
         // Set up event listeners for the gameplay commands

@@ -15,7 +15,7 @@ const interactions_json = JSON.parse(jsonGetter.getJSON('data/interactions.json'
 const music_json = JSON.parse(jsonGetter.getJSON('data/music.json'));
 const text_json = JSON.parse(jsonGetter.getJSON('data/texts.json'));
 const layersJson = JSON.parse(jsonGetter.getJSON('data/layers.json'));
-const rooms_json = JSON.parse(jsonGetter.getJSON('data/rooms.json'))['rooms'];
+const rooms_json = JSON.parse(jsonGetter.getJSON('data/rooms.json'));
 const character_json = JSON.parse(jsonGetter.getJSON('data/character.json'));
 const sequences_json = JSON.parse(jsonGetter.getJSON('data/sequences.json'));
 const menu_json = JSON.parse(jsonGetter.getJSON('data/menu.json'));
@@ -26,11 +26,12 @@ const gameData = {
     music_json: music_json,
     text_json: text_json,
     layersJson: layersJson,
-    rooms_json: rooms_json,
+    rooms_json: rooms_json['rooms'],
     character_json: character_json,
     sequences_json: sequences_json,
     menu_json: menu_json,
     items_json: items_json,
+    startRoomId: rooms_json['startRoomId']
 };
 
 const gameEventEmitter = new GameEventEmitter();
