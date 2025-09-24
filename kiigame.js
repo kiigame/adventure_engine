@@ -136,10 +136,8 @@ export class KiiGame {
         this.speak_animation;
         this.idle_animation;
 
-        // Variable for saving the current room (for changing backgrounds and object layers)
+        // Variable for saving the current layer (for changing backgrounds and object layers)
         this.current_layer;
-        this.current_background;
-        this.game_start_layer; // also accessed in latkazombit.js
         this.start_layer; // also accessed in latkazombit.js
 
         // List of animated objects
@@ -148,26 +146,24 @@ export class KiiGame {
         // List of character animations.
         this.character_animations = []; // also accessed in latkazombit.js
 
-        // Add rooms to images_json for stage building. Add them before the room
-        // fade layer to ensure correct draw order.
-        var stageLayerAdder = new LayerAdder();
-        layerJson = stageLayerAdder.process(
-            layerJson,
-            gameData.rooms_json,
-            'fader_room'
-        );
-
         // Build an array of all the sequences out of sequences_json and merge them to
         // images_json for stage building.
         var builtSequences = this.sequencesBuilder.build(this.sequences_json);
+        var stageLayerAdder = new LayerAdder();
         layerJson = stageLayerAdder.process(
             layerJson,
             builtSequences,
             'start_layer_menu' // TODO: Use fader_full ?
         );
 
-        // Push items.json contents to correct layer.
+        // Push rooms into the room layer
         var stageLayerChildAdder = new LayerChildAdder();
+        layerJson = stageLayerChildAdder.add(
+            layerJson,
+            gameData.rooms_json,
+            'room_layer'
+        );
+        // Push items.json contents to correct layer.
         layerJson = stageLayerChildAdder.add(
             layerJson,
             gameData.items_json,
@@ -201,6 +197,8 @@ export class KiiGame {
         this.text_layer = this.getObject("text_layer");
         this.fader_full = this.getObject("fader_full");
         this.fader_room = this.getObject("fader_room");
+        this.room_layer = this.getObject("room_layer");
+        this.current_room = null;
 
         // Scale background and UI elements
         this.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
@@ -276,27 +274,23 @@ export class KiiGame {
         this.idle_animation = this.character_animations["idle"];
 
         // Creating all image objects from json file based on their attributes
-        var imageData = this.stage.toObject();
+        const imageData = this.stage.toObject();
 
-        for (var i = 0; i < imageData.children.length; i++) {
-            for (var j = 0; j < imageData.children[i].children.length; j++) {
-                if (imageData.children[i].children[j].className == 'Image') {
-                    this.createObject(imageData.children[i].children[j].attrs);
-                    var object_attrs = imageData.children[i].children[j].attrs;
-
-                    if (object_attrs.animated === true) {
-                        this.create_animation(this.getObject(object_attrs.id));
-                    }
+        for (let i = 0; i < imageData.children.length; i++) {
+            const container = imageData.children[i];
+            if (container.attrs.id !== 'room_layer') {
+                this.prepareImages(container);
+            } else {
+                for (let j = 0; j < container.children.length; j++) {
+                    const room = container.children[j];
+                    this.prepareImages(room);
                 }
-            }
-            if (imageData.children[i].attrs.category == 'menu') {
-                this.create_menu_action(imageData.children[i]);
             }
         }
 
         // On window load we create image hit regions for our items on object layers
         window.onload = () => {
-            this.hitRegionInitializer.initHitRegions(this, this.stage);
+            this.hitRegionInitializer.initHitRegions(this, this.room_layer);
             this.readyStage();
         };
 
@@ -320,8 +314,8 @@ export class KiiGame {
                 this.setDelay(10);
 
                 // Loop through all the items on the current object layer
-                for (var i = 0; i < this.current_layer.children.length; i++) {
-                    var object = (this.current_layer.getChildren())[i];
+                for (var i = 0; i < this.current_room.children.length; i++) {
+                    var object = (this.current_room.getChildren())[i];
 
                     if (object != undefined && object.getAttr('category') != 'room_background') {
                         // Break if still intersecting with the same target
@@ -383,7 +377,7 @@ export class KiiGame {
 
                 // If target is found, highlight it and show the interaction text
                 if (this.target != null) {
-                    this.current_layer.getChildren().each((shape, i) => {
+                    this.current_room.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
                     this.inventory_layer.getChildren().each((shape, i) => {
@@ -406,7 +400,7 @@ export class KiiGame {
                     this.text_layer.draw();
                 } else {
                     // If no target, clear the texts and highlights
-                    this.current_layer.getChildren().each((shape, i) => {
+                    this.current_room.getChildren().each((shape, i) => {
                         shape.shadowBlur(0);
                     });
                     this.inventory_layer.getChildren().each((shape, i) => {
@@ -471,7 +465,7 @@ export class KiiGame {
             }
 
             // Clearing the glow effects
-            this.current_layer.getChildren().each((shape, i) => {
+            this.current_room.getChildren().each((shape, i) => {
                 shape.shadowBlur(0);
             });
             this.inventory_layer.getChildren().each((shape, i) => {
@@ -486,10 +480,9 @@ export class KiiGame {
         // Not using getObject (with its error messaging), because these are optional.
         this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
 
-        // The optional start layer has optional splash screen and optional start menu.
-        // TODO: Delay transition to game_start_layer?
+        //The optional start layer has optional splash screen and optional start menu.
+        // TODO: Delay transition to the start room ?
         if (this.stage.find("#start_layer")[0] != null) {
-            this.current_background = 'start_layer';
             this.current_layer = this.start_layer;
             if (this.stage.find('#splash_screen')[0] != null) {
                 this.stage.find('#splash_screen')[0].on('tap click', (event) => {
@@ -578,6 +571,35 @@ export class KiiGame {
         });
 
         this.animated_objects.push(animation);
+    }
+
+    /**
+     * Prepare images from a container (layer or group)
+     * @param container
+     */
+    prepareImages(container) {
+        for (var i = 0; i < container.children.length; i++) {
+            const object = container.children[i];
+            if (object.className == 'Image') {
+                const { id, src: imageSrc, animated } = object.attrs;
+                this.prepareImage(id, imageSrc, animated);
+            }
+        }
+    }
+
+    /**
+     * Prepares Image class objects for the stage
+     *
+     * @param id
+     * @param imageSrc
+     * @param animated
+     */
+    prepareImage(id, imageSrc, animated) {
+        this.createObject(id, imageSrc);
+
+        if (animated === true) {
+            this.create_animation(this.getObject(id));
+        }
     }
 
     /*
@@ -742,31 +764,32 @@ export class KiiGame {
     /// @param room_id The id of the room to transition to.
     /// @param fade_time The fade duration; if null, use a default.
     do_transition(room_id, fade_time) {
-        // By default do fast fade
-        if (fade_time === null) {
-            fade_time = 700;
-        }
+        const fadeDuration = fade_time === null || fade_time === undefined ? 700 : fade_time;
 
-        // Don't fade if duration is zero.
-        if (fade_time != 0) {
-            this.fade_room.tween.duration = fade_time;
+        // Don't fade if duration is zero
+        if (fadeDuration) {
+            this.fade_room.tween.duration = fadeDuration;
             this.fader_room.show();
             this.fade_room.play();
         }
 
         setTimeout(() => {
             // Don't fade if duration is zero.
-            if (fade_time != 0) {
+            if (fadeDuration) {
                 this.fade_room.reverse();
             }
 
             // may be null if no start_layer is defined
-            if (this.current_layer != null) {
+            if (this.current_layer !== undefined && this.current_layer.id() !== this.room_layer.id()) {
                 this.current_layer.hide();
             }
 
-            this.current_layer = this.getObject(room_id);
+            if (this.current_room !== null) {
+                this.current_room.hide();
+            }
 
+            this.current_layer = this.room_layer;
+            this.current_room = this.getObject(room_id);
             // Play the animations of the room
             for (var i in this.animated_objects) {
                 if (this.animated_objects[i].node.parent.id() == this.current_layer.id()) {
@@ -777,6 +800,7 @@ export class KiiGame {
             }
 
             this.current_layer.show();
+            this.current_room.show();
             this.inventory_layer.show();
             this.inventory_bar_layer.show();
             this.character_layer.show();
@@ -785,8 +809,8 @@ export class KiiGame {
             setTimeout(() => {
                 this.fader_room.hide();
                 this.music.playMusic(this.current_layer.id());
-            }, fade_time);
-        }, fade_time);
+            }, fadeDuration);
+        }, fadeDuration);
     }
 
     /// Handle click interactions on room objects, inventory items and inventory
@@ -1051,13 +1075,17 @@ export class KiiGame {
         this.stopCharacterAnimations(); // reset and play idle animation
     }
 
-    // Setting an image to the stage and scaling it based on relative values if they exist
-    createObject(o) {
-        window[o.id] = new Image();
-        window[o.id].onload = () => {
-            this.getObject(o.id).image(window[o.id]);
+    /**
+     * Setting an image to the stage and scaling it based on relative values if they exist.
+     * Comes up with width and height of the image if not set in json data. Needed by hit region
+     * caching.
+     */
+    createObject(id, imageSrc) {
+        window[id] = new Image();
+        window[id].onload = () => {
+            this.getObject(id).image(window[id]);
         };
-        window[o.id].src = o.src;
+        window[id].src = imageSrc;
     }
 
     /// Adding an item to the inventory. Adds new items, but also an item that

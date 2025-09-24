@@ -87,6 +87,13 @@
     },
     {
       "attrs": {
+        "id": "room_layer"
+      },
+      "children": [],
+      "className": "Layer"
+    },
+    {
+      "attrs": {
         "id": "fader_room",
         "opacity": 0,
         "visible": false

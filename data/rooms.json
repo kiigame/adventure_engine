@@ -1,5 +1,5 @@
 {
-    "startRoomId": "locker_room_1",
+    "startRoomId": "object_layer_locker_room_1",
     "rooms": [
         {
             "attrs": {
@@ -158,7 +158,7 @@
                     "className": "Image"
                 }
             ],
-            "className": "Layer"
+            "className": "Group"
         },
         {
             "attrs": {
@@ -399,7 +399,7 @@
                     "className": "Image"
                 }
             ],
-            "className": "Layer"
+            "className": "Group"
         },
         {
             "attrs": {
@@ -465,7 +465,7 @@
                     "className": "Image"
                 }
             ],
-            "className": "Layer"
+            "className": "Group"
         },
         {
             "attrs": {
@@ -621,7 +621,7 @@
                     "className": "Image"
                 }
             ],
-            "className": "Layer"
+            "className": "Group"
         },
         {
             "attrs": {
@@ -708,7 +708,7 @@
                     "className": "Image"
                 }
             ],
-            "className": "Layer"
+            "className": "Group"
         },
         {
             "attrs": {
@@ -740,7 +740,7 @@
                     "className": "Text"
                 }
             ],
-            "className": "Layer"
+            "className": "Group"
         }
     ]
 }

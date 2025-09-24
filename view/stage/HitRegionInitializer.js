@@ -6,9 +6,9 @@ class HitRegionInitializer {
         this.hitRegionFilter = hitRegionFilter;
     }
 
-    initHitRegions(engine, stage)
+    initHitRegions(engine, roomLayer)
     {
-        stage.getChildren().each((o) => {
+        roomLayer.getChildren().each((o) => {
             if (o.getAttr('category') == 'room') {
                 o.getChildren().each((shape, i) => {
                     if (this.hitRegionFilter.filter(shape)) {
