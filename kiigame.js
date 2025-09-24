@@ -74,7 +74,7 @@ export class KiiGame {
         this.interactions = new Interactions(gameData.interactions_json);
         this.music = new Music(gameData.music_json, new AudioFactory());
         this.text = new Text(gameData.text_json);
-        let layerJson = gameData.images_json;
+        let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
         this.menu_json = gameData.menu_json;
 
