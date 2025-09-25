@@ -5,7 +5,7 @@ import pkg from './package.json' with { type: "json" };
 
 export const build = [
     {
-        input: 'kiigame.js',
+        input: 'src/kiigame.js',
         output: {
             name: 'kiigame',
             file: pkg.browser,
@@ -16,9 +16,8 @@ export const build = [
             commonjs()
         ]
     },
-
     {
-        input: 'kiigame.js',
+        input: 'src/kiigame.js',
         external: ['konva'],
         output: [
             { file: pkg.main, format: 'cjs' },
@@ -28,10 +27,10 @@ export const build = [
 ];
 
 export const dev = {
-    input: 'latkazombit.js',
+    input: 'src/latkazombit.js',
     output: {
         name: 'kiigame',
-        file: 'public/latkazombit.js',
+        file: 'public/src/latkazombit.js',
         format: 'iife',
         sourcemap: true
     },
@@ -44,9 +43,7 @@ export const dev = {
                 { src: 'data/*.json', dest: 'public/data/' },
                 { src: 'data/audio/**/*', dest: 'public/data/audio/' },
                 { src: 'data/images/**/*', dest: 'public/data/images/' },
-                { src: 'model/**/*', dest: 'public/model/'},
-                { src: 'util/**/*', dest: 'public/util/' },
-                { src: 'view/**/*', dest: 'public/view/' }
+                { src: 'src/**/*', dest: 'public/src/'},
             ]
         })
     ]
