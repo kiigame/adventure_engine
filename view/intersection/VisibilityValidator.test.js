@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import VisibilityValidator from '../../../view/intersection/VisibilityValidator.js';
+import VisibilityValidator from './VisibilityValidator.js';
 
 describe('Test VisibilityValidator', function() {
     it('will return true if target has visibility', function() {

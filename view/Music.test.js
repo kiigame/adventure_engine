@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import sinon from 'sinon';
-import Music from '../../view/Music.js';
-import AudioFactory from '../../view/music/AudioFactory.js';
+import Music from './Music.js';
+import AudioFactory from './music/AudioFactory.js';
 
 const audioFactoryStub = sinon.createStubInstance(AudioFactory);
 

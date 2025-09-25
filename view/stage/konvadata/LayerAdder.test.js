@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import LayerAdder from '../../../../view/stage/konvadata/LayerAdder.js';
+import LayerAdder from './LayerAdder.js';
 
 describe('Test stage LayerAdder', function(){
     it('should splice given object after specified layer', function(){

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import sinon from 'sinon';
-import SequenceBuilder from '../../../../view/sequence/konvadata/SequenceBuilder.js';
-import SlideBuilder from '../../../../view/sequence/konvadata/SlideBuilder.js';
+import SequenceBuilder from './SequenceBuilder.js';
+import SlideBuilder from './SlideBuilder.js';
 
 var slideBuilderStub = sinon.createStubInstance(SlideBuilder);
 slideBuilderStub.build.withArgs(

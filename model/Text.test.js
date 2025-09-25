@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import Text from '../../model/Text.js';
+import Text from './Text.js';
 
 describe('Test Text getName function', function() {
     it('returns the name of the object if it exists', function() {

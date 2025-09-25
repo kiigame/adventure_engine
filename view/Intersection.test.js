@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import sinon from 'sinon';
-import Intersection from '../../view/Intersection.js';
-import VisibilityValidator from '../../view/intersection/VisibilityValidator.js';
+import Intersection from './Intersection.js';
+import VisibilityValidator from './intersection/VisibilityValidator.js';
 
 var validatorStub = sinon.createStubInstance(VisibilityValidator);
 

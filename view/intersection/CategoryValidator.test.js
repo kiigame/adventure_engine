@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import CategoryValidator from '../../../view/intersection/CategoryValidator.js';
+import CategoryValidator from './CategoryValidator.js';
 
 describe('Test CategoryValidator', function() {
     it('will return false if target has excluded category', function() {

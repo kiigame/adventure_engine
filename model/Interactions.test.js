@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import Interactions from '../../model/Interactions.js';
+import Interactions from './Interactions.js';
 
 describe('Test Interactions', function() {
     it('will return the single click command', function() {
