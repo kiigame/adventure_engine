@@ -43,7 +43,6 @@ export const dev = {
                 { src: 'data/*.json', dest: 'public/data/' },
                 { src: 'data/audio/**/*', dest: 'public/data/audio/' },
                 { src: 'data/images/**/*', dest: 'public/data/images/' },
-                { src: 'src/**/*', dest: 'public/src/'},
             ]
         })
     ]
