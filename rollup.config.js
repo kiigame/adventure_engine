@@ -18,7 +18,7 @@ export const build = [
     },
     {
         input: 'src/kiigame.js',
-        external: ['konva'],
+        external: ['konva', 'reflect-metadata', 'inversify'],
         output: [
             { file: pkg.main, format: 'cjs' },
             { file: pkg.module, format: 'es' }
