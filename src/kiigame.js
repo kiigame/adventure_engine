@@ -553,6 +553,9 @@ export class KiiGame {
             this.fader_full.show();
             this.fade_full.play();
         });
+        this.uiEventEmitter.on('play_music', (musicParams) => {
+            this.music.playMusic(musicParams);
+        });
     }
 
     // Draw the stage and start animations
@@ -918,6 +921,13 @@ export class KiiGame {
             const npc = this.getObject(command.npc);
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             this.gameEventEmitter.emit('npc_monologue', npc, text);
+        } else if (command.command == "play_music") {
+            const musicParams = {
+                music: command.music,
+                loop: command.loop !== undefined ? command.loop : false,
+                fade: command.fade !== undefined ? command.fade : 0
+            };
+            this.gameEventEmitter.emit('play_music', musicParams);
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
