@@ -668,7 +668,7 @@ export class KiiGame {
         this.character_layer.show();
         this.inventory_bar_layer.show();
         this.stage.draw();
-        this.music.playMusic('start_layer');
+        this.music.playMusicById('start_layer');
     }
 
     /// Plays a sequence defined in sequences.json
@@ -691,7 +691,7 @@ export class KiiGame {
         var slidesTotal = 0;
         var slide = null;
 
-        this.music.playMusic(id);
+        this.music.playMusicById(id);
 
         for (var i in sequence.slides) {
             slidesTotal++;
@@ -808,7 +808,7 @@ export class KiiGame {
 
             setTimeout(() => {
                 this.fader_room.hide();
-                this.music.playMusic(this.current_layer.id());
+                this.music.playMusicById(this.current_layer.id());
             }, fadeDuration);
         }, fadeDuration);
     }

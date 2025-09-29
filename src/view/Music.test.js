@@ -19,7 +19,7 @@ describe('Test Music', function() {
         const result = music.getCurrentMusic();
         assert.deepEqual(result, null);
     });
-    it('starting music without loop and fade data have neither loop nor fade', function() {
+    it('starting music without loop and fade data will have neither loop nor fade', function() {
         function AudioStub() {
             this.play = function () {
                 // do nothing
@@ -32,7 +32,7 @@ describe('Test Music', function() {
             },
         };
         const music = new Music(json, audioFactoryStub);
-        music.playMusic('layer');
+        music.playMusicById('layer');
         const result = music.getCurrentMusic();
         assert.isNotNull(result);
         assert.isFalse(result.loop);
@@ -54,7 +54,7 @@ describe('Test Music', function() {
             },
         };
         const music = new Music(json, audioFactoryStub);
-        music.playMusic('layer');
+        music.playMusicById('layer');
         const result = music.getCurrentMusic();
         assert.isNotNull(result);
         assert.isFalse(result.loop);
@@ -76,7 +76,7 @@ describe('Test Music', function() {
             },
         };
         const music = new Music(json, audioFactoryStub);
-        music.playMusic('layer');
+        music.playMusicById('layer');
         const result = music.getCurrentMusic();
         assert.isNotNull(result);
         assert.isTrue(result.loop);
@@ -101,8 +101,8 @@ describe('Test Music', function() {
             }
         };
         const music = new Music(json, audioFactoryStub);
-        music.playMusic('loop');
-        music.playMusic('noloop');
+        music.playMusicById('loop');
+        music.playMusicById('noloop');
         const result = music.getCurrentMusic();
         assert.isFalse(result.loop);
     });
@@ -123,8 +123,8 @@ describe('Test Music', function() {
             }
         };
         const music = new Music(json, audioFactoryStub);
-        music.playMusic('loop');
-        music.playMusic('noloop');
+        music.playMusicById('loop');
+        music.playMusicById('noloop');
         const result = music.getCurrentMusic();
         assert.isFalse(result.loop);
     });

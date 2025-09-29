@@ -9,19 +9,27 @@ class Music {
     }
 
     /**
-     * Play music.
-     * Stops previous music if no music is found for this id. Note that moving to a room and
-     * playing a sequence always call this; if you want the music to continue, it needs to be
-     * the same as in previous room/sequence.
+     * Get music by id from music.json data and play it. Backwards compatibility method.
      * @param string id Object id; looks for music for this room/sequence/other from music.json data
      */
-    playMusic(id) {
+    playMusicById(id) {
         if (id == undefined) {
             return;
         }
 
         var data = this.musicJson[id];
+        this.playMusic(data);
+    }
 
+    /**
+     * Play music based on data object with file name, fade and loop properties.
+     *
+     * Stops previous music if no music is found for this id. Note that moving to a room and
+     * playing a sequence always call this; if you want the music to continue, it needs to be
+     * the same as in previous room/sequence.
+     * @param data Object { music: string, fade: boolean, loop: boolean }
+     */
+    playMusic(data) {
         // If no new music is to be played, stop the old music.
         if (!data || !data.music) {
             this.stopMusic(this.current_music);
@@ -51,7 +59,7 @@ class Music {
                         clearInterval(fade_interval);
                     }
                 }, 200);
-           } else {
+            } else {
                 this.current_music.volume = 1;
             }
 
