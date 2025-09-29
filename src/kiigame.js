@@ -808,7 +808,7 @@ export class KiiGame {
 
             setTimeout(() => {
                 this.fader_room.hide();
-                this.music.playMusicById(this.current_layer.id());
+                this.music.playMusicById(this.current_room.id());
             }, fadeDuration);
         }, fadeDuration);
     }
