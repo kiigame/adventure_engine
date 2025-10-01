@@ -28,7 +28,7 @@
     "@rollup/plugin-node-resolve": "16.0.1",
     "@types/sinon-chai": "4.0.0",
     "chai": "6.0.1",
-    "commitlint-plugin-tense": "1.0.8",
+    "commitlint-plugin-tense": "1.0.9",
     "esm": "3.2.25",
     "http-server": "14.1.1",
     "husky": "9.1.7",
