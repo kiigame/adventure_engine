@@ -43,7 +43,7 @@ describe('Test SequenceBuilder', function () {
                     "slide": "mock_intro_2"
                 }
             ],
-            "className": "Layer"
+            "className": "Group"
         };
         var slides = [
             {

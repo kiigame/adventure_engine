@@ -9,7 +9,7 @@ class SequenceBuilder {
         var builtSequence = {
             attrs: {},
             children: [],
-            className: "Layer"
+            className: "Group"
         };
         builtSequence.attrs.category = 'sequence';
         builtSequence.attrs.visible = false;

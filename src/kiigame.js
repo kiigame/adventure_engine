@@ -1,6 +1,5 @@
 import Konva from 'konva';
 
-import LayerAdder from './view/stage/konvadata/LayerAdder.js';
 import LayerChildAdder from './view/stage/konvadata/LayerChildAdder.js';
 import SequencesBuilder from './view/sequence/konvadata/SequencesBuilder.js';
 import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
@@ -148,18 +147,15 @@ export class KiiGame {
         // List of character animations.
         this.character_animations = []; // also accessed in latkazombit.js
 
-        // Build an array of all the sequences out of sequences_json and merge them to
-        // images_json for stage building.
+        // Build sequences and push them to the sequence layer
         var builtSequences = this.sequencesBuilder.build(this.sequences_json);
-        var stageLayerAdder = new LayerAdder();
-        layerJson = stageLayerAdder.process(
+        var stageLayerChildAdder = new LayerChildAdder();
+        layerJson = stageLayerChildAdder.add(
             layerJson,
             builtSequences,
-            'start_layer_menu' // TODO: Use fader_full ?
+            'sequence_layer'
         );
-
         // Push rooms into the room layer
-        var stageLayerChildAdder = new LayerChildAdder();
         layerJson = stageLayerChildAdder.add(
             layerJson,
             gameData.rooms_json,
@@ -280,13 +276,13 @@ export class KiiGame {
 
         for (let i = 0; i < imageData.children.length; i++) {
             const container = imageData.children[i];
-            if (container.attrs.id !== 'room_layer') {
-                this.prepareImages(container);
-            } else {
+            if (['room_layer', 'sequence_layer'].includes(container.attrs.id)) {
                 for (let j = 0; j < container.children.length; j++) {
-                    const room = container.children[j];
-                    this.prepareImages(room);
+                    const child = container.children[j];
+                    this.prepareImages(child);
                 }
+            } else {
+                this.prepareImages(container);
             }
         }
 
@@ -695,41 +691,44 @@ export class KiiGame {
 
         this.uiEventEmitter.emit('play_full_fade_out');
 
-        var old_layer = this.current_layer;
-        this.current_layer = this.getObject(id);
-        var sequence = this.sequences_json[this.current_layer.id()];
-        var final_fade_duration = sequence.transition_length != null ? sequence.transition_length : 0;
-
-        var sequenceCounter = 0;
-        var slidesTotal = 0;
+        const old_layer = this.current_layer;
+        this.current_layer = this.getObject('sequence_layer');
+        const currentSequence = this.getObject(id);
+        var sequenceData = this.sequences_json[id];
+        var final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
         var slide = null;
 
         this.uiEventEmitter.emit('play_music_by_id', id);
 
-        for (var i in sequence.slides) {
-            slidesTotal++;
+        setTimeout(() => {
+            // For the first slide, hide everything else except sequence + full fader
+            this.hide_menu();
+            this.character_layer.hide();
+            this.inventory_bar_layer.hide();
+            this.inventory_layer.hide();
+            old_layer.hide();
+            // For the first slide, show sequence layer and sequence
+            this.current_layer.show();
+            currentSequence.show();
+        }, delay);
 
+        for (var i in sequenceData.slides) {
             var lastSlide = slide;
-            slide = this.getObject(sequence.slides[i].id);
+            slide = this.getObject(sequenceData.slides[i].id);
 
-            var displaySlide = (i, slide, lastSlide) => {
+            const displaySlide = (i, slide, lastSlide) => {
                 setTimeout(() => {
-                    this.current_layer.show();
-                    old_layer.hide();
-                    this.fader_full.show();
-                    this.hide_menu(); // So that the menu is hidden after first fadeout.
-                    this.character_layer.hide();
-                    this.inventory_bar_layer.hide();
-                    this.inventory_layer.hide();
-                    this.fade_full.play();
-
+                    // Hide previous slide
                     if (lastSlide) {
                         lastSlide.hide();
+                        this.uiEventEmitter.emit('play_full_fade_out');
                     }
+
+                    // Show current slide (note stage.draw only below)
                     slide.show();
 
-                    // Fade-in the slide
-                    var slideFade = sequence.slides[i].do_fade;
+                    // Fade in?
+                    var slideFade = sequenceData.slides[i].do_fade;
                     if (slideFade === true) {
                         setTimeout(() => {
                             this.fade_full.reverse();
@@ -740,14 +739,11 @@ export class KiiGame {
                         this.fade_full.reset();
                         this.stage.draw();
                     }
-
-                    sequenceCounter += 1;
-
                 }, delay);
             }
             displaySlide(i, slide, lastSlide);
 
-            delay = delay + sequence.slides[i].show_time;
+            delay = delay + sequenceData.slides[i].show_time;
         };
 
         // After last slide, do the final fade

@@ -497,6 +497,14 @@
     },
     {
       "attrs": {
+        "id": "sequence_layer",
+        "visible": false
+      },
+      "children": [],
+      "className": "Layer"
+    },
+    {
+      "attrs": {
         "id": "fader_full",
         "opacity": 0,
         "visible": false
