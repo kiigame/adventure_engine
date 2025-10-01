@@ -14,7 +14,7 @@ import CategoryValidator from './view/intersection/CategoryValidator.js';
 import Music from './view/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
-import GameEventEmitter from './events/GameEventEmitter.js';
+import EventEmitter from './events/EventEmitter.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -27,7 +27,8 @@ export class KiiGame {
         dragResolvers = [],
         hitRegionInitializer = null,
         intersection = null,
-        gameEventEmitter = new GameEventEmitter(),
+        gameEventEmitter = new EventEmitter(),
+        uiEventEmitter = new EventEmitter(),
         gameData = {},
     ) {
         this.sequencesBuilder = sequencesBuilder;
@@ -36,6 +37,7 @@ export class KiiGame {
         this.hitRegionInitializer = hitRegionInitializer;
         this.intersection = intersection;
         this.gameEventEmitter = gameEventEmitter;
+        this.uiEventEmitter = uiEventEmitter;
 
         if (this.sequencesBuilder === null) {
             // TODO: Move DI up
@@ -543,6 +545,14 @@ export class KiiGame {
         this.gameEventEmitter.on('npc_monologue', (npc, text) => {
             this.npcMonologue(npc, text);
         });
+
+        // Set up event listeners for UI commands
+        this.uiEventEmitter.on('play_full_fade_out', () => {
+            // Animation cycle for proper fading and drawing order
+            this.fade_full.reset();
+            this.fader_full.show();
+            this.fade_full.play();
+        });
     }
 
     // Draw the stage and start animations
@@ -677,10 +687,7 @@ export class KiiGame {
     play_sequence(id) {
         var delay = 700;
 
-        // Animation cycle for proper fading and drawing order
-        this.fade_full.reset();
-        this.fader_full.show();
-        this.fade_full.play();
+        this.uiEventEmitter.emit('play_full_fade_out');
 
         var old_layer = this.current_layer;
         this.current_layer = this.getObject(id);

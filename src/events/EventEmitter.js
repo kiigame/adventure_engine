@@ -1,4 +1,4 @@
-class GameEventEmitter {
+class EventEmitter {
     constructor(logger = console) {
         this.listeners = new Map();
         this.logger = logger;
@@ -21,4 +21,4 @@ class GameEventEmitter {
     }
 }
 
-export default GameEventEmitter;
+export default EventEmitter;

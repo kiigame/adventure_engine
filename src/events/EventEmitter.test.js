@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import GameEventEmitter from './GameEventEmitter.js';
+import EventEmitter from './EventEmitter.js';
 
-describe('GameEventEmitter', () => {
+describe('EventEmitter', () => {
     let emitter;
     let loggerSpy;
 
     beforeEach(() => {
         loggerSpy = { debug: sinon.spy() };
-        emitter = new GameEventEmitter(loggerSpy);
+        emitter = new EventEmitter(loggerSpy);
     });
 
     it('should call listener when event is emitted', () => {

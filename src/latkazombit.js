@@ -6,7 +6,7 @@ import Intersection from './view/Intersection.js';
 import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
-import GameEventEmitter from './events/GameEventEmitter.js';
+import EventEmitter from './events/EventEmitter.js';
 
 const jsonGetter = new JSONGetter();
 
@@ -34,17 +34,17 @@ const gameData = {
     startRoomId: rooms_json['startRoomId']
 };
 
-const gameEventEmitter = new GameEventEmitter();
+const gameEventEmitter = new EventEmitter();
 
 let kiigame = new KiiGame(
-    null,
+    undefined,
     [
         new DefaultInteractionResolver('item'),
         new DefaultInteractionResolver('furniture'),
         new DefaultInteractionResolver('reward'),
         new DefaultInteractionResolver('secret')
     ],
-    [],
+    undefined,
     new HitRegionInitializer(
         new HitRegionFilter(['secret'], ['Image'])
     ),
@@ -55,6 +55,7 @@ let kiigame = new KiiGame(
         ]
     ),
     gameEventEmitter,
+    undefined,
     gameData,
 );
 let stage = kiigame.stage;
