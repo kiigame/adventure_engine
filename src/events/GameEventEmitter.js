@@ -1,6 +1,7 @@
 class GameEventEmitter {
-    constructor() {
+    constructor(logger = console) {
         this.listeners = new Map();
+        this.logger = logger;
     }
 
     on(eventName, callback) {
@@ -12,9 +13,11 @@ class GameEventEmitter {
 
     emit(eventName, data) {
         const callbacks = this.listeners.get(eventName);
-        if (callbacks) {
-            callbacks.forEach(callback => callback(data));
+        if (!callbacks) {
+            this.logger.debug(`No listeners for event: ${eventName}`);
+            return;
         }
+        callbacks.forEach(callback => callback(data));
     }
 }
 
