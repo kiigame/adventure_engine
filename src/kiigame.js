@@ -553,6 +553,9 @@ export class KiiGame {
             this.fader_full.show();
             this.fade_full.play();
         });
+        this.uiEventEmitter.on('play_music_by_id', (musicId) => {
+            this.music.playMusicById(musicId);
+        });
         this.uiEventEmitter.on('play_music', (musicParams) => {
             this.music.playMusic(musicParams);
         });
@@ -681,7 +684,7 @@ export class KiiGame {
         this.character_layer.show();
         this.inventory_bar_layer.show();
         this.stage.draw();
-        this.music.playMusicById('start_layer');
+        this.uiEventEmitter.emit('play_music_by_id', 'start_layer');
     }
 
     /// Plays a sequence defined in sequences.json
@@ -701,7 +704,7 @@ export class KiiGame {
         var slidesTotal = 0;
         var slide = null;
 
-        this.music.playMusicById(id);
+        this.uiEventEmitter.emit('play_music_by_id', id);
 
         for (var i in sequence.slides) {
             slidesTotal++;
@@ -818,7 +821,7 @@ export class KiiGame {
 
             setTimeout(() => {
                 this.fader_room.hide();
-                this.music.playMusicById(this.current_room.id());
+                this.uiEventEmitter.emit('play_music_by_id', this.current_room.id());
             }, fadeDuration);
         }, fadeDuration);
     }
@@ -927,7 +930,7 @@ export class KiiGame {
                 loop: command.loop !== undefined ? command.loop : false,
                 fade: command.fade !== undefined ? command.fade : 0
             };
-            this.gameEventEmitter.emit('play_music', musicParams);
+            this.uiEventEmitter.emit('play_music', musicParams);
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
