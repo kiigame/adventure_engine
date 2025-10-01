@@ -14,7 +14,7 @@ import CategoryValidator from './view/intersection/CategoryValidator.js';
 import Music from './view/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
-import GameEventEmitter from './events/GameEventEmitter.js';
+import EventEmitter from './events/EventEmitter.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -27,7 +27,7 @@ export class KiiGame {
         dragResolvers = [],
         hitRegionInitializer = null,
         intersection = null,
-        gameEventEmitter = new GameEventEmitter(),
+        gameEventEmitter = new EventEmitter(),
         gameData = {},
     ) {
         this.sequencesBuilder = sequencesBuilder;
