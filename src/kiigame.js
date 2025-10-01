@@ -475,41 +475,6 @@ export class KiiGame {
             this.redrawInventory();
         });
 
-        // Not using getObject (with its error messaging), because these are optional.
-        this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
-
-        // The optional start layer has optional splash screen and optional start menu.
-        // TODO: Delay transition to the start room ?
-        if (this.stage.find("#start_layer")[0] != null) {
-            this.current_layer = this.start_layer;
-            if (this.stage.find('#splash_screen')[0] != null) {
-                this.stage.find('#splash_screen')[0].on('tap click', (event) => {
-                    this.stage.find('#splash_screen')[0].hide();
-                    if (this.stage.find('#start_layer_menu')[0] != null) {
-                        this.display_start_menu();
-                    } else {
-                        this.uiEventEmitter.emit('show_inventory');
-                        this.uiEventEmitter.emit('show_character');
-                        this.do_transition(gameData.startRoomId);
-                    }
-                });
-            } else { // no splash screen
-                if (this.stage.find('#start_layer_menu')[0] != null) {
-                    this.display_start_menu();
-                } else {
-                    // start layer without splash or menu?!
-                    this.uiEventEmitter.emit('show_inventory');
-                    this.uiEventEmitter.emit('show_character');
-                    this.do_transition(gameData.startRoomId);
-                }
-            }
-        } else {
-            // no start layer
-            this.uiEventEmitter.emit('show_inventory');
-            this.uiEventEmitter.emit('show_character');
-            this.do_transition(gameData.startRoomId);
-        }
-
         // Set up event listeners for the gameplay commands
         this.gameEventEmitter.on('monologue', (text) => {
             this.setMonologue(text);
@@ -578,6 +543,41 @@ export class KiiGame {
             this.character_layer.show();
             this.character_layer.draw();
         });
+
+        // Not using getObject (with its error messaging), because these are optional.
+        this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
+
+        // The optional start layer has optional splash screen and optional start menu.
+        // TODO: Delay transition to the start room ?
+        if (this.stage.find("#start_layer")[0] != null) {
+            this.current_layer = this.start_layer;
+            if (this.stage.find('#splash_screen')[0] != null) {
+                this.stage.find('#splash_screen')[0].on('tap click', (event) => {
+                    this.stage.find('#splash_screen')[0].hide();
+                    if (this.stage.find('#start_layer_menu')[0] != null) {
+                        this.display_start_menu();
+                    } else {
+                        this.uiEventEmitter.emit('show_inventory');
+                        this.uiEventEmitter.emit('show_character');
+                        this.do_transition(gameData.startRoomId);
+                    }
+                });
+            } else { // no splash screen
+                if (this.stage.find('#start_layer_menu')[0] != null) {
+                    this.display_start_menu();
+                } else {
+                    // start layer without splash or menu?!
+                    this.uiEventEmitter.emit('show_inventory');
+                    this.uiEventEmitter.emit('show_character');
+                    this.do_transition(gameData.startRoomId);
+                }
+            }
+        } else {
+            // no start layer
+            this.uiEventEmitter.emit('show_inventory');
+            this.uiEventEmitter.emit('show_character');
+            this.do_transition(gameData.startRoomId);
+        }
     }
 
     // Draw the stage and start animations
