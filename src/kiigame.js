@@ -478,7 +478,7 @@ export class KiiGame {
         // Not using getObject (with its error messaging), because these are optional.
         this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
 
-        //The optional start layer has optional splash screen and optional start menu.
+        // The optional start layer has optional splash screen and optional start menu.
         // TODO: Delay transition to the start room ?
         if (this.stage.find("#start_layer")[0] != null) {
             this.current_layer = this.start_layer;
@@ -488,6 +488,8 @@ export class KiiGame {
                     if (this.stage.find('#start_layer_menu')[0] != null) {
                         this.display_start_menu();
                     } else {
+                        this.uiEventEmitter.emit('show_inventory');
+                        this.uiEventEmitter.emit('show_character');
                         this.do_transition(gameData.startRoomId);
                     }
                 });
@@ -496,11 +498,15 @@ export class KiiGame {
                     this.display_start_menu();
                 } else {
                     // start layer without splash or menu?!
+                    this.uiEventEmitter.emit('show_inventory');
+                    this.uiEventEmitter.emit('show_character');
                     this.do_transition(gameData.startRoomId);
                 }
             }
         } else {
             // no start layer
+            this.uiEventEmitter.emit('show_inventory');
+            this.uiEventEmitter.emit('show_character');
             this.do_transition(gameData.startRoomId);
         }
 
@@ -554,6 +560,23 @@ export class KiiGame {
         });
         this.uiEventEmitter.on('play_music', (musicParams) => {
             this.music.playMusic(musicParams);
+        });
+        this.uiEventEmitter.on('hide_inventory', () => {
+            this.inventory_layer.hide();
+            this.inventory_bar_layer.hide();
+        });
+        this.uiEventEmitter.on('show_inventory', () => {
+            this.inventory_layer.show();
+            this.inventory_bar_layer.show();
+            this.inventory_bar_layer.draw();
+            this.inventory_layer.draw();
+        });
+        this.uiEventEmitter.on('hide_character', () => {
+            this.character_layer.hide();
+        });
+        this.uiEventEmitter.on('show_character', () => {
+            this.character_layer.show();
+            this.character_layer.draw();
         });
     }
 
@@ -677,8 +700,8 @@ export class KiiGame {
     display_start_menu() {
         this.start_layer.show();
         this.display_menu("start_layer");
-        this.character_layer.show();
-        this.inventory_bar_layer.show();
+        this.uiEventEmitter.emit('show_inventory');
+        this.uiEventEmitter.emit('show_character');
         this.stage.draw();
         this.uiEventEmitter.emit('play_music_by_id', 'start_layer');
     }
@@ -703,9 +726,8 @@ export class KiiGame {
         setTimeout(() => {
             // For the first slide, hide everything else except sequence + full fader
             this.hide_menu();
-            this.character_layer.hide();
-            this.inventory_bar_layer.hide();
-            this.inventory_layer.hide();
+            this.uiEventEmitter.emit('hide_inventory');
+            this.uiEventEmitter.emit('hide_character');
             old_layer.hide();
             // For the first slide, show sequence layer and sequence
             this.current_layer.show();
@@ -753,6 +775,9 @@ export class KiiGame {
                 this.fade_full.play();
 
                 setTimeout(() => {
+                    // Assumes sequences will always go to a room
+                    this.uiEventEmitter.emit('show_inventory');
+                    this.uiEventEmitter.emit('show_character');
                     this.fade_full.reverse();
                     setTimeout(() => {
                         this.fader_full.hide();
@@ -763,6 +788,13 @@ export class KiiGame {
 
             // Doesn't include the fade-in!
             delay = delay + final_fade_duration;
+        } else {
+            setTimeout(() => {
+                // Assumes sequences will always go to a room
+                this.uiEventEmitter.emit('show_inventory');
+                this.uiEventEmitter.emit('show_character');
+                this.fader_full.hide();
+            }, delay);
         }
 
         // Return sequence delay
@@ -810,9 +842,6 @@ export class KiiGame {
 
             this.current_layer.show();
             this.current_room.show();
-            this.inventory_layer.show();
-            this.inventory_bar_layer.show();
-            this.character_layer.show();
             this.stage.draw();
 
             setTimeout(() => {
