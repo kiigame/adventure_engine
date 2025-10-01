@@ -3,28 +3,30 @@ import sinon from 'sinon';
 import SequenceBuilder from './SequenceBuilder.js';
 import SlideBuilder from './SlideBuilder.js';
 
-var slideBuilderStub = sinon.createStubInstance(SlideBuilder);
-slideBuilderStub.build.withArgs(
-    {
-        "do_fade": true,
-        "id": "intro_1",
-        "show_time": 4000,
-        "text": {
-            "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
-        }
-    }
-).returns({"slide": "intro_1"});
-slideBuilderStub.build.withArgs(
-    {
-        "do_fade": true,
-        "id": "intro_2",
-        "show_time": 5000,
-        "imageSrc": "images/intro_2.png"
-    }
-).returns({"slide": "intro_2"});
+describe('Test SequenceBuilder', function () {
+    it('build sequence with two slides', function () {
+        // stubbing - we don't test what SlideBuilder really returns, just that
+        // we call it correctly
+        var slideBuilderStub = sinon.createStubInstance(SlideBuilder);
+        slideBuilderStub.build.withArgs(
+            {
+                "do_fade": true,
+                "id": "intro_1",
+                "show_time": 4000,
+                "text": {
+                    "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
+                }
+            }
+        ).returns({ "slide": "mock_intro_1" });
+        slideBuilderStub.build.withArgs(
+            {
+                "do_fade": true,
+                "id": "intro_2",
+                "show_time": 5000,
+                "imageSrc": "images/intro_2.png"
+            }
+        ).returns({ "slide": "mock_intro_2" });
 
-describe('Test SequenceBuilder', function(){
-    it('build sequence with two slides', function(){
         let sequenceBuilder = new SequenceBuilder(slideBuilderStub);
 
         var expected = {
@@ -35,10 +37,10 @@ describe('Test SequenceBuilder', function(){
             },
             "children": [
                 {
-                    "slide": "intro_1"
+                    "slide": "mock_intro_1"
                 },
                 {
-                    "slide": "intro_2"
+                    "slide": "mock_intro_2"
                 }
             ],
             "className": "Layer"
