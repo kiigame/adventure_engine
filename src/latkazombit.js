@@ -37,14 +37,14 @@ const gameData = {
 const gameEventEmitter = new EventEmitter();
 
 let kiigame = new KiiGame(
-    null,
+    undefined,
     [
         new DefaultInteractionResolver('item'),
         new DefaultInteractionResolver('furniture'),
         new DefaultInteractionResolver('reward'),
         new DefaultInteractionResolver('secret')
     ],
-    [],
+    undefined,
     new HitRegionInitializer(
         new HitRegionFilter(['secret'], ['Image'])
     ),
@@ -55,6 +55,7 @@ let kiigame = new KiiGame(
         ]
     ),
     gameEventEmitter,
+    undefined,
     gameData,
 );
 let stage = kiigame.stage;
