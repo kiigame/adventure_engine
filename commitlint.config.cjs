@@ -13,6 +13,7 @@ module.exports = {
         allowlist: [
           'capitalize',
           'mention',
+          'drive',
         ],
       }
     ]
