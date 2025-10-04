@@ -764,11 +764,10 @@
         "click": [
             {
                 "command": "add_object",
-                "object": "oikotie"
-            },
-            {
-                "command": "add_object",
-                "object": "oikotie2"
+                "object": [
+                    "oikotie",
+                    "oikotie2"
+                ]
             }
         ]
     },
