@@ -22,7 +22,7 @@ class Text {
         return name;
     }
 
-    /// Find text in object. If a text is not found from th text data by the parameter,
+    /// Find text in object. If a text is not found from the text data with the parameter,
     /// return the default text for the object (if it exists), or the master default text.
     /// @param object_id The id of the object which's texts are looked up.
     /// @param key The key to look up the text with. If null, set to 'examine' by
