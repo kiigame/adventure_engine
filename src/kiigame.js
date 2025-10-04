@@ -1036,7 +1036,10 @@ export class KiiGame {
 
         this.character_speech_bubble.y(this.stage.height() - 100 - 15 - this.monologue.height() / 2);
         this.text_layer.draw();
-        this.playCharacterAnimation(this.character_animations[this.speakAnimationName]);
+        this.uiEventEmitter.emit(
+            'play_character_animation',
+            { animation: this.character_animations[this.speakAnimationName], duration: 3000 }
+        );
     }
 
     /**

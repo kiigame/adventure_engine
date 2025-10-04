@@ -14,6 +14,7 @@ module.exports = {
           'capitalize',
           'mention',
           'drive',
+          'play',
         ],
       }
     ]
