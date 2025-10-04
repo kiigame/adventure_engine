@@ -74,19 +74,12 @@
             },
             {
                 "command": "remove_object",
-                "object": "cieni"
-            },
-            {
-                "command": "remove_object",
-                "object": "cieni_mouth"
-            },
-            {
-                "command": "remove_object",
-                "object": "cieni_eyes"
-            },
-            {
-                "command": "remove_object",
-                "object": "shower_door_to_locker_room_2_blocked"
+                "object": [
+                    "cieni",
+                    "cieni_mouth",
+                    "cieni_eyes",
+                    "shower_door_to_locker_room_2_blocked"
+                ]
             },
             {
                 "command": "add_object",
@@ -103,19 +96,12 @@
             },
             {
                 "command": "remove_object",
-                "object": "cieni"
-            },
-            {
-                "command": "remove_object",
-                "object": "cieni_mouth"
-            },
-            {
-                "command": "remove_object",
-                "object": "cieni_eyes"
-            },
-            {
-                "command": "remove_object",
-                "object": "shower_door_to_locker_room_2_blocked"
+                "object": [
+                    "cieni",
+                    "cieni_mouth",
+                    "cieni_eyes",
+                    "shower_door_to_locker_room_2_blocked"
+                ]
             },
             {
                 "command": "add_object",
@@ -132,19 +118,12 @@
             },
             {
                 "command": "remove_object",
-                "object": "cieni"
-            },
-            {
-                "command": "remove_object",
-                "object": "cieni_mouth"
-            },
-            {
-                "command": "remove_object",
-                "object": "cieni_eyes"
-            },
-            {
-                "command": "remove_object",
-                "object": "shower_door_to_locker_room_2_blocked"
+                "object": [
+                    "cieni",
+                    "cieni_mouth",
+                    "cieni_eyes",
+                    "shower_door_to_locker_room_2_blocked"
+                ]
             },
             {
                 "command": "add_object",
