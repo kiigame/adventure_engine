@@ -143,7 +143,7 @@ export class KiiGame {
         this.character_animation_timeout;
 
         // Default character animations
-        this.speak_animation;
+        this.speakAnimationName;
         this.idle_animation;
 
         // Variable for saving the current layer (for changing backgrounds and object layers)
@@ -278,7 +278,7 @@ export class KiiGame {
         }
 
         // Default character animations
-        this.speak_animation = this.character_animations["speak"];
+        this.speakAnimationName = "speak";
         this.idle_animation = this.character_animations["idle"];
 
         // Creating all image objects from json file based on their attributes
@@ -1036,7 +1036,7 @@ export class KiiGame {
 
         this.character_speech_bubble.y(this.stage.height() - 100 - 15 - this.monologue.height() / 2);
         this.text_layer.draw();
-        this.playCharacterAnimation(this.speak_animation, 3000);
+        this.playCharacterAnimation(this.character_animations[this.speakAnimationName]);
     }
 
     /**
@@ -1089,7 +1089,7 @@ export class KiiGame {
     /// @param animation_name The name of the animation, look the animation up
     ///                       from this.character_animations[].
     setSpeakAnimation(animation_name) {
-        this.speak_animation = this.character_animations[animation_name];
+        this.speakAnimationName = animation_name;
         this.stopCharacterAnimations(); // reset and play idle animation
     }
 
