@@ -423,10 +423,10 @@ export class KiiGame {
 
         /// Stop character animations and clear monologue when clicked or touched
         /// anywhere on the screen.
-        this.stage.on('touchstart mousedown', (event) => {
+        this.stage.on('touchstart mousedown', () => {
             this.clearText(this.monologue);
             this.clearText(this.npc_monologue);
-            this.stopCharacterAnimations();
+            this.uiEventEmitter.emit('reset_character_animation');
         });
 
         /// Touch start and mouse down events (save the coordinates before dragging)
@@ -552,6 +552,9 @@ export class KiiGame {
         // fired and handled in the same order ...
         this.uiEventEmitter.on('play_character_animation', ({ animation, duration }) => {
             this.playCharacterAnimation(animation, duration);
+        });
+        this.uiEventEmitter.on('reset_character_animation', () => {
+            this.resetCharacterAnimation();
         });
 
         // Not using getObject (with its error messaging), because these are optional.
@@ -1048,7 +1051,7 @@ export class KiiGame {
      * @param {*} duration The time in ms until the character returns to idle animation.
      */
     playCharacterAnimation(animation, duration) {
-        this.stopCharacterAnimations();
+        this.uiEventEmitter.emit('reset_character_animation');
         for (var i in this.idle_animation) {
             this.idle_animation[i].node.hide();
             this.idle_animation[i].reset();
@@ -1060,12 +1063,12 @@ export class KiiGame {
 
         clearTimeout(this.character_animation_timeout);
         this.character_animation_timeout = setTimeout(() => {
-            this.stopCharacterAnimations();
+            this.uiEventEmitter.emit('reset_character_animation');
         }, duration);
     }
 
     // Stop the characer animations, start idle animation
-    stopCharacterAnimations() {
+    resetCharacterAnimation() {
         for (var i in this.character_animations) {
             for (var j in this.character_animations[i]) {
                 this.character_animations[i][j].node.hide();
@@ -1084,7 +1087,7 @@ export class KiiGame {
     ///                       from this.character_animations[].
     setIdleAnimation(animation_name) {
         this.idle_animation = this.character_animations[animation_name];
-        this.stopCharacterAnimations(); // reset and play the new idle animation
+        this.uiEventEmitter.emit('reset_character_animation'); // reset and play the new idle animation
     }
 
     /// Change speak animation, so that the character graphics can be changed
@@ -1093,7 +1096,7 @@ export class KiiGame {
     ///                       from this.character_animations[].
     setSpeakAnimation(animation_name) {
         this.speakAnimationName = animation_name;
-        this.stopCharacterAnimations(); // reset and play idle animation
+        this.uiEventEmitter.emit('reset_character_animation'); // reset and play idle animation
     }
 
     /**
@@ -1155,7 +1158,7 @@ export class KiiGame {
         this.inventory_layer.draw();
         this.clearText(this.monologue);
         this.clearText(this.npc_monologue);
-        this.stopCharacterAnimations();
+        this.uiEventEmitter.emit('reset_character_animation');
     }
 
     /**
