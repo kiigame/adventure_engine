@@ -143,8 +143,8 @@ export class KiiGame {
         this.character_animation_timeout;
 
         // Default character animations
-        this.speakAnimationName;
-        this.idle_animation;
+        this.speakAnimationName = "speak";
+        this.idleAnimationName = "idle";
 
         // Variable for saving the current layer (for changing backgrounds and object layers)
         this.current_layer;
@@ -276,10 +276,6 @@ export class KiiGame {
                 }
             }
         }
-
-        // Default character animations
-        this.speakAnimationName = "speak";
-        this.idle_animation = this.character_animations["idle"];
 
         // Creating all image objects from json file based on their attributes
         const imageData = this.stage.toObject();
@@ -551,11 +547,11 @@ export class KiiGame {
         // Overriding default speaking animation from setMonologue from the same
         // interaction assumes: setMonologue is called first, and that events get
         // fired and handled in the same order ...
-        this.uiEventEmitter.on('play_character_animation', ({ animation, duration }) => {
-            this.playCharacterAnimation(animation, duration);
+        this.uiEventEmitter.on('play_character_animation', ({ animationName, duration }) => {
+            this.playCharacterAnimation(animationName, duration);
         });
         this.uiEventEmitter.on('reset_character_animation', () => {
-            this.resetCharacterAnimation();
+            this.startCharacterAnimation(this.idleAnimationName);
         });
 
         // Not using getObject (with its error messaging), because these are optional.
@@ -916,9 +912,9 @@ export class KiiGame {
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             this.gameEventEmitter.emit('npc_monologue', npc, text);
         } else if (command.command == "play_character_animation") {
-            const animation = this.character_animations[command.animation];
+            const animationName = command.animation;
             const duration = command.length;
-            this.uiEventEmitter.emit('play_character_animation', { animation, duration });
+            this.uiEventEmitter.emit('play_character_animation', { animationName, duration });
         } else if (command.command == "play_music") {
             const musicParams = {
                 music: command.music,
@@ -1035,33 +1031,15 @@ export class KiiGame {
         this.text_layer.draw();
         this.uiEventEmitter.emit(
             'play_character_animation',
-            { animation: this.character_animations[this.speakAnimationName], duration: 3000 }
+            { animationName: this.speakAnimationName, duration: 3000 }
         );
     }
 
     /**
-     * Play a character animation.
-     * @param {*} animation The animation to play.
-     * @param {*} duration The time in ms until the character returns to idle animation.
+     * Start a character animation by name.
      */
-    playCharacterAnimation(animation, duration) {
-        this.uiEventEmitter.emit('reset_character_animation');
-        for (var i in this.idle_animation) {
-            this.idle_animation[i].node.hide();
-        }
-        animation[0].node.show();
-        animation[0].play();
-
-        this.character_layer.draw();
-
-        clearTimeout(this.character_animation_timeout);
-        this.character_animation_timeout = setTimeout(() => {
-            this.uiEventEmitter.emit('reset_character_animation');
-        }, duration);
-    }
-
-    // Stop the characer animations, start idle animation
-    resetCharacterAnimation() {
+    startCharacterAnimation(animationName) {
+        // Hide and reset all character animations
         for (var i in this.character_animations) {
             for (var j in this.character_animations[i]) {
                 this.character_animations[i][j].node.hide();
@@ -1069,9 +1047,23 @@ export class KiiGame {
             }
         }
 
-        this.idle_animation[0].node.show();
-        this.idle_animation[0].play();
+        const animation = this.character_animations[animationName];
+        animation[0].node.show();
+        animation[0].play();
         this.character_layer.draw();
+    }
+
+    /**
+     * Play a character animation once and reset to idle.
+     * @param {*} animationName The name of the animation to play.
+     * @param {*} duration The time in ms until the character returns to idle animation.
+     */
+    playCharacterAnimation(animationName, duration) {
+        this.startCharacterAnimation(animationName);
+        clearTimeout(this.character_animation_timeout);
+        this.character_animation_timeout = setTimeout(() => {
+            this.uiEventEmitter.emit('reset_character_animation');
+        }, duration);
     }
 
     /// Change idle animation, so that the character graphics can be changed
@@ -1079,7 +1071,7 @@ export class KiiGame {
     /// @param animation_name The name of the animation, look the animation up
     ///                       from this.character_animations[].
     setIdleAnimation(animation_name) {
-        this.idle_animation = this.character_animations[animation_name];
+        this.idleAnimationName = animation_name;
         this.uiEventEmitter.emit('reset_character_animation'); // reset and play the new idle animation
     }
 

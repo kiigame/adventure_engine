@@ -243,7 +243,7 @@ stage.find('#start_credits')[0].on('tap click', function () {
 // Easter egg, click the image on the start screen and get a funny reaction from the character
 stage.find('#start')[0].on('tap click', function () {
     gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
-    uiEventEmitter.emit('play_character_animation', { animation: kiigame.character_animations["panic"], duration: 6000 });
+    uiEventEmitter.emit('play_character_animation', { animationName: "panic", duration: 6000 });
 });
 
 // When poster on the wall is clicked (the final step of the game), count rewards in invetory.
