@@ -38,6 +38,7 @@ const gameEventEmitter = new EventEmitter();
 
 let kiigame = new KiiGame(
     undefined,
+    undefined,
     [
         new DefaultInteractionResolver('item'),
         new DefaultInteractionResolver('furniture'),
