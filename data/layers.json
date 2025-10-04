@@ -119,92 +119,10 @@
       "children": [
         {
           "attrs": {
-            "height": 543,
-            "id": "start",
-            "src": "data/images/start.png",
-            "width": 724
-          },
-          "className": "Image"
-        },
-        {
-          "attrs": {
             "height": 643,
             "id": "splash_screen",
             "src": "data/images/splash_screen.png",
             "width": 1024
-          },
-          "className": "Image"
-        }
-      ],
-      "className": "Layer"
-    },
-    {
-      "attrs": {
-        "category": "menu",
-        "id": "start_layer_menu",
-        "visible": false
-      },
-      "children": [
-        {
-          "attrs": {
-            "height": 300,
-            "id": "start_game",
-            "src": "data/images/start_game.png",
-            "width": 257,
-            "x": 724,
-            "y": 0
-          },
-          "className": "Image"
-        },
-        {
-          "attrs": {
-            "height": 93,
-            "id": "start_credits",
-            "src": "data/images/start_credits.png",
-            "width": 257,
-            "x": 724,
-            "y": 300
-          },
-          "className": "Image"
-        },
-        {
-          "attrs": {
-            "height": 150,
-            "id": "start_empty",
-            "src": "data/images/start_empty.png",
-            "width": 257,
-            "x": 724,
-            "y": 393
-          },
-          "className": "Image"
-        }
-      ],
-      "className": "Layer"
-    },
-    {
-      "attrs": {
-        "category": "custom",
-        "id": "oikotiet",
-        "visible": false
-      },
-      "children": [
-        {
-          "attrs": {
-            "category": "furniture",
-            "id": "oikotie",
-            "src": "data/images/shower_door_to_locker_room_1.png",
-            "x": 691,
-            "y": 136
-          },
-          "className": "Image"
-        },
-        {
-          "attrs": {
-            "category": "furniture",
-            "id": "oikotie2",
-            "src": "data/images/shower_door_to_locker_room_1.png",
-            "x": 691,
-            "y": 136
           },
           "className": "Image"
         }

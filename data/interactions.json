@@ -1,5 +1,8 @@
 {
     "start_game": {
+        "click": []
+    },
+    "start_button_ok": {
         "click": [
             {
                 "command": "play_sequence",
@@ -13,7 +16,10 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "intro", "string": "examine"},
+                "textkey": {
+                    "object": "intro",
+                    "string": "examine"
+                },
                 "timeout": 23000
             }
         ]
@@ -22,7 +28,10 @@
         "locker_room_1_door_to_wc_stinking": [
             {
                 "command": "monologue",
-                "textkey": {"object": "airfreshener", "string": "locker_room_1_door_to_wc_stinking"}
+                "textkey": {
+                    "object": "airfreshener",
+                    "string": "locker_room_1_door_to_wc_stinking"
+                }
             },
             {
                 "command": "remove_object",
@@ -34,13 +43,15 @@
             }
         ]
     },
-    "book_stephenking": {
-    },
+    "book_stephenking": {},
     "cienibang_floor": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "cienibang_floor", "string": "pickup"}
+                "textkey": {
+                    "object": "cienibang_floor",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -56,7 +67,10 @@
         "cieni": [
             {
                 "command": "monologue",
-                "textkey": {"object": "cienibang", "string": "cieni"}
+                "textkey": {
+                    "object": "cienibang",
+                    "string": "cieni"
+                }
             },
             {
                 "command": "remove_object",
@@ -82,7 +96,10 @@
         "cieni_eyes": [
             {
                 "command": "monologue",
-                "textkey": {"object": "cienibang", "string": "cieni"}
+                "textkey": {
+                    "object": "cienibang",
+                    "string": "cieni"
+                }
             },
             {
                 "command": "remove_object",
@@ -108,7 +125,10 @@
         "cieni_mouth": [
             {
                 "command": "monologue",
-                "textkey": {"object": "cienibang", "string": "cieni"}
+                "textkey": {
+                    "object": "cienibang",
+                    "string": "cieni"
+                }
             },
             {
                 "command": "remove_object",
@@ -132,13 +152,15 @@
             }
         ]
     },
-    "garbagecan_empty": {
-    },
+    "garbagecan_empty": {},
     "garbagecan_teddy": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "garbagecan_teddy", "string": "examine"}
+                "textkey": {
+                    "object": "garbagecan_teddy",
+                    "string": "examine"
+                }
             },
             {
                 "command": "inventory_add",
@@ -158,7 +180,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "hairkeeper_floor", "string": "pickup"}
+                "textkey": {
+                    "object": "hairkeeper_floor",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -174,7 +199,10 @@
         "poster_withoutglue": [
             {
                 "command": "monologue",
-                "textkey": {"object": "hairkeeper", "string": "poster_withoutglue"}
+                "textkey": {
+                    "object": "hairkeeper",
+                    "string": "poster_withoutglue"
+                }
             },
             {
                 "command": "inventory_remove",
@@ -189,15 +217,16 @@
             }
         ]
     },
-    "icehockey_jersey": {
-    },
-    "jersey_number": {
-    },
+    "icehockey_jersey": {},
+    "jersey_number": {},
     "jacket_full": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "jacket_full", "string": "examine"}
+                "textkey": {
+                    "object": "jacket_full",
+                    "string": "examine"
+                }
             },
             {
                 "command": "inventory_add",
@@ -213,15 +242,16 @@
             }
         ]
     },
-    "jacket_empty": {
-    },
-    "library_receipt": {
-    },
+    "jacket_empty": {},
+    "library_receipt": {},
     "locker_room_1_door_to_out": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_1_door_to_out", "string": "examine"}
+                "textkey": {
+                    "object": "locker_room_1_door_to_out",
+                    "string": "examine"
+                }
             },
             {
                 "command": "play_character_animation",
@@ -234,7 +264,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_2_door_to_out", "string": "examine"}
+                "textkey": {
+                    "object": "locker_room_2_door_to_out",
+                    "string": "examine"
+                }
             },
             {
                 "command": "play_character_animation",
@@ -243,15 +276,16 @@
             }
         ]
     },
-    "locker_room_1_blood": {
-    },
-    "locker_room_2_blood": {
-    },
+    "locker_room_1_blood": {},
+    "locker_room_2_blood": {},
     "locker_room_1_door_to_shower_closed": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_1_door_to_shower_closed", "string": "examine"}
+                "textkey": {
+                    "object": "locker_room_1_door_to_shower_closed",
+                    "string": "examine"
+                }
             },
             {
                 "command": "remove_object",
@@ -271,7 +305,10 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_1_door_to_shower_open", "string": "examine"},
+                "textkey": {
+                    "object": "locker_room_1_door_to_shower_open",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
@@ -280,7 +317,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_1_door_to_wc_closed", "string": "examine"}
+                "textkey": {
+                    "object": "locker_room_1_door_to_wc_closed",
+                    "string": "examine"
+                }
             },
             {
                 "command": "remove_object",
@@ -292,8 +332,7 @@
             }
         ]
     },
-    "locker_room_1_door_to_wc_stinking": {
-    },
+    "locker_room_1_door_to_wc_stinking": {},
     "locker_room_1_door_to_wc_open": {
         "click": [
             {
@@ -302,7 +341,10 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_1_door_to_wc_open", "string": "examine"},
+                "textkey": {
+                    "object": "locker_room_1_door_to_wc_open",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
@@ -311,7 +353,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_2_door_to_wc_closed", "string": "examine"}
+                "textkey": {
+                    "object": "locker_room_2_door_to_wc_closed",
+                    "string": "examine"
+                }
             },
             {
                 "command": "remove_object",
@@ -331,7 +376,10 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_2_door_to_wc_open", "string": "examine"},
+                "textkey": {
+                    "object": "locker_room_2_door_to_wc_open",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
@@ -344,18 +392,23 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_room_2_door_to_shower", "string": "examine"},
+                "textkey": {
+                    "object": "locker_room_2_door_to_shower",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
     },
-    "locker_closed": {
-    },
+    "locker_closed": {},
     "locker_open": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "locker_open", "string": "examine"}
+                "textkey": {
+                    "object": "locker_open",
+                    "string": "examine"
+                }
             },
             {
                 "command": "inventory_add",
@@ -371,13 +424,15 @@
             }
         ]
     },
-    "locker_empty": {
-    },
+    "locker_empty": {},
     "marker": {
         "tactic_board_2": [
             {
                 "command": "monologue",
-                "textkey": {"object": "marker", "string": "tactic_board_2"}
+                "textkey": {
+                    "object": "marker",
+                    "string": "tactic_board_2"
+                }
             },
             {
                 "command": "remove_object",
@@ -393,7 +448,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "marker_floor", "string": "pickup"}
+                "textkey": {
+                    "object": "marker_floor",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -409,7 +467,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "poster", "string": "pickup"}
+                "textkey": {
+                    "object": "poster",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -425,7 +486,10 @@
         "wall": [
             {
                 "command": "monologue",
-                "textkey": {"object": "poster_withglue", "string": "wall"}
+                "textkey": {
+                    "object": "poster_withglue",
+                    "string": "wall"
+                }
             },
             {
                 "command": "remove_object",
@@ -466,12 +530,9 @@
             }
         ]
     },
-    "shower_left": {
-    },
-    "shower_middle": {
-    },
-    "shower_right": {
-    },
+    "shower_left": {},
+    "shower_middle": {},
+    "shower_right": {},
     "shower_door_to_locker_room_1": {
         "click": [
             {
@@ -480,18 +541,23 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "shower_door_to_locker_room_1", "string": "examine"},
+                "textkey": {
+                    "object": "shower_door_to_locker_room_1",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
     },
-    "shower_door_to_locker_room_2_blocked": {
-    },
+    "shower_door_to_locker_room_2_blocked": {},
     "shower_door_to_locker_room_2_closed": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "shower_door_to_locker_room_2_closed", "string": "examine"}
+                "textkey": {
+                    "object": "shower_door_to_locker_room_2_closed",
+                    "string": "examine"
+                }
             },
             {
                 "command": "remove_object",
@@ -511,22 +577,25 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "shower_door_to_locker_room_2_open", "string": "examine"},
+                "textkey": {
+                    "object": "shower_door_to_locker_room_2_open",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
     },
-    "tactic_board_1": {
-    },
-    "tactic_board_2": {
-    },
-    "tactic_board_3": {
-    },
+    "tactic_board_1": {},
+    "tactic_board_2": {},
+    "tactic_board_3": {},
     "tactic_board_wiper_floor": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "tactic_board_wiper_floor", "string": "pickup"}
+                "textkey": {
+                    "object": "tactic_board_wiper_floor",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -542,7 +611,10 @@
         "tactic_board_1": [
             {
                 "command": "monologue",
-                "textkey": {"object": "tactic_board_wiper", "string": "tactic_board_1"}
+                "textkey": {
+                    "object": "tactic_board_wiper",
+                    "string": "tactic_board_1"
+                }
             },
             {
                 "command": "remove_object",
@@ -554,13 +626,15 @@
             }
         ]
     },
-    "tag_on_wall": {
-    },
+    "tag_on_wall": {},
     "teddybear_floor": {
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "teddybear_floor", "string": "pickup"}
+                "textkey": {
+                    "object": "teddybear_floor",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -576,7 +650,10 @@
         "garbagecan_empty": [
             {
                 "command": "monologue",
-                "textkey": {"object": "teddybear", "string": "garbagecan_empty"}
+                "textkey": {
+                    "object": "teddybear",
+                    "string": "garbagecan_empty"
+                }
             },
             {
                 "command": "inventory_remove",
@@ -596,7 +673,10 @@
         "locker_closed": [
             {
                 "command": "monologue",
-                "textkey": {"object": "teddybear_chewinggum", "string": "locker_closed"}
+                "textkey": {
+                    "object": "teddybear_chewinggum",
+                    "string": "locker_closed"
+                }
             },
             {
                 "command": "remove_object",
@@ -608,14 +688,10 @@
             }
         ]
     },
-    "wall": {
-    },
-    "wc_1_mirror": {
-    },
-    "wc_2_mirror": {
-    },
-    "wc_2_window": {
-    },
+    "wall": {},
+    "wc_1_mirror": {},
+    "wc_2_mirror": {},
+    "wc_2_window": {},
     "wc_1_door_to_locker_room_1": {
         "click": [
             {
@@ -624,7 +700,10 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "wc_1_door_to_locker_room_1", "string": "examine"},
+                "textkey": {
+                    "object": "wc_1_door_to_locker_room_1",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
@@ -637,7 +716,10 @@
             },
             {
                 "command": "monologue",
-                "textkey": {"object": "wc_2_door_to_locker_room_2", "string": "examine"},
+                "textkey": {
+                    "object": "wc_2_door_to_locker_room_2",
+                    "string": "examine"
+                },
                 "timeout": 700
             }
         ]
@@ -646,7 +728,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "reward_1", "string": "pickup"}
+                "textkey": {
+                    "object": "reward_1",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -662,7 +747,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "reward_2", "string": "pickup"}
+                "textkey": {
+                    "object": "reward_2",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -678,7 +766,10 @@
         "click": [
             {
                 "command": "monologue",
-                "textkey": {"object": "reward_3", "string": "pickup"}
+                "textkey": {
+                    "object": "reward_3",
+                    "string": "pickup"
+                }
             },
             {
                 "command": "inventory_add",
@@ -690,6 +781,53 @@
             }
         ]
     },
-    "oikotie": {"click": [{"command": "play_sequence","sequence": "outro"},{"command": "do_transition", "destination": "end_layer", "timeout": 5700}]},
-    "oikotie2": {"click":[{"command":"do_transition","destination":"object_layer_locker_room_2"}]}
+    "start_empty": {
+        "click": [
+            {
+                "command": "add_object",
+                "object": "oikotie"
+            },
+            {
+                "command": "add_object",
+                "object": "oikotie2"
+            }
+        ]
+    },
+    "oikotie": {
+        "click": [
+            {
+                "command": "play_sequence",
+                "sequence": "outro"
+            },
+            {
+                "command": "do_transition",
+                "destination": "end_layer",
+                "timeout": 5700
+            }
+        ]
+    },
+    "oikotie2": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_locker_room_2"
+            },
+            {
+                "command": "inventory_add",
+                "item": "poster_withoutglue"
+            },
+            {
+                "command": "inventory_add",
+                "item": "poster_withglue"
+            },
+            {
+                "command": "inventory_add",
+                "item": "airfreshener"
+            },
+            {
+                "command": "inventory_add",
+                "item": "cienibang"
+            }
+        ]
+    }
 }
