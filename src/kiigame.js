@@ -18,10 +18,13 @@ import EventEmitter from './events/EventEmitter.js';
 // TODO: Move DI up
 import "reflect-metadata";
 import { container, TYPES } from "./inversify.config.js";
+import ItemsBuilder from './view/items/konvadata/ItemsBuilder.js';
+import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
 
 export class KiiGame {
     constructor(
         sequencesBuilder = null,
+        itemsBuilder = null,
         clickResolvers = [],
         dragResolvers = [],
         hitRegionInitializer = null,
@@ -31,6 +34,7 @@ export class KiiGame {
         gameData = {},
     ) {
         this.sequencesBuilder = sequencesBuilder;
+        this.itemsBuilder = itemsBuilder;
         this.clickResolvers = clickResolvers;
         this.dragResolvers = dragResolvers;
         this.hitRegionInitializer = hitRegionInitializer;
@@ -45,6 +49,11 @@ export class KiiGame {
                 new SequenceBuilder(
                     slideBuilder
                 )
+            );
+        }
+        if (this.itemsBuilder === null) {
+            this.itemsBuilder = new ItemsBuilder(
+                new ItemBuilder()
             );
         }
         if (this.clickResolvers.length == 0) {
@@ -161,10 +170,11 @@ export class KiiGame {
             gameData.rooms_json,
             'room_layer'
         );
-        // Push items.json contents to correct layer.
+        // Build items and push them to the inventory item cache layer
+        const items = this.itemsBuilder.build(gameData.items_json);
         layerJson = stageLayerChildAdder.add(
             layerJson,
-            gameData.items_json,
+            items,
             'inventory_item_cache'
         );
         // Push character animation frames to correct layer.

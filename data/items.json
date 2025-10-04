@@ -1,119 +1,54 @@
-[
-    {
-        "attrs": {
-            "category": "item",
-            "id": "airfreshener",
-            "src": "data/images/airfreshener.png",
-            "visible": false
-        },
-        "className": "Image"
+{
+    "airfreshener": {
+        "src": "data/images/airfreshener.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "dnaanalyzer",
-            "src": "data/images/dnaanalyzer.png",
-            "visible": false
-        },
-        "className": "Image"
+    "dnaanalyzer": {
+        "src": "data/images/dnaanalyzer.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "marker",
-            "src": "data/images/marker.png",
-            "visible": false
-        },
-        "className": "Image"
+    "marker": {
+        "src": "data/images/marker.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "teddybear",
-            "src": "data/images/teddybear.png",
-            "visible": false
-        },
-        "className": "Image"
+    "teddybear": {
+        "src": "data/images/teddybear.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "teddybear_chewinggum",
-            "src": "data/images/teddybear_chewinggum.png",
-            "visible": false
-        },
-        "className": "Image"
+    "teddybear_chewinggum": {
+        "src": "data/images/teddybear_chewinggum.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "poster_withoutglue",
-            "src": "data/images/poster_withoutglue.png",
-            "visible": false
-        },
-        "className": "Image"
+    "poster_withoutglue": {
+        "src": "data/images/poster_withoutglue.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "tactic_board_wiper",
-            "src": "data/images/tactic_board_wiper.png",
-            "visible": false
-        },
-        "className": "Image"
+    "tactic_board_wiper": {
+        "src": "data/images/tactic_board_wiper.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "hairkeeper",
-            "src": "data/images/hairkeeper.png",
-            "visible": false
-        },
-        "className": "Image"
+    "hairkeeper": {
+        "src": "data/images/hairkeeper.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "cienibang",
-            "src": "data/images/cienibang.png",
-            "visible": false
-        },
-        "className": "Image"
+    "cienibang": {
+        "src": "data/images/cienibang.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "item",
-            "id": "poster_withglue",
-            "src": "data/images/poster_withglue.png",
-            "visible": false
-        },
-        "className": "Image"
+    "poster_withglue": {
+        "src": "data/images/poster_withglue.png",
+        "category": "item"
     },
-    {
-        "attrs": {
-            "category": "reward",
-            "id": "book_reward_1",
-            "src": "data/images/book_reward_1.png",
-            "visible": false
-        },
-        "className": "Image"
+    "book_reward_1": {
+        "src": "data/images/book_reward_1.png",
+        "category": "reward"
     },
-    {
-        "attrs": {
-            "category": "reward",
-            "id": "book_reward_2",
-            "src": "data/images/book_reward_2.png",
-            "visible": false
-        },
-        "className": "Image"
+    "book_reward_2": {
+        "src": "data/images/book_reward_2.png",
+        "category": "reward"
     },
-    {
-        "attrs": {
-            "category": "reward",
-            "id": "book_reward_3",
-            "src": "data/images/book_reward_3.png",
-            "visible": false
-        },
-        "className": "Image"
+    "book_reward_3": {
+        "src": "data/images/book_reward_3.png",
+        "category": "reward"
     }
-]
+}
