@@ -1,4 +1,38 @@
 {
+    "begin": {
+        "start": [
+            {
+                "command": "do_transition",
+                "destination": "start_layer",
+                "length": 0
+            }
+        ]
+    },
+    "splash_screen": {
+        "click": [
+            {
+                "command": "play_full_fade_out"
+            },
+            {
+                "command": "do_transition",
+                "destination": "start_layer_menu",
+                "length": 0,
+                "timeout": 700
+            },
+            {
+                "command": "show_inventory",
+                "timeout": 700
+            },
+            {
+                "command": "show_character",
+                "timeout": 700
+            },
+            {
+                "command": "play_full_fade_in",
+                "timeout": 700
+            }
+        ]
+    },
     "start_game": {
         "click": []
     },
