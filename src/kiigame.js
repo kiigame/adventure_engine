@@ -296,7 +296,6 @@ export class KiiGame {
         window.onload = () => {
             this.hitRegionInitializer.initHitRegions(this, this.room_layer);
             this.stage.draw();
-            this.uiEventEmitter.emit('reset_character_animation');
         };
 
         // Mouse up and touch end events (picking up items from the environment
@@ -554,40 +553,54 @@ export class KiiGame {
             this.startCharacterAnimation(this.idleAnimationName);
         });
 
-        // Not using getObject (with its error messaging), because these are optional.
+        // Not using getObject (with its error messaging), start_layer is optional.
         this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
-
-        // The optional start layer has optional splash screen and optional start menu.
-        // TODO: Delay transition to the start room ?
-        if (this.stage.find("#start_layer")[0] != null) {
-            this.current_layer = this.start_layer;
-            if (this.stage.find('#splash_screen')[0] != null) {
-                this.stage.find('#splash_screen')[0].on('tap click', (event) => {
-                    this.stage.find('#splash_screen')[0].hide();
-                    if (this.stage.find('#start_layer_menu')[0] != null) {
-                        this.display_start_menu();
-                    } else {
-                        this.uiEventEmitter.emit('show_inventory');
-                        this.uiEventEmitter.emit('show_character');
-                        this.do_transition(gameData.startRoomId);
-                    }
-                });
-            } else { // no splash screen
-                if (this.stage.find('#start_layer_menu')[0] != null) {
-                    this.display_start_menu();
-                } else {
-                    // start layer without splash or menu?!
-                    this.uiEventEmitter.emit('show_inventory');
-                    this.uiEventEmitter.emit('show_character');
-                    this.do_transition(gameData.startRoomId);
-                }
-            }
+        if (this.start_layer) {
+            this.prepareStartLayer();
         } else {
-            // no start layer
-            this.uiEventEmitter.emit('show_inventory');
-            this.uiEventEmitter.emit('show_character');
-            this.do_transition(gameData.startRoomId);
+            this.startGame();
         }
+    }
+
+    startGame() {
+        this.uiEventEmitter.emit('show_inventory');
+        this.uiEventEmitter.emit('show_character');
+        this.uiEventEmitter.emit('reset_character_animation');
+        this.stage.draw();
+        this.gameEventEmitter.emit('do_transition', { room_id: gameData.startRoomId });
+    }
+
+    prepareStartLayer() {
+        // Not using getObject (with its error messaging), because these are optional.
+        const splashScreen = this.stage.find('#splash_screen')[0];
+        const startLayerMenu = this.stage.find('#start_layer_menu')[0];
+
+        // start layer without splash screen or menu!?
+        if (!splashScreen && !startLayerMenu) {
+            this.startGame();
+            return;
+        }
+
+        this.current_layer = this.start_layer;
+        this.start_layer.show();
+
+        if (!splashScreen) {
+            this.display_start_menu();
+            return;
+        }
+
+        if (!startLayerMenu) {
+            splashScreen.on('tap click', () => {
+                splashScreen.hide();
+                this.startGame();
+            });
+            return;
+        }
+
+        splashScreen.on('tap click', () => {
+            splashScreen.hide();
+            this.display_start_menu();
+        });
     }
 
     create_animation(object) {
@@ -664,10 +677,10 @@ export class KiiGame {
 
     // Display the start menu including "click" to proceed image
     display_start_menu() {
-        this.start_layer.show();
         this.display_menu("start_layer");
         this.uiEventEmitter.emit('show_inventory');
         this.uiEventEmitter.emit('show_character');
+        this.uiEventEmitter.emit('reset_character_animation');
         this.stage.draw();
         this.uiEventEmitter.emit('play_music_by_id', 'start_layer');
     }
