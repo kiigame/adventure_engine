@@ -299,7 +299,8 @@ export class KiiGame {
         // On window load we create image hit regions for our items on object layers
         window.onload = () => {
             this.hitRegionInitializer.initHitRegions(this, this.room_layer);
-            this.readyStage();
+            this.stage.draw();
+            this.uiEventEmitter.emit('reset_character_animation');
         };
 
         // Mouse up and touch end events (picking up items from the environment
@@ -591,13 +592,6 @@ export class KiiGame {
             this.uiEventEmitter.emit('show_character');
             this.do_transition(gameData.startRoomId);
         }
-    }
-
-    // Draw the stage and start animations
-    readyStage() {
-        this.stage.draw();
-        this.idle_animation[0].node.show();
-        this.idle_animation[0].play();
     }
 
     create_animation(object) {
