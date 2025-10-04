@@ -35,6 +35,7 @@ const gameData = {
 };
 
 const gameEventEmitter = new EventEmitter();
+const uiEventEmitter = new EventEmitter();
 
 let kiigame = new KiiGame(
     undefined,
@@ -56,7 +57,7 @@ let kiigame = new KiiGame(
         ]
     ),
     gameEventEmitter,
-    undefined,
+    uiEventEmitter,
     gameData,
 );
 let stage = kiigame.stage;
@@ -242,9 +243,8 @@ stage.find('#start_credits')[0].on('tap click', function () {
 // Easter egg, click the image on the start screen and get a funny reaction from the character
 stage.find('#start')[0].on('tap click', function () {
     gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
-    gameEventEmitter.emit('play_character_animation', { animation: kiigame.character_animations["panic"], duration: 6000 });
+    uiEventEmitter.emit('play_character_animation', { animation: kiigame.character_animations["panic"], duration: 6000 });
 });
-
 
 // When poster on the wall is clicked (the final step of the game), count rewards in invetory.
 stage.find('#poster_onthewall')[0].on('tap click', function () {

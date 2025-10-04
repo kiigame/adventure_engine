@@ -504,12 +504,6 @@ export class KiiGame {
         this.gameEventEmitter.on('do_transition', ({ room_id, fade_time }) => {
             this.do_transition(room_id, fade_time);
         });
-        // Overriding default speaking animation from setMonologue from the same
-        // interaction assumes: setMonologue is called first, and that events get
-        // fired and handled in the same order ...
-        this.gameEventEmitter.on('play_character_animation', ({ animation, duration }) => {
-            this.playCharacterAnimation(animation, duration);
-        });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
         });
@@ -552,6 +546,12 @@ export class KiiGame {
         this.uiEventEmitter.on('show_character', () => {
             this.character_layer.show();
             this.character_layer.draw();
+        });
+        // Overriding default speaking animation from setMonologue from the same
+        // interaction assumes: setMonologue is called first, and that events get
+        // fired and handled in the same order ...
+        this.uiEventEmitter.on('play_character_animation', ({ animation, duration }) => {
+            this.playCharacterAnimation(animation, duration);
         });
 
         // Not using getObject (with its error messaging), because these are optional.
@@ -877,7 +877,7 @@ export class KiiGame {
     }
 
     /// Handle each interaction. Check what command is coming in, and do the thing.
-    /// Timeouts are done in handle_commands. Order of commands in interactinos.json
+    /// Timeouts are done in handle_commands. Order of commands in interactions.json
     /// can be important: for instance, monologue plays the speaking animation, so
     /// play_character_animation should come after it, so that the speaking
     /// animation is stopped and the defined animation plays, and not vice versa.
@@ -908,10 +908,6 @@ export class KiiGame {
             const fade_time = command.length != null ? command.length : 700;
             const room_id = command.destination;
             this.gameEventEmitter.emit('do_transition', { room_id, fade_time });
-        } else if (command.command == "play_character_animation") {
-            const animation = this.character_animations[command.animation];
-            const duration = command.length;
-            this.gameEventEmitter.emit('play_character_animation', { animation, duration });
         } else if (command.command == "play_sequence") {
             this.gameEventEmitter.emit('play_sequence', command.sequence);
         } else if (command.command == "set_idle_animation") {
@@ -922,6 +918,10 @@ export class KiiGame {
             const npc = this.getObject(command.npc);
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             this.gameEventEmitter.emit('npc_monologue', npc, text);
+        } else if (command.command == "play_character_animation") {
+            const animation = this.character_animations[command.animation];
+            const duration = command.length;
+            this.uiEventEmitter.emit('play_character_animation', { animation, duration });
         } else if (command.command == "play_music") {
             const musicParams = {
                 music: command.music,
@@ -1061,7 +1061,7 @@ export class KiiGame {
         }, duration);
     }
 
-    ///Stop the characer animations, start idle animation
+    // Stop the characer animations, start idle animation
     stopCharacterAnimations() {
         for (var i in this.character_animations) {
             for (var j in this.character_animations[i]) {
