@@ -485,8 +485,8 @@ export class KiiGame {
         this.gameEventEmitter.on('inventory_remove', (itemName) => {
             this.inventoryRemove(itemName);
         });
-        this.gameEventEmitter.on('remove_object', (object) => {
-            this.removeObject(object);
+        this.gameEventEmitter.on('remove_object', (objectName) => {
+            this.removeObject(objectName);
         });
         this.gameEventEmitter.on('add_object', (object) => {
             this.addObject(object);
@@ -859,8 +859,10 @@ export class KiiGame {
                 this.gameEventEmitter.emit('inventory_remove', itemName)
             );
         } else if (command.command == "remove_object") {
-            const object = this.getObject(command.object);
-            this.gameEventEmitter.emit('remove_object', object);
+            const objects = Array.isArray(command.object) ? command.object : [command.object];
+            objects.forEach((objectName) =>
+                this.gameEventEmitter.emit('remove_object', objectName)
+            );
         } else if (command.command == "add_object") {
             const object = this.getObject(command.object);
             this.gameEventEmitter.emit('add_object', object);
@@ -919,11 +921,15 @@ export class KiiGame {
         this.current_layer.draw();
     }
 
-    /// Remove an object from stage. Called after interactions that remove objects.
-    /// The removed object is hidden. Handles animations.
-    /// @param object The object to be destroyed.
-    removeObject(object) {
-        this.removeAnimation(object.id());
+    /**
+     * Remove an object from stage. Called after interactions that remove objects.
+     * The removed object is simply hidden. Handles animations.
+     *
+     * @param {string} objectName
+     */
+    removeObject(objectName) {
+        this.removeAnimation(objectName);
+        const object = this.getObject(objectName);
         object.hide();
         this.current_layer.draw();
     }
