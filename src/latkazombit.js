@@ -98,7 +98,7 @@ stage.find('#start')[0].on('tap click', function (event) {
     event = event.target;
 
     gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
-    gameEventEmitter.emit('playCharacterAnimation', kiigame.character_animations["panic"], 6000);
+    gameEventEmitter.emit('play_character_animation', { animation: kiigame.character_animations["panic"], duration: 6000 });
 });
 
 // Listeners for the input screen buttons
