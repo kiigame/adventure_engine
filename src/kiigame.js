@@ -457,9 +457,9 @@ export class KiiGame {
                 }
             }
 
-            // Check if dragged item's destroyed, if not, add it to inventory
+            // Check if dragged item's destroyed, if not, add it back to inventory
             if (dragged_item.isVisible()) {
-                this.inventoryAdd(dragged_item);
+                this.gameEventEmitter.emit('inventory_add', { itemName: dragged_item.id() });
             }
 
             // Clearing the glow effects
@@ -479,8 +479,8 @@ export class KiiGame {
         this.gameEventEmitter.on('monologue', (text) => {
             this.setMonologue(text);
         });
-        this.gameEventEmitter.on('inventory_add', (item) => {
-            this.inventoryAdd(item);
+        this.gameEventEmitter.on('inventory_add', (itemName) => {
+            this.inventoryAdd(itemName);
         });
         this.gameEventEmitter.on('inventory_remove', (itemName) => {
             this.inventoryRemove(itemName);
@@ -849,8 +849,10 @@ export class KiiGame {
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             this.gameEventEmitter.emit('monologue', text);
         } else if (command.command == "inventory_add") {
-            const item = this.getObject(command.item);
-            this.gameEventEmitter.emit('inventory_add', item);
+            const items = Array.isArray(command.item) ? command.item : [command.item];
+            items.forEach((itemName) =>
+                this.gameEventEmitter.emit('inventory_add', itemName)
+            );
         } else if (command.command == "inventory_remove") {
             const items = Array.isArray(command.item) ? command.item : [command.item];
             items.forEach((itemName) =>
@@ -1062,12 +1064,16 @@ export class KiiGame {
         window[id].src = imageSrc;
     }
 
-    /// Adding an item to the inventory. Adds new items, but also an item that
-    /// has been dragged out of the inventory is put back with this function.
-    /// XXX: May become problematic if interaction both returns the dragged item
-    /// and adds a new one.
-    /// @param item Item to be added to the inventory
-    inventoryAdd(item) {
+    /**
+     * Adding an item to the inventory. Adds new items, but also an item that
+     * has been dragged out of the inventory is put back with this function.
+     * May become problematic if interaction both returns the dragged item
+     * and adds a new one.
+     *
+     * @param {string} itemName The name of the item to be added to the inventory.
+     */
+    inventoryAdd(itemName) {
+        const item = this.getObject(itemName);
         item.show();
         item.moveTo(this.inventory_layer);
         item.clearCache();
