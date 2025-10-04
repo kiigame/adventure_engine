@@ -1054,7 +1054,6 @@ export class KiiGame {
         this.uiEventEmitter.emit('reset_character_animation');
         for (var i in this.idle_animation) {
             this.idle_animation[i].node.hide();
-            this.idle_animation[i].reset();
         }
         animation[0].node.show();
         animation[0].play();
