@@ -1177,7 +1177,6 @@ export class KiiGame {
         if (item.isVisible()) {
             item.hide();
             item.moveTo(this.current_layer);
-            item.draggable(false);
             this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
             this.redrawInventory();
         }
@@ -1193,12 +1192,17 @@ export class KiiGame {
         this.stopCharacterAnimations();
     }
 
-    /// Redrawing inventory. Shows the items that should be visible according to
-    /// inventory_index and takes care of showing inventory arrows as necessary.
+    /**
+     * Manages which inventory items are shown. There's limited space in the UI,
+     * and we may have an arbitrary number of items in the inventory. Shows the
+     * items that should be visible according to inventory_index and takes care
+     * of showing inventory arrows as necessary.
+     */
     redrawInventory() {
+        // At first reset all items. Adding or removing items, as well as clicking
+        // arrows, may change which items should be shown.
         this.inventory_layer.getChildren().each((shape, i) => {
             shape.setAttr('visible', false);
-            shape.draggable(false);
         });
 
         // If the left arrow is visible AND there's empty space to the right,
@@ -1209,7 +1213,6 @@ export class KiiGame {
 
         for (var i = this.inventory_index; i < Math.min(this.inventory_index + this.inventory_max, this.inventory_list.length); i++) {
             var shape = this.inventory_list[i];
-            shape.draggable(true);
             shape.x(this.offsetFromLeft + (this.inventory_list.indexOf(shape) - this.inventory_index) * 100);
             shape.y(this.stage.height() - 90);
             shape.setAttr('visible', true);
