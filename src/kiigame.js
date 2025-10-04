@@ -459,7 +459,7 @@ export class KiiGame {
 
             // Check if dragged item's destroyed, if not, add it back to inventory
             if (dragged_item.isVisible()) {
-                this.gameEventEmitter.emit('inventory_add', { itemName: dragged_item.id() });
+                this.gameEventEmitter.emit('inventory_add', dragged_item.id());
             }
 
             // Clearing the glow effects
