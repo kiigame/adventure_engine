@@ -56,6 +56,7 @@ export class KiiGame {
                 new ItemBuilder()
             );
         }
+
         if (this.clickResolvers.length == 0) {
             this.clickResolvers.push(
                 new DefaultInteractionResolver('furniture'),
@@ -68,6 +69,8 @@ export class KiiGame {
                 new DefaultInteractionResolver('item')
             );
         }
+        this.startInteractionResolver = new DefaultInteractionResolver('start');
+
         if (this.hitRegionInitializer === null) {
             this.hitRegionInitializer = new HitRegionInitializer(
                 new HitRegionFilter([], ['Image'])
@@ -142,7 +145,6 @@ export class KiiGame {
 
         // Variable for saving the current layer (for changing backgrounds and object layers)
         this.current_layer;
-        this.start_layer; // also accessed in latkazombit.js
 
         // List of animated objects
         this.animated_objects = [];
@@ -554,44 +556,14 @@ export class KiiGame {
             this.startCharacterAnimation(this.idleAnimationName);
         });
 
-        // Not using getObject (with its error messaging), start_layer is optional.
-        this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
-        if (this.start_layer) {
-            this.prepareStartLayer(gameData.startRoomId);
-        } else {
-            this.startGame(gameData.startRoomId);
-        }
-    }
-
-    startGame(roomId) {
-        this.uiEventEmitter.emit('show_inventory');
-        this.uiEventEmitter.emit('show_character');
-        this.uiEventEmitter.emit('reset_character_animation');
         this.stage.draw();
-        this.gameEventEmitter.emit('do_transition', { room_id: roomId, fade_time: 0 });
-    }
-
-    prepareStartLayer(roomId) {
-        // Not using getObject (with its error messaging), because this is optional
-        const splashScreen = this.stage.find('#splash_screen')[0];
-
-        // start layer without splash screen?!
-        if (!splashScreen) {
-            this.startGame(roomId);
-            return;
-        }
-
-        this.current_layer = this.start_layer;
-        this.start_layer.show();
-
-        splashScreen.on('tap click', () => {
-            this.uiEventEmitter.emit('play_full_fade_out');
-            setTimeout(() => {
-                splashScreen.hide();
-                this.startGame(roomId);
-                this.uiEventEmitter.emit('play_full_fade_in');
-            }, 700); // TODO: refactor magic numbers
-        });
+        this.handle_commands(
+            this.startInteractionResolver.resolveCommands(
+                this.interactions,
+                gameData.startInteraction,
+                'start'
+            )
+        );
     }
 
     create_animation(object) {
@@ -756,7 +728,6 @@ export class KiiGame {
                 this.fade_room.reverse();
             }
 
-            // may be null if no start_layer is defined
             if (this.current_layer !== undefined && this.current_layer.id() !== this.room_layer.id()) {
                 this.current_layer.hide();
             }
@@ -893,6 +864,14 @@ export class KiiGame {
                 fade: command.fade !== undefined ? command.fade : 0
             };
             this.uiEventEmitter.emit('play_music', musicParams);
+        } else if (command.command === 'play_full_fade_out') {
+            this.uiEventEmitter.emit('play_full_fade_out');
+        } else if (command.command === 'play_full_fade_in') {
+            this.uiEventEmitter.emit('play_full_fade_in');
+        } else if (command.command === 'show_inventory') {
+            this.uiEventEmitter.emit('show_inventory');
+        } else if (command.command === 'show_character') {
+            this.uiEventEmitter.emit('show_character');
         } else {
             console.warn("Unknown interaction command " + command.command);
         }

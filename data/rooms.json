@@ -1,6 +1,26 @@
 {
-    "startRoomId": "start_layer_menu",
     "rooms": [
+        {
+            "attrs": {
+                "category": "room",
+                "id": "start_layer",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "height": 643,
+                        "id": "splash_screen",
+                        "src": "data/images/splash_screen.png",
+                        "width": 1024,
+                        "visible": true
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Group"
+        },
         {
             "attrs": {
                 "category": "room",

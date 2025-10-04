@@ -29,7 +29,7 @@ const gameData = {
     character_json: character_json,
     sequences_json: sequences_json,
     items_json: items_json,
-    startRoomId: rooms_json['startRoomId']
+    startInteraction: 'begin'
 };
 
 const gameEventEmitter = new EventEmitter();

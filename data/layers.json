@@ -113,24 +113,6 @@
     },
     {
       "attrs": {
-        "category": "start",
-        "id": "start_layer"
-      },
-      "children": [
-        {
-          "attrs": {
-            "height": 643,
-            "id": "splash_screen",
-            "src": "data/images/splash_screen.png",
-            "width": 1024
-          },
-          "className": "Image"
-        }
-      ],
-      "className": "Layer"
-    },
-    {
-      "attrs": {
         "category": "custom",
         "id": "input_layer",
         "visible": false
