@@ -1,5 +1,5 @@
 {
-    "start_layer": {
+    "start_layer_menu": {
         "music": "data/audio/alku_musax_mono_20131213.ogg",
         "fade": true,
         "loop": true

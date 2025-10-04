@@ -1,6 +1,88 @@
 {
-    "startRoomId": "object_layer_locker_room_1",
+    "startRoomId": "start_layer_menu",
     "rooms": [
+        {
+            "attrs": {
+                "category": "room",
+                "id": "start_layer_menu",
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "categore": "room_background",
+                        "height": 543,
+                        "id": "start",
+                        "src": "data/images/start.png",
+                        "width": 724,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "height": 300,
+                        "id": "start_game",
+                        "src": "data/images/start_game.png",
+                        "width": 257,
+                        "x": 724,
+                        "y": 0,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "height": 93,
+                        "id": "start_credits",
+                        "src": "data/images/start_credits.png",
+                        "width": 257,
+                        "x": 724,
+                        "y": 300,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "height": 150,
+                        "id": "start_empty",
+                        "src": "data/images/start_empty.png",
+                        "width": 257,
+                        "x": 724,
+                        "y": 393,
+                        "visible": true
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "oikotie",
+                        "src": "data/images/shower_door_to_locker_room_1.png",
+                        "x": 100,
+                        "y": 200,
+                        "visible": false
+                    },
+                    "className": "Image"
+                },
+                {
+                    "attrs": {
+                        "category": "furniture",
+                        "id": "oikotie2",
+                        "src": "data/images/shower_door_to_locker_room_1.png",
+                        "x": 300,
+                        "y": 200,
+                        "visible": false
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Group"
+        },
         {
             "attrs": {
                 "category": "room",
@@ -346,7 +428,10 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "tactic_board_wiper_floor",
-                        "scale": {"x": 0.6, "y": 0.6},
+                        "scale": {
+                            "x": 0.6,
+                            "y": 0.6
+                        },
                         "src": "data/images/tactic_board_wiper.png",
                         "x": 680,
                         "y": 390,
@@ -434,7 +519,10 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "hairkeeper_floor",
-                        "scale": {"x": 0.7, "y": 0.7},
+                        "scale": {
+                            "x": 0.7,
+                            "y": 0.7
+                        },
                         "src": "data/images/hairkeeper.png",
                         "x": 454,
                         "y": 209,
@@ -655,7 +743,10 @@
                     "attrs": {
                         "category": "furniture",
                         "id": "cienibang_floor",
-                        "scale": {"x": 0.8, "y": 0.8},
+                        "scale": {
+                            "x": 0.8,
+                            "y": 0.8
+                        },
                         "src": "data/images/cienibang.png",
                         "x": 443,
                         "y": 325,

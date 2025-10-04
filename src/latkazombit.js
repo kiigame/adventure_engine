@@ -18,7 +18,6 @@ const layersJson = JSON.parse(jsonGetter.getJSON('data/layers.json'));
 const rooms_json = JSON.parse(jsonGetter.getJSON('data/rooms.json'));
 const character_json = JSON.parse(jsonGetter.getJSON('data/character.json'));
 const sequences_json = JSON.parse(jsonGetter.getJSON('data/sequences.json'));
-const menu_json = JSON.parse(jsonGetter.getJSON('data/menu.json'));
 const items_json = JSON.parse(jsonGetter.getJSON('data/items.json'));
 
 const gameData = {
@@ -29,7 +28,6 @@ const gameData = {
     rooms_json: rooms_json['rooms'],
     character_json: character_json,
     sequences_json: sequences_json,
-    menu_json: menu_json,
     items_json: items_json,
     startRoomId: rooms_json['startRoomId']
 };
@@ -213,7 +211,7 @@ input_layer.on('tap click', function (event) {
 
         kiigame.handle_commands(new DefaultInteractionResolver().resolveCommands(
             kiigame.interactions,
-            'start_game'
+            'start_button_ok'
         ));
     }
     // If no number, grey out buttons that can't be used
@@ -235,11 +233,6 @@ input_layer.on('tap click', function (event) {
     input_layer.draw();
 });
 
-// Show developer credits
-stage.find('#start_credits')[0].on('tap click', function () {
-    gameEventEmitter.emit('monologue', kiigame.text.getText('start_credits', 'text'));
-});
-
 // Easter egg, click the image on the start screen and get a funny reaction from the character
 stage.find('#start')[0].on('tap click', function () {
     gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
@@ -256,35 +249,4 @@ stage.find('#poster_onthewall')[0].on('tap click', function () {
         }
     }
     rewards_text.text(rewardsCount + rewards_text.text());
-});
-
-// Developer feature - shortcut menu from the empty menu button for testing purposes
-kiigame.start_layer.on('mouseup touchend', function (event) {
-    kiigame.handle_click(event);
-});
-
-stage.find('#start_empty')[0].on('tap click', function (event) {
-    event = event.target;
-
-    var oikotie = stage.find('#oikotie')[0];
-    oikotie.x(50);
-    oikotie.show();
-    oikotie.moveTo(kiigame.start_layer);
-    oikotie.on('click', function () {
-        kiigame.menu.hide();
-    });
-
-    var oikotie2 = stage.find('#oikotie2')[0];
-    oikotie2.x(200);
-    oikotie2.show();
-    oikotie2.moveTo(kiigame.start_layer);
-    oikotie2.on('click', function () {
-        gameEventEmitter.emit('inventory_add', stage.find('#poster_withoutglue')[0]);
-        gameEventEmitter.emit('inventory_add', stage.find('#poster_withglue')[0]);
-        gameEventEmitter.emit('inventory_add', stage.find('#airfreshener')[0]);
-        gameEventEmitter.emit('inventory_add', stage.find('#cienibang')[0]);
-        kiigame.menu.hide();
-    });
-
-    stage.draw();
 });

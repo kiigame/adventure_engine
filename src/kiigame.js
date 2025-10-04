@@ -86,7 +86,6 @@ export class KiiGame {
         this.text = new Text(gameData.text_json);
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
-        this.menu_json = gameData.menu_json;
 
         // Alternative variable for `this` to allow reference even when it's shadowed
         var self = this;
@@ -114,11 +113,6 @@ export class KiiGame {
         // For limiting the speed of inventory browsing when dragging an item
         this.dragDelay = 500;
         this.dragDelayEnabled = false;
-
-        // Menu
-        this.menu; // also accessed in latkazombit.js
-        // Track the currently shown menu
-        this.current_menu;
 
         // The item dragged from the inventory
         this.dragged_item;
@@ -520,6 +514,13 @@ export class KiiGame {
             this.fader_full.show();
             this.fade_full.play();
         });
+        this.uiEventEmitter.on('play_full_fade_in', () => {
+            // Assumes fade_full has first faded out
+            this.fade_full.reverse();
+            setTimeout(() => {
+                this.fader_full.hide();
+            }, this.fade_full.tween.duration);
+        });
         this.uiEventEmitter.on('play_music_by_id', (musicId) => {
             this.music.playMusicById(musicId);
         });
@@ -556,50 +557,40 @@ export class KiiGame {
         // Not using getObject (with its error messaging), start_layer is optional.
         this.start_layer = this.stage.find("#start_layer")[0]; // TODO: get rid of start_layer
         if (this.start_layer) {
-            this.prepareStartLayer();
+            this.prepareStartLayer(gameData.startRoomId);
         } else {
-            this.startGame();
+            this.startGame(gameData.startRoomId);
         }
     }
 
-    startGame() {
+    startGame(roomId) {
         this.uiEventEmitter.emit('show_inventory');
         this.uiEventEmitter.emit('show_character');
         this.uiEventEmitter.emit('reset_character_animation');
         this.stage.draw();
-        this.gameEventEmitter.emit('do_transition', { room_id: gameData.startRoomId });
+        this.gameEventEmitter.emit('do_transition', { room_id: roomId, fade_time: 0 });
     }
 
-    prepareStartLayer() {
-        // Not using getObject (with its error messaging), because these are optional.
+    prepareStartLayer(roomId) {
+        // Not using getObject (with its error messaging), because this is optional
         const splashScreen = this.stage.find('#splash_screen')[0];
-        const startLayerMenu = this.stage.find('#start_layer_menu')[0];
 
-        // start layer without splash screen or menu!?
-        if (!splashScreen && !startLayerMenu) {
-            this.startGame();
+        // start layer without splash screen?!
+        if (!splashScreen) {
+            this.startGame(roomId);
             return;
         }
 
         this.current_layer = this.start_layer;
         this.start_layer.show();
 
-        if (!splashScreen) {
-            this.display_start_menu();
-            return;
-        }
-
-        if (!startLayerMenu) {
-            splashScreen.on('tap click', () => {
-                splashScreen.hide();
-                this.startGame();
-            });
-            return;
-        }
-
         splashScreen.on('tap click', () => {
-            splashScreen.hide();
-            this.display_start_menu();
+            this.uiEventEmitter.emit('play_full_fade_out');
+            setTimeout(() => {
+                splashScreen.hide();
+                this.startGame(roomId);
+                this.uiEventEmitter.emit('play_full_fade_in');
+            }, 700); // TODO: refactor magic numbers
         });
     }
 
@@ -653,38 +644,6 @@ export class KiiGame {
         }
     }
 
-    // Display menu for the given layer
-    // string layerId - the ID of the layer we want to display the menu for
-    display_menu(layerId) {
-        this.hide_menu();
-        this.menu = this.menu_json[layerId] !== undefined ? this.getObject(this.menu_json[layerId]["menu"]) : false;
-        if (!this.menu) {
-            return;
-        }
-
-        this.menu.show()
-        this.current_menu = this.menu;
-    }
-
-    hide_menu() {
-        if (!this.current_menu) {
-            return;
-        }
-
-        this.menu.hide();
-        this.current_menu = null;
-    }
-
-    // Display the start menu including "click" to proceed image
-    display_start_menu() {
-        this.display_menu("start_layer");
-        this.uiEventEmitter.emit('show_inventory');
-        this.uiEventEmitter.emit('show_character');
-        this.uiEventEmitter.emit('reset_character_animation');
-        this.stage.draw();
-        this.uiEventEmitter.emit('play_music_by_id', 'start_layer');
-    }
-
     /// Plays a sequence defined in sequences.json
     /// @param id The sequence id in sequences.json
     /// @return The length of sequence in ms. Doesn't include the fade-in!
@@ -703,8 +662,6 @@ export class KiiGame {
         this.uiEventEmitter.emit('play_music_by_id', id);
 
         setTimeout(() => {
-            // For the first slide, hide everything else except sequence + full fader
-            this.hide_menu();
             this.uiEventEmitter.emit('hide_inventory');
             this.uiEventEmitter.emit('hide_character');
             old_layer.hide();
@@ -732,7 +689,7 @@ export class KiiGame {
                     var slideFade = sequenceData.slides[i].do_fade;
                     if (slideFade === true) {
                         setTimeout(() => {
-                            this.fade_full.reverse();
+                            this.fade_full.reverse(); // TODO consider play_full_fade_in
                             this.stage.draw();
                         }, 700);
                     } else {
@@ -757,7 +714,7 @@ export class KiiGame {
                     // Assumes sequences will always go to a room
                     this.uiEventEmitter.emit('show_inventory');
                     this.uiEventEmitter.emit('show_character');
-                    this.fade_full.reverse();
+                    this.fade_full.reverse(); // TODO: use play_full_fade_in
                     setTimeout(() => {
                         this.fader_full.hide();
                         this.fade_full.tween.duration = 600; // reset to default
@@ -804,7 +761,7 @@ export class KiiGame {
                 this.current_layer.hide();
             }
 
-            if (this.current_room !== null) {
+            if (this.current_room) {
                 this.current_room.hide();
             }
 
