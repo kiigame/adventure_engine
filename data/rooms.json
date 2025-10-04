@@ -10,7 +10,7 @@
             "children": [
                 {
                     "attrs": {
-                        "categore": "room_background",
+                        "category": "room_background",
                         "height": 543,
                         "id": "start",
                         "src": "data/images/start.png",
