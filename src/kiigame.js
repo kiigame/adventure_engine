@@ -647,43 +647,6 @@ export class KiiGame {
         }
     }
 
-    /*
-    Create item actions such as "new game" for the given menu object
-    Menus may have certain kinds of actions: start_game, credits, main_menu
-    Other actions (such as "none") are regarded as non-functioning menu buttons
-    Object menu_image - the menu image object with the items inside
-    */
-    create_menu_action(menu_image) {
-        var menu_object = this.menu_json[menu_image.attrs.id];
-        if (!menu_object) {
-            console.warn("Could not find menu.json entry for menu '", menu_image.attrs.id, "'");
-            return;
-        }
-
-        // Go through the menu items to bind their actions
-        for (var i = 0; i < menu_image.children.length; i++) {
-            var item_id = menu_image.children[i].attrs.id;
-            var item_action = menu_object.items[item_id];
-
-            var item = this.getObject(item_id);
-            // Don't override custom menu event listeners
-            if (item.eventListeners.click) {
-                continue;
-            }
-
-            if (item_action == "start_game") {
-                item.on('tap click', (event) => {
-                    var resolver = new DefaultInteractionResolver();
-                    this.handle_commands(resolver.resolveCommands(this.interactions, 'start_game'));
-                });
-            } else if (item_action == "credits") {
-                item.on('tap click', (event) => {
-                    this.setMonologue(this.text.getText(event.target.id()));
-                });
-            }
-        }
-    }
-
     // Display menu for the given layer
     // string layerId - the ID of the layer we want to display the menu for
     display_menu(layerId) {

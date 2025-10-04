@@ -69,17 +69,14 @@ stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 10
 var input_text = stage.find('#input_text')[0];
 var input_layer = stage.find('#input_layer')[0];
 
-//For checking whether player has selected their jersey number
+// For checking whether player has selected their jersey number
 var number_selected = false;
 
 // Default player number
 input_text.setText(kiigame.text.getText('input_text', 'text'));
 
-// Dirty removing of default event handler to allow using jersey input
-stage.find('#start_game')[0].eventListeners.click = [];
-
 // On clicking the start game we open the choosing the jersey number
-stage.find('#start_game')[0].on('tap click', function (event) {
+stage.find('#start_game')[0].on('tap click', function () {
     input_layer.show();
     // When default number is on, buttons shouldn't be grey when starting
     stage.find('#button_ok').show();
@@ -91,14 +88,6 @@ stage.find('#start_game')[0].on('tap click', function (event) {
     input_layer.draw();
     input_layer.moveToTop();
     kiigame.music.stopMusic(kiigame.music.getCurrentMusic());
-});
-
-// Hidden feature, click the image on the start screen and get a funny reaction from the character
-stage.find('#start')[0].on('tap click', function (event) {
-    event = event.target;
-
-    gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
-    gameEventEmitter.emit('play_character_animation', { animation: kiigame.character_animations["panic"], duration: 6000 });
 });
 
 // Listeners for the input screen buttons
@@ -245,8 +234,20 @@ input_layer.on('tap click', function (event) {
     input_layer.draw();
 });
 
+// Show developer credits
+stage.find('#start_credits')[0].on('tap click', function () {
+    gameEventEmitter.emit('monologue', kiigame.text.getText('start_credits', 'text'));
+});
+
+// Easter egg, click the image on the start screen and get a funny reaction from the character
+stage.find('#start')[0].on('tap click', function () {
+    gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
+    gameEventEmitter.emit('play_character_animation', { animation: kiigame.character_animations["panic"], duration: 6000 });
+});
+
+
 // When poster on the wall is clicked (the final step of the game), count rewards in invetory.
-stage.find('#poster_onthewall')[0].on('tap click', function (event) {
+stage.find('#poster_onthewall')[0].on('tap click', function () {
     var rewards_text = kiigame.getObject("rewards_text");
     var rewardsCount = 0;
     for (let inventoryItem of kiigame.inventory_layer.children) {
@@ -257,7 +258,7 @@ stage.find('#poster_onthewall')[0].on('tap click', function (event) {
     rewards_text.text(rewardsCount + rewards_text.text());
 });
 
-//Developer feature - shortcut menu from the empty menu button for testing purposes
+// Developer feature - shortcut menu from the empty menu button for testing purposes
 kiigame.start_layer.on('mouseup touchend', function (event) {
     kiigame.handle_click(event);
 });
