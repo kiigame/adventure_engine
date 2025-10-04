@@ -17,13 +17,13 @@ class DefaultInteractionResolver {
      * @param string action (click or target item)
      * @param string defaultString (examine or target item)
      */
-    resolveCommands(interactions, entityID, action = 'click', defaultString = 'examine') {
+    resolveCommands(interactions, entityId, action = 'click', defaultString = 'examine') {
         var commands;
-        commands = interactions.getCommands(entityID, action);
+        commands = interactions.getCommands(entityId, action);
 
         // no interaction for the action defined: usual text
         if (commands === null || commands === undefined) {
-            commands = [{"command":"monologue", "textkey":{"object": entityID, "string": defaultString}}];
+            commands = [{"command":"monologue", "textkey":{"object": entityId, "string": defaultString}}];
         }
 
         return commands;
