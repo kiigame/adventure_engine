@@ -166,6 +166,31 @@ export class KiiGame {
             gameData.rooms_json,
             'room_layer'
         );
+        // Push room fader into the room layer after rooms, so it's on top
+        const faderRoomJson = {
+            "attrs": {
+                "id": "fader_room",
+                "opacity": 0,
+                "visible": false
+            },
+            "children": [
+                {
+                    "attrs": {
+                        "height": 543,
+                        "id": "black_screen_room",
+                        "src": "data/images/black.png",
+                        "width": 1024
+                    },
+                    "className": "Image"
+                }
+            ],
+            "className": "Group"
+        };
+        layerJson = stageLayerChildAdder.add(
+            layerJson,
+            [faderRoomJson],
+            'room_layer'
+        )
         // Build items and push them to the inventory item cache layer
         const items = this.itemsBuilder.build(gameData.items_json);
         layerJson = stageLayerChildAdder.add(
@@ -722,22 +747,29 @@ export class KiiGame {
             this.fade_room.play();
         }
 
+        const previousLayer = this.current_layer;
+        const previousRoom = this.current_room;
+        this.current_layer = this.room_layer;
+        this.current_room = this.getObject(room_id);
+
         setTimeout(() => {
             // Don't fade if duration is zero.
             if (fadeDuration) {
                 this.fade_room.reverse();
+                setTimeout(() => {
+                    this.fader_room.hide();
+                    this.current_layer.draw();
+                }, fadeDuration);
             }
 
-            if (this.current_layer !== undefined && this.current_layer.id() !== this.room_layer.id()) {
-                this.current_layer.hide();
+            if (previousLayer && previousLayer.id() !== this.room_layer.id()) {
+                previousLayer.hide();
             }
 
-            if (this.current_room) {
-                this.current_room.hide();
+            if (previousRoom) {
+                previousRoom.hide();
             }
 
-            this.current_layer = this.room_layer;
-            this.current_room = this.getObject(room_id);
             // Play the animations of the room
             for (var i in this.animated_objects) {
                 if (this.animated_objects[i].node.parent.id() == this.current_layer.id()) {
@@ -750,11 +782,7 @@ export class KiiGame {
             this.current_layer.show();
             this.current_room.show();
             this.stage.draw();
-
-            setTimeout(() => {
-                this.fader_room.hide();
-                this.uiEventEmitter.emit('play_music_by_id', this.current_room.id());
-            }, fadeDuration);
+            this.uiEventEmitter.emit('play_music_by_id', this.current_room.id());
         }, fadeDuration);
     }
 
@@ -1081,7 +1109,6 @@ export class KiiGame {
             this.inventory_index = Math.max(this.inventory_list.indexOf(item) + 1 - this.inventory_max, 0);
         }
 
-        this.current_layer.draw();
         this.redrawInventory();
     }
 

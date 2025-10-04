@@ -94,25 +94,6 @@
     },
     {
       "attrs": {
-        "id": "fader_room",
-        "opacity": 0,
-        "visible": false
-      },
-      "children": [
-        {
-          "attrs": {
-            "height": 543,
-            "id": "black_screen_room",
-            "src": "data/images/black.png",
-            "width": 1024
-          },
-          "className": "Image"
-        }
-      ],
-      "className": "Layer"
-    },
-    {
-      "attrs": {
         "category": "custom",
         "id": "input_layer",
         "visible": false
