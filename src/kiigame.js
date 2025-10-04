@@ -482,8 +482,8 @@ export class KiiGame {
         this.gameEventEmitter.on('inventory_add', (item) => {
             this.inventoryAdd(item);
         });
-        this.gameEventEmitter.on('inventory_remove', (item) => {
-            this.inventoryRemove(item);
+        this.gameEventEmitter.on('inventory_remove', (itemName) => {
+            this.inventoryRemove(itemName);
         });
         this.gameEventEmitter.on('remove_object', (object) => {
             this.removeObject(object);
@@ -852,15 +852,10 @@ export class KiiGame {
             const item = this.getObject(command.item);
             this.gameEventEmitter.emit('inventory_add', item);
         } else if (command.command == "inventory_remove") {
-            if (Array.isArray(command.item)) {
-                for (let itemId of command.item) {
-                    const item = this.getObject(itemId);
-                    this.gameEventEmitter.emit('inventory_remove', item);
-                }
-            } else {
-                const item = this.getObject(command.item);
-                this.gameEventEmitter.emit('inventory_remove', item);
-            }
+            const items = Array.isArray(command.item) ? command.item : [command.item];
+            items.forEach((itemName) =>
+                this.gameEventEmitter.emit('inventory_remove', itemName)
+            );
         } else if (command.command == "remove_object") {
             const object = this.getObject(command.object);
             this.gameEventEmitter.emit('remove_object', object);
@@ -1094,10 +1089,14 @@ export class KiiGame {
         this.redrawInventory();
     }
 
-    /// Removing an item from the inventory. Dragged items are currently just
-    /// hidden & inventory is readrawn only after drag ends. Only remove visibile items.
-    /// @param item Item to be removed from the inventory
-    inventoryRemove(item) {
+    /**
+     * Removing an item from the inventory. Dragged items are currently just
+     * hidden & inventory is readrawn only after drag ends. Only remove visibile items.
+     *
+     * @param {string} itemName of the item to be removed from the inventory
+     */
+    inventoryRemove(itemName) {
+        const item = this.getObject(itemName);
         if (item.isVisible()) {
             item.hide();
             item.moveTo(this.current_layer);
