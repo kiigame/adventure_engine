@@ -488,8 +488,8 @@ export class KiiGame {
         this.gameEventEmitter.on('remove_object', (objectName) => {
             this.removeObject(objectName);
         });
-        this.gameEventEmitter.on('add_object', (object) => {
-            this.addObject(object);
+        this.gameEventEmitter.on('add_object', (objectName) => {
+            this.addObject(objectName);
         });
         this.gameEventEmitter.on('do_transition', ({ room_id, fade_time }) => {
             this.do_transition(room_id, fade_time);
@@ -864,8 +864,10 @@ export class KiiGame {
                 this.gameEventEmitter.emit('remove_object', objectName)
             );
         } else if (command.command == "add_object") {
-            const object = this.getObject(command.object);
-            this.gameEventEmitter.emit('add_object', object);
+            const objects = Array.isArray(command.object) ? command.object : [command.object];
+            objects.forEach((objectName) =>
+                this.gameEventEmitter.emit('add_object', objectName)
+            );
         } else if (command.command == "do_transition") {
             const fade_time = command.length != null ? command.length : 700;
             const room_id = command.destination;
@@ -911,10 +913,13 @@ export class KiiGame {
         return object;
     }
 
-    /// Add an object to the stage. Currently, this means setting its visibility
-    /// to true. // TODO: Add animations & related parts.
-    /// @param The object to be added.
-    addObject(object) {
+    /**
+     * Add an object to the stage. Currently, this means setting its visibility to true.
+     * TODO: Add animations & related parts.
+     * @param {string} objectName
+     */
+    addObject(objectName) {
+        const object = this.getObject(objectName);
         object.clearCache();
         object.show();
         object.cache();
