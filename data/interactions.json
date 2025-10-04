@@ -814,19 +814,12 @@
             },
             {
                 "command": "inventory_add",
-                "item": "poster_withoutglue"
-            },
-            {
-                "command": "inventory_add",
-                "item": "poster_withglue"
-            },
-            {
-                "command": "inventory_add",
-                "item": "airfreshener"
-            },
-            {
-                "command": "inventory_add",
-                "item": "cienibang"
+                "item": [
+                    "poster_withoutglue",
+                    "poster_withglue",
+                    "airfreshener",
+                    "cienibang"
+                ]
             }
         ]
     }
