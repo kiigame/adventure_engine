@@ -641,9 +641,10 @@ export class KiiGame {
         }
     }
 
-    /// Plays a sequence defined in sequences.json
-    /// @param id The sequence id in sequences.json
-    /// @return The length of sequence in ms. Doesn't include the fade-in!
+    /**
+     * Playes a sequence definied in sequences.json by id.
+     * @param {string} id The Sequence id in sequences.json
+     */
     play_sequence(id) {
         var delay = 700;
 
@@ -654,7 +655,7 @@ export class KiiGame {
         const currentSequence = this.getObject(id);
         var sequenceData = this.sequences_json[id];
         var final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
-        var slide = null;
+        var currentSlide = null;
 
         this.uiEventEmitter.emit('play_music_by_id', id);
 
@@ -668,27 +669,26 @@ export class KiiGame {
         }, delay);
 
         for (var i in sequenceData.slides) {
-            var lastSlide = slide;
-            slide = this.getObject(sequenceData.slides[i].id);
+            let previousSlide = currentSlide;
+            currentSlide = this.getObject(sequenceData.slides[i].id);
 
-            const displaySlide = (i, slide, lastSlide) => {
+            const displaySlide = (i, currentSlide, previousSlide) => {
                 setTimeout(() => {
-                    // Hide previous slide
-                    if (lastSlide) {
-                        lastSlide.hide();
+                    if (previousSlide) {
+                        previousSlide.hide();
                         this.uiEventEmitter.emit('play_full_fade_out');
                     }
 
                     // Show current slide (note stage.draw only below)
-                    slide.show();
+                    currentSlide.show();
 
                     // Fade in?
                     var slideFade = sequenceData.slides[i].do_fade;
                     if (slideFade === true) {
                         setTimeout(() => {
-                            this.fade_full.reverse(); // TODO consider play_full_fade_in
+                            this.uiEventEmitter.emit('play_full_fade_in');
                             this.stage.draw();
-                        }, 700);
+                        }, this.fade_full.tween.duration);
                     } else {
                         // Immediately display the slide
                         this.fade_full.reset();
@@ -696,7 +696,7 @@ export class KiiGame {
                     }
                 }, delay);
             }
-            displaySlide(i, slide, lastSlide);
+            displaySlide(i, currentSlide, previousSlide);
 
             delay = delay + sequenceData.slides[i].show_time;
         };
@@ -711,9 +711,8 @@ export class KiiGame {
                     // Assumes sequences will always go to a room
                     this.uiEventEmitter.emit('show_inventory');
                     this.uiEventEmitter.emit('show_character');
-                    this.fade_full.reverse(); // TODO: use play_full_fade_in
+                    this.uiEventEmitter.emit('play_full_fade_in');
                     setTimeout(() => {
-                        this.fader_full.hide();
                         this.fade_full.tween.duration = 600; // reset to default
                     }, final_fade_duration);
                 }, final_fade_duration);
@@ -729,9 +728,6 @@ export class KiiGame {
                 this.fader_full.hide();
             }, delay);
         }
-
-        // Return sequence delay
-        return delay;
     }
 
     /// Transition to a room.
