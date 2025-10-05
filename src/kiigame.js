@@ -762,7 +762,7 @@ export class KiiGame {
 
             // Play the animations of the room
             for (var i in this.animated_objects) {
-                if (this.animated_objects[i].node.parent.id() == this.current_layer.id()) {
+                if (this.animated_objects[i].node.parent.id() == this.current_room.id()) {
                     this.animated_objects[i].play();
                 } else if (this.animated_objects[i].anim.isRunning()) {
                     this.animated_objects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
