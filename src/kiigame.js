@@ -146,12 +146,6 @@ export class KiiGame {
         // Variable for saving the current layer (for changing backgrounds and object layers)
         this.current_layer;
 
-        // List of animated objects
-        this.animated_objects = [];
-
-        // List of character animations.
-        this.character_animations = []; // also accessed in latkazombit.js
-
         // Build sequences and push them to the sequence layer
         var builtSequences = this.sequencesBuilder.build(this.sequences_json);
         var stageLayerChildAdder = new LayerChildAdder();
