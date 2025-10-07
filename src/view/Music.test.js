@@ -141,6 +141,9 @@ describe('Test Music', function () {
             assert.isTrue(result.fade_out);
             // Test that volume starts at zero when fading in
             assert.deepEqual(result.volume, 0);
+            // Test that volume grows as expected when fading in
+            clock.tick(200);
+            assert.deepEqual(result.volume, 0.05);
         });
     });
     // TODO: More test cases
