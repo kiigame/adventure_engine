@@ -1,11 +1,13 @@
 import { assert } from 'chai';
-import sinon from 'sinon';
+import { createStubInstance, useFakeTimers, stub } from 'sinon';
 import Music from './Music.js';
 import AudioFactory from './music/AudioFactory.js';
+import EventEmitter from '../events/EventEmitter.js';
 
-const audioFactoryStub = sinon.createStubInstance(AudioFactory);
+const audioFactoryStub = createStubInstance(AudioFactory);
+const uiEventEmitterStub = createStubInstance(EventEmitter, { on: null });
 
-describe('Test Music', function () {
+describe('test Music methods', function () {
     it('playing undefined music does not crash', function () {
         function AudioStub() { };
         audioFactoryStub.create.returns(new AudioStub());
@@ -14,7 +16,7 @@ describe('Test Music', function () {
                 "music": "music.ogg",
             },
         };
-        const music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusic(undefined);
         const result = music.current_music;
         assert.deepEqual(result, null);
@@ -31,7 +33,7 @@ describe('Test Music', function () {
                 "music": "music.ogg",
             },
         };
-        const music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('layer');
         const result = music.current_music;
         assert.isNotNull(result);
@@ -55,7 +57,7 @@ describe('Test Music', function () {
                 "loop": false,
             },
         };
-        const music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('layer');
         const result = music.current_music;
         assert.isNotNull(result);
@@ -80,7 +82,7 @@ describe('Test Music', function () {
                 "music": "music.ogg"
             }
         };
-        const music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
         music.playMusicById('noloop');
         const result = music.current_music;
@@ -102,7 +104,7 @@ describe('Test Music', function () {
                 "music": "music.ogg"
             }
         };
-        const music = new Music(json, audioFactoryStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
         music.playMusicById('noloop');
         const result = music.current_music;
@@ -111,7 +113,7 @@ describe('Test Music', function () {
     describe('fades', function () {
         let clock;
         before(function () {
-            clock = sinon.useFakeTimers();
+            clock = useFakeTimers();
         });
         after(function () {
             clock.tick(100000); // so that mocha doesn't wait for the interval to resolve
@@ -132,7 +134,7 @@ describe('Test Music', function () {
                     "loop": true,
                 },
             };
-            const music = new Music(json, audioFactoryStub);
+            const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
             music.playMusicById('layer');
             const result = music.current_music;
             assert.isNotNull(result);
@@ -147,4 +149,35 @@ describe('Test Music', function () {
         });
     });
     // TODO: More test cases
+});
+
+/**
+ * These tests stub the methods that are called by the callbacks and only test
+ * that the event configuration is as expected. The actual functionality is
+ * tested in 'test Music methods'.
+ */
+describe('test Music event management', function () {
+    it('should handle play_music event by calling playMusic', function () {
+        const playMusicStub = stub(Music.prototype, 'playMusic');
+        const music = new Music({}, audioFactoryStub, uiEventEmitterStub);
+        const musicData = { music: 'test.ogg' };
+
+        // Get the callback that was registered for play_music event
+        const playMusicCallback = uiEventEmitterStub.on.getCall(0).args[1];
+        playMusicCallback(musicData);
+        assert.isTrue(playMusicStub.calledOnceWith(musicData));
+        playMusicStub.restore();
+    });
+
+     it('should handle play_music_by_id event by calling playMusicById', function () {
+        const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
+        const music = new Music({}, audioFactoryStub, uiEventEmitterStub);
+        const musicId = 'testId';
+
+        // Get the callback that was registered for play_music_by_id event
+        const playMusicByIdCallback = uiEventEmitterStub.on.getCall(1).args[1];
+        playMusicByIdCallback(musicId);
+        assert.isTrue(playMusicByIdStub.calledOnceWith(musicId));
+        playMusicByIdStub.restore();
+    });
 });

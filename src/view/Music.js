@@ -1,11 +1,18 @@
 /**
  */
 class Music {
-    constructor(musicJson, audioFactory) {
+    constructor(musicJson, audioFactory, uiEventEmitter) {
         this.musicJson = musicJson;
         this.audioFactory = audioFactory;
         this.current_music = null;
         this.current_music_source = null;
+
+        uiEventEmitter.on('play_music', (musicParams) => {
+            this.playMusic(musicParams);
+        });
+        uiEventEmitter.on('play_music_by_id', (musicId) => {
+            this.playMusicById(musicId);
+        });
     }
 
     /**

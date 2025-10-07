@@ -85,7 +85,7 @@ export class KiiGame {
             );
         }
         this.interactions = new Interactions(gameData.interactions_json);
-        this.music = new Music(gameData.music_json, new AudioFactory());
+        this.music = new Music(gameData.music_json, new AudioFactory(), uiEventEmitter);
         this.text = new Text(gameData.text_json);
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
@@ -541,12 +541,6 @@ export class KiiGame {
             setTimeout(() => {
                 this.fader_full.hide();
             }, this.fade_full.tween.duration);
-        });
-        this.uiEventEmitter.on('play_music_by_id', (musicId) => {
-            this.music.playMusicById(musicId);
-        });
-        this.uiEventEmitter.on('play_music', (musicParams) => {
-            this.music.playMusic(musicParams);
         });
         this.uiEventEmitter.on('hide_inventory', () => {
             this.inventory_layer.hide();
