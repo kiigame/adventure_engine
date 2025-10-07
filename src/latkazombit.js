@@ -86,7 +86,6 @@ stage.find('#start_game')[0].on('tap click', function () {
     stage.find('#button_0_gray').hide();
     input_layer.draw();
     input_layer.moveToTop();
-    kiigame.music.stopMusic(kiigame.music.getCurrentMusic());
 });
 
 // Listeners for the input screen buttons

@@ -16,10 +16,10 @@ describe('Test Music', function() {
         };
         const music = new Music(json, audioFactoryStub);
         music.playMusic(undefined);
-        const result = music.getCurrentMusic();
+        const result = music.current_music;
         assert.deepEqual(result, null);
     });
-    it('starting music without loop and fade data will have neither loop nor fade', function() {
+    it('starting music without loop, fade_in or fade_out data will not have loop, fade_in or fade_out', function() {
         function AudioStub() {
             this.play = function () {
                 // do nothing
@@ -33,13 +33,14 @@ describe('Test Music', function() {
         };
         const music = new Music(json, audioFactoryStub);
         music.playMusicById('layer');
-        const result = music.getCurrentMusic();
+        const result = music.current_music;
         assert.isNotNull(result);
         assert.isFalse(result.loop);
-        assert.isFalse(result.fade);
+        assert.isFalse(result.fade_in);
+        assert.isFalse(result.fade_out);
         assert.deepEqual(result.volume, 1);
     });
-    it('starting music with explicit false for loop and fade data have neither loop nor fade', function() {
+    it('starting music with explicit false for loop, fade_in and fade_out in data will not fave loop, fade_in or fade_out', function() {
         function AudioStub() {
             this.play = function () {
                 // do nothing
@@ -49,19 +50,21 @@ describe('Test Music', function() {
         const json = {
             "layer": {
                 "music": "music.ogg",
-                "fade": false,
+                "fade_in": false,
+                "fade_out": false,
                 "loop": false,
             },
         };
         const music = new Music(json, audioFactoryStub);
         music.playMusicById('layer');
-        const result = music.getCurrentMusic();
+        const result = music.current_music;
         assert.isNotNull(result);
         assert.isFalse(result.loop);
-        assert.isFalse(result.fade);
+        assert.isFalse(result.fade_in);
+        assert.isFalse(result.fade_out);
         assert.deepEqual(result.volume, 1);
     });
-    it('starting music with loop and fade data have both loop nor fade', function() {
+    it('starting music with loop, fade_in and fade_out in data have all of loop, fade_in and fade_out', function() {
         function AudioStub() {
             this.play = function () {
                 // do nothing
@@ -71,16 +74,18 @@ describe('Test Music', function() {
         const json = {
             "layer": {
                 "music": "music.ogg",
-                "fade": true,
+                "fade_in": true,
+                "fade_out": true,
                 "loop": true,
             },
         };
         const music = new Music(json, audioFactoryStub);
         music.playMusicById('layer');
-        const result = music.getCurrentMusic();
+        const result = music.current_music;
         assert.isNotNull(result);
         assert.isTrue(result.loop);
-        assert.isTrue(result.fade);
+        assert.isTrue(result.fade_in);
+        assert.isTrue(result.fade_out);
         // Cludgy way to test that the volume starts at 0
         assert.deepEqual(result.volume, 0);
     });
@@ -103,7 +108,7 @@ describe('Test Music', function() {
         const music = new Music(json, audioFactoryStub);
         music.playMusicById('loop');
         music.playMusicById('noloop');
-        const result = music.getCurrentMusic();
+        const result = music.current_music;
         assert.isFalse(result.loop);
     });
     it('in two subsequent rooms with same music, respect if the second room explicitly sets looping to false', function() {
@@ -125,7 +130,7 @@ describe('Test Music', function() {
         const music = new Music(json, audioFactoryStub);
         music.playMusicById('loop');
         music.playMusicById('noloop');
-        const result = music.getCurrentMusic();
+        const result = music.current_music;
         assert.isFalse(result.loop);
     });
     // TODO: More test cases
