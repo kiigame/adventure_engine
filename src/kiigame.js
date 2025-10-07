@@ -91,7 +91,7 @@ export class KiiGame {
         this.sequences_json = gameData.sequences_json;
 
         // Alternative variable for `this` to allow reference even when it's shadowed
-        var self = this;
+        const self = this;
 
         // List of items in the inventory. inventory_list.length gives the item amount.
         this.inventory_list = [];
@@ -147,8 +147,8 @@ export class KiiGame {
         this.current_layer;
 
         // Build sequences and push them to the sequence layer
-        var builtSequences = this.sequencesBuilder.build(this.sequences_json);
-        var stageLayerChildAdder = new LayerChildAdder();
+        const builtSequences = this.sequencesBuilder.build(this.sequences_json);
+        const stageLayerChildAdder = new LayerChildAdder();
         layerJson = stageLayerChildAdder.add(
             layerJson,
             builtSequences,
@@ -259,16 +259,16 @@ export class KiiGame {
 
         // Set up onFinish functions for each frame to show the next frame. In the case
         // of the last of the frames, show the first frame.
-        for (var i in this.character_animations) {
-            for (var j = 0; j < this.character_animations[i].length; j++) {
+        for (let i in this.character_animations) {
+            for (let j = 0; j < this.character_animations[i].length; j++) {
                 if (this.character_animations[i].length > j + 1) {
                     this.character_animations[i][j].onFinish = function () {
                         // `this` refers to the character_animations object,
                         // `self` refers to the engine object
-                        for (var k in self.character_animations) {
+                        for (let k in self.character_animations) {
                             if (self.character_animations[k].indexOf(this) > -1) {
-                                var animation = self.character_animations[k];
-                                var frame_index = self.character_animations[k].indexOf(this);
+                                const animation = self.character_animations[k];
+                                const frame_index = self.character_animations[k].indexOf(this);
                                 this.node.hide();
                                 animation[frame_index + 1].node.show();
                                 this.reset();
@@ -278,9 +278,9 @@ export class KiiGame {
                     }
                 } else {
                     this.character_animations[i][j].onFinish = function () {
-                        for (var k in self.character_animations) {
+                        for (let k in self.character_animations) {
                             if (self.character_animations[k].indexOf(this) > -1) {
-                                var animation = self.character_animations[k];
+                                const animation = self.character_animations[k];
                                 this.node.hide();
                                 animation[0].node.show();
                                 this.reset();
@@ -333,8 +333,8 @@ export class KiiGame {
                 this.setDelay(10);
 
                 // Loop through all the items on the current object layer
-                for (var i = 0; i < this.current_room.children.length; i++) {
-                    var object = (this.current_room.getChildren())[i];
+                for (let i = 0; i < this.current_room.children.length; i++) {
+                    const object = (this.current_room.getChildren())[i];
 
                     if (object != undefined && object.getAttr('category') != 'room_background') {
                         // Break if still intersecting with the same target
@@ -356,8 +356,8 @@ export class KiiGame {
                 // If no intersecting targets were found on object layer, check the inventory
                 if (this.target == null) {
                     // Loop through all the items on the inventory layer
-                    for (var i = 0; i < this.inventory_layer.children.length; i++) {
-                        var object = (this.inventory_layer.getChildren())[i];
+                    for (let i = 0; i < this.inventory_layer.children.length; i++) {
+                        const object = (this.inventory_layer.getChildren())[i];
                         if (object != undefined) {
                             // Look for intersecting targets
                             if (this.intersection.check(this.dragged_item, object)) {
@@ -374,8 +374,8 @@ export class KiiGame {
 
                 // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
                 if (this.target == null) {
-                    var leftArrow = this.getObject("inventory_left_arrow");
-                    var rightArrow = this.getObject("inventory_right_arrow");
+                    const leftArrow = this.getObject("inventory_left_arrow");
+                    const rightArrow = this.getObject("inventory_right_arrow");
                     if (!this.dragDelayEnabled) {
                         if (this.intersection.check(this.dragged_item, leftArrow)) {
                             this.dragDelayEnabled = true;
@@ -453,7 +453,7 @@ export class KiiGame {
 
         /// Drag end events for inventory items.
         this.stage.find('Image').on('dragend', (event) => {
-            var dragged_item = event.target;
+            const dragged_item = event.target;
 
             // If nothing's under the dragged item
             if (this.target == null) {
@@ -462,9 +462,9 @@ export class KiiGame {
             }
             // Look up the possible interaction from interactions.json.
             else {
-                var target_category = this.target.getAttr('category');
+                const target_category = this.target.getAttr('category');
 
-                var dragResolver = this.dragResolvers.filter(function (dragResolver) {
+                const dragResolver = this.dragResolvers.filter(function (dragResolver) {
                     return dragResolver.getTargetCategory() == target_category;
                 }).pop();
 
@@ -580,8 +580,8 @@ export class KiiGame {
     }
 
     create_animation(object) {
-        var attrs = object.getAttr("animation");
-        var animation = new Konva.Tween({
+        const attrs = object.getAttr("animation");
+        const animation = new Konva.Tween({
             node: object,
             x: attrs.x ? object.x() + attrs.x : object.x(),
             y: attrs.y ? object.y() + attrs.y : object.y(),
@@ -605,7 +605,7 @@ export class KiiGame {
      * @param container
      */
     prepareImages(container) {
-        for (var i = 0; i < container.children.length; i++) {
+        for (let i = 0; i < container.children.length; i++) {
             const object = container.children[i];
             if (object.className == 'Image') {
                 const { id, src: imageSrc, animated } = object.attrs;
@@ -629,21 +629,21 @@ export class KiiGame {
         }
     }
 
-    /**
+    /** 
      * Playes a sequence definied in sequences.json by id.
      * @param {string} id The Sequence id in sequences.json
      */
     play_sequence(id) {
-        var delay = 700;
+        let delay = 700;
 
         this.uiEventEmitter.emit('play_full_fade_out');
 
         const old_layer = this.current_layer;
         this.current_layer = this.getObject('sequence_layer');
         const currentSequence = this.getObject(id);
-        var sequenceData = this.sequences_json[id];
-        var final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
-        var currentSlide = null;
+        const sequenceData = this.sequences_json[id];
+        const final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
+        let currentSlide = null;
 
         this.uiEventEmitter.emit('play_music_by_id', id);
 
@@ -656,7 +656,7 @@ export class KiiGame {
             currentSequence.show();
         }, delay);
 
-        for (var i in sequenceData.slides) {
+        for (let i in sequenceData.slides) {
             let previousSlide = currentSlide;
             currentSlide = this.getObject(sequenceData.slides[i].id);
 
@@ -671,7 +671,7 @@ export class KiiGame {
                     currentSlide.show();
 
                     // Fade in?
-                    var slideFade = sequenceData.slides[i].do_fade;
+                    const slideFade = sequenceData.slides[i].do_fade;
                     if (slideFade === true) {
                         setTimeout(() => {
                             this.uiEventEmitter.emit('play_full_fade_in');
@@ -755,7 +755,7 @@ export class KiiGame {
             }
 
             // Play the animations of the room
-            for (var i in this.animated_objects) {
+            for (let i in this.animated_objects) {
                 if (this.animated_objects[i].node.parent.id() == this.current_room.id()) {
                     this.animated_objects[i].play();
                 } else if (this.animated_objects[i].anim.isRunning()) {
@@ -773,10 +773,10 @@ export class KiiGame {
     /// Handle click interactions on room objects, inventory items and inventory
     /// arrows.
     handle_click(event) {
-        var target = event.target;
-        var target_category = target.getAttr('category');
+        const target = event.target;
+        const target_category = target.getAttr('category');
 
-        var clickResolver = this.clickResolvers.filter(function (clickResolver) {
+        const clickResolver = this.clickResolvers.filter(function (clickResolver) {
             return clickResolver.getTargetCategory() === target_category;
         }).pop();
 
@@ -809,7 +809,7 @@ export class KiiGame {
     /// Loop through a list of interaction commands and execute them with
     /// handle_command, with timeout if specified.
     handle_commands(commands) {
-        for (var i in commands) {
+        for (let i in commands) {
             if (commands[i].timeout != null) {
                 ((commands, i) => {
                     setTimeout(() => {
@@ -897,7 +897,7 @@ export class KiiGame {
     /// @param object The name of the object to look up.
     /// @return Returns the object if it's found, or null if it isn't.
     getObject(id) {
-        var object = this.stage.find('#' + id)[0];
+        const object = this.stage.find('#' + id)[0];
         if (object == null) {
             console.warn("Could not find object from stage with id " + id);
         }
@@ -963,7 +963,7 @@ export class KiiGame {
         this.npc_speech_bubble.show();
         this.npc_monologue.text(text);
 
-        var npc_tag = this.getObject("npc_tag");
+        const npc_tag = this.getObject("npc_tag");
         if (npc.x() + npc.width() > (this.stage.width() / 2)) {
             npc_tag.pointerDirection("right");
             if (this.npc_monologue.width() > npc.x() - 100) {
@@ -1009,8 +1009,8 @@ export class KiiGame {
      */
     startCharacterAnimation(animationName) {
         // Hide and reset all character animations
-        for (var i in this.character_animations) {
-            for (var j in this.character_animations[i]) {
+        for (let i in this.character_animations) {
+            for (let j in this.character_animations[i]) {
                 this.character_animations[i][j].node.hide();
                 this.character_animations[i][j].reset();
             }
@@ -1139,8 +1139,8 @@ export class KiiGame {
             this.inventory_index = Math.max(this.inventory_list.length - this.inventory_max, 0);
         }
 
-        for (var i = this.inventory_index; i < Math.min(this.inventory_index + this.inventory_max, this.inventory_list.length); i++) {
-            var shape = this.inventory_list[i];
+        for (let i = this.inventory_index; i < Math.min(this.inventory_index + this.inventory_max, this.inventory_list.length); i++) {
+            const shape = this.inventory_list[i];
             shape.x(this.offsetFromLeft + (this.inventory_list.indexOf(shape) - this.inventory_index) * 100);
             shape.y(this.stage.height() - 90);
             shape.setAttr('visible', true);

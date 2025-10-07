@@ -7,6 +7,7 @@ import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
 import EventEmitter from './events/EventEmitter.js';
+console.log('avoiding var');
 
 const jsonGetter = new JSONGetter();
 
@@ -35,7 +36,7 @@ const gameData = {
 const gameEventEmitter = new EventEmitter();
 const uiEventEmitter = new EventEmitter();
 
-let kiigame = new KiiGame(
+const kiigame = new KiiGame(
     undefined,
     undefined,
     [
@@ -58,18 +59,18 @@ let kiigame = new KiiGame(
     uiEventEmitter,
     gameData,
 );
-let stage = kiigame.stage;
+const stage = kiigame.stage;
 
-var legends_json = JSON.parse(jsonGetter.getJSON('data/legends.json'));
+const legends_json = JSON.parse(jsonGetter.getJSON('data/legends.json'));
 
 stage.find("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 
-var input_text = stage.find('#input_text')[0];
-var input_layer = stage.find('#input_layer')[0];
+const input_text = stage.find('#input_text')[0];
+const input_layer = stage.find('#input_layer')[0];
 
 // For checking whether player has selected their jersey number
-var number_selected = false;
+let number_selected = false;
 
 // Default player number
 input_text.setText(kiigame.text.getText('input_text', 'text'));
@@ -90,9 +91,9 @@ stage.find('#start_game')[0].on('tap click', function () {
 
 // Listeners for the input screen buttons
 input_layer.on('tap click', function (event) {
-    var target = event.target;
+    const target = event.target;
 
-    var selected = kiigame.text.getName(target.getAttr('id'));
+    const selected = kiigame.text.getName(target.getAttr('id'));
     if (!selected) {
         return;
     }
@@ -240,8 +241,8 @@ stage.find('#start')[0].on('tap click', function () {
 
 // When poster on the wall is clicked (the final step of the game), count rewards in invetory.
 stage.find('#poster_onthewall')[0].on('tap click', function () {
-    var rewards_text = kiigame.getObject("rewards_text");
-    var rewardsCount = 0;
+    const rewards_text = kiigame.getObject("rewards_text");
+    let rewardsCount = 0;
     for (let inventoryItem of kiigame.inventory_layer.children) {
         if (inventoryItem.getAttr('category') === 'reward') {
             rewardsCount++;
