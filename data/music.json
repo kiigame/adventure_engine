@@ -1,18 +1,26 @@
 {
     "start_layer_menu": {
         "music": "data/audio/alku_musax_mono_20131213.mp3",
-        "fade": true,
+        "fade_in": false,
+        "fade_out": true,
         "loop": true
     },
     "intro": {
-        "music": "data/audio/intro_mono_20131213.mp3"
+        "music": "data/audio/intro_mono_20131213.mp3",
+        "fade_in": false,
+        "fade_out": false,
+        "loop": false
     },
     "outro": {
         "music": "data/audio/loppu_musax_mono_20131213.mp3",
-        "loop": true
+        "fade_in": false,
+        "fade_out": false,
+        "loop": false
     },
     "end_layer": {
         "music": "data/audio/loppu_musax_mono_20131213.mp3",
-        "loop": true
+        "fade_in": false,
+        "fade_out": false,
+        "loop": false
     }
 }
