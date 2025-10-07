@@ -18,7 +18,7 @@ describe('test Music methods', function () {
         };
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusic(undefined);
-        const result = music.current_music;
+        const result = music.current_audio;
         assert.deepEqual(result, null);
     });
     it('starting music without loop, fade_in or fade_out data will not have loop, fade_in or fade_out', function () {
@@ -35,7 +35,7 @@ describe('test Music methods', function () {
         };
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('layer');
-        const result = music.current_music;
+        const result = music.current_audio;
         assert.isNotNull(result);
         assert.isFalse(result.loop);
         assert.isFalse(result.fade_in);
@@ -59,7 +59,7 @@ describe('test Music methods', function () {
         };
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('layer');
-        const result = music.current_music;
+        const result = music.current_audio;
         assert.isNotNull(result);
         assert.isFalse(result.loop);
         assert.isFalse(result.fade_in);
@@ -85,7 +85,7 @@ describe('test Music methods', function () {
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
         music.playMusicById('noloop');
-        const result = music.current_music;
+        const result = music.current_audio;
         assert.isFalse(result.loop);
     });
     it('in two subsequent rooms with same music, respect if the second room explicitly sets looping to false', function () {
@@ -107,7 +107,7 @@ describe('test Music methods', function () {
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
         music.playMusicById('noloop');
-        const result = music.current_music;
+        const result = music.current_audio;
         assert.isFalse(result.loop);
     });
     describe('fades', function () {
@@ -136,7 +136,7 @@ describe('test Music methods', function () {
             };
             const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
             music.playMusicById('layer');
-            const result = music.current_music;
+            const result = music.current_audio;
             assert.isNotNull(result);
             assert.isTrue(result.loop);
             assert.isTrue(result.fade_in);

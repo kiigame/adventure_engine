@@ -4,8 +4,8 @@ class Music {
     constructor(musicJson, audioFactory, uiEventEmitter) {
         this.musicJson = musicJson;
         this.audioFactory = audioFactory;
-        this.current_music = null;
-        this.current_music_source = null;
+        this.current_audio = null;
+        this.current_audio_source = null;
 
         uiEventEmitter.on('play_music', (musicParams) => {
             this.playMusic(musicParams);
@@ -39,79 +39,79 @@ class Music {
     playMusic(data) {
         // If no new music is to be played, stop the old music.
         if (!data || !data.music) {
-            this.stopMusic(this.current_music);
+            this.stopMusic(this.current_audio);
             return;
         }
 
         // If not already playing music or old/new songs are different
-        if (!this.current_music || this.current_music_source != data.music) {
-            this.stopMusic(this.current_music);
-            this.current_music = this.audioFactory.create(data.music);
+        if (!this.current_audio || this.current_audio_source != data.music) {
+            this.stopMusic(this.current_audio);
+            this.current_audio = this.audioFactory.create(data.music);
 
             // Fade music in if it's new and fade_in is set
             if (data.fade_in === true) {
-                this.current_music.volume = 0;
+                this.current_audio.volume = 0;
                 const fade_interval = setInterval(() => {
                     // Audio API will throw exception when volume is maxed
                     try {
-                        this.current_music.volume += 0.05;
+                        this.current_audio.volume += 0.05;
                     } catch (e) {
-                        this.current_music.volume = 1;
+                        this.current_audio.volume = 1;
                         clearInterval(fade_interval);
                     }
 
                     // Some additional safety
-                    if (this.current_music.volume >= 1) {
-                        this.current_music.volume = 1;
+                    if (this.current_audio.volume >= 1) {
+                        this.current_audio.volume = 1;
                         clearInterval(fade_interval);
                     }
                 }, 200);
             } else {
-                this.current_music.volume = 1;
+                this.current_audio.volume = 1;
             }
 
-            this.current_music.play();
-            this.current_music_source = data.music;
+            this.current_audio.play();
+            this.current_audio_source = data.music;
         }
 
         // Loop and fade settings may change when playing the same music in different rooms
-        this.current_music.loop = data.loop === true ? true : false;
-        this.current_music.fade_in = data.fade_in === true ? true : false;
-        this.current_music.fade_out = data.fade_out === true ? true : false;
+        this.current_audio.loop = data.loop === true ? true : false;
+        this.current_audio.fade_in = data.fade_in === true ? true : false;
+        this.current_audio.fade_out = data.fade_out === true ? true : false;
     }
 
     /**
      * @param Audio music
      * @param boolean fade_out
      */
-    stopMusic(music) {
-        if (music == null) {
+    stopMusic(audio) {
+        if (audio == null) {
             return;
         }
 
         // Fade music out if fade is set to true
-        if (music.fade_out === true) {
-            const fade_interval = setInterval((music) => {
+        if (audio.fade_out === true) {
+            const fade_interval = setInterval((audio) => {
                 // Audio API will throw exception when volume is maxed
                 // or an crossfade interval may still be running
                 try {
-                    music.volume -= 0.05;
+                    audio.volume -= 0.05;
                 } catch (e) {
                     clearInterval(fade_interval);
-                    music.pause();
+                    audio.pause();
                 }
 
                 // Some additional safety
-                if (music.volume <= 0) {
+                if (audio.volume <= 0) {
                     clearInterval(fade_interval);
-                    music.pause();
+                    audio.pause();
                 }
-            }, 100, music);
+            }, 100, audio);
         } else {
-            music.pause();
+            audio.pause();
         }
 
-        music = null;
+        audio = null;
     }
 }
 
