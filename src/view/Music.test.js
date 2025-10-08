@@ -6,11 +6,15 @@ import EventEmitter from '../events/EventEmitter.js';
 
 const audioFactoryStub = createStubInstance(AudioFactory);
 const uiEventEmitterStub = createStubInstance(EventEmitter, { on: null });
+class AudioStub {
+    play() { return; };
+    pause() { return; };
+};
+const audioStubStub = createStubInstance(AudioStub, { play: null, pause: null });
+audioFactoryStub.create.returns(audioStubStub);
 
 describe('test Music methods', function () {
-    it('playing undefined music does not crash', function () {
-        function AudioStub() { };
-        audioFactoryStub.create.returns(new AudioStub());
+    it('calling play for undefined music does play music or crash', function () {
         const json = {
             "layer": {
                 "music": "music.ogg",
@@ -18,16 +22,29 @@ describe('test Music methods', function () {
         };
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusic(undefined);
-        const result = music.current_audio;
-        assert.deepEqual(result, null);
+        assert(audioStubStub.play.notCalled);
+        const current_audio = music.current_audio;
+        assert.deepEqual(current_audio, null);
+    });
+    it('calling play for undefined music when playing by id lets previous audio keep playing', function () {
+        const json = {
+            "layer": {
+                "music": "music.ogg",
+            },
+        };
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
+        music.playMusicById("layer");
+        assert(audioStubStub.play.called, "play not called for first music");
+        const current_audio = music.current_audio;
+        assert.deepEqual(current_audio, audioStubStub);
+        const audioStubStubNotToBeCreated = createStubInstance(AudioStub, { play: null, pause: null });
+        music.playMusicById(undefined);
+        assert(audioStubStubNotToBeCreated.play.notCalled, "play called for second music");
+        assert(audioStubStub.pause.notCalled, "pause called for first music");
+        const current_audio_after_second_call = music.current_audio;
+        assert.deepEqual(current_audio_after_second_call, audioStubStub);
     });
     it('starting music without loop, fade_in or fade_out data will not have loop, fade_in or fade_out', function () {
-        function AudioStub() {
-            this.play = function () {
-                // do nothing
-            }
-        };
-        audioFactoryStub.create.returns(new AudioStub());
         const json = {
             "layer": {
                 "music": "music.ogg",
@@ -43,12 +60,6 @@ describe('test Music methods', function () {
         assert.deepEqual(result.volume, 1);
     });
     it('starting music with explicit false for loop, fade_in and fade_out in data will not fave loop, fade_in or fade_out', function () {
-        function AudioStub() {
-            this.play = function () {
-                // do nothing
-            }
-        };
-        audioFactoryStub.create.returns(new AudioStub());
         const json = {
             "layer": {
                 "music": "music.ogg",
@@ -59,6 +70,7 @@ describe('test Music methods', function () {
         };
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('layer');
+        assert(audioStubStub.play.called);
         const result = music.current_audio;
         assert.isNotNull(result);
         assert.isFalse(result.loop);
@@ -67,12 +79,6 @@ describe('test Music methods', function () {
         assert.deepEqual(result.volume, 1);
     });
     it('in two subsequent rooms with same music, respect if the second room implicitly sets looping to false', function () {
-        function AudioStub() {
-            this.play = function () {
-                // do nothing
-            }
-        };
-        audioFactoryStub.create.returns(new AudioStub());
         const json = {
             "loop": {
                 "music": "music.ogg",
@@ -84,29 +90,32 @@ describe('test Music methods', function () {
         };
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
+        assert(audioStubStub.play.called);
+        const audioStubStubNotToBeCreated = createStubInstance(AudioStub, { play: null, pause: null });
+        audioFactoryStub.create.returns(audioStubStubNotToBeCreated);
         music.playMusicById('noloop');
+        assert(audioStubStubNotToBeCreated.play.notCalled);
         const result = music.current_audio;
         assert.isFalse(result.loop);
     });
     it('in two subsequent rooms with same music, respect if the second room explicitly sets looping to false', function () {
-        function AudioStub() {
-            this.play = function () {
-                // do nothing
-            }
-        };
-        audioFactoryStub.create.returns(new AudioStub());
         const json = {
             "loop": {
                 "music": "music.ogg",
                 "loop": true,
             },
             "noloop": {
-                "music": "music.ogg"
+                "music": "music.ogg",
+                "loop": false
             }
         };
         const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
+        assert(audioStubStub.play.called);
+        const audioStubStubNotToBeCreated = createStubInstance(AudioStub, { play: null, pause: null });
+        audioFactoryStub.create.returns(audioStubStubNotToBeCreated);
         music.playMusicById('noloop');
+        assert(audioStubStubNotToBeCreated.play.notCalled);
         const result = music.current_audio;
         assert.isFalse(result.loop);
     });
@@ -120,12 +129,6 @@ describe('test Music methods', function () {
             clock.restore();
         });
         it('starting music with loop, fade_in and fade_out in data have all of loop, fade_in and fade_out', function () {
-            function AudioStub() {
-                this.play = function () {
-                    // do nothing
-                }
-            };
-            audioFactoryStub.create.returns(new AudioStub());
             const json = {
                 "layer": {
                     "music": "music.ogg",
@@ -136,6 +139,7 @@ describe('test Music methods', function () {
             };
             const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
             music.playMusicById('layer');
+            assert(audioStubStub.play.called);
             const result = music.current_audio;
             assert.isNotNull(result);
             assert.isTrue(result.loop);
@@ -159,7 +163,6 @@ describe('test Music methods', function () {
 describe('test Music event management', function () {
     it('should handle play_music event by calling playMusic', function () {
         const playMusicStub = stub(Music.prototype, 'playMusic');
-        const music = new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicData = { music: 'test.ogg' };
 
         // Get the callback that was registered for play_music event
@@ -171,7 +174,6 @@ describe('test Music event management', function () {
 
      it('should handle play_music_by_id event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
-        const music = new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicId = 'testId';
 
         // Get the callback that was registered for play_music_by_id event
