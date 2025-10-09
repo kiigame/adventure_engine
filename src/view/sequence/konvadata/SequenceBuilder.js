@@ -6,7 +6,7 @@ class SequenceBuilder {
     }
 
     build(slides, key) {
-        var builtSequence = {
+        const builtSequence = {
             attrs: {},
             children: [],
             className: "Group"
@@ -14,7 +14,7 @@ class SequenceBuilder {
         builtSequence.attrs.category = 'sequence';
         builtSequence.attrs.visible = false;
         builtSequence.attrs.id = key;
-        for (let [index, slide] of slides.entries()) {
+        for (const [index, slide] of slides.entries()) {
             builtSequence.children.push(this.slideBuilder.build(slide));
         };
         return builtSequence;

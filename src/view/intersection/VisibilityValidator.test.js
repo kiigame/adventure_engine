@@ -9,9 +9,9 @@ describe('Test VisibilityValidator', function() {
                 return true;
             }
         };
-        var targetStub = new ShapeStub();
-        let visibilityValidator = new VisibilityValidator();
-        var result = visibilityValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const visibilityValidator = new VisibilityValidator();
+        const result = visibilityValidator.validate(targetStub);
         assert.deepEqual(result, true);
     });
     it ('will return false if target has no visibility', function() {
@@ -21,9 +21,9 @@ describe('Test VisibilityValidator', function() {
                 return false;
             }
         };
-        var targetStub = new ShapeStub();
-        let visibilityValidator = new VisibilityValidator();
-        var result = visibilityValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const visibilityValidator = new VisibilityValidator();
+        const result = visibilityValidator.validate(targetStub);
         assert.deepEqual(result, false);
     });
 });

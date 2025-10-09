@@ -6,8 +6,8 @@ class SequencesBuilder {
     }
 
     build(sequences_json) {
-        var builtSequences = [];
-        for (var key in sequences_json) {
+        const builtSequences = [];
+        for (const key in sequences_json) {
             builtSequences.push(
                 this.sequenceBuilder.build(
                     sequences_json[key].slides, key

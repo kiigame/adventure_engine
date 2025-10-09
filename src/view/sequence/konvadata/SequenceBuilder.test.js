@@ -7,7 +7,7 @@ describe('Test SequenceBuilder', function () {
     it('build sequence with two slides', function () {
         // stubbing - we don't test what SlideBuilder really returns, just that
         // we call it correctly
-        var slideBuilderStub = sinon.createStubInstance(SlideBuilder);
+        const slideBuilderStub = sinon.createStubInstance(SlideBuilder);
         slideBuilderStub.build.withArgs(
             {
                 "do_fade": true,
@@ -27,9 +27,9 @@ describe('Test SequenceBuilder', function () {
             }
         ).returns({ "slide": "mock_intro_2" });
 
-        let sequenceBuilder = new SequenceBuilder(slideBuilderStub);
+        const sequenceBuilder = new SequenceBuilder(slideBuilderStub);
 
-        var expected = {
+        const expected = {
             "attrs": {
                 "category": "sequence",
                 "id": "intro",
@@ -45,7 +45,7 @@ describe('Test SequenceBuilder', function () {
             ],
             "className": "Group"
         };
-        var slides = [
+        const slides = [
             {
                 "do_fade": true,
                 "id": "intro_1",
@@ -61,7 +61,7 @@ describe('Test SequenceBuilder', function () {
                 "imageSrc": "images/intro_2.png"
             }
         ];
-        var result = sequenceBuilder.build(slides, 'intro');
+        const result = sequenceBuilder.build(slides, 'intro');
         assert.deepEqual(expected, result);
     });
 });

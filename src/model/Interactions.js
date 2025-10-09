@@ -5,13 +5,11 @@ class Interactions {
     }
 
     getCommands(entityId, action) {
-        var commands = null;
         try {
-            commands = this.json[entityId][action];
+            return this.json[entityId][action];
         } catch (e) {
-            // Do nothing
+            return null;
         }
-        return commands;
     }
 }
 

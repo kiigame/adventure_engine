@@ -9,11 +9,11 @@ class CategoryValidator {
     }
 
     validate(target) {
-        var targetCategory = target.getAttr('category');
+        const targetCategory = target.getAttr('category');
         if (targetCategory === undefined) {
             return false;
         }
-        for (let excludedCategory of this.categoryToInvalidate) {
+        for (const excludedCategory of this.categoryToInvalidate) {
             if (targetCategory === excludedCategory) {
                 return false;
             }

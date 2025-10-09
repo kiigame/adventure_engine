@@ -5,7 +5,7 @@ class TextBuilder {
     }
 
     build(text) {
-        var builtText = {
+        let builtText = {
             "attrs": {}
         };
         builtText.attrs.text = text.text;

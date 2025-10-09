@@ -6,11 +6,11 @@ class SlideBuilder {
     }
 
     build(slide) {
-        var builtSlide = {
+        let builtSlide = {
             "attrs": {}
         };
 
-        var background = {
+        let background = {
             "attrs": {}
         };
 
