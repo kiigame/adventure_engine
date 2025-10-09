@@ -89,7 +89,7 @@ export class KiiGame {
         this.interactions = new Interactions(gameData.interactions_json);
         this.music = new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter);
         this.text = new Text(gameData.text_json);
-        this.roomAnimations = new RoomAnimations(this.uiEventEmitter);
+        this.roomAnimations = new RoomAnimations(this.uiEventEmitter, this.gameEventEmitter);
 
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
@@ -921,20 +921,9 @@ export class KiiGame {
      * @param {string} objectName
      */
     removeObject(objectName) {
-        this.removeAnimation(objectName);
         const object = this.getObject(objectName);
         object.hide();
         this.current_layer.draw();
-    }
-
-    /// Remove an object from the list of animated objects.
-    /// @param id The id of the object to be de-animated.
-    removeAnimation(id) {
-        if (this.roomAnimations.animatedObjects.indexOf(id) > -1) {
-            this.roomAnimations.animatedObjects.splice(
-                this.roomAnimations.animatedObjects.indexOf(id), 1
-            );
-        }
     }
 
     // Clearing the given text
