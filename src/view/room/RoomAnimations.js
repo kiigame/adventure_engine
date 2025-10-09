@@ -7,21 +7,21 @@ class RoomAnimations {
      * @param {EventEmitter} uiEventEmitter
      */
     constructor(uiEventEmitter) {
+        this.animatedObjects = []; // Tween[]
         this.runningAnimations = new Set();
-        uiEventEmitter.on('play_room_animations', ({ animatedObjects, roomId }) => {
-            this.playRoomAnimations(animatedObjects, roomId);
+        uiEventEmitter.on('play_room_animations', (roomId) => {
+            this.playRoomAnimations(roomId);
         });
     }
 
     /**
-     * @param {Tween[]} animatedObjects
      * @param {string} roomId
      */
-    playRoomAnimations(animatedObjects, roomId) {
+    playRoomAnimations(roomId) {
         this.runningAnimations.forEach(anim => anim.stop());
         this.runningAnimations.clear();
 
-        animatedObjects.forEach(animatedObject => {
+        this.animatedObjects.forEach(animatedObject => {
             if (animatedObject.node.getParent().id() === roomId) {
                 animatedObject.play();
                 this.runningAnimations.add(animatedObject.anim);

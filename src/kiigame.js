@@ -134,9 +134,6 @@ export class KiiGame {
         // Animation for fading the room portion of the screen
         this.fade_room;
 
-        // List of animated objects
-        this.animated_objects = [];
-
         // List of character animations.
         this.character_animations = []; // also accessed in latkazombit.js
 
@@ -604,7 +601,7 @@ export class KiiGame {
             }
         });
 
-        this.animated_objects.push(animation);
+        this.roomAnimations.animatedObjects.push(animation);
     }
 
     /**
@@ -761,10 +758,7 @@ export class KiiGame {
                 previousRoom.hide();
             }
 
-            this.uiEventEmitter.emit('play_room_animations', {
-                animatedObjects: this.animated_objects,
-                roomId: this.current_room.id()
-            });
+            this.uiEventEmitter.emit('play_room_animations', this.current_room.id());
 
             this.current_layer.show();
             this.current_room.show();
@@ -936,8 +930,10 @@ export class KiiGame {
     /// Remove an object from the list of animated objects.
     /// @param id The id of the object to be de-animated.
     removeAnimation(id) {
-        if (this.animated_objects.indexOf(id) > -1) {
-            this.animated_objects.splice(this.animated_objects.indexOf(id), 1);
+        if (this.roomAnimations.animatedObjects.indexOf(id) > -1) {
+            this.roomAnimations.animatedObjects.splice(
+                this.roomAnimations.animatedObjects.indexOf(id), 1
+            );
         }
     }
 
