@@ -10,7 +10,7 @@ import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 import Intersection from './view/Intersection.js';
 import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
-import Music from './view/Music.js';
+import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
 import EventEmitter from './events/EventEmitter.js';
