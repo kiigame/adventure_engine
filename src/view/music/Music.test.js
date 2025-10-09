@@ -5,7 +5,6 @@ import AudioFactory from './AudioFactory.js';
 import EventEmitter from '../../events/EventEmitter.js';
 
 const audioFactoryStub = createStubInstance(AudioFactory);
-const uiEventEmitterStub = createStubInstance(EventEmitter, { on: null });
 class AudioStub {
     play() { return; };
     pause() { return; };
@@ -14,6 +13,10 @@ const audioStubStub = createStubInstance(AudioStub, { play: null, pause: null })
 audioFactoryStub.create.returns(audioStubStub);
 
 describe('test Music methods', function () {
+    let uiEventEmitterStub;
+    beforeEach(() => {
+        uiEventEmitterStub = createStubInstance(EventEmitter, { on: null });
+    });
     it('calling play for undefined music does play music or crash', function () {
         const json = {
             "layer": {
@@ -161,8 +164,14 @@ describe('test Music methods', function () {
  * tested in 'test Music methods'.
  */
 describe('test Music event management', function () {
+    let uiEventEmitterStub;
+    beforeEach(() => {
+        uiEventEmitterStub = createStubInstance(EventEmitter, { on: null });
+    });
+
     it('should handle play_music event by calling playMusic', function () {
         const playMusicStub = stub(Music.prototype, 'playMusic');
+        new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicData = { music: 'test.ogg' };
 
         // Get the callback that was registered for play_music event
@@ -172,8 +181,9 @@ describe('test Music event management', function () {
         playMusicStub.restore();
     });
 
-     it('should handle play_music_by_id event by calling playMusicById', function () {
+    it('should handle play_music_by_id event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
+        new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicId = 'testId';
 
         // Get the callback that was registered for play_music_by_id event
