@@ -295,24 +295,22 @@ export class KiiGame {
             }
         }
 
-        // Creating all image objects from json file based on their attributes
-        const imageData = this.stage.toObject();
-
-        for (let i = 0; i < imageData.children.length; i++) {
-            const container = imageData.children[i];
-            if (['room_layer', 'sequence_layer'].includes(container.attrs.id)) {
-                for (let j = 0; j < container.children.length; j++) {
-                    const child = container.children[j];
-                    this.prepareImages(child);
-                }
-            } else {
-                this.prepareImages(container);
-            }
-        }
-
+        // Prepare room animations
         for (const child of this.room_layer.children) {
             if (child.attrs.category === 'room') {
                 this.prepareRoomAnimation(child);
+            }
+        }
+
+        // Creating all image objects from json file based on their attributes
+        const imageData = this.stage.toObject();
+        for (const layer of imageData.children) {
+            if (['room_layer', 'sequence_layer'].includes(layer.attrs.id)) {
+                for (const child of layer.children) {
+                    this.prepareImages(child);
+                }
+            } else {
+                this.prepareImages(layer);
             }
         }
 
