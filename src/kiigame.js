@@ -609,8 +609,7 @@ export class KiiGame {
      * @param container
      */
     prepareImages(container) {
-        for (let i = 0; i < container.children.length; i++) {
-            const object = container.children[i];
+        for (const object of container.children) {
             if (object.className == 'Image') {
                 const { id, src: imageSrc, animated } = object.attrs;
                 this.loadImageObject(id, imageSrc);
