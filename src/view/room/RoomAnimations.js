@@ -2,7 +2,7 @@ import pkg from "konva";
 const { Tween } = pkg;
 import EventEmitter from "../../events/EventEmitter.js";
 
-class RoomAnimationsPlayer {
+class RoomAnimations {
     /**
      * @param {EventEmitter} uiEventEmitter
      */
@@ -30,4 +30,4 @@ class RoomAnimationsPlayer {
     }
 }
 
-export default RoomAnimationsPlayer;
+export default RoomAnimations;

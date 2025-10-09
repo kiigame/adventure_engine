@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { createStubInstance, stub } from 'sinon';
-import RoomAnimationsPlayer from './RoomAnimationsPlayer.js';
+import RoomAnimations from './RoomAnimations.js';
 import EventEmitter from '../../events/EventEmitter.js';
 import pkg from 'konva';
 const { Container, Node, Animation } = pkg;
@@ -23,7 +23,7 @@ describe('Room animations player tests', function () {
         return { mockTween, mockAnimation };
     };
     it('should start the room animations when entering the room', function () {
-        new RoomAnimationsPlayer(uiEventEmitterStub);
+        new RoomAnimations(uiEventEmitterStub);
         const playRoomAnimationsCallback = uiEventEmitterStub.on.getCall(0).args[1];
         const { mockTween, mockAnimation } = buildMockTween('room-id');
         const mockAnimatedObjects = [
@@ -34,7 +34,7 @@ describe('Room animations player tests', function () {
         assert.isFalse(mockAnimation.stop.called);
     });
     it('should stop previous room\'s animations when entering the next room', function () {
-        new RoomAnimationsPlayer(uiEventEmitterStub);
+        new RoomAnimations(uiEventEmitterStub);
         const playRoomAnimationsCallback = uiEventEmitterStub.on.getCall(0).args[1];
         const { mockTween: mockFirstRoomTween, mockAnimation: mockFirstRoomAnimation } = buildMockTween('room-id');
         const { mockTween: mockSecondRoomTween, mockAnimation: mockSecondRoomAnimation } = buildMockTween('other-room-id');

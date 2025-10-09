@@ -14,7 +14,7 @@ import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
 import EventEmitter from './events/EventEmitter.js';
-import RoomAnimationsPlayer from './view/room/RoomAnimationsPlayer.js';
+import RoomAnimations from './view/room/RoomAnimations.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -89,7 +89,7 @@ export class KiiGame {
         this.interactions = new Interactions(gameData.interactions_json);
         this.music = new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter);
         this.text = new Text(gameData.text_json);
-        this.roomAnimationsPlayer = new RoomAnimationsPlayer(this.uiEventEmitter);
+        this.roomAnimations = new RoomAnimations(this.uiEventEmitter);
 
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
@@ -586,7 +586,7 @@ export class KiiGame {
         );
     }
 
-    create_animation(object) {
+    createRoomAnimation(object) {
         const attrs = object.getAttr("animation");
         const animation = new Konva.Tween({
             node: object,
@@ -632,7 +632,7 @@ export class KiiGame {
         this.createObject(id, imageSrc);
 
         if (animated === true) {
-            this.create_animation(this.getObject(id));
+            this.createRoomAnimation(this.getObject(id));
         }
     }
 
