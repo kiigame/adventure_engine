@@ -16,7 +16,7 @@ class HitRegionInitializer {
                             shape.cache();
                             shape.drawHitFromCache();
                         } catch (e) {
-                            console.log(`Error processing hit region for shape ${shape.attrs.id}`);
+                            console.error(`Error processing hit region for shape ${shape.attrs.id}`);
                             throw e;
                         }
                     }
