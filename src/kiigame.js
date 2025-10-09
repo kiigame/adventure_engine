@@ -14,6 +14,7 @@ import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
 import EventEmitter from './events/EventEmitter.js';
+import RoomAnimationsPlayer from './view/room/RoomAnimationsPlayer.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -84,9 +85,12 @@ export class KiiGame {
                 ]
             );
         }
+
         this.interactions = new Interactions(gameData.interactions_json);
-        this.music = new Music(gameData.music_json, new AudioFactory(), uiEventEmitter);
+        this.music = new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter);
         this.text = new Text(gameData.text_json);
+        this.roomAnimationsPlayer = new RoomAnimationsPlayer(this.uiEventEmitter);
+
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
 
@@ -571,9 +575,6 @@ export class KiiGame {
         this.uiEventEmitter.on('redraw_inventory', () => {
             this.redrawInventory();
         });
-        this.uiEventEmitter.on('play_room_animations', ({ animatedObjects, roomId }) => {
-            this.playRoomAnimations(animatedObjects, roomId);
-        });
 
         this.stage.draw();
         this.handle_commands(
@@ -770,21 +771,6 @@ export class KiiGame {
             this.stage.draw();
             this.uiEventEmitter.emit('play_music_by_id', this.current_room.id());
         }, fadeDuration);
-    }
-
-    /**
-     * @param {*} animatedObjects
-     * @param {string} roomId
-     */
-    playRoomAnimations(animatedObjects, roomId) {
-        // Play the animations of the room
-        for (const i in animatedObjects) {
-            if (animatedObjects[i].node.parent.id() == roomId) {
-                animatedObjects[i].play();
-            } else if (animatedObjects[i].anim.isRunning()) {
-                animatedObjects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
-            }
-        }
     }
 
     /// Handle click interactions on room objects, inventory items and inventory
