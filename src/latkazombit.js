@@ -7,7 +7,6 @@ import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
 import EventEmitter from './events/EventEmitter.js';
-console.log('avoiding var');
 
 const jsonGetter = new JSONGetter();
 
