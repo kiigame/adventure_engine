@@ -571,6 +571,9 @@ export class KiiGame {
         this.uiEventEmitter.on('redraw_inventory', () => {
             this.redrawInventory();
         });
+        this.uiEventEmitter.on('play_room_animations', ({ animatedObjects, roomId }) => {
+            this.playRoomAnimations(animatedObjects, roomId);
+        });
 
         this.stage.draw();
         this.handle_commands(
@@ -757,20 +760,31 @@ export class KiiGame {
                 previousRoom.hide();
             }
 
-            // Play the animations of the room
-            for (const i in this.animated_objects) {
-                if (this.animated_objects[i].node.parent.id() == this.current_room.id()) {
-                    this.animated_objects[i].play();
-                } else if (this.animated_objects[i].anim.isRunning()) {
-                    this.animated_objects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
-                }
-            }
+            this.uiEventEmitter.emit('play_room_animations', {
+                animatedObjects: this.animated_objects,
+                roomId: this.current_room.id()
+            });
 
             this.current_layer.show();
             this.current_room.show();
             this.stage.draw();
             this.uiEventEmitter.emit('play_music_by_id', this.current_room.id());
         }, fadeDuration);
+    }
+
+    /**
+     * @param {*} animatedObjects
+     * @param {string} roomId
+     */
+    playRoomAnimations(animatedObjects, roomId) {
+        // Play the animations of the room
+        for (const i in animatedObjects) {
+            if (animatedObjects[i].node.parent.id() == roomId) {
+                animatedObjects[i].play();
+            } else if (animatedObjects[i].anim.isRunning()) {
+                animatedObjects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
+            }
+        }
     }
 
     /// Handle click interactions on room objects, inventory items and inventory
