@@ -1,5 +1,3 @@
-import pkg from "konva";
-const { Tween } = pkg;
 import EventEmitter from "../../events/EventEmitter.js";
 
 class RoomAnimations {
@@ -38,11 +36,9 @@ class RoomAnimations {
      * @param {string} id The id of the object to be de-animated
      */
     removeAnimation(id) {
-        if (this.animatedObjects.indexOf(id) > -1) {
-            this.animatedObjects.splice(
-                this.animatedObjects.indexOf(id), 1
-            );
-        }
+        this.animatedObjects = this.animatedObjects.filter((animatedObject) => {
+            return animatedObject.node.id() !== id;
+        });
     }
 }
 
