@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import { createStubInstance, useFakeTimers, stub } from 'sinon';
 import Music from './Music.js';
-import AudioFactory from './music/AudioFactory.js';
-import EventEmitter from '../events/EventEmitter.js';
+import AudioFactory from './AudioFactory.js';
+import EventEmitter from '../../events/EventEmitter.js';
 
 const audioFactoryStub = createStubInstance(AudioFactory);
 const uiEventEmitterStub = createStubInstance(EventEmitter, { on: null });
