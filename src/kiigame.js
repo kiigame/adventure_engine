@@ -21,6 +21,8 @@ import "reflect-metadata";
 import { container, TYPES } from "./inversify.config.js";
 import ItemsBuilder from './view/items/konvadata/ItemsBuilder.js';
 import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
+import { Node } from 'konva/types/Node.js';
+import { Group } from 'konva/types/Group.js';
 
 export class KiiGame {
     constructor(
@@ -305,6 +307,12 @@ export class KiiGame {
                 }
             } else {
                 this.prepareImages(container);
+            }
+        }
+
+        for (const child of this.room_layer.children) {
+            if (child.attrs.category === 'room') {
+                this.prepareRoomAnimation(child);
             }
         }
 
@@ -606,17 +614,25 @@ export class KiiGame {
 
     /**
      * Prepare images from a container (layer or group)
-     * @param container
+     * @param {Node} container
      */
     prepareImages(container) {
         for (const object of container.children) {
             if (object.className == 'Image') {
-                const { id, src: imageSrc, animated } = object.attrs;
-                this.loadImageObject(id, imageSrc);
-                if (animated) {
-                    const animation = this.createRoomAnimation(this.getObject(id));
-                    this.roomAnimations.animatedObjects.push(animation);
-                }
+                this.loadImageObject(object.attrs.id, object.attrs.src);
+            }
+        }
+    }
+
+    /**
+     * Prepare room animations
+     * @param {Group} room
+     */
+    prepareRoomAnimation(room) {
+        for (const object of room.children) {
+            if (object.className == 'Image' && object.attrs.animated) {
+                const animation = this.createRoomAnimation(this.getObject(object.attrs.id));
+                this.roomAnimations.animatedObjects.push(animation);
             }
         }
     }
@@ -904,7 +920,7 @@ export class KiiGame {
 
     /**
      * Remove an object from stage. Called after interactions that remove objects.
-     * The removed object is simply hidden. Handles animations.
+     * The removed object is simply hidden.
      *
      * @param {string} objectName
      */
