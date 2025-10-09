@@ -7,6 +7,7 @@ class RoomAnimationsPlayer {
      * @param {EventEmitter} uiEventEmitter
      */
     constructor(uiEventEmitter) {
+        this.runningAnimations = new Set();
         uiEventEmitter.on('play_room_animations', ({ animatedObjects, roomId }) => {
             this.playRoomAnimations(animatedObjects, roomId);
         });
@@ -17,13 +18,15 @@ class RoomAnimationsPlayer {
      * @param {string} roomId
      */
     playRoomAnimations(animatedObjects, roomId) {
-        for (const animatedObject of animatedObjects) {
-            if (animatedObject.node.getParent().id() == roomId) {
+        this.runningAnimations.forEach(anim => anim.stop());
+        this.runningAnimations.clear();
+
+        animatedObjects.forEach(animatedObject => {
+            if (animatedObject.node.getParent().id() === roomId) {
                 animatedObject.play();
-            } else if (animatedObject.anim.isRunning()) {
-                animatedObject.anim.stop(); // Should this be .anim.stop() or .pause()?
+                this.runningAnimations.add(animatedObject.anim);
             }
-        }
+        });
     }
 }
 
