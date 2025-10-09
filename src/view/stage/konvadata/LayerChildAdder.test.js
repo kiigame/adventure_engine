@@ -3,9 +3,9 @@ import LayerChildAdder from './LayerChildAdder.js';
 
 describe('Test stage LayerChildAdder', function(){
     it('should add children to the specified layer', function(){
-        let layerChildAdder = new LayerChildAdder();
+        const layerChildAdder = new LayerChildAdder();
 
-        var expected = {
+        const expected = {
             'children': [
                 {
                     "attrs": {
@@ -22,7 +22,7 @@ describe('Test stage LayerChildAdder', function(){
                 }
             ]
         };
-        var imagesJson = {
+        const imagesJson = {
             'children': [
                 {
                     "attrs": {
@@ -32,7 +32,7 @@ describe('Test stage LayerChildAdder', function(){
                 }
             ]
         };
-        var newJson = [
+        const newJson = [
             {
                 "id": 'item1'
             },
@@ -40,7 +40,7 @@ describe('Test stage LayerChildAdder', function(){
                 "id": 'item2'
             }
         ];
-        var result = layerChildAdder.add(imagesJson, newJson, 'first');
+        const result = layerChildAdder.add(imagesJson, newJson, 'first');
         assert.deepEqual(expected, result);
     });
 

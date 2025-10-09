@@ -12,7 +12,7 @@ class LayerChildAdder {
      * @returns {object} The combined JSON object.
      */
     add(imagesJson, newChildren, layerName) {
-        var layer = imagesJson.children.find(function (child) {
+        const layer = imagesJson.children.find(function (child) {
             return child.attrs.id === layerName;
         });
         layer.children.push.apply(

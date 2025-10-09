@@ -11,9 +11,9 @@ describe('Test CategoryValidator', function() {
                 }
             }
         };
-        var targetStub = new ShapeStub();
-        let categoryValidator = new CategoryValidator(['excludedCategory']);
-        var result = categoryValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const categoryValidator = new CategoryValidator(['excludedCategory']);
+        const result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, false);
     });
     it('will return false if target has excluded category (multiple excluded categories)', function() {
@@ -25,9 +25,9 @@ describe('Test CategoryValidator', function() {
                 }
             }
         };
-        var targetStub = new ShapeStub();
-        let categoryValidator = new CategoryValidator(['excludedCategory', 'anotherExcludedCategory']);
-        var result = categoryValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const categoryValidator = new CategoryValidator(['excludedCategory', 'anotherExcludedCategory']);
+        const result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, false);
     });
     it('will return true if target has no excluded category', function() {
@@ -39,9 +39,9 @@ describe('Test CategoryValidator', function() {
                 }
             }
         };
-        var targetStub = new ShapeStub();
-        let categoryValidator = new CategoryValidator(['excludedCategory']);
-        var result = categoryValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const categoryValidator = new CategoryValidator(['excludedCategory']);
+        const result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, true);
     });
     it('will return false if target category is undefined', function() {
@@ -53,9 +53,9 @@ describe('Test CategoryValidator', function() {
                 }
             }
         };
-        var targetStub = new ShapeStub();
-        let categoryValidator = new CategoryValidator(['excludedCategory']);
-        var result = categoryValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const categoryValidator = new CategoryValidator(['excludedCategory']);
+        const result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, false);
     });
     it('will return true if no excluded categories are set (null) and category is defined', function() {
@@ -67,9 +67,9 @@ describe('Test CategoryValidator', function() {
                 }
             }
         };
-        var targetStub = new ShapeStub();
-        let categoryValidator = new CategoryValidator();
-        var result = categoryValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const categoryValidator = new CategoryValidator();
+        const result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, true);
     });
     it('will return true if no excluded categories are set (empty array) and category is defined', function() {
@@ -81,9 +81,9 @@ describe('Test CategoryValidator', function() {
                 }
             }
         };
-        var targetStub = new ShapeStub();
-        let categoryValidator = new CategoryValidator([]);
-        var result = categoryValidator.validate(targetStub);
+        const targetStub = new ShapeStub();
+        const categoryValidator = new CategoryValidator([]);
+        const result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, true);
     });
 });

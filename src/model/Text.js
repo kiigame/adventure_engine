@@ -11,15 +11,11 @@ class Text {
     }
 
     getName(id) {
-        var name = '';
-        // Don't cause a mass of errors if no text found
         try {
-            name = this.texts[id].name;
+            return this.texts[id].name;
         } catch (e) {
-            // Do nothing
+            return '';
         }
-
-        return name;
     }
 
     /// Find text in object. If a text is not found from the text data with the parameter,
@@ -29,17 +25,12 @@ class Text {
     ///            default. Otherwise usually the name of the other object in
     ///            item-object interactions.
     /// @return The text found, or the default text.
-    getText(object_id, key) {
-        if (key == null) {
-            key = 'examine';
-        }
-
-        var text = null;
+    getText(object_id, key = 'examine') {
         if (!this.texts[object_id]) {
             return this.getDefaultExamine();
         }
 
-        text = this.texts[object_id][key];
+        let text = this.texts[object_id][key];
 
         // If no text found, use default text
         if (!text || text.length == 0) {

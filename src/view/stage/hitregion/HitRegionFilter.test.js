@@ -3,7 +3,7 @@ import HitRegionFilter from './HitRegionFilter.js';
 
 describe('Test filtering for hit regions for Konva shapes', function() {
     it('Lätkäzombit secret will should not have a hit region', function() {
-        let hitRegionFilter = new HitRegionFilter(['secret'], ['Image']);
+        const hitRegionFilter = new HitRegionFilter(['secret'], ['Image']);
 
         // TODO: Do this with sinon?
         function ShapeStub() {
@@ -14,14 +14,14 @@ describe('Test filtering for hit regions for Konva shapes', function() {
             },
             this.className = 'Image';
         };
-        var shapeStub = new ShapeStub();
+        const shapeStub = new ShapeStub();
 
-        var result = hitRegionFilter.filter(shapeStub);
+        const result = hitRegionFilter.filter(shapeStub);
         assert.deepEqual(result, false);
     });
 
     it('Default non-Image Shape should not have a hit region', function() {
-        let hitRegionFilter = new HitRegionFilter([], ['Image']);
+        const hitRegionFilter = new HitRegionFilter([], ['Image']);
 
         // TODO: Do this with sinon?
         function ShapeStub() {
@@ -32,14 +32,14 @@ describe('Test filtering for hit regions for Konva shapes', function() {
             },
             this.className = 'SomethingElse';
         };
-        var shapeStub = new ShapeStub();
+        const shapeStub = new ShapeStub();
 
-        var result = hitRegionFilter.filter(shapeStub);
+        const result = hitRegionFilter.filter(shapeStub);
         assert.deepEqual(result, false);
     });
 
     it('Non-excluded Image should have a hit region', function() {
-        let hitRegionFilter = new HitRegionFilter(['someExcludedCategory'], ['Image']);
+        const hitRegionFilter = new HitRegionFilter(['someExcludedCategory'], ['Image']);
 
         // TODO: Do this with sinon?
         function ShapeStub() {
@@ -50,9 +50,9 @@ describe('Test filtering for hit regions for Konva shapes', function() {
             },
             this.className = 'Image';
         };
-        var shapeStub = new ShapeStub();
+        const shapeStub = new ShapeStub();
 
-        var result = hitRegionFilter.filter(shapeStub);
+        const result = hitRegionFilter.filter(shapeStub);
         assert.deepEqual(result, true);
     });
 });

@@ -5,7 +5,7 @@ describe('Test sequence TextBuilder', function(){
     it('it should build expected JSON object with Text data', function(){
         let textBuilder = new TextBuilder();
 
-        var expected = {
+        const expected = {
             "attrs": {
                 "text": "Kaikki ei kuitenkaan ollut niin kuin piti..",
                 "fontFamily": "Chalkboard SE",
@@ -19,10 +19,10 @@ describe('Test sequence TextBuilder', function(){
             },
             "className": "Text"
         };
-        var text = {
+        const text = {
             "text": "Kaikki ei kuitenkaan ollut niin kuin piti.."
         };
-        var result = textBuilder.build(text);
+        const result = textBuilder.build(text);
         assert.deepEqual(expected, result);
     });
 });

@@ -259,13 +259,13 @@ export class KiiGame {
 
         // Set up onFinish functions for each frame to show the next frame. In the case
         // of the last of the frames, show the first frame.
-        for (let i in this.character_animations) {
+        for (const i in this.character_animations) {
             for (let j = 0; j < this.character_animations[i].length; j++) {
                 if (this.character_animations[i].length > j + 1) {
                     this.character_animations[i][j].onFinish = function () {
                         // `this` refers to the character_animations object,
                         // `self` refers to the engine object
-                        for (let k in self.character_animations) {
+                        for (const k in self.character_animations) {
                             if (self.character_animations[k].indexOf(this) > -1) {
                                 const animation = self.character_animations[k];
                                 const frame_index = self.character_animations[k].indexOf(this);
@@ -278,7 +278,7 @@ export class KiiGame {
                     }
                 } else {
                     this.character_animations[i][j].onFinish = function () {
-                        for (let k in self.character_animations) {
+                        for (const k in self.character_animations) {
                             if (self.character_animations[k].indexOf(this) > -1) {
                                 const animation = self.character_animations[k];
                                 this.node.hide();
@@ -755,7 +755,7 @@ export class KiiGame {
             }
 
             // Play the animations of the room
-            for (let i in this.animated_objects) {
+            for (const i in this.animated_objects) {
                 if (this.animated_objects[i].node.parent.id() == this.current_room.id()) {
                     this.animated_objects[i].play();
                 } else if (this.animated_objects[i].anim.isRunning()) {
@@ -809,7 +809,7 @@ export class KiiGame {
     /// Loop through a list of interaction commands and execute them with
     /// handle_command, with timeout if specified.
     handle_commands(commands) {
-        for (let i in commands) {
+        for (const i in commands) {
             if (commands[i].timeout != null) {
                 ((commands, i) => {
                     setTimeout(() => {
@@ -1009,8 +1009,8 @@ export class KiiGame {
      */
     startCharacterAnimation(animationName) {
         // Hide and reset all character animations
-        for (let i in this.character_animations) {
-            for (let j in this.character_animations[i]) {
+        for (const i in this.character_animations) {
+            for (const j in this.character_animations[i]) {
                 this.character_animations[i][j].node.hide();
                 this.character_animations[i][j].reset();
             }

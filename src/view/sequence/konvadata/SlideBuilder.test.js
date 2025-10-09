@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import SlideBuilder from './SlideBuilder.js';
 import TextBuilder from './TextBuilder.js';
 
-var textBuilderStub = sinon.createStubInstance(TextBuilder);
+const textBuilderStub = sinon.createStubInstance(TextBuilder);
 textBuilderStub.build.returns(
     {
         "text": "text"
@@ -12,9 +12,9 @@ textBuilderStub.build.returns(
 
 describe('Test sequence SlideBuilder', function(){
     it('from only text, build text and rect wrapped in group', function(){
-        let slideBuilder = new SlideBuilder(textBuilderStub);
+        const slideBuilder = new SlideBuilder(textBuilderStub);
 
-        var expected = {
+        const expected = {
             "attrs": {
                 "category": "sequence",
                 "id": "intro_1",
@@ -39,7 +39,7 @@ describe('Test sequence SlideBuilder', function(){
             ],
             "className": "Group"
         };
-        var slide = {
+        const slide = {
             "do_fade": true,
             "id": "intro_1",
             "show_time": 4000,
@@ -47,13 +47,13 @@ describe('Test sequence SlideBuilder', function(){
                 "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
             }
         };
-        var result = slideBuilder.build(slide);
+        const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     }),
     it('from only imageSrc, it should build an image', function(){
-        let slideBuilder = new SlideBuilder(textBuilderStub);
+        const slideBuilder = new SlideBuilder(textBuilderStub);
 
-        var expected = {
+        const expected = {
             "attrs": {
                 "category": "sequence",
                 "id": "intro_2",
@@ -62,19 +62,19 @@ describe('Test sequence SlideBuilder', function(){
             },
             "className": "Image"
         };
-        var slide = {
+        const slide = {
             "do_fade": true,
             "id": "intro_2",
             "show_time": 5000,
             "imageSrc": "images/intro_2.png"
         };
-        var result = slideBuilder.build(slide);
+        const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     }),
     it('from text and image, build text and image wrapped in group', function(){
-        let slideBuilder = new SlideBuilder(textBuilderStub);
+        const slideBuilder = new SlideBuilder(textBuilderStub);
 
-        var expected = {
+        const expected = {
             "attrs": {
                 "category": "sequence",
                 "id": "intro_42",
@@ -95,7 +95,7 @@ describe('Test sequence SlideBuilder', function(){
             ],
             "className": "Group"
         };
-        var slide = {
+        const slide = {
             "do_fade": true,
             "id": "intro_42",
             "show_time": 4000,
@@ -104,13 +104,13 @@ describe('Test sequence SlideBuilder', function(){
                 "text": "Oli nätti päivä, piti olla ihan normaalit treenit.."
             }
         };
-        var result = slideBuilder.build(slide);
+        const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     }),
     it('from no text or imageSrc, it should build a rect', function(){
-        let slideBuilder = new SlideBuilder(textBuilderStub);
+        const slideBuilder = new SlideBuilder(textBuilderStub);
 
-        var expected = {
+        const expected = {
             "attrs": {
                 "category": "sequence",
                 "id": "intro_7",
@@ -123,12 +123,12 @@ describe('Test sequence SlideBuilder', function(){
             },
             "className": "Rect"
         };
-        var slide = {
+        const slide = {
             "do_fade": false,
             "id": "intro_7",
             "show_time": 1000
         };
-        var result = slideBuilder.build(slide);
+        const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     });
 });

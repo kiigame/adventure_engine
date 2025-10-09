@@ -12,21 +12,20 @@ class DefaultInteractionResolver {
     }
 
     /**
-     * @param Interactions interactions
-     * @param string entityId clicked or dragged item
-     * @param string action (click or target item)
-     * @param string defaultString (examine or target item)
+     * @param {Interactions} interactions
+     * @param {string} entityId clicked or dragged item
+     * @param {string} action click or target item
+     * @param {string} defaultString examine or target item
      */
     resolveCommands(interactions, entityId, action = 'click', defaultString = 'examine') {
-        var commands;
-        commands = interactions.getCommands(entityId, action);
+        const commands = interactions.getCommands(entityId, action);
 
-        // no interaction for the action defined: usual text
-        if (commands === null || commands === undefined) {
-            commands = [{"command":"monologue", "textkey":{"object": entityId, "string": defaultString}}];
+        if (commands !== null && commands !== undefined) {
+            return commands;
         }
 
-        return commands;
+        // no interaction for the action defined: usual text
+        return [{"command":"monologue", "textkey":{"object": entityId, "string": defaultString}}];
     }
 }
 
