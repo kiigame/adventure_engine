@@ -380,12 +380,12 @@ export class KiiGame {
                         if (this.intersection.check(this.dragged_item, leftArrow)) {
                             this.dragDelayEnabled = true;
                             this.inventory_index--;
-                            this.redrawInventory();
+                            this.uiEventEmitter.emit('redraw_inventory');
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
                         } else if (this.intersection.check(this.dragged_item, rightArrow)) {
                             this.dragDelayEnabled = true;
                             this.inventory_index++;
-                            this.redrawInventory();
+                            this.uiEventEmitter.emit('redraw_inventory');
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
                         } else {
                             this.target = null;
@@ -493,7 +493,7 @@ export class KiiGame {
             // Clearing the texts
             this.clearText(this.interaction_text);
 
-            this.redrawInventory();
+            this.uiEventEmitter.emit('redraw_inventory');
         });
 
         // Set up event listeners for the gameplay commands
@@ -567,6 +567,9 @@ export class KiiGame {
         });
         this.uiEventEmitter.on('reset_character_animation', () => {
             this.startCharacterAnimation(this.idleAnimationName);
+        });
+        this.uiEventEmitter.on('redraw_inventory', () => {
+            this.redrawInventory();
         });
 
         this.stage.draw();
@@ -792,7 +795,7 @@ export class KiiGame {
         if (target.getAttr('id') == 'inventory_left_arrow') {
             if (target.getAttr('visible') == true) {
                 this.inventory_index--;
-                this.redrawInventory();
+                this.uiEventEmitter.emit('redraw_inventory');
                 return;
             }
         }
@@ -800,7 +803,7 @@ export class KiiGame {
         if (target.getAttr('id') == 'inventory_right_arrow') {
             if (target.getAttr('visible') == true) {
                 this.inventory_index++;
-                this.redrawInventory();
+                this.uiEventEmitter.emit('redraw_inventory');
                 return;
             }
         }
@@ -1093,7 +1096,7 @@ export class KiiGame {
             this.inventory_index = Math.max(this.inventory_list.indexOf(item) + 1 - this.inventory_max, 0);
         }
 
-        this.redrawInventory();
+        this.uiEventEmitter.emit('redraw_inventory');
     }
 
     /**
@@ -1107,7 +1110,7 @@ export class KiiGame {
         item.hide();
         item.moveTo(this.current_layer);
         this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
-        this.redrawInventory();
+        this.uiEventEmitter.emit('redraw_inventory');
     }
 
     // Dragging an item from the inventory
