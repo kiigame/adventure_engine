@@ -17,11 +17,11 @@ class RoomAnimationsPlayer {
      * @param {string} roomId
      */
     playRoomAnimations(animatedObjects, roomId) {
-        for (const i in animatedObjects) {
-            if (animatedObjects[i].node.getParent().id() == roomId) {
-                animatedObjects[i].play();
-            } else if (animatedObjects[i].anim.isRunning()) {
-                animatedObjects[i].anim.stop(); // Should this be .anim.stop() or .pause()?
+        for (const animatedObject of animatedObjects) {
+            if (animatedObject.node.getParent().id() == roomId) {
+                animatedObject.play();
+            } else if (animatedObject.anim.isRunning()) {
+                animatedObject.anim.stop(); // Should this be .anim.stop() or .pause()?
             }
         }
     }
