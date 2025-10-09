@@ -601,7 +601,7 @@ export class KiiGame {
             }
         });
 
-        this.roomAnimations.animatedObjects.push(animation);
+        return animation;
     }
 
     /**
@@ -613,23 +613,12 @@ export class KiiGame {
             const object = container.children[i];
             if (object.className == 'Image') {
                 const { id, src: imageSrc, animated } = object.attrs;
-                this.prepareImage(id, imageSrc, animated);
+                this.loadImageObject(id, imageSrc);
+                if (animated) {
+                    const animation = this.createRoomAnimation(this.getObject(id));
+                    this.roomAnimations.animatedObjects.push(animation);
+                }
             }
-        }
-    }
-
-    /**
-     * Prepares Image class objects for the stage
-     *
-     * @param id
-     * @param imageSrc
-     * @param animated
-     */
-    prepareImage(id, imageSrc, animated) {
-        this.createObject(id, imageSrc);
-
-        if (animated === true) {
-            this.createRoomAnimation(this.getObject(id));
         }
     }
 
@@ -1042,11 +1031,12 @@ export class KiiGame {
     }
 
     /**
-     * Setting an image to the stage and scaling it based on relative values if they exist.
-     * Comes up with width and height of the image if not set in json data. Needed by hit region
-     * caching.
+     * Loads an image for the stage and sets up its onload handler.
+     * The image is cached globally to ensure it stays in memory while loading.
+     * @param {string} id - The identifier for the image object
+     * @param {string} imageSrc - The source URL of the image
      */
-    createObject(id, imageSrc) {
+    loadImageObject(id, imageSrc) {
         window[id] = new Image();
         window[id].onload = () => {
             this.getObject(id).image(window[id]);
