@@ -15,14 +15,15 @@ import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
 import EventEmitter from './events/EventEmitter.js';
 import RoomAnimations from './view/room/RoomAnimations.js';
-
-// TODO: Move DI up
-import "reflect-metadata";
-import { container, TYPES } from "./inversify.config.js";
 import ItemsBuilder from './view/items/konvadata/ItemsBuilder.js';
 import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
 import { Node } from 'konva/types/Node.js';
 import { Group } from 'konva/types/Group.js';
+import RoomAnimationBuilder from './view/room/konvadata/RoomAnimationBuilder.js';
+
+// TODO: Move DI up
+import "reflect-metadata";
+import { container, TYPES } from "./inversify.config.js";
 
 export class KiiGame {
     constructor(
@@ -92,6 +93,7 @@ export class KiiGame {
         this.music = new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter);
         this.text = new Text(gameData.text_json);
         this.roomAnimations = new RoomAnimations(this.uiEventEmitter, this.gameEventEmitter);
+        this.roomAnimationBuilder = new RoomAnimationBuilder();
 
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
@@ -589,27 +591,6 @@ export class KiiGame {
         );
     }
 
-    createRoomAnimation(object) {
-        const attrs = object.getAttr("animation");
-        const animation = new Konva.Tween({
-            node: object,
-            x: attrs.x ? object.x() + attrs.x : object.x(),
-            y: attrs.y ? object.y() + attrs.y : object.y(),
-            width: attrs.width ? object.width() - 15 : object.width(),
-            easing: Konva.Easings.EaseInOut,
-            duration: attrs.duration,
-
-            onFinish: () => {
-                animation.reverse();
-                setTimeout(() => {
-                    animation.play();
-                }, attrs.duration * 1000);
-            }
-        });
-
-        return animation;
-    }
-
     /**
      * Prepare images from a container (layer or group)
      * @param {Node} container
@@ -629,7 +610,9 @@ export class KiiGame {
     prepareRoomAnimation(room) {
         for (const object of room.children) {
             if (object.className == 'Image' && object.attrs.animated) {
-                const animation = this.createRoomAnimation(this.getObject(object.attrs.id));
+                const animation = this.roomAnimationBuilder.createRoomAnimation(
+                    this.getObject(object.attrs.id)
+                );
                 this.roomAnimations.animatedObjects.push(animation);
             }
         }
