@@ -1,5 +1,5 @@
 import pkg from 'konva';
-const { Tween, EaseInOut } = pkg;
+const { Tween } = pkg;
 
 class RoomAnimationBuilder {
     /**
@@ -13,7 +13,7 @@ class RoomAnimationBuilder {
             x: attrs.x ? object.x() + attrs.x : object.x(),
             y: attrs.y ? object.y() + attrs.y : object.y(),
             width: attrs.width ? object.width() - 15 : object.width(),
-            easing: EaseInOut,
+            easing: Konva.Easings.EaseInOut,
             duration: attrs.duration,
 
             onFinish: () => {
