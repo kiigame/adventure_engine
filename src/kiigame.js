@@ -474,7 +474,7 @@ export class KiiGame {
                 const target_category = this.target.getAttr('category');
 
                 const dragResolver = this.dragResolvers.filter(function (dragResolver) {
-                    return dragResolver.getTargetCategory() == target_category;
+                    return dragResolver.getTargetCategory() === target_category;
                 }).pop();
 
                 if (dragResolver) {
