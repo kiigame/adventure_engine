@@ -704,7 +704,6 @@ export class KiiGame {
         const previousRoom = this.current_room;
         this.current_room = this.getObject(roomId);
 
-        // Don't fade if duration is zero
         if (fadeDuration) {
             this.fade_room.tween.duration = fadeDuration;
             this.fader_room.show();
