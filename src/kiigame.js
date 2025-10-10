@@ -147,9 +147,6 @@ export class KiiGame {
         this.speakAnimationName = "speak";
         this.idleAnimationName = "idle";
 
-        // Variable for saving the current layer (for changing backgrounds and object layers)
-        this.current_layer;
-
         // Build sequences and push them to the sequence layer
         const builtSequences = this.sequencesBuilder.build(this.sequences_json);
         const stageLayerChildAdder = new LayerChildAdder();
@@ -207,6 +204,7 @@ export class KiiGame {
         this.fader_full = this.getObject("fader_full");
         this.fader_room = this.getObject("fader_room");
         this.room_layer = this.getObject("room_layer");
+        this.sequenceLayer = this.getObject("sequence_layer");
         this.current_room = null;
 
         // Scale background and UI elements
@@ -418,7 +416,7 @@ export class KiiGame {
                     this.clearText(this.interaction_text);
                 }
 
-                this.current_layer.draw();
+                this.room_layer.draw();
             }
         });
 
@@ -564,6 +562,7 @@ export class KiiGame {
         // A bit kludgy to respond to events by firing more events, but let's do
         // this for now
         this.uiEventEmitter.on('room_became_visible', (roomId) => {
+            this.sequenceLayer.hide();
             // Slightly kludgy way of checking if we want to show inventory and character
             if (this.getObject(roomId).attrs.fullScreen) {
                 return;
@@ -610,7 +609,8 @@ export class KiiGame {
     }
 
     /** 
-     * Playes a sequence definied in sequences.json by id.
+     * Playes a sequence definied in sequences.json by id. Currently doesn't take the
+     * responsibiilty of hiding the sequence layer after playing.
      * @param {string} id The Sequence id in sequences.json
      */
     play_sequence(id) {
@@ -618,8 +618,6 @@ export class KiiGame {
 
         this.uiEventEmitter.emit('play_full_fade_out');
 
-        const old_layer = this.current_layer;
-        this.current_layer = this.getObject('sequence_layer');
         const currentSequence = this.getObject(id);
         const sequenceData = this.sequences_json[id];
         const final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
@@ -630,9 +628,8 @@ export class KiiGame {
         setTimeout(() => {
             this.uiEventEmitter.emit('hide_inventory');
             this.uiEventEmitter.emit('hide_character');
-            old_layer.hide();
             // For the first slide, show sequence layer and sequence
-            this.current_layer.show();
+            this.sequenceLayer.show();
             currentSequence.show();
         }, delay);
 
@@ -705,9 +702,7 @@ export class KiiGame {
             this.fade_room.play();
         }
 
-        const previousLayer = this.current_layer;
         const previousRoom = this.current_room;
-        this.current_layer = this.room_layer;
         this.current_room = this.getObject(room_id);
 
         setTimeout(() => {
@@ -716,12 +711,8 @@ export class KiiGame {
                 this.fade_room.reverse();
                 setTimeout(() => {
                     this.fader_room.hide();
-                    this.current_layer.draw();
+                    this.room_layer.draw();
                 }, fadeDuration);
-            }
-
-            if (previousLayer && previousLayer.id() !== this.room_layer.id()) {
-                previousLayer.hide();
             }
 
             if (previousRoom) {
@@ -730,7 +721,6 @@ export class KiiGame {
 
             this.uiEventEmitter.emit('room_became_visible', this.current_room.id());
 
-            this.current_layer.show();
             this.current_room.show();
             this.stage.draw();
         }, fadeDuration);
@@ -880,7 +870,7 @@ export class KiiGame {
         object.clearCache();
         object.show();
         object.cache();
-        this.current_layer.draw();
+        this.room_layer.draw();
     }
 
     /**
@@ -892,7 +882,7 @@ export class KiiGame {
     removeObject(objectName) {
         const object = this.getObject(objectName);
         object.hide();
-        this.current_layer.draw();
+        this.room_layer.draw();
     }
 
     // Clearing the given text
@@ -1063,14 +1053,14 @@ export class KiiGame {
     inventoryRemove(itemName) {
         const item = this.getObject(itemName);
         item.hide();
-        item.moveTo(this.current_layer);
+        item.moveTo(this.room_layer); // but why?
         this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
         this.uiEventEmitter.emit('redraw_inventory');
     }
 
     // Dragging an item from the inventory
     inventoryDrag(item) {
-        item.moveTo(this.current_layer);
+        item.moveTo(this.room_layer); // are we sure?
         this.inventory_bar_layer.draw();
         this.inventory_layer.draw();
         this.clearText(this.monologue);
@@ -1118,7 +1108,7 @@ export class KiiGame {
 
         this.inventory_bar_layer.draw();
         this.inventory_layer.draw();
-        this.current_layer.draw();
+        this.room_layer.draw();
     }
 
     // Delay to be set after each intersection check

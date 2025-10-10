@@ -87,7 +87,8 @@
     },
     {
       "attrs": {
-        "id": "room_layer"
+        "id": "room_layer",
+        "visible": true
       },
       "children": [],
       "className": "Layer"
