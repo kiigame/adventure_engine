@@ -20,6 +20,7 @@ import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
 import { Node } from 'konva/types/Node.js';
 import { Group } from 'konva/types/Group.js';
 import RoomAnimationBuilder from './view/room/konvadata/RoomAnimationBuilder.js';
+import RoomFaderBuilder from './view/stage/konvadata/RoomFaderBuilder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -166,25 +167,7 @@ export class KiiGame {
             'room_layer'
         );
         // Push room fader into the room layer after rooms, so it's on top
-        const faderRoomJson = {
-            "attrs": {
-                "id": "fader_room",
-                "opacity": 0,
-                "visible": false
-            },
-            "children": [
-                {
-                    "attrs": {
-                        "height": 543,
-                        "id": "black_screen_room",
-                        "src": "data/images/black.png",
-                        "width": 1024
-                    },
-                    "className": "Image"
-                }
-            ],
-            "className": "Group"
-        };
+        const faderRoomJson = new RoomFaderBuilder().buildRoomFader();
         layerJson = stageLayerChildAdder.add(
             layerJson,
             [faderRoomJson],
