@@ -1,12 +1,20 @@
+import EventEmitter from "../../events/EventEmitter";
+import HitRegionFilter from "./hitregion/HitRegionFilter";
+
 /**
  * Initialize hit regions in the stage.
  */
 class HitRegionInitializer {
-    constructor(hitRegionFilter) {
+    /**
+     * @param {HitRegionFilter} hitRegionFilter
+     * @param {EventEmitter} uiEventEmitter
+     */
+    constructor(hitRegionFilter, uiEventEmitter) {
         this.hitRegionFilter = hitRegionFilter;
+        this.uiEventEmitter = uiEventEmitter;
     }
 
-    initHitRegions(engine, roomLayer)
+    initHitRegions(roomLayer)
     {
         roomLayer.getChildren().each((o) => {
             if (o.getAttr('category') == 'room') {
@@ -23,7 +31,7 @@ class HitRegionInitializer {
                 });
 
                 o.on('mouseup touchend', (event) => {
-                    engine.handle_click(event.target);
+                    this.uiEventEmitter.emit('furniture_clicked', event.target);
                 });
             }
         });

@@ -50,7 +50,8 @@ const kiigame = new KiiGame(
         new DefaultInteractionResolver('reward')
     ],
     new HitRegionInitializer(
-        new HitRegionFilter(['secret'], ['Image'])
+        new HitRegionFilter(['secret'], ['Image']),
+        uiEventEmitter
     ),
     new Intersection(
         [

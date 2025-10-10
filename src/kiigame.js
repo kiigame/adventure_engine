@@ -76,7 +76,8 @@ export class KiiGame {
 
         if (this.hitRegionInitializer === null) {
             this.hitRegionInitializer = new HitRegionInitializer(
-                new HitRegionFilter([], ['Image'])
+                new HitRegionFilter([], ['Image']),
+                this.uiEventEmitter
             );
         }
         if (this.intersection === null) {
@@ -297,7 +298,7 @@ export class KiiGame {
 
         // On window load we create image hit regions for furniture in rooms
         window.onload = () => {
-            this.hitRegionInitializer.initHitRegions(this, this.room_layer);
+            this.hitRegionInitializer.initHitRegions(this.room_layer);
             this.stage.draw();
         };
 
@@ -572,6 +573,9 @@ export class KiiGame {
             }
             this.uiEventEmitter.emit('show_inventory');
             this.uiEventEmitter.emit('show_character');
+        });
+        this.uiEventEmitter.on('furniture_clicked', (target) => {
+            this.handle_click(target);
         });
 
         this.stage.draw();
