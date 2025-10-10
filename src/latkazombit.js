@@ -66,6 +66,7 @@ const stage = kiigame.stage;
 
 const legends_json = JSON.parse(jsonGetter.getJSON('data/legends.json'));
 
+// Fix these backgrounds being in the wrong size in relation to the stage & other backgrounds
 stage.find("#locker_room_1")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 100);
 
