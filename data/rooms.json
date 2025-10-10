@@ -4,7 +4,8 @@
             "attrs": {
                 "category": "room",
                 "id": "start_layer",
-                "visible": false
+                "visible": false,
+                "fullScreen": true
             },
             "children": [
                 {

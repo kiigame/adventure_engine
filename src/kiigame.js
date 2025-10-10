@@ -561,6 +561,16 @@ export class KiiGame {
         this.uiEventEmitter.on('redraw_inventory', () => {
             this.redrawInventory();
         });
+        // A bit kludgy to respond to events by firing more events, but let's do
+        // this for now
+        this.uiEventEmitter.on('room_became_visible', (roomId) => {
+            // Slightly kludgy way of checking if we want to show inventory and character
+            if (this.getObject(roomId).attrs.fullScreen) {
+                return;
+            }
+            this.uiEventEmitter.emit('show_inventory');
+            this.uiEventEmitter.emit('show_character');
+        });
 
         this.stage.draw();
         this.handle_commands(
@@ -666,9 +676,6 @@ export class KiiGame {
                 this.fade_full.play();
 
                 setTimeout(() => {
-                    // Assumes sequences will always go to a room
-                    this.uiEventEmitter.emit('show_inventory');
-                    this.uiEventEmitter.emit('show_character');
                     this.uiEventEmitter.emit('play_full_fade_in');
                     setTimeout(() => {
                         this.fade_full.tween.duration = 600; // reset to default
@@ -680,9 +687,6 @@ export class KiiGame {
             delay = delay + final_fade_duration;
         } else {
             setTimeout(() => {
-                // Assumes sequences will always go to a room
-                this.uiEventEmitter.emit('show_inventory');
-                this.uiEventEmitter.emit('show_character');
                 this.fader_full.hide();
             }, delay);
         }

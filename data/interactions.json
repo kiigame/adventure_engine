@@ -20,14 +20,6 @@
                 "timeout": 700
             },
             {
-                "command": "show_inventory",
-                "timeout": 700
-            },
-            {
-                "command": "show_character",
-                "timeout": 700
-            },
-            {
                 "command": "play_full_fade_in",
                 "timeout": 700
             }
