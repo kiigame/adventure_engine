@@ -746,7 +746,6 @@ export class KiiGame {
                 this.interactions,
                 target.id()
             ));
-            return;
         }
     }
 
