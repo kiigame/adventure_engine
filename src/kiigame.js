@@ -504,8 +504,8 @@ export class KiiGame {
         this.gameEventEmitter.on('add_object', (objectName) => {
             this.addObject(objectName);
         });
-        this.gameEventEmitter.on('do_transition', ({ room_id, fade_time }) => {
-            this.do_transition(room_id, fade_time);
+        this.gameEventEmitter.on('do_transition', ({ room_id, fadeDuration }) => {
+            this.do_transition(room_id, fadeDuration);
         });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
@@ -695,39 +695,34 @@ export class KiiGame {
             }, delay);
         }
     }
-
-    /// Transition to a room.
-    /// @param room_id The id of the room to transition to.
-    /// @param fade_time The fade duration; if null, use a default.
-    do_transition(room_id, fade_time) {
-        const fadeDuration = fade_time === null || fade_time === undefined ? 700 : fade_time;
+    /**
+     * Transition to a room.
+     * @param {string} roomId The id of the room to transition to.
+     * @param {int} fadeDuration
+     */
+    do_transition(roomId, fadeDuration = 700) {
+        const previousRoom = this.current_room;
+        this.current_room = this.getObject(roomId);
 
         // Don't fade if duration is zero
         if (fadeDuration) {
             this.fade_room.tween.duration = fadeDuration;
             this.fader_room.show();
             this.fade_room.play();
-        }
-
-        const previousRoom = this.current_room;
-        this.current_room = this.getObject(room_id);
-
-        setTimeout(() => {
-            // Don't fade if duration is zero.
-            if (fadeDuration) {
+            setTimeout(() => {
                 this.fade_room.reverse();
                 setTimeout(() => {
                     this.fader_room.hide();
                     this.room_layer.draw();
                 }, fadeDuration);
-            }
+            }, fadeDuration);
+        }
 
+        setTimeout(() => {
             if (previousRoom) {
                 previousRoom.hide();
             }
-
             this.uiEventEmitter.emit('room_became_visible', this.current_room.id());
-
             this.current_room.show();
             this.stage.draw();
         }, fadeDuration);
@@ -794,9 +789,9 @@ export class KiiGame {
                 this.gameEventEmitter.emit('add_object', objectName)
             );
         } else if (command.command == "do_transition") {
-            const fade_time = command.length != null ? command.length : 700;
+            const fadeDuration = command.length != null ? command.length : 700;
             const room_id = command.destination;
-            this.gameEventEmitter.emit('do_transition', { room_id, fade_time });
+            this.gameEventEmitter.emit('do_transition', { room_id, fadeDuration });
         } else if (command.command == "play_sequence") {
             this.gameEventEmitter.emit('play_sequence', command.sequence);
         } else if (command.command == "set_idle_animation") {
