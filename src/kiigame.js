@@ -724,12 +724,11 @@ export class KiiGame {
                 previousRoom.hide();
             }
 
-            this.uiEventEmitter.emit('play_room_animations', this.current_room.id());
+            this.uiEventEmitter.emit('room_became_visible', this.current_room.id());
 
             this.current_layer.show();
             this.current_room.show();
             this.stage.draw();
-            this.uiEventEmitter.emit('play_music_by_id', this.current_room.id());
         }, fadeDuration);
     }
 

@@ -168,28 +168,37 @@ describe('test Music event management', function () {
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter, { on: null });
     });
-
     it('should handle play_music event by calling playMusic', function () {
         const playMusicStub = stub(Music.prototype, 'playMusic');
         new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicData = { music: 'test.ogg' };
-
-        // Get the callback that was registered for play_music event
-        const playMusicCallback = uiEventEmitterStub.on.getCall(0).args[1];
+        const playMusicCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+            return callback.args[0] === 'play_music';
+        }).args[1];
         playMusicCallback(musicData);
         assert.isTrue(playMusicStub.calledOnceWith(musicData));
         playMusicStub.restore();
     });
-
     it('should handle play_music_by_id event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
         new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicId = 'testId';
-
-        // Get the callback that was registered for play_music_by_id event
-        const playMusicByIdCallback = uiEventEmitterStub.on.getCall(1).args[1];
+        const playMusicByIdCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+            return callback.args[0] === 'play_music_by_id';
+        }).args[1];
         playMusicByIdCallback(musicId);
         assert.isTrue(playMusicByIdStub.calledOnceWith(musicId));
+        playMusicByIdStub.restore();
+    });
+    it('should handle room_became_visible event by calling playMusicById', function () {
+        const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
+        new Music({}, audioFactoryStub, uiEventEmitterStub);
+        const roomId = 'testId';
+        const playMusicByIdCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+            return callback.args[0] === 'room_became_visible';
+        }).args[1];
+        playMusicByIdCallback(roomId);
+        assert.isTrue(playMusicByIdStub.calledOnceWith(roomId));
         playMusicByIdStub.restore();
     });
 });

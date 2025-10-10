@@ -11,7 +11,7 @@ class RoomAnimations {
         gameEventEmitter.on('remove_object', (objectName) => {
             this.removeAnimation(objectName);
         });
-        uiEventEmitter.on('play_room_animations', (roomId) => {
+        uiEventEmitter.on('room_became_visible', (roomId) => {
             this.playRoomAnimations(roomId);
         });
     }

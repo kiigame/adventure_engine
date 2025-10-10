@@ -13,6 +13,10 @@ class Music {
         uiEventEmitter.on('play_music_by_id', (musicId) => {
             this.playMusicById(musicId);
         });
+        // Assumes room music is in musicJson with the roomId
+        uiEventEmitter.on('room_became_visible', (roomId) => {
+            this.playMusicById(roomId);
+        });
     }
 
     /**
