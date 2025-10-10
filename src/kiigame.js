@@ -736,11 +736,10 @@ export class KiiGame {
     /// Handle click interactions on room objects, inventory items and inventory
     /// arrows.
     handle_click(target) {
-        const target_category = target.getAttr('category');
-
-        const clickResolver = this.clickResolvers.filter(function (clickResolver) {
-            return clickResolver.getTargetCategory() === target_category;
-        }).pop();
+        const targetCategory = target.getAttr('category');
+        const clickResolver = this.clickResolvers.find(function (clickResolver) {
+            return clickResolver.getTargetCategory() === targetCategory;
+        });
 
         if (clickResolver) {
             this.handle_commands(clickResolver.resolveCommands(
