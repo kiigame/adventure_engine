@@ -23,7 +23,7 @@ class HitRegionInitializer {
                 });
 
                 o.on('mouseup touchend', (event) => {
-                    engine.handle_click(event);
+                    engine.handle_click(event.target);
                 });
             }
         });

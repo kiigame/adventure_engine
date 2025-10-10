@@ -295,17 +295,25 @@ export class KiiGame {
             }
         }
 
-        // On window load we create image hit regions for our items on object layers
+        // On window load we create image hit regions for furniture in rooms
         window.onload = () => {
             this.hitRegionInitializer.initHitRegions(this, this.room_layer);
             this.stage.draw();
         };
 
-        // Mouse up and touch end events (picking up items from the environment
-        // Mouse click and tap events (examine items in the inventory)
+        // Handle clicks on inventory items and arrows arrows
         this.inventory_layer.on('click tap', (event) => {
-            this.handle_click(event);
+            this.handle_click(event.target);
         });
+        this.getObject('inventory_left_arrow').on('click tap', () => {
+            this.inventory_index--;
+            this.uiEventEmitter.emit('redraw_inventory');
+        });
+        this.getObject('inventory_right_arrow').on('click tap', () => {
+            this.inventory_index++;
+            this.uiEventEmitter.emit('redraw_inventory');
+        });
+
         // Drag start events
         this.stage.find('Image').on('dragstart', (event) => {
             this.dragged_item = event.target;
@@ -432,11 +440,6 @@ export class KiiGame {
         this.inventory_layer.on('touchstart mousedown', (event) => {
             this.dragStartX = event.target.x();
             this.dragStartY = event.target.y();
-        });
-
-        /// Inventory arrow clicking events
-        this.inventory_bar_layer.on('click tap', (event) => {
-            this.handle_click(event);
         });
 
         /// Drag end events for inventory items.
@@ -728,8 +731,7 @@ export class KiiGame {
 
     /// Handle click interactions on room objects, inventory items and inventory
     /// arrows.
-    handle_click(event) {
-        const target = event.target;
+    handle_click(target) {
         const target_category = target.getAttr('category');
 
         const clickResolver = this.clickResolvers.filter(function (clickResolver) {
@@ -742,23 +744,6 @@ export class KiiGame {
                 target.id()
             ));
             return;
-        }
-
-        // Inventory arrow buttons
-        if (target.getAttr('id') == 'inventory_left_arrow') {
-            if (target.getAttr('visible') == true) {
-                this.inventory_index--;
-                this.uiEventEmitter.emit('redraw_inventory');
-                return;
-            }
-        }
-
-        if (target.getAttr('id') == 'inventory_right_arrow') {
-            if (target.getAttr('visible') == true) {
-                this.inventory_index++;
-                this.uiEventEmitter.emit('redraw_inventory');
-                return;
-            }
         }
     }
 
