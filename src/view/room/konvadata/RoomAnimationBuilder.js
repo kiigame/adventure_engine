@@ -12,7 +12,6 @@ class RoomAnimationBuilder {
             node: object,
             x: attrs.x ? object.x() + attrs.x : object.x(),
             y: attrs.y ? object.y() + attrs.y : object.y(),
-            width: attrs.width ? object.width() - 15 : object.width(),
             easing: Konva.Easings.EaseInOut,
             duration: attrs.duration,
 
@@ -23,7 +22,6 @@ class RoomAnimationBuilder {
                 }, attrs.duration * 1000);
             }
         });
-
         return animation;
     }
 }

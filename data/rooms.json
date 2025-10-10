@@ -670,7 +670,6 @@
                         "animated": true,
                         "animation": {
                             "duration": 1.9,
-                            "width": -15,
                             "x": 9,
                             "y": -3
                         },
