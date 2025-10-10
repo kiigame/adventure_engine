@@ -45,7 +45,11 @@ const kiigame = new KiiGame(
         new DefaultInteractionResolver('reward'),
         new DefaultInteractionResolver('secret')
     ],
-    undefined,
+    [
+        new DefaultInteractionResolver('item'),
+        new DefaultInteractionResolver('furniture'),
+        new DefaultInteractionResolver('reward')
+    ],
     new HitRegionInitializer(
         new HitRegionFilter(['secret'], ['Image'])
     ),

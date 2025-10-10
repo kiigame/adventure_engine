@@ -66,7 +66,6 @@ export class KiiGame {
         if (this.dragResolvers.length == 0) {
             this.dragResolvers.push(
                 new DefaultInteractionResolver('furniture'),
-                new DefaultInteractionResolver('reward'),
                 new DefaultInteractionResolver('item')
             );
         }
