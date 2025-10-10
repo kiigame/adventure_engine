@@ -17,8 +17,6 @@ import EventEmitter from './events/EventEmitter.js';
 import RoomAnimations from './view/room/RoomAnimations.js';
 import ItemsBuilder from './view/items/konvadata/ItemsBuilder.js';
 import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
-import { Node } from 'konva/types/Node.js';
-import { Group } from 'konva/types/Group.js';
 import RoomAnimationBuilder from './view/room/konvadata/RoomAnimationBuilder.js';
 import RoomFaderBuilder from './view/stage/konvadata/RoomFaderBuilder.js';
 
@@ -576,7 +574,7 @@ export class KiiGame {
 
     /**
      * Prepare images from a container (layer or group)
-     * @param {Node} container
+     * @param {Konva.Node} container
      */
     prepareImages(container) {
         for (const object of container.children) {
@@ -588,7 +586,7 @@ export class KiiGame {
 
     /**
      * Prepare room animations
-     * @param {Group} room
+     * @param {Konva.Group} room
      */
     prepareRoomAnimation(room) {
         for (const object of room.children) {
