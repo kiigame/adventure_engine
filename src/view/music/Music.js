@@ -1,7 +1,7 @@
 /**
  */
 class Music {
-    constructor(musicJson, audioFactory, uiEventEmitter) {
+    constructor(musicJson, audioFactory, uiEventEmitter, gameEventEmitter) {
         this.musicJson = musicJson;
         this.audioFactory = audioFactory;
         this.current_audio = null;
@@ -14,7 +14,7 @@ class Music {
             this.playMusicById(musicId);
         });
         // Assumes room music is in musicJson with the roomId
-        uiEventEmitter.on('room_became_visible', (roomId) => {
+        gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.playMusicById(roomId);
         });
     }

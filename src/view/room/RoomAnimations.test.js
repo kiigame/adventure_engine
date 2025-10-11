@@ -6,10 +6,8 @@ import pkg from 'konva';
 const { Container, Node, Animation } = pkg;
 
 describe('Room animations player tests', function () {
-    let uiEventEmitterStub;
     let gameEventEmitterStub;
     beforeEach(() => {
-        uiEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
         gameEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
     });
     const buildMockTween = (roomId, nodeId) => {
@@ -28,9 +26,9 @@ describe('Room animations player tests', function () {
     };
     describe('play room animations', function () {
         it('should start the room animations when entering the room', function () {
-            const roomAnimations = new RoomAnimations(uiEventEmitterStub, gameEventEmitterStub);
-            const playRoomAnimationsCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'room_became_visible';
+            const roomAnimations = new RoomAnimations(gameEventEmitterStub);
+            const playRoomAnimationsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'arrived_in_room';
             }).args[1];
             const { mockTween, mockAnimation } = buildMockTween('room-id', 'node-id');
             roomAnimations.animatedObjects = [mockTween];
@@ -39,9 +37,9 @@ describe('Room animations player tests', function () {
             assert.isFalse(mockAnimation.stop.called);
         });
         it('should stop previous room\'s animations when entering the next room', function () {
-            const roomAnimations = new RoomAnimations(uiEventEmitterStub, gameEventEmitterStub);
-            const playRoomAnimationsCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'room_became_visible';
+            const roomAnimations = new RoomAnimations(gameEventEmitterStub);
+            const playRoomAnimationsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'arrived_in_room';
             }).args[1];
             const { mockTween: mockFirstRoomTween, mockAnimation: mockFirstRoomAnimation } = buildMockTween('room-id', 'first-node-id');
             const { mockTween: mockSecondRoomTween, mockAnimation: mockSecondRoomAnimation } = buildMockTween('other-room-id', 'second-node-id');
@@ -56,9 +54,9 @@ describe('Room animations player tests', function () {
     });
     describe('remove animations', function () {
         it('should not play animation after removing it from the room', function () {
-            const roomAnimations = new RoomAnimations(uiEventEmitterStub, gameEventEmitterStub);
-            const playRoomAnimationsCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'room_became_visible';
+            const roomAnimations = new RoomAnimations(gameEventEmitterStub);
+            const playRoomAnimationsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'arrived_in_room';
             }).args[1];
             const { mockTween } = buildMockTween('room-id', 'node-id');
             roomAnimations.animatedObjects = [mockTween];

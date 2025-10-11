@@ -15,6 +15,7 @@ module.exports = {
           'mention',
           'drive',
           'play',
+          'model',
         ],
       }
     ]

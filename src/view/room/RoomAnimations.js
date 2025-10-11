@@ -2,16 +2,15 @@ import EventEmitter from "../../events/EventEmitter.js";
 
 class RoomAnimations {
     /**
-     * @param {EventEmitter} uiEventEmitter
      * @param {EventEmitter} gameEventEmitter
      */
-    constructor(uiEventEmitter, gameEventEmitter) {
+    constructor(gameEventEmitter) {
         this.animatedObjects = []; // Tween[]
         this.runningAnimations = new Set();
         gameEventEmitter.on('remove_object', (objectName) => {
             this.removeAnimation(objectName);
         });
-        uiEventEmitter.on('room_became_visible', (roomId) => {
+        gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.playRoomAnimations(roomId);
         });
     }
