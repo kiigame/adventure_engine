@@ -111,9 +111,6 @@ export class KiiGame {
         // (how many items from the beginning are not shown)
         this.inventory_index = 0;
 
-        // Timeout event for showing character animation for certain duration
-        this.character_animation_timeout;
-
         // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
         this.dragStartX;
         this.dragStartY;
