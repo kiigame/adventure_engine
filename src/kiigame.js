@@ -19,6 +19,7 @@ import ItemsBuilder from './view/items/konvadata/ItemsBuilder.js';
 import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
 import RoomAnimationBuilder from './view/room/konvadata/RoomAnimationBuilder.js';
 import RoomFaderBuilder from './view/stage/konvadata/RoomFaderBuilder.js';
+import CharacterInRoom from './model/CharacterInRoom.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -209,9 +210,7 @@ export class KiiGame {
         // The current room view
         this.current_room = null;
         // "Player character in room" model status
-        this.characterInRoom = {
-            type: 'NOT_IN_ROOM'
-        };
+        this.characterInRoom = new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
 
         // Scale background and UI elements
         this.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
@@ -507,12 +506,6 @@ export class KiiGame {
         this.gameEventEmitter.on('add_object', (objectName) => {
             this.addObject(objectName);
         });
-        this.gameEventEmitter.on('do_transition', ({ roomId }) => {
-            this.doTransition(roomId);
-        });
-        this.gameEventEmitter.on('do_instant_transition', ({ roomId }) => {
-            this.doInstantTransition(roomId);
-        });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
         });
@@ -525,8 +518,8 @@ export class KiiGame {
         this.gameEventEmitter.on('npc_monologue', (npc, text) => {
             this.npcMonologue(npc, text);
         });
-        this.gameEventEmitter.on('leave_room', (from) => {
-            this.roomFadeOut(from);
+        this.gameEventEmitter.on('leaving_room', () => {
+            this.roomFadeOut();
         });
         this.gameEventEmitter.on('left_room', (from) => {
             this.hidePreviousRoom(from);
@@ -587,9 +580,6 @@ export class KiiGame {
         });
         this.uiEventEmitter.on('redraw_inventory', () => {
             this.redrawInventory();
-        });
-        this.uiEventEmitter.on('room_fade_out_done', (from) => {
-            this.moveCharacterFromTransitToRoom();
         });
         this.uiEventEmitter.on('room_fade_in_done', () => {
             this.drawRoomLayer();
@@ -717,58 +707,13 @@ export class KiiGame {
     }
 
     /**
-     * TODO: move to characterInRoom model component
-     * Transition to a room.
-     * @param {string} roomId The id of the room to transition to.
-     */
-    doTransition(roomId) {
-        if (this.characterInRoom.type === 'NOT_IN_ROOM') {
-            this.characterInRoom = {
-                type: 'IN_ROOM',
-                room: roomId
-            };
-            this.gameEventEmitter.emit('arriving_in_room');
-            this.gameEventEmitter.emit('arrived_in_room', roomId);
-            return;
-        }
-        if (this.characterInRoom.type === 'IN_ROOM') {
-            const from = this.characterInRoom.room;
-            this.characterInRoom = {
-                type: 'IN_TRANSITION',
-                from,
-                to: roomId
-            };
-            this.gameEventEmitter.emit('leave_room', from);
-            return;
-        }
-        throw ('Doing transition with incompatible characterInRoom type', this.characterInRoom.type);
-    }
-
-    /**
-     * TODO: move to characterInRoom model component
-     * @param {string} roomId room id to move instantly to
-     */
-    doInstantTransition(roomId) {
-        if (this.characterInRoom.type === 'IN_ROOM') {
-            const from = this.characterInRoom.room;
-            this.gameEventEmitter.emit('left_room', from);
-        }
-        this.characterInRoom = {
-            type: 'IN_ROOM',
-            room: roomId
-        };
-        this.gameEventEmitter.emit('arrived_in_room', roomId);
-    }
-
-    /**
      * TODO: move to room fader view component
-     * @param {string} from room id of the room we are leaving
      */
-    roomFadeOut(from) {
+    roomFadeOut() {
         this.fader_room.show();
         this.fade_room.play();
         setTimeout(() => {
-            this.uiEventEmitter.emit('room_fade_out_done', from);
+            this.uiEventEmitter.emit('room_fade_out_done');
         }, this.fade_room.tween.duration);
     }
 
@@ -779,27 +724,6 @@ export class KiiGame {
     hidePreviousRoom(from) {
         const room = this.getObject(from);
         room.hide();
-    }
-
-    /**
-     * TODO: move to characterInRoom model component
-     * @returns {void}
-     */
-    moveCharacterFromTransitToRoom() {
-        if (this.characterInRoom.type === 'IN_TRANSITION') {
-            const from = this.characterInRoom.from;
-            const room = this.characterInRoom.to;
-            this.characterInRoom = {
-                type: 'IN_ROOM',
-                room
-            };
-            this.gameEventEmitter.emit('left_room', from);
-            this.gameEventEmitter.emit('arriving_in_room');
-            this.gameEventEmitter.emit('arrived_in_room', room);
-            return;
-        }
-
-        throw ('Moving character from in tranistion to room with incompatible type', this.characterInRoom.type);
     }
 
     /**
