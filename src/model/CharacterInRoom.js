@@ -40,7 +40,7 @@ class CharacterInRoom {
             this.gameEventEmitter.emit('leaving_room');
             return;
         }
-        throw ('Doing transition with incompatible CharacterInRoom mode', this.state.mode);
+        throw new Error('Doing transition with incompatible CharacterInRoom mode ' + this.state.mode);
     }
 
     /**
@@ -77,7 +77,7 @@ class CharacterInRoom {
             return;
         }
 
-        throw ('Moving character from in transition to room with incompatible mode', this.state.mode);
+        throw new Error('Moving character from in transition to room with incompatible mode ' + this.state.mode);
     }
 };
 
