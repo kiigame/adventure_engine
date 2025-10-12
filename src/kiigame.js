@@ -490,8 +490,8 @@ export class KiiGame {
             if (this.stageObjectGetter.getObject(roomId).attrs.fullScreen) {
                 return;
             }
-            this.uiEventEmitter.emit('show_inventory');
-            this.uiEventEmitter.emit('show_character');
+            this.showInventory();
+            this.showCharacter();
         });
 
         // Set up event listeners for UI commands
@@ -501,29 +501,17 @@ export class KiiGame {
         this.uiEventEmitter.on('play_sequence_started', (_id) => {
             this.playFullFadeOut();
         });
+        this.uiEventEmitter.on('first_sequence_slide_shown', () => {
+            this.hideCharacter();
+            this.hideInventory();
+            this.sequenceLayer.show();
+        });
         this.uiEventEmitter.on('play_full_fade_in', () => {
             // Assumes fade_full has first faded out
             this.fade_full.reverse();
             setTimeout(() => {
                 this.fader_full.hide();
             }, this.fade_full.tween.duration);
-        });
-        this.uiEventEmitter.on('hide_inventory', () => {
-            this.inventory_layer.hide();
-            this.inventory_bar_layer.hide();
-        });
-        this.uiEventEmitter.on('show_inventory', () => {
-            this.inventory_layer.show();
-            this.inventory_bar_layer.show();
-            this.inventory_bar_layer.draw();
-            this.inventory_layer.draw();
-        });
-        this.uiEventEmitter.on('hide_character', () => {
-            this.character_layer.hide();
-        });
-        this.uiEventEmitter.on('show_character', () => {
-            this.character_layer.show();
-            this.character_layer.draw();
         });
         this.uiEventEmitter.on('redraw_inventory', () => {
             this.redrawInventory();
@@ -546,6 +534,39 @@ export class KiiGame {
                 'start'
             )
         );
+    }
+
+    /**
+     * TODO: move to character view component (or stage manager?)
+     */
+    showCharacter() {
+        this.character_layer.show();
+        this.character_layer.draw();
+    }
+
+    /**
+     * TODO: move to character view component (or stage manager?)
+     */
+    hideCharacter() {
+        this.character_layer.hide();
+    }
+
+    /**
+     * TODO: move to inventory view component (or stage manager?)
+     */
+    showInventory() {
+        this.inventory_layer.show();
+        this.inventory_bar_layer.show();
+        this.inventory_bar_layer.draw();
+        this.inventory_layer.draw();
+    }
+
+    /**
+     * TODO: move to inventory view component (or stage manager?)
+     */
+    hideInventory() {
+        this.inventory_layer.hide();
+        this.inventory_bar_layer.hide();
     }
 
     /**
@@ -603,10 +624,7 @@ export class KiiGame {
         let currentSlide = null;
 
         setTimeout(() => {
-            this.uiEventEmitter.emit('hide_inventory');
-            this.uiEventEmitter.emit('hide_character');
-            // For the first slide, show sequence layer and sequence
-            this.sequenceLayer.show();
+            this.uiEventEmitter.emit('first_sequence_slide_shown');
             currentSequence.show();
         }, delay);
 
@@ -818,10 +836,6 @@ export class KiiGame {
             this.uiEventEmitter.emit('play_full_fade_out');
         } else if (command.command === 'play_full_fade_in') {
             this.uiEventEmitter.emit('play_full_fade_in');
-        } else if (command.command === 'show_inventory') {
-            this.uiEventEmitter.emit('show_inventory');
-        } else if (command.command === 'show_character') {
-            this.uiEventEmitter.emit('show_character');
         } else {
             console.warn("Unknown interaction command " + command.command);
         }
