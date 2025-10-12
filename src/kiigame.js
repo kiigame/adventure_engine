@@ -23,6 +23,7 @@ import CharacterInRoom from './model/CharacterInRoom.js';
 import StageObjectGetter from './view/stage/StageObjectGetter.js';
 import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';
+import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBuilder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -168,9 +169,10 @@ export class KiiGame {
             'inventory_item_cache'
         );
         // Push character animation frames to correct layer.
+        const characterFrames = new CharacterFramesBuilder({x: 764, y: 443}).build(gameData.character_json.frames);
         layerJson = stageLayerChildAdder.add(
             layerJson,
-            gameData.character_json.frames,
+            characterFrames,
             'character_layer'
         );
 

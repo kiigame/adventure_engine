@@ -1,54 +1,24 @@
 {
     "frames": [
         {
-            "attrs": {
-                "id": "character_idle_1",
-                "src": "data/images/character_idle_1.png",
-                "x": 764,
-                "y": 443,
-                "visible": true
-            },
-            "className": "Image"
+            "id": "character_idle_1",
+            "src": "data/images/character_idle_1.png"
         },
         {
-            "attrs": {
-                "id": "character_idle_2",
-                "src": "data/images/character_idle_2.png",
-                "visible": false,
-                "x": 764,
-                "y": 443
-            },
-            "className": "Image"
+            "id": "character_idle_2",
+            "src": "data/images/character_idle_2.png"
         },
         {
-            "attrs": {
-                "id": "character_speak_1",
-                "src": "data/images/character_speak_1.png",
-                "visible": false,
-                "x": 764,
-                "y": 443
-            },
-            "className": "Image"
+            "id": "character_speak_1",
+            "src": "data/images/character_speak_1.png"
         },
         {
-            "attrs": {
-                "id": "character_speak_2",
-                "src": "data/images/character_speak_2.png",
-                "visible": false,
-                "x": 764,
-                "y": 443
-            },
-            "className": "Image"
+            "id": "character_speak_2",
+            "src": "data/images/character_speak_2.png"
         },
         {
-            "attrs": {
-                "id": "character_panic",
-                "src": "data/images/character_panic.png",
-                "visible": false,
-                "x": 764,
-                "y": 443
-            },
-            "className": "Image"
+            "id": "character_panic",
+            "src": "data/images/character_panic.png"
         }
     ],
     "animations": {
