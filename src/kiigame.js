@@ -327,44 +327,17 @@ export class KiiGame {
                             this.target = null;
                         }
                     }
-                    this.clearText(this.interaction_text);
+                    this.clearInteractionText();
                 }
 
                 // If target is found, highlight it and show the interaction text
                 if (this.target != null) {
-                    this.current_room.getChildren().each((shape, i) => {
-                        shape.shadowBlur(0);
-                    });
-                    this.inventory_layer.getChildren().each((shape, i) => {
-                        shape.shadowBlur(0);
-                    });
-                    this.target.clearCache();
-                    this.target.shadowColor('purple');
-                    this.target.shadowOffset({ x: 0, y: 0 });
-                    this.target.shadowBlur(20);
-                    this.inventory_layer.draw();
-
-                    this.interaction_text.text(this.text.getName(this.target.id()));
-
-                    this.interaction_text.x(this.dragged_item.x() + (this.dragged_item.width() / 2));
-                    this.interaction_text.y(this.dragged_item.y() - 30);
-                    this.interaction_text.offset({
-                        x: this.interaction_text.width() / 2
-                    });
-
-                    this.text_layer.draw();
+                    this.uiEventEmitter.emit('dragmove_hover_on_object', this.target);
                 } else {
-                    // If no target, clear the texts and highlights
-                    this.current_room.getChildren().each((shape, i) => {
-                        shape.shadowBlur(0);
-                    });
-                    this.inventory_layer.getChildren().each((shape, i) => {
-                        shape.shadowBlur(0);
-                    });
-                    this.clearText(this.interaction_text);
+                    this.uiEventEmitter.emit('dragmove_hover_on_nothing');
                 }
 
-                this.room_layer.draw();
+                this.drawRoomLayer();
             }
         });
 
@@ -409,16 +382,6 @@ export class KiiGame {
             if (dragged_item.isVisible()) {
                 this.gameEventEmitter.emit('inventory_add', dragged_item.id());
             }
-
-            // Clearing the glow effects
-            this.current_room.getChildren().each((shape, i) => {
-                shape.shadowBlur(0);
-            });
-            this.inventory_layer.getChildren().each((shape, i) => {
-                shape.shadowBlur(0);
-            });
-            // Clearing the texts
-            this.clearText(this.interaction_text);
 
             this.uiEventEmitter.emit('dragend_ended');
         });
@@ -492,6 +455,19 @@ export class KiiGame {
             this.clearMonologues();
             this.moveItemToRoomLayer(draggedItem);
         });
+        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
+            this.clearRoomObjectBlur();
+            this.glowRoomObject(target);
+            this.showTextOnDragMove(target);
+        });
+        this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
+            this.clearRoomObjectBlur();
+            this.clearInteractionText();
+        });
+        this.uiEventEmitter.on('dragend_ended', () => {
+            this.clearRoomObjectBlur();
+            this.clearInteractionText();
+        });
 
         this.stage.draw();
         this.handle_commands(
@@ -507,6 +483,52 @@ export class KiiGame {
     setDelay(delay) {
         this.delayEnabled = true;
         setTimeout(() => this.delayEnabled = false, delay);
+    }
+
+    /**
+     * TODO: move to text view component (or something)
+     */
+    clearInteractionText() {
+        this.clearText(this.interaction_text);
+    }
+
+    /**
+     * TODO: move to room view component
+     */
+    clearRoomObjectBlur() {
+        this.current_room.getChildren().each((shape, _i) => {
+            shape.shadowBlur(0);
+        });
+    }
+
+    /**
+     * TODO: move to room view component
+     * @param {*} target
+     * @returns {void}
+     */
+    glowRoomObject(target) {
+        if (!this.current_room.getChildren((object) => { return object === target; })) {
+            return;
+        }
+        target.clearCache();
+        target.shadowColor('purple');
+        target.shadowOffset({ x: 0, y: 0 });
+        target.shadowBlur(20);
+    }
+
+    /**
+     * TODO: clean up and move to a view component (but which?)
+     * @param {*} target
+     */
+    showTextOnDragMove(target) {
+        this.interaction_text.text(this.text.getName(target.id()));
+        this.interaction_text.x(this.dragged_item.x() + (this.dragged_item.width() / 2));
+        this.interaction_text.y(this.dragged_item.y() - 30);
+        this.interaction_text.offset({
+            x: this.interaction_text.width() / 2
+        });
+
+        this.text_layer.draw();
     }
 
     /**
