@@ -216,7 +216,7 @@ export class KiiGame {
         // Animation for fading the screen
         this.fade_full = new Konva.Tween({
             node: this.fader_full,
-            duration: 0.7,
+            duration: 0.6,
             opacity: 1
         });
 
