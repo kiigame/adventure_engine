@@ -137,7 +137,7 @@ export class KiiGame {
         this.fade_room;
 
         // List of character animations.
-        this.character_animations = []; // also accessed in latkazombit.js
+        this.character_animations = {};
 
         // Timeout event for showing character animation for certain duration
         this.character_animation_timeout;
@@ -246,20 +246,20 @@ export class KiiGame {
 
         // Set up onFinish functions for each frame to show the next frame. In the case
         // of the last of the frames, show the first frame.
-        for (const i in this.character_animations) {
-            for (let j = 0; j < this.character_animations[i].length; j++) {
-                const nextAnimation = this.character_animations[i].length > j + 1
-                    ? this.character_animations[i][j + 1]
-                    : this.character_animations[i][0];
-                this.character_animations[i][j].nextAnimation = nextAnimation;
-                this.character_animations[i][j].onFinish = function () {
+        Object.values(this.character_animations).forEach((frames) => {
+            frames.forEach((frame) => {
+                const nextFrame = frames.length > frames.indexOf(frame) + 1
+                    ? frames[frames.indexOf(frame) + 1]
+                    : frames[0];
+                frame.nextFrame = nextFrame;
+                frame.onFinish = function () {
                     this.node.hide();
-                    this.nextAnimation.node.show();
+                    this.nextFrame.node.show();
                     this.reset();
-                    this.nextAnimation.play();
+                    this.nextFrame.play();
                 }
-            }
-        }
+            });
+        });
 
         // Prepare room animations
         for (const child of this.room_layer.children) {
@@ -953,12 +953,12 @@ export class KiiGame {
      */
     startCharacterAnimation(animationName) {
         // Hide and reset all character animations
-        for (const i in this.character_animations) {
-            for (const j in this.character_animations[i]) {
-                this.character_animations[i][j].node.hide();
-                this.character_animations[i][j].reset();
-            }
-        }
+        Object.values(this.character_animations).forEach((frames) => {
+            frames.forEach((frame) => {
+                frame.node.hide();
+                frame.reset();
+            });
+        });
 
         const animation = this.character_animations[animationName];
         animation[0].node.show();
