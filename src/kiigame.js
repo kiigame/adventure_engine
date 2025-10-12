@@ -21,6 +21,7 @@ import RoomAnimationBuilder from './view/room/konvadata/RoomAnimationBuilder.js'
 import RoomFaderBuilder from './view/stage/konvadata/RoomFaderBuilder.js';
 import CharacterInRoom from './model/CharacterInRoom.js';
 import StageObjectGetter from './view/stage/StageObjectGetter.js';
+import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -235,34 +236,9 @@ export class KiiGame {
 
         // Load up frames from json to the character animations array.
         const characterAnimationData = gameData.character_json.animations;
-        Object.entries(characterAnimationData).forEach(([id, animationDatum]) => {
-            const frames = [];
-            for (const frameDatum of animationDatum.frames) {
-                const frame = new Konva.Tween({
-                    node: this.stageObjectGetter.getObject(frameDatum.node),
-                    duration: frameDatum.duration
-                });
-                frames.push(frame);
-            }
-            this.character_animations[id] = frames;
-        });
-
-        // Set up onFinish functions for each frame to show the next frame. In the case
-        // of the last of the frames, show the first frame.
-        Object.values(this.character_animations).forEach((frames) => {
-            frames.forEach((frame) => {
-                const nextFrame = frames.length > frames.indexOf(frame) + 1
-                    ? frames[frames.indexOf(frame) + 1]
-                    : frames[0];
-                frame.nextFrame = nextFrame;
-                frame.onFinish = function () {
-                    this.node.hide();
-                    this.nextFrame.node.show();
-                    this.reset();
-                    this.nextFrame.play();
-                }
-            });
-        });
+        this.character_animations = new CharacterAnimationsBuilder(
+            this.stageObjectGetter
+        ).build(characterAnimationData);
 
         // Prepare all room animations
         for (const child of this.room_layer.children) {
