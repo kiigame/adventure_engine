@@ -96,16 +96,13 @@ export class KiiGame {
         }
 
         this.interactions = new Interactions(gameData.interactions_json);
-        this.music = new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
+        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
         this.text = new Text(gameData.text_json);
         this.roomAnimations = new RoomAnimations(this.gameEventEmitter);
         this.roomAnimationBuilder = new RoomAnimationBuilder();
 
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
-
-        // Alternative variable for `this` to allow reference even when it's shadowed
-        const self = this;
 
         // List of items in the inventory. inventory_list.length gives the item amount.
         this.inventory_list = [];
@@ -133,9 +130,6 @@ export class KiiGame {
 
         // Intersection target (object below dragged item)
         this.target;
-
-        // Animation for fading the screen
-        this.fade_full;
 
         // Build sequences and push them to the sequence layer
         const builtSequences = this.sequencesBuilder.build(this.sequences_json);
@@ -201,7 +195,7 @@ export class KiiGame {
         // The current room view
         this.current_room = null;
         // "Player character in room" model status
-        this.characterInRoom = new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
+        new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
 
         // Scale background and UI elements
         this.stageObjectGetter.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
@@ -229,7 +223,7 @@ export class KiiGame {
         const characterAnimations = new CharacterAnimationsBuilder(
             this.stageObjectGetter
         ).build(characterAnimationData);
-        this.characterAnimations = new CharacterAnimations(
+        new CharacterAnimations(
             characterAnimations,
             this.uiEventEmitter,
             this.gameEventEmitter
