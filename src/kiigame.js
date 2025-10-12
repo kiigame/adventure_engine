@@ -28,6 +28,8 @@ import CharacterAnimations from './view/character/CharacterAnimations.js';
 import InventoryView from './view/inventory/InventoryView.js';
 import RoomView from './view/room/RoomView.js';
 import CharacterView from './view/character/CharacterView.js';
+import Inventory from './model/Inventory.js';
+import InventoryViewModel from './view/inventory/InventoryViewModel.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -98,6 +100,8 @@ export class KiiGame {
         // Model start
         // "Player character in room" model status
         new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
+        // Inventory model
+        new Inventory(this.gameEventEmitter, this.uiEventEmitter);
         // Model end
 
         // View start
@@ -261,6 +265,11 @@ export class KiiGame {
             inventoryBarLayer,
             this.stage.height() - 90
         );
+        new InventoryViewModel(
+            this.uiEventEmitter,
+            this.gameEventEmitter,
+            7 // inventoryMax, TODO make configurable/responsive
+        )
         // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
         this.dragStartX;
         this.dragStartY;
@@ -328,17 +337,17 @@ export class KiiGame {
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.clearMonologues();
         });
+        this.uiEventEmitter.on('inventory_drag_start', (_target) => {
+            this.clearMonologues();
+        });
         this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
             this.showTextOnDragMove(target);
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
             this.clearInteractionText();
         });
-        this.uiEventEmitter.on('dragend_ended', () => {
+        this.uiEventEmitter.on('dragend_ended', (_draggedItem) => {
             this.clearInteractionText();
-        });
-        this.uiEventEmitter.on('inventory_drag_start', (target) => {
-            this.clearMonologues();
         });
         // Text view end
 
@@ -438,7 +447,7 @@ export class KiiGame {
             }
         });
 
-        /// Drag end events for inventory items.
+        // Drag end events for inventory items.
         this.stage.find('Image').on('dragend', (event) => {
             const dragged_item = event.target;
 
@@ -465,12 +474,15 @@ export class KiiGame {
                 }
             }
 
-            // Check if dragged item's destroyed, if not, add it back to inventory
-            if (dragged_item.isVisible()) {
-                this.gameEventEmitter.emit('inventory_add', dragged_item.id());
-            }
+            this.uiEventEmitter.emit('dragend_ended', this.dragged_item);
+        });
 
-            this.uiEventEmitter.emit('dragend_ended');
+        // Remove the dragged item if it was removed as a result of drag end -> interaction -> remove item
+        this.gameEventEmitter.on('inventory_item_removed', ({ itemList: _itemList, itemNameRemoved }) => {
+            if (this.dragged_item && this.dragged_item.attrs.id === itemNameRemoved) {
+                this.dragged_item.hide();
+                this.dragged_item = null;
+            }
         });
         // To be refactored - end
 
