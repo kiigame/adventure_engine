@@ -20,6 +20,7 @@ import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
 import RoomAnimationBuilder from './view/room/konvadata/RoomAnimationBuilder.js';
 import RoomFaderBuilder from './view/stage/konvadata/RoomFaderBuilder.js';
 import CharacterInRoom from './model/CharacterInRoom.js';
+import StageObjectGetter from './view/stage/StageObjectGetter.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -187,23 +188,25 @@ export class KiiGame {
             'container'
         );
 
+        this.stageObjectGetter = new StageObjectGetter(this.stage);
+
         // Define variables from stage for easier use
 
         // Texts & layers
-        this.monologue = this.getObject("monologue");
-        this.character_speech_bubble = this.getObject("character_speech_bubble");
-        this.npc_monologue = this.getObject("npc_monologue");
-        this.npc_speech_bubble = this.getObject("npc_speech_bubble");
-        this.interaction_text = this.getObject("interaction_text");
+        this.monologue = this.stageObjectGetter.getObject("monologue");
+        this.character_speech_bubble = this.stageObjectGetter.getObject("character_speech_bubble");
+        this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
+        this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
+        this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
 
-        this.inventory_layer = this.getObject("inventory_layer");
-        this.inventory_bar_layer = this.getObject("inventory_bar_layer");
-        this.character_layer = this.getObject("character_layer");
-        this.text_layer = this.getObject("text_layer");
-        this.fader_full = this.getObject("fader_full");
-        this.fader_room = this.getObject("fader_room");
-        this.room_layer = this.getObject("room_layer");
-        this.sequenceLayer = this.getObject("sequence_layer");
+        this.inventory_layer = this.stageObjectGetter.getObject("inventory_layer");
+        this.inventory_bar_layer = this.stageObjectGetter.getObject("inventory_bar_layer");
+        this.character_layer = this.stageObjectGetter.getObject("character_layer");
+        this.text_layer = this.stageObjectGetter.getObject("text_layer");
+        this.fader_full = this.stageObjectGetter.getObject("fader_full");
+        this.fader_room = this.stageObjectGetter.getObject("fader_room");
+        this.room_layer = this.stageObjectGetter.getObject("room_layer");
+        this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
 
         // The current room view
         this.current_room = null;
@@ -211,10 +214,10 @@ export class KiiGame {
         this.characterInRoom = new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
 
         // Scale background and UI elements
-        this.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
-        this.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
-        this.getObject("inventory_bar").y(this.stage.height() - 100);
-        this.getObject("inventory_bar").width(this.stage.width());
+        this.stageObjectGetter.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
+        this.stageObjectGetter.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
+        this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
+        this.stageObjectGetter.getObject("inventory_bar").width(this.stage.width());
 
         // Animation for fading the screen
         this.fade_full = new Konva.Tween({
@@ -236,7 +239,7 @@ export class KiiGame {
             const frames = [];
             for (const frameDatum of animationDatum.frames) {
                 const frame = new Konva.Tween({
-                    node: this.getObject(frameDatum.node),
+                    node: this.stageObjectGetter.getObject(frameDatum.node),
                     duration: frameDatum.duration
                 });
                 frames.push(frame);
@@ -293,11 +296,11 @@ export class KiiGame {
         this.inventory_layer.on('click tap', (event) => {
             this.handle_click(event.target);
         });
-        this.getObject('inventory_left_arrow').on('click tap', () => {
+        this.stageObjectGetter.getObject('inventory_left_arrow').on('click tap', () => {
             this.inventory_index--;
             this.uiEventEmitter.emit('redraw_inventory');
         });
-        this.getObject('inventory_right_arrow').on('click tap', () => {
+        this.stageObjectGetter.getObject('inventory_right_arrow').on('click tap', () => {
             this.inventory_index++;
             this.uiEventEmitter.emit('redraw_inventory');
         });
@@ -358,8 +361,8 @@ export class KiiGame {
 
                 // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
                 if (this.target == null) {
-                    const leftArrow = this.getObject("inventory_left_arrow");
-                    const rightArrow = this.getObject("inventory_right_arrow");
+                    const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
+                    const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
                     if (!this.dragDelayEnabled) {
                         if (this.intersection.check(this.dragged_item, leftArrow)) {
                             this.dragDelayEnabled = true;
@@ -516,7 +519,7 @@ export class KiiGame {
             this.sequenceLayer.hide();
             this.showRoom(roomId);
             // Slightly kludgy way of checking if we want to show inventory and character
-            if (this.getObject(roomId).attrs.fullScreen) {
+            if (this.stageObjectGetter.getObject(roomId).attrs.fullScreen) {
                 return;
             }
             this.uiEventEmitter.emit('show_inventory');
@@ -605,7 +608,7 @@ export class KiiGame {
         for (const object of room.children) {
             if (object.className == 'Image' && object.attrs.animated) {
                 const animation = this.roomAnimationBuilder.createRoomAnimation(
-                    this.getObject(object.attrs.id)
+                    this.stageObjectGetter.getObject(object.attrs.id)
                 );
                 roomAnimations.push(animation);
             }
@@ -623,7 +626,7 @@ export class KiiGame {
 
         this.uiEventEmitter.emit('play_full_fade_out');
 
-        const currentSequence = this.getObject(id);
+        const currentSequence = this.stageObjectGetter.getObject(id);
         const sequenceData = this.sequences_json[id];
         const final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
         let currentSlide = null;
@@ -640,7 +643,7 @@ export class KiiGame {
 
         for (let i in sequenceData.slides) {
             let previousSlide = currentSlide;
-            currentSlide = this.getObject(sequenceData.slides[i].id);
+            currentSlide = this.stageObjectGetter.getObject(sequenceData.slides[i].id);
 
             const displaySlide = (i, currentSlide, previousSlide) => {
                 setTimeout(() => {
@@ -710,7 +713,7 @@ export class KiiGame {
      * @param {string} from room id of the room we have faded out
      */
     hidePreviousRoom(from) {
-        const room = this.getObject(from);
+        const room = this.stageObjectGetter.getObject(from);
         room.hide();
     }
 
@@ -719,7 +722,7 @@ export class KiiGame {
      * @param {string} roomId room to make visible
      */
     showRoom(roomId) {
-        const room = this.getObject(roomId);
+        const room = this.stageObjectGetter.getObject(roomId);
         room.show();
         this.current_room = room;
         this.stage.draw();
@@ -821,7 +824,7 @@ export class KiiGame {
         } else if (command.command == "set_speak_animation") {
             this.gameEventEmitter.emit('set_speak_animation', command.animation);
         } else if (command.command == "npc_monologue") {
-            const npc = this.getObject(command.npc);
+            const npc = this.stageObjectGetter.getObject(command.npc);
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             this.gameEventEmitter.emit('npc_monologue', npc, text);
         } else if (command.command == "play_character_animation") {
@@ -848,28 +851,13 @@ export class KiiGame {
         }
     }
 
-    /// Get an object from stage by it's id. Gives an error message in console with
-    /// the looked up name if it is not found. Basically, a wrapper for
-    /// stage.find(id) with error messaging, helpful with typos in jsons,
-    /// and also gives some errors if an object required by the kiigame.js script
-    /// itself is missing.
-    /// @param object The name of the object to look up.
-    /// @return Returns the object if it's found, or null if it isn't.
-    getObject(id) {
-        const object = this.stage.find('#' + id)[0];
-        if (object == null) {
-            console.warn("Could not find object from stage with id " + id);
-        }
-        return object;
-    }
-
     /**
      * Add an object to the stage. Currently, this means setting its visibility to true.
      * TODO: Add animations & related parts.
      * @param {string} objectName
      */
     addObject(objectName) {
-        const object = this.getObject(objectName);
+        const object = this.stageObjectGetter.getObject(objectName);
         object.clearCache();
         object.show();
         object.cache();
@@ -883,7 +871,7 @@ export class KiiGame {
      * @param {string} objectName
      */
     removeObject(objectName) {
-        const object = this.getObject(objectName);
+        const object = this.stageObjectGetter.getObject(objectName);
         object.hide();
         this.room_layer.draw();
     }
@@ -913,7 +901,7 @@ export class KiiGame {
         this.npc_speech_bubble.show();
         this.npc_monologue.text(text);
 
-        const npc_tag = this.getObject("npc_tag");
+        const npc_tag = this.stageObjectGetter.getObject("npc_tag");
         if (npc.x() + npc.width() > (this.stage.width() / 2)) {
             npc_tag.pointerDirection("right");
             if (this.npc_monologue.width() > npc.x() - 100) {
@@ -1012,7 +1000,7 @@ export class KiiGame {
     loadImageObject(id, imageSrc) {
         window[id] = new Image();
         window[id].onload = () => {
-            this.getObject(id).image(window[id]);
+            this.stageObjectGetter.getObject(id).image(window[id]);
         };
         window[id].src = imageSrc;
     }
@@ -1026,7 +1014,7 @@ export class KiiGame {
      * @param {string} itemName The name of the item to be added to the inventory.
      */
     inventoryAdd(itemName) {
-        const item = this.getObject(itemName);
+        const item = this.stageObjectGetter.getObject(itemName);
         item.show();
         item.moveTo(this.inventory_layer);
         item.clearCache();
@@ -1054,7 +1042,7 @@ export class KiiGame {
      * @param {string} itemName of the item to be removed from the inventory
      */
     inventoryRemove(itemName) {
-        const item = this.getObject(itemName);
+        const item = this.stageObjectGetter.getObject(itemName);
         item.hide();
         item.moveTo(this.room_layer); // but why?
         this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
@@ -1098,15 +1086,15 @@ export class KiiGame {
         }
 
         if (this.inventory_index > 0) {
-            this.getObject("inventory_left_arrow").show();
+            this.stageObjectGetter.getObject("inventory_left_arrow").show();
         } else {
-            this.getObject("inventory_left_arrow").hide();
+            this.stageObjectGetter.getObject("inventory_left_arrow").hide();
         }
 
         if (this.inventory_index + this.inventory_max < this.inventory_list.length) {
-            this.getObject("inventory_right_arrow").show();
+            this.stageObjectGetter.getObject("inventory_right_arrow").show();
         } else {
-            this.getObject("inventory_right_arrow").hide();
+            this.stageObjectGetter.getObject("inventory_right_arrow").hide();
         }
 
         this.inventory_bar_layer.draw();
