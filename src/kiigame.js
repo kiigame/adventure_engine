@@ -24,6 +24,7 @@ import StageObjectGetter from './view/stage/StageObjectGetter.js';
 import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';
 import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBuilder.js';
+import RoomFader from './view/room/RoomFader.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -133,12 +134,8 @@ export class KiiGame {
         // Intersection target (object below dragged item)
         this.target;
 
-        // Animations
         // Animation for fading the screen
         this.fade_full;
-
-        // Animation for fading the room portion of the screen
-        this.fade_room;
 
         // Build sequences and push them to the sequence layer
         const builtSequences = this.sequencesBuilder.build(this.sequences_json);
@@ -169,7 +166,7 @@ export class KiiGame {
             'inventory_item_cache'
         );
         // Push character animation frames to correct layer.
-        const characterFrames = new CharacterFramesBuilder({x: 764, y: 443}).build(gameData.character_json.frames);
+        const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
         layerJson = stageLayerChildAdder.add(
             layerJson,
             characterFrames,
@@ -198,7 +195,6 @@ export class KiiGame {
         this.character_layer = this.stageObjectGetter.getObject("character_layer");
         this.text_layer = this.stageObjectGetter.getObject("text_layer");
         this.fader_full = this.stageObjectGetter.getObject("fader_full");
-        this.fader_room = this.stageObjectGetter.getObject("fader_room");
         this.room_layer = this.stageObjectGetter.getObject("room_layer");
         this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
 
@@ -221,11 +217,17 @@ export class KiiGame {
         });
 
         // Animation for fading the room portion of the screen
-        this.fade_room = new Konva.Tween({
-            node: this.fader_room,
-            duration: 0.7,
-            opacity: 1
-        });
+        const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
+        new RoomFader(
+            roomFaderNode,
+            new Konva.Tween({
+                node: roomFaderNode,
+                duration: 0.7,
+                opacity: 1
+            }),
+            this.uiEventEmitter,
+            this.gameEventEmitter
+        );
 
         // Load up frames from json to the character animations array.
         const characterAnimationData = gameData.character_json.animations;
@@ -474,14 +476,8 @@ export class KiiGame {
         this.gameEventEmitter.on('npc_monologue', (npc, text) => {
             this.npcMonologue(npc, text);
         });
-        this.gameEventEmitter.on('leaving_room', () => {
-            this.roomFadeOut();
-        });
         this.gameEventEmitter.on('left_room', (from) => {
             this.hidePreviousRoom(from);
-        });
-        this.gameEventEmitter.on('arriving_in_room', () => {
-            this.roomFadeIn();
         });
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.sequenceLayer.hide();
@@ -685,17 +681,6 @@ export class KiiGame {
     }
 
     /**
-     * TODO: move to room fader view component
-     */
-    roomFadeOut() {
-        this.fader_room.show();
-        this.fade_room.play();
-        setTimeout(() => {
-            this.uiEventEmitter.emit('room_fade_out_done');
-        }, this.fade_room.tween.duration);
-    }
-
-    /**
      * TODO: move to a "stage manager" view component
      * @param {string} from room id of the room we have faded out
      */
@@ -713,17 +698,6 @@ export class KiiGame {
         room.show();
         this.current_room = room;
         this.stage.draw();
-    }
-
-    /**
-     * TODO: move to room fader view component
-     */
-    roomFadeIn() {
-        this.fade_room.reverse();
-        setTimeout(() => {
-            this.fader_room.hide();
-            this.uiEventEmitter.emit('room_fade_in_done');
-        }, this.fade_room.tween.duration);
     }
 
     /**
