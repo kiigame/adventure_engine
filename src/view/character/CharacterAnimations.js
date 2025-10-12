@@ -27,7 +27,10 @@ class CharacterAnimations {
         this.uiEventEmitter.on('play_character_animation', ({ animationName, duration }) => {
             this.playCharacterAnimation(animationName, duration);
         });
-        this.uiEventEmitter.on('reset_character_animation', () => {
+        this.uiEventEmitter.on('clicked_on_stage', () => {
+            this.startCharacterAnimation(this.idleAnimationName);
+        });
+        this.uiEventEmitter.on('inventory_drag_start', (_draggedItem) => {
             this.startCharacterAnimation(this.idleAnimationName);
         });
         this.gameEventEmitter.on('set_idle_animation', (animation_id) => {
@@ -65,7 +68,7 @@ class CharacterAnimations {
         this.startCharacterAnimation(animationName);
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            this.uiEventEmitter.emit('reset_character_animation');
+            this.startCharacterAnimation(this.idleAnimationName);
         }, duration);
     }
 

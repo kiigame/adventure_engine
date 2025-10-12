@@ -25,6 +25,7 @@ import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnim
 import CharacterAnimations from './view/character/CharacterAnimations.js';
 import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBuilder.js';
 import RoomFader from './view/room/RoomFader.js';
+import InventoryView from './view/InventoryView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -104,33 +105,6 @@ export class KiiGame {
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
 
-        // List of items in the inventory. inventory_list.length gives the item amount.
-        this.inventory_list = [];
-        // Offset from left for drawing inventory items starting from proper position
-        this.offsetFromLeft = 50;
-        // How many items the inventory can show at a time (7 with current settings)
-        this.inventory_max = 7;
-        // The item number where the shown items start from
-        // (how many items from the beginning are not shown)
-        this.inventory_index = 0;
-
-        // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
-        this.dragStartX;
-        this.dragStartY;
-
-        // For limiting the amount of intersection checks
-        this.delayEnabled = false;
-
-        // For limiting the speed of inventory browsing when dragging an item
-        this.dragDelay = 500;
-        this.dragDelayEnabled = false;
-
-        // The item dragged from the inventory
-        this.dragged_item;
-
-        // Intersection target (object below dragged item)
-        this.target;
-
         // Build sequences and push them to the sequence layer
         const builtSequences = this.sequencesBuilder.build(this.sequences_json);
         const stageLayerChildAdder = new LayerChildAdder();
@@ -191,6 +165,32 @@ export class KiiGame {
         this.fader_full = this.stageObjectGetter.getObject("fader_full");
         this.room_layer = this.stageObjectGetter.getObject("room_layer");
         this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
+
+        // Inventory and item UI related
+        this.inventoryView = new InventoryView(
+            this.uiEventEmitter,
+            this.gameEventEmitter,
+            this.stageObjectGetter,
+            this.inventory_layer,
+            this.inventory_bar_layer,
+            this.stage.height() - 90
+        );
+        // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
+        this.dragStartX;
+        this.dragStartY;
+
+        // For limiting the amount of intersection checks
+        this.delayEnabled = false;
+
+        // For limiting the speed of inventory browsing when dragging an item
+        this.dragDelay = 500;
+        this.dragDelayEnabled = false;
+
+        // The item dragged from the inventory
+        this.dragged_item;
+
+        // Intersection target (object below dragged item)
+        this.target;
 
         // The current room view
         this.current_room = null;
@@ -257,23 +257,10 @@ export class KiiGame {
             this.stage.draw();
         };
 
-        // Handle clicks on inventory items and arrows arrows
-        this.inventory_layer.on('click tap', (event) => {
-            this.handle_click(event.target);
-        });
-        this.stageObjectGetter.getObject('inventory_left_arrow').on('click tap', () => {
-            this.inventory_index--;
-            this.uiEventEmitter.emit('redraw_inventory');
-        });
-        this.stageObjectGetter.getObject('inventory_right_arrow').on('click tap', () => {
-            this.inventory_index++;
-            this.uiEventEmitter.emit('redraw_inventory');
-        });
-
         // Drag start events
         this.stage.find('Image').on('dragstart', (event) => {
             this.dragged_item = event.target;
-            this.inventoryDrag(this.dragged_item);
+            this.uiEventEmitter.emit('inventory_drag_start', this.dragged_item);
         });
 
         // While dragging events (use item on item or object)
@@ -331,13 +318,11 @@ export class KiiGame {
                     if (!this.dragDelayEnabled) {
                         if (this.intersection.check(this.dragged_item, leftArrow)) {
                             this.dragDelayEnabled = true;
-                            this.inventory_index--;
-                            this.uiEventEmitter.emit('redraw_inventory');
+                            this.uiEventEmitter.emit('inventory_left_arrow_draghovered');
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
                         } else if (this.intersection.check(this.dragged_item, rightArrow)) {
                             this.dragDelayEnabled = true;
-                            this.inventory_index++;
-                            this.uiEventEmitter.emit('redraw_inventory');
+                            this.uiEventEmitter.emit('inventory_right_arrow_draghovered');
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
                         } else {
                             this.target = null;
@@ -384,12 +369,8 @@ export class KiiGame {
             }
         });
 
-        /// Stop character animations and clear monologue when clicked or touched
-        /// anywhere on the screen.
         this.stage.on('touchstart mousedown', () => {
-            this.clearText(this.monologue);
-            this.clearText(this.npc_monologue);
-            this.uiEventEmitter.emit('reset_character_animation');
+            this.uiEventEmitter.emit('clicked_on_stage');
         });
 
         /// Touch start and mouse down events (save the coordinates before dragging)
@@ -440,18 +421,12 @@ export class KiiGame {
             // Clearing the texts
             this.clearText(this.interaction_text);
 
-            this.uiEventEmitter.emit('redraw_inventory');
+            this.uiEventEmitter.emit('dragend_ended');
         });
 
         // Set up event listeners for the gameplay commands
         this.gameEventEmitter.on('monologue', (text) => {
             this.setMonologue(text);
-        });
-        this.gameEventEmitter.on('inventory_add', (itemName) => {
-            this.inventoryAdd(itemName);
-        });
-        this.gameEventEmitter.on('inventory_remove', (itemName) => {
-            this.inventoryRemove(itemName);
         });
         this.gameEventEmitter.on('remove_object', (objectName) => {
             this.removeObject(objectName);
@@ -471,11 +446,10 @@ export class KiiGame {
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.sequenceLayer.hide();
             this.showRoom(roomId);
-            // Slightly kludgy way of checking if we want to show inventory and character
+            // Slightly kludgy way of checking if we want to show character
             if (this.stageObjectGetter.getObject(roomId).attrs.fullScreen) {
                 return;
             }
-            this.showInventory();
             this.showCharacter();
         });
 
@@ -488,7 +462,6 @@ export class KiiGame {
         });
         this.uiEventEmitter.on('first_sequence_slide_shown', () => {
             this.hideCharacter();
-            this.hideInventory();
             this.sequenceLayer.show();
         });
         this.uiEventEmitter.on('play_full_fade_in', () => {
@@ -498,17 +471,27 @@ export class KiiGame {
                 this.fader_full.hide();
             }, this.fade_full.tween.duration);
         });
-        this.uiEventEmitter.on('redraw_inventory', () => {
-            this.redrawInventory();
-        });
         this.uiEventEmitter.on('room_fade_in_done', () => {
             this.drawRoomLayer();
         });
         this.uiEventEmitter.on('furniture_clicked', (target) => {
-            this.handle_click(target);
+            this.handleClick(target);
+        });
+        this.uiEventEmitter.on('inventory_click', (target) => {
+            this.handleClick(target);
         });
         this.uiEventEmitter.on('character_animation_started', () => {
             this.drawCharacterLayer();
+        });
+        this.uiEventEmitter.on('inventory_redrawn', () => {
+            this.drawRoomLayer();
+        });
+        this.uiEventEmitter.on('clicked_on_stage', () => {
+            this.clearMonologues();
+        });
+        this.uiEventEmitter.on('inventory_drag_start', (draggedItem) => {
+            this.clearMonologues();
+            this.moveItemToRoomLayer(draggedItem);
         });
 
         this.stage.draw();
@@ -519,6 +502,12 @@ export class KiiGame {
                 'start'
             )
         );
+    }
+
+    // Delay to be set after each intersection check
+    setDelay(delay) {
+        this.delayEnabled = true;
+        setTimeout(() => this.delayEnabled = false, delay);
     }
 
     /**
@@ -534,24 +523,6 @@ export class KiiGame {
      */
     hideCharacter() {
         this.character_layer.hide();
-    }
-
-    /**
-     * TODO: move to inventory view component (or stage manager?)
-     */
-    showInventory() {
-        this.inventory_layer.show();
-        this.inventory_bar_layer.show();
-        this.inventory_bar_layer.draw();
-        this.inventory_layer.draw();
-    }
-
-    /**
-     * TODO: move to inventory view component (or stage manager?)
-     */
-    hideInventory() {
-        this.inventory_layer.hide();
-        this.inventory_bar_layer.hide();
     }
 
     /**
@@ -703,9 +674,11 @@ export class KiiGame {
         this.character_layer.draw();
     }
 
-    /// Handle click interactions on room objects, inventory items and inventory
-    /// arrows.
-    handle_click(target) {
+    /**
+     * Handle click interactions on room objects, inventory items & any resolver category ...
+     * @param {*} target
+     */
+    handleClick(target) {
         const targetCategory = target.getAttr('category');
         const clickResolver = this.clickResolvers.find(function (clickResolver) {
             return clickResolver.getTargetCategory() === targetCategory;
@@ -910,109 +883,19 @@ export class KiiGame {
     }
 
     /**
-     * TODO: Move to inventory view component
-     *
-     * Adding an item to the inventory. Adds new items, but also an item that
-     * has been dragged out of the inventory is put back with this function.
-     * May become problematic if interaction both returns the dragged item
-     * and adds a new one.
-     *
-     * @param {string} itemNameAdded The name of the item added to the inventory.
+     * Move item to room layer, for example on drag start, so that it can be "hidden" from inventory.
+     * @param {Konva.Image} item
      */
-    inventoryAdd(itemNameAdded) {
-        const item = this.stageObjectGetter.getObject(itemNameAdded);
-        item.show();
-        item.moveTo(this.inventory_layer);
-        item.clearCache();
-        item.size({ width: 80, height: 80 });
-
-        if (this.inventory_list.indexOf(item) > -1) {
-            this.inventory_list.splice(this.inventory_list.indexOf(item), 1, item);
-        } else {
-            this.inventory_list.push(item);
-        }
-
-        // The picked up item should be visible in the inventory. Scroll inventory
-        // to the right if necessary.
-        if (this.inventory_list.indexOf(item) > this.inventory_index + this.inventory_max - 1) {
-            this.inventory_index = Math.max(this.inventory_list.indexOf(item) + 1 - this.inventory_max, 0);
-        }
-
-        this.uiEventEmitter.emit('redraw_inventory');
+    moveItemToRoomLayer(item) {
+        item.moveTo(this.room_layer);
+        this.uiEventEmitter.emit('item_moved_to_room_layer');
     }
 
     /**
-     * TODO: Move to inventory view component
-     *
-     * Removing an item from the inventory. Dragged items are currently just
-     * hidden, and inventory is redrawn only after drag ends.
-     *
-     * @param {string} itemNameRemoved Name of the item removed from the inventory
+     * TODO: move to (a) view component(s)
      */
-    inventoryRemove(itemNameRemoved) {
-        const itemRemoved = this.stageObjectGetter.getObject(itemNameRemoved);
-        itemRemoved.hide();
-        itemRemoved.moveTo(this.room_layer); // but why?
-        this.inventory_list = this.inventory_list.filter((item) => itemRemoved !== item);
-        this.uiEventEmitter.emit('redraw_inventory');
-    }
-
-    // Dragging an item from the inventory
-    inventoryDrag(item) {
-        item.moveTo(this.room_layer); // are we sure?
-        this.inventory_bar_layer.draw();
-        this.inventory_layer.draw();
+    clearMonologues() {
         this.clearText(this.monologue);
         this.clearText(this.npc_monologue);
-        this.uiEventEmitter.emit('reset_character_animation');
-    }
-
-    /**
-     * Manages which inventory items are shown. There's limited space in the UI,
-     * and we may have an arbitrary number of items in the inventory. Shows the
-     * items that should be visible according to inventory_index and takes care
-     * of showing inventory arrows as necessary.
-     */
-    redrawInventory() {
-        // At first reset all items. Adding or removing items, as well as clicking
-        // arrows, may change which items should be shown.
-        this.inventory_layer.getChildren().each((shape, i) => {
-            shape.setAttr('visible', false);
-        });
-
-        // If the left arrow is visible AND there's empty space to the right,
-        // scroll the inventory to the left. This should happen when removing items.
-        if (this.inventory_index + this.inventory_max > this.inventory_list.length) {
-            this.inventory_index = Math.max(this.inventory_list.length - this.inventory_max, 0);
-        }
-
-        for (let i = this.inventory_index; i < Math.min(this.inventory_index + this.inventory_max, this.inventory_list.length); i++) {
-            const shape = this.inventory_list[i];
-            shape.x(this.offsetFromLeft + (this.inventory_list.indexOf(shape) - this.inventory_index) * 100);
-            shape.y(this.stage.height() - 90);
-            shape.setAttr('visible', true);
-        }
-
-        if (this.inventory_index > 0) {
-            this.stageObjectGetter.getObject("inventory_left_arrow").show();
-        } else {
-            this.stageObjectGetter.getObject("inventory_left_arrow").hide();
-        }
-
-        if (this.inventory_index + this.inventory_max < this.inventory_list.length) {
-            this.stageObjectGetter.getObject("inventory_right_arrow").show();
-        } else {
-            this.stageObjectGetter.getObject("inventory_right_arrow").hide();
-        }
-
-        this.inventory_bar_layer.draw();
-        this.inventory_layer.draw();
-        this.room_layer.draw();
-    }
-
-    // Delay to be set after each intersection check
-    setDelay(delay) {
-        this.delayEnabled = true;
-        setTimeout(() => this.delayEnabled = false, delay);
     }
 }
