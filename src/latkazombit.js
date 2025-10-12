@@ -246,14 +246,18 @@ stage.find('#start')[0].on('tap click', function () {
     uiEventEmitter.emit('play_character_animation', { animationName: "panic", duration: 6000 });
 });
 
-// When poster on the wall is clicked (the final step of the game), count rewards in invetory.
-stage.find('#poster_onthewall')[0].on('tap click', function () {
-    const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text");
-    let rewardsCount = 0;
-    for (const inventoryItem of kiigame.inventoryView.inventoryList) {
-        if (inventoryItem.getAttr('category') === 'reward') {
-            rewardsCount++;
+// When arriving to the final room (the final step of the game), count rewards in invetory.
+gameEventEmitter.on('arrived_in_room', function (roomId) {
+    if (roomId === 'end_layer') {
+        const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text");
+        let rewardsCount = 0;
+        for (const inventoryItem of kiigame.inventoryView.inventoryItems.children) {
+            if (inventoryItem.getAttr('category') === 'reward') {
+                rewardsCount++;
+            }
         }
+        rewards_text.text(rewardsCount + rewards_text.text());
+        rewards_text.clearCache();
+        stage.draw();
     }
-    rewards_text.text(rewardsCount + rewards_text.text());
 });

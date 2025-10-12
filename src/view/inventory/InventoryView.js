@@ -6,7 +6,6 @@ class InventoryView {
      * @param {EventEmitter} uiEventEmitter
      * @param {EventEmitter} gameEventEmitter
      * @param {StageObjectGetter} stageObjectGetter
-     * @param {Konva.Group} inventoryItems
      * @param {Konva.Layer} inventoryBarLayer
      * @param {int} offsetFromTop
      */
@@ -20,18 +19,9 @@ class InventoryView {
         this.offsetFromTop = offsetFromTop;
         // Offset from left for drawing inventory items starting from proper position
         this.offsetFromLeft = 50;
-        // List of items in the inventory. inventoryList.length gives the item amount.
-        this.inventoryList = [];
-        // How many items the inventory can show at a time (7 with current settings)
-        this.inventoryMax = 7;
-        // The item number where the shown items start from (how many items from the beginning are not shown)
-        this.inventoryIndex = 0;
 
-        this.gameEventEmitter.on('inventory_add', (itemName) => {
-            this.inventoryAdd(itemName);
-        });
-        this.gameEventEmitter.on('inventory_remove', (itemName) => {
-            this.inventoryRemove(itemName);
+        this.uiEventEmitter.on('inventory_view_model_updated', ({ visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible }) => {
+            this.redrawInventory(visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible);
         });
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             // Slightly kludgy way of checking if we want to show inventory
@@ -39,10 +29,6 @@ class InventoryView {
                 return;
             }
             this.showInventory();
-        });
-        this.uiEventEmitter.on('dragend_ended', () => {
-            this.clearInventoryItemBlur();
-            this.redrawInventory();
         });
         this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
             this.clearInventoryItemBlur();
@@ -54,10 +40,10 @@ class InventoryView {
             this.drawInventoryLayer();
         });
         this.uiEventEmitter.on('inventory_left_arrow_draghovered', () => {
-            this.handleInventoryLeftArrowEngaged();
+            this.uiEventEmitter.emit('inventory_left_arrow_engaged');
         });
         this.uiEventEmitter.on('inventory_right_arrow_draghovered', () => {
-            this.handleInventoryRightArrowEngaged();
+            this.uiEventEmitter.emit('inventory_right_arrow_engaged');
         });
         this.uiEventEmitter.on('first_sequence_slide_shown', () => {
             this.hideInventory();
@@ -65,15 +51,18 @@ class InventoryView {
         this.uiEventEmitter.on('item_moved_to_room_layer', () => {
             this.drawInventoryLayer();
         });
+        this.uiEventEmitter.on('dragend_ended', (draggedItem) => {
+            this.moveDraggedItemBackToInventory(draggedItem);
+        });
         // Handle clicks etc on inventory items and arrows
         this.inventoryItems.on('click tap', (event) => {
             this.uiEventEmitter.emit('inventory_click', event.target);
         });
         this.stageObjectGetter.getObject('inventory_left_arrow').on('click tap', () => {
-            this.handleInventoryLeftArrowEngaged();
+            this.uiEventEmitter.emit('inventory_left_arrow_engaged');
         });
         this.stageObjectGetter.getObject('inventory_right_arrow').on('click tap', () => {
-            this.handleInventoryRightArrowEngaged();
+            this.uiEventEmitter.emit('inventory_right_arrow_engaged');
         });
         this.inventoryItems.on('touchstart mousedown', (event) => {
             this.uiEventEmitter.emit('inventory_touchstart', event.target);
@@ -81,94 +70,46 @@ class InventoryView {
     }
 
     /**
-     * Adding an item to the inventory. Adds new items, but also an item that
-     * has been dragged out of the inventory is put back with this function.
-     * May become problematic if interaction both returns the dragged item
-     * and adds a new one.
+     * Show given items and inventory arrows.
      *
-     * @param {string} itemNameAdded The name of the item added to the inventory.
+     * @param {string[]} visibleInventoryItems in order from left to right
+     * @param {boolean} isInventoryLeftArrowVisible
+     * @param {boolean} isInventoryRightArrowVisible
      */
-    inventoryAdd(itemNameAdded) {
-        const item = this.stageObjectGetter.getObject(itemNameAdded);
-        item.show();
-        item.moveTo(this.inventoryItems);
-        item.clearCache();
-        item.size({ width: 80, height: 80 });
-
-        if (this.inventoryList.indexOf(item) > -1) {
-            this.inventoryList.splice(this.inventoryList.indexOf(item), 1, item);
-        } else {
-            this.inventoryList.push(item);
-        }
-
-        // The picked up item should be visible in the inventory. Scroll inventory to the right if necessary.
-        if (this.inventoryList.indexOf(item) > this.inventoryIndex + this.inventoryMax - 1) {
-            this.inventoryIndex = Math.max(this.inventoryList.indexOf(item) + 1 - this.inventoryMax, 0);
-        }
-
-        this.redrawInventory();
-    }
-
-    /**
-     * Removing an item from the inventory.
-     *
-     * @param {string} itemNameRemoved Name of the item removed from the inventory
-     */
-    inventoryRemove(itemNameRemoved) {
-        const itemRemoved = this.stageObjectGetter.getObject(itemNameRemoved);
-        itemRemoved.hide();
-        this.inventoryList = this.inventoryList.filter((item) => itemRemoved !== item);
-        this.redrawInventory();
-    }
-
-    handleInventoryLeftArrowEngaged() {
-        this.inventoryIndex--;
-        this.redrawInventory();
-    }
-
-    handleInventoryRightArrowEngaged() {
-        this.inventoryIndex++;
-        this.redrawInventory();
-    };
-
-    /**
-     * Manages which inventory items are shown. There's limited space in the UI,
-     * and we may have an arbitrary number of items in the inventory. Shows the
-     * items that should be visible according to inventory_index and takes care
-     * of showing inventory arrows as necessary.
-     */
-    redrawInventory() {
+    redrawInventory(visibleInventoryItems, isInventoryLeftArrowVisible, isInventoryRightArrowVisible) {
         // At first reset all items. Adding or removing items, as well as clicking
         // arrows, may change which items should be shown.
-        this.inventoryItems.getChildren().each((shape, i) => {
+        this.inventoryItems.getChildren().each((shape) => {
             shape.setAttr('visible', false);
         });
-
-        // If the left arrow is visible AND there's empty space to the right,
-        // scroll the inventory to the left. This should happen when removing items.
-        if (this.inventoryIndex + this.inventoryMax > this.inventoryList.length) {
-            this.inventoryIndex = Math.max(this.inventoryList.length - this.inventoryMax, 0);
-        }
-
-        for (let i = this.inventoryIndex; i < Math.min(this.inventoryIndex + this.inventoryMax, this.inventoryList.length); i++) {
-            const shape = this.inventoryList[i];
-            shape.x(this.offsetFromLeft + (this.inventoryList.indexOf(shape) - this.inventoryIndex) * 100);
+        visibleInventoryItems.forEach((visibleItemName, index) => {
+            let shape = this.inventoryItems.findOne((item) => {
+                item.attrs.id === visibleItemName;
+            });
+            if (!shape) {
+                shape = this.stageObjectGetter.getObject(visibleItemName);
+                shape.moveTo(this.inventoryItems);
+                shape.clearCache();
+                shape.size({ width: 80, height: 80 });
+            }
+            shape.x(this.offsetFromLeft + (index * 100));
             shape.y(this.offsetFromTop);
             shape.setAttr('visible', true);
-        }
+        });
 
-        if (this.inventoryIndex > 0) {
+        if (isInventoryLeftArrowVisible) {
             this.stageObjectGetter.getObject("inventory_left_arrow").show();
         } else {
             this.stageObjectGetter.getObject("inventory_left_arrow").hide();
         }
 
-        if (this.inventoryIndex + this.inventoryMax < this.inventoryList.length) {
+        if (isInventoryRightArrowVisible) {
             this.stageObjectGetter.getObject("inventory_right_arrow").show();
         } else {
             this.stageObjectGetter.getObject("inventory_right_arrow").hide();
         }
 
+        this.clearInventoryItemBlur();
         this.drawInventoryLayer();
         this.uiEventEmitter.emit('inventory_redrawn');
     }
@@ -190,14 +131,14 @@ class InventoryView {
     }
 
     clearInventoryItemBlur() {
-        this.inventoryItems.getChildren().each((shape, _i) => {
+        this.inventoryItems.getChildren().each((shape) => {
             shape.shadowBlur(0);
         });
     }
 
     glowInventoryItem(target) {
         // check that target is in inventory
-        if (!this.inventoryList.find((item) => item === target)) {
+        if (!this.inventoryItems.find((item) => item === target)) {
             return;
         }
         target.clearCache();
@@ -208,6 +149,13 @@ class InventoryView {
 
     getVisibleInventoryItems() {
         return this.inventoryItems.find((item) => item.attrs.visible === true);
+    }
+
+    moveDraggedItemBackToInventory(draggedItem) {
+        if (!draggedItem) {
+            return;
+        }
+        draggedItem.moveTo(this.inventoryItems)
     }
 }
 

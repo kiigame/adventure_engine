@@ -36,7 +36,7 @@ class RoomView {
             this.clearRoomObjectBlur();
             this.drawRoomLayer();
         });
-        this.uiEventEmitter.on('dragend_ended', () => {
+        this.uiEventEmitter.on('dragend_ended', (_draggedItem) => {
             this.clearRoomObjectBlur();
         });
         this.uiEventEmitter.on('room_fade_in_done', () => {

@@ -516,12 +516,6 @@
                 "sequence": "outro"
             },
             {
-                "command": "do_transition",
-                "destination": "end_layer",
-                "instant": true,
-                "timeout": 4700
-            },
-            {
                 "command": "inventory_remove",
                 "item": [
                     "teddybear_chewinggum",
@@ -531,6 +525,12 @@
                     "cienibang",
                     "airfreshener"
                 ],
+                "timeout": 800
+            },
+            {
+                "command": "do_transition",
+                "destination": "end_layer",
+                "instant": true,
                 "timeout": 4700
             }
         ]
