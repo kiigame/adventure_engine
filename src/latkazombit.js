@@ -246,7 +246,7 @@ stage.find('#start')[0].on('tap click', function () {
 
 // When poster on the wall is clicked (the final step of the game), count rewards in invetory.
 stage.find('#poster_onthewall')[0].on('tap click', function () {
-    const rewards_text = kiigame.getObject("rewards_text");
+    const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text");
     let rewardsCount = 0;
     for (const inventoryItem of kiigame.inventory_layer.children) {
         if (inventoryItem.getAttr('category') === 'reward') {
