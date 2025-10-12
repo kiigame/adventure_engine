@@ -53,19 +53,19 @@
     ],
     "animations": {
         "speak": {
-            "id": "speak", "frames": [
+            "frames": [
                 {"node": "character_speak_1", "duration": "0.3"},
                 {"node": "character_speak_2", "duration": "0.3"}
             ]
         },
         "idle": {
-            "id": "idle", "frames": [
+            "frames": [
                 {"node": "character_idle_1", "duration": "8.7"},
                 {"node": "character_idle_2", "duration": "0.2"}
             ]
         },
         "panic": {
-            "id": "panic", "frames": [
+            "frames": [
                 {"node": "character_speak_1", "duration": "0.3"},
                 {"node": "character_speak_2", "duration": "0.3"},
                 {"node": "character_speak_1", "duration": "0.3"},

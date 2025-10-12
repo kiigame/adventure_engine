@@ -232,17 +232,17 @@ export class KiiGame {
 
         // Load up frames from json to the character animations array.
         const characterAnimationData = gameData.character_json.animations;
-        for (const i in characterAnimationData) {
+        Object.entries(characterAnimationData).forEach(([id, animationDatum]) => {
             const frames = [];
-            for (const j in characterAnimationData[i].frames) {
+            for (const frameDatum of animationDatum.frames) {
                 const frame = new Konva.Tween({
-                    node: this.getObject(characterAnimationData[i].frames[j].node),
-                    duration: characterAnimationData[i].frames[j].duration
+                    node: this.getObject(frameDatum.node),
+                    duration: frameDatum.duration
                 });
                 frames.push(frame);
             }
-            this.character_animations[characterAnimationData[i].id] = frames;
-        }
+            this.character_animations[id] = frames;
+        });
 
         // Set up onFinish functions for each frame to show the next frame. In the case
         // of the last of the frames, show the first frame.
