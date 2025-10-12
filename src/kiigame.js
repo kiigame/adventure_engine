@@ -248,33 +248,15 @@ export class KiiGame {
         // of the last of the frames, show the first frame.
         for (const i in this.character_animations) {
             for (let j = 0; j < this.character_animations[i].length; j++) {
-                if (this.character_animations[i].length > j + 1) {
-                    this.character_animations[i][j].onFinish = function () {
-                        // `this` refers to the character_animations object,
-                        // `self` refers to the engine object
-                        for (const k in self.character_animations) {
-                            if (self.character_animations[k].indexOf(this) > -1) {
-                                const animation = self.character_animations[k];
-                                const frame_index = self.character_animations[k].indexOf(this);
-                                this.node.hide();
-                                animation[frame_index + 1].node.show();
-                                this.reset();
-                                animation[frame_index + 1].play();
-                            }
-                        }
-                    }
-                } else {
-                    this.character_animations[i][j].onFinish = function () {
-                        for (const k in self.character_animations) {
-                            if (self.character_animations[k].indexOf(this) > -1) {
-                                const animation = self.character_animations[k];
-                                this.node.hide();
-                                animation[0].node.show();
-                                this.reset();
-                                animation[0].play();
-                            }
-                        }
-                    }
+                const nextAnimation = this.character_animations[i].length > j + 1
+                    ? this.character_animations[i][j + 1]
+                    : this.character_animations[i][0];
+                this.character_animations[i][j].nextAnimation = nextAnimation;
+                this.character_animations[i][j].onFinish = function () {
+                    this.node.hide();
+                    this.nextAnimation.node.show();
+                    this.reset();
+                    this.nextAnimation.play();
                 }
             }
         }
