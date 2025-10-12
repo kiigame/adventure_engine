@@ -198,8 +198,6 @@ export class KiiGame {
 
         this.inventory_layer = this.getObject("inventory_layer");
         this.inventory_bar_layer = this.getObject("inventory_bar_layer");
-        this.inventoryLeftArrow = this.getObject("inventory_left_arrow");
-        this.inventoryRightArrow = this.getObject("inventory_right_arrow");
         this.character_layer = this.getObject("character_layer");
         this.text_layer = this.getObject("text_layer");
         this.fader_full = this.getObject("fader_full");
@@ -306,15 +304,15 @@ export class KiiGame {
             this.stage.draw();
         };
 
-        // Handle clicks on inventory items and arrows
+        // Handle clicks on inventory items and arrows arrows
         this.inventory_layer.on('click tap', (event) => {
             this.handle_click(event.target);
         });
-        this.inventoryLeftArrow.on('click tap', () => {
+        this.getObject('inventory_left_arrow').on('click tap', () => {
             this.inventory_index--;
             this.uiEventEmitter.emit('redraw_inventory');
         });
-        this.inventoryRightArrow.on('click tap', () => {
+        this.getObject('inventory_right_arrow').on('click tap', () => {
             this.inventory_index++;
             this.uiEventEmitter.emit('redraw_inventory');
         });
@@ -375,13 +373,15 @@ export class KiiGame {
 
                 // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
                 if (this.target == null) {
+                    const leftArrow = this.getObject("inventory_left_arrow");
+                    const rightArrow = this.getObject("inventory_right_arrow");
                     if (!this.dragDelayEnabled) {
-                        if (this.intersection.check(this.dragged_item, this.inventoryLeftArrow)) {
+                        if (this.intersection.check(this.dragged_item, leftArrow)) {
                             this.dragDelayEnabled = true;
                             this.inventory_index--;
                             this.uiEventEmitter.emit('redraw_inventory');
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
-                        } else if (this.intersection.check(this.dragged_item, this.inventoryRightArrow)) {
+                        } else if (this.intersection.check(this.dragged_item, rightArrow)) {
                             this.dragDelayEnabled = true;
                             this.inventory_index++;
                             this.uiEventEmitter.emit('redraw_inventory');
@@ -755,7 +755,8 @@ export class KiiGame {
         this.room_layer.draw();
     }
 
-    /// Handle click interactions on room objects and inventory items
+    /// Handle click interactions on room objects, inventory items and inventory
+    /// arrows.
     handle_click(target) {
         const targetCategory = target.getAttr('category');
         const clickResolver = this.clickResolvers.find(function (clickResolver) {
@@ -1109,15 +1110,15 @@ export class KiiGame {
         }
 
         if (this.inventory_index > 0) {
-            this.inventoryRightArrow.show();
+            this.getObject("inventory_left_arrow").show();
         } else {
-            this.inventoryLeftArrow.hide();
+            this.getObject("inventory_left_arrow").hide();
         }
 
         if (this.inventory_index + this.inventory_max < this.inventory_list.length) {
-            this.inventoryLeftArrow.show();
+            this.getObject("inventory_right_arrow").show();
         } else {
-            this.inventoryRightArrow.hide();
+            this.getObject("inventory_right_arrow").hide();
         }
 
         this.inventory_bar_layer.draw();
