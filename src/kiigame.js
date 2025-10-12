@@ -22,6 +22,7 @@ import RoomFaderBuilder from './view/stage/konvadata/RoomFaderBuilder.js';
 import CharacterInRoom from './model/CharacterInRoom.js';
 import StageObjectGetter from './view/stage/StageObjectGetter.js';
 import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
+import CharacterAnimations from './view/character/CharacterAnimations.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -138,16 +139,6 @@ export class KiiGame {
         // Animation for fading the room portion of the screen
         this.fade_room;
 
-        // List of character animations.
-        this.character_animations = {};
-
-        // Timeout event for showing character animation for certain duration
-        this.character_animation_timeout;
-
-        // Default character animations
-        this.speakAnimationName = "speak";
-        this.idleAnimationName = "idle";
-
         // Build sequences and push them to the sequence layer
         const builtSequences = this.sequencesBuilder.build(this.sequences_json);
         const stageLayerChildAdder = new LayerChildAdder();
@@ -236,9 +227,14 @@ export class KiiGame {
 
         // Load up frames from json to the character animations array.
         const characterAnimationData = gameData.character_json.animations;
-        this.character_animations = new CharacterAnimationsBuilder(
+        const characterAnimations = new CharacterAnimationsBuilder(
             this.stageObjectGetter
         ).build(characterAnimationData);
+        this.characterAnimations = new CharacterAnimations(
+            characterAnimations,
+            this.uiEventEmitter,
+            this.gameEventEmitter
+        );
 
         // Prepare all room animations
         for (const child of this.room_layer.children) {
@@ -473,12 +469,6 @@ export class KiiGame {
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
         });
-        this.gameEventEmitter.on('set_idle_animation', (animation_id) => {
-            this.setIdleAnimation(animation_id);
-        });
-        this.gameEventEmitter.on('set_speak_animation', (animation_id) => {
-            this.setSpeakAnimation(animation_id);
-        });
         this.gameEventEmitter.on('npc_monologue', (npc, text) => {
             this.npcMonologue(npc, text);
         });
@@ -533,15 +523,6 @@ export class KiiGame {
             this.character_layer.show();
             this.character_layer.draw();
         });
-        // Overriding default speaking animation from setMonologue from the same
-        // interaction assumes: setMonologue is called first, and that events get
-        // fired and handled in the same order ...
-        this.uiEventEmitter.on('play_character_animation', ({ animationName, duration }) => {
-            this.playCharacterAnimation(animationName, duration);
-        });
-        this.uiEventEmitter.on('reset_character_animation', () => {
-            this.startCharacterAnimation(this.idleAnimationName);
-        });
         this.uiEventEmitter.on('redraw_inventory', () => {
             this.redrawInventory();
         });
@@ -550,6 +531,9 @@ export class KiiGame {
         });
         this.uiEventEmitter.on('furniture_clicked', (target) => {
             this.handle_click(target);
+        });
+        this.uiEventEmitter.on('character_animation_started', () => {
+            this.drawCharacterLayer();
         });
 
         this.stage.draw();
@@ -720,6 +704,13 @@ export class KiiGame {
      */
     drawRoomLayer() {
         this.room_layer.draw();
+    }
+
+    /**
+     * TODO: move to a "stage manager" view component
+     */
+    drawCharacterLayer() {
+        this.character_layer.draw();
     }
 
     /// Handle click interactions on room objects, inventory items and inventory
@@ -913,58 +904,9 @@ export class KiiGame {
         this.character_speech_bubble.y(this.stage.height() - 100 - 15 - this.monologue.height() / 2);
         this.text_layer.draw();
         this.uiEventEmitter.emit(
-            'play_character_animation',
-            { animationName: this.speakAnimationName, duration: 3000 }
+            'play_character_speak_animation',
+            { duration: 3000 }
         );
-    }
-
-    /**
-     * Start a character animation by name.
-     */
-    startCharacterAnimation(animationName) {
-        // Hide and reset all character animations
-        Object.values(this.character_animations).forEach((frames) => {
-            frames.forEach((frame) => {
-                frame.node.hide();
-                frame.reset();
-            });
-        });
-
-        const animation = this.character_animations[animationName];
-        animation[0].node.show();
-        animation[0].play();
-        this.character_layer.draw();
-    }
-
-    /**
-     * Play a character animation once and reset to idle.
-     * @param {*} animationName The name of the animation to play.
-     * @param {*} duration The time in ms until the character returns to idle animation.
-     */
-    playCharacterAnimation(animationName, duration) {
-        this.startCharacterAnimation(animationName);
-        clearTimeout(this.character_animation_timeout);
-        this.character_animation_timeout = setTimeout(() => {
-            this.uiEventEmitter.emit('reset_character_animation');
-        }, duration);
-    }
-
-    /// Change idle animation, so that the character graphics can be changed
-    /// mid-game.
-    /// @param animation_name The name of the animation, look the animation up
-    ///                       from this.character_animations[].
-    setIdleAnimation(animation_name) {
-        this.idleAnimationName = animation_name;
-        this.uiEventEmitter.emit('reset_character_animation'); // reset and play the new idle animation
-    }
-
-    /// Change speak animation, so that the character graphics can be changed
-    /// mid-game.
-    /// @param animation_name The name of the animation, look the animation up
-    ///                       from this.character_animations[].
-    setSpeakAnimation(animation_name) {
-        this.speakAnimationName = animation_name;
-        this.uiEventEmitter.emit('reset_character_animation'); // reset and play idle animation
     }
 
     /**
