@@ -1,7 +1,13 @@
 class RoomFader {
-    constructor(faderNode, animation, uiEventEmitter, gameEventEmitter) {
+    constructor(faderNode, uiEventEmitter, gameEventEmitter) {
         this.faderNode = faderNode;
-        this.animation = animation;
+        // Should we have a Tween factory?
+        this.animation =  new Konva.Tween({
+            node: this.faderNode,
+            duration: 0.7,
+            opacity: 1
+        });
+
         this.uiEventEmitter = uiEventEmitter;
         this.gameEventEmitter = gameEventEmitter;
 

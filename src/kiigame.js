@@ -220,11 +220,6 @@ export class KiiGame {
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
             roomFaderNode,
-            new Konva.Tween({
-                node: roomFaderNode,
-                duration: 0.7,
-                opacity: 1
-            }),
             this.uiEventEmitter,
             this.gameEventEmitter
         );
