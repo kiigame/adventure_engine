@@ -1,4 +1,15 @@
+import EventEmitter from "../events/EventEmitter";
+import StageObjectGetter from "./stage/StageObjectGetter";
+
 class InventoryView {
+    /**
+     * @param {EventEmitter} uiEventEmitter
+     * @param {EventEmitter} gameEventEmitter
+     * @param {StageObjectGetter} stageObjectGetter
+     * @param {Konva.Layer} inventoryLayer
+     * @param {Konva.Layer} inventoryBarLayer
+     * @param {int} offsetFromTop
+     */
     constructor(uiEventEmitter, gameEventEmitter, stageObjectGetter, inventoryLayer, inventoryBarLayer, offsetFromTop) {
         this.uiEventEmitter = uiEventEmitter;
         this.gameEventEmitter = gameEventEmitter;
