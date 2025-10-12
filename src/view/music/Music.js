@@ -10,8 +10,8 @@ class Music {
         uiEventEmitter.on('play_music', (musicParams) => {
             this.playMusic(musicParams);
         });
-        uiEventEmitter.on('play_music_by_id', (musicId) => {
-            this.playMusicById(musicId);
+        uiEventEmitter.on('play_sequence_started', (sequenceId) => {
+            this.playMusicById(sequenceId);
         });
         // Assumes room music is in musicJson with the roomId
         gameEventEmitter.on('arrived_in_room', (roomId) => {

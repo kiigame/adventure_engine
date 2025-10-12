@@ -496,10 +496,10 @@ export class KiiGame {
 
         // Set up event listeners for UI commands
         this.uiEventEmitter.on('play_full_fade_out', () => {
-            // Animation cycle for proper fading and drawing order
-            this.fade_full.reset();
-            this.fader_full.show();
-            this.fade_full.play();
+            this.playFullFadeOut();
+        });
+        this.uiEventEmitter.on('play_sequence_started', (_id) => {
+            this.playFullFadeOut();
         });
         this.uiEventEmitter.on('play_full_fade_in', () => {
             // Assumes fade_full has first faded out
@@ -549,6 +549,15 @@ export class KiiGame {
     }
 
     /**
+     * TODO: move to full fade view component
+     */
+    playFullFadeOut() {
+        this.fade_full.reset();
+        this.fader_full.show();
+        this.fade_full.play();
+    }
+
+    /**
      * Prepare images from a container (layer or group)
      * @param {Konva.Node} container
      */
@@ -586,14 +595,12 @@ export class KiiGame {
     play_sequence(id) {
         let delay = 700;
 
-        this.uiEventEmitter.emit('play_full_fade_out');
+        this.uiEventEmitter.emit('play_sequence_started', id);
 
         const currentSequence = this.stageObjectGetter.getObject(id);
         const sequenceData = this.sequences_json[id];
         const final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
         let currentSlide = null;
-
-        this.uiEventEmitter.emit('play_music_by_id', id);
 
         setTimeout(() => {
             this.uiEventEmitter.emit('hide_inventory');

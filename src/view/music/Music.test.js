@@ -183,12 +183,12 @@ describe('test Music event management', function () {
         assert.isTrue(playMusicStub.calledOnceWith(musicData));
         playMusicStub.restore();
     });
-    it('should handle play_music_by_id event by calling playMusicById', function () {
+    it('should handle play_sequence_started event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
         new Music({}, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
         const musicId = 'testId';
         const playMusicByIdCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-            return callback.args[0] === 'play_music_by_id';
+            return callback.args[0] === 'play_sequence_started';
         }).args[1];
         playMusicByIdCallback(musicId);
         assert.isTrue(playMusicByIdStub.calledOnceWith(musicId));
