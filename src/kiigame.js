@@ -14,17 +14,18 @@ import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
 import EventEmitter from './events/EventEmitter.js';
-import RoomAnimations from './view/room/RoomAnimations.js';
 import ItemsBuilder from './view/items/konvadata/ItemsBuilder.js';
 import ItemBuilder from './view/items/konvadata/ItemBuilder.js';
 import RoomAnimationBuilder from './view/room/konvadata/RoomAnimationBuilder.js';
+import RoomAnimationsBuilder from './view/room/konvadata/RoomAnimationsBuilder.js';
+import RoomAnimations from './view/room/RoomAnimations.js';
 import RoomFaderBuilder from './view/stage/konvadata/RoomFaderBuilder.js';
+import RoomFader from './view/room/RoomFader.js';
 import CharacterInRoom from './model/CharacterInRoom.js';
 import StageObjectGetter from './view/stage/StageObjectGetter.js';
+import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBuilder.js';
 import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';
-import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBuilder.js';
-import RoomFader from './view/room/RoomFader.js';
 import InventoryView from './view/InventoryView.js';
 
 // TODO: Move DI up
@@ -99,8 +100,6 @@ export class KiiGame {
         this.interactions = new Interactions(gameData.interactions_json);
         new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
         this.text = new Text(gameData.text_json);
-        this.roomAnimations = new RoomAnimations(this.gameEventEmitter);
-        this.roomAnimationBuilder = new RoomAnimationBuilder();
 
         let layerJson = gameData.layersJson;
         this.sequences_json = gameData.sequences_json;
@@ -218,7 +217,7 @@ export class KiiGame {
             this.gameEventEmitter
         );
 
-        // Load up frames from json to the character animations array.
+        // Load up frames from json and set up CharacterAnimations view component
         const characterAnimationData = gameData.character_json.animations;
         const characterAnimations = new CharacterAnimationsBuilder(
             this.stageObjectGetter
@@ -229,15 +228,15 @@ export class KiiGame {
             this.gameEventEmitter
         );
 
-        // Prepare all room animations
-        for (const child of this.room_layer.children) {
-            if (child.attrs.category === 'room') {
-                const newAnimations = this.prepareRoomAnimations(child);
-                newAnimations.forEach((animation) => {
-                    this.roomAnimations.animatedObjects.push(animation);
-                })
-            }
-        }
+        // Build room object animations and set up RoomAnimations view component
+        const rooms = this.room_layer.children.filter((child) => {
+            return child.attrs.category === 'room';
+        });
+        const animatedRoomObjects = new RoomAnimationsBuilder(
+            new RoomAnimationBuilder(),
+            this.stageObjectGetter
+        ).build(rooms);
+        new RoomAnimations(this.gameEventEmitter, animatedRoomObjects);
 
         // Creating all image objects from json file based on their attributes
         const imageData = this.stage.toObject();
@@ -544,24 +543,6 @@ export class KiiGame {
                 this.loadImageObject(object.attrs.id, object.attrs.src);
             }
         }
-    }
-
-    /**
-     * Prepare the animations for a room
-     * @param {Konva.Group} room
-     * @returns {Konva.Tween[]} An array of room animations
-     */
-    prepareRoomAnimations(room) {
-        const roomAnimations = [];
-        for (const object of room.children) {
-            if (object.className == 'Image' && object.attrs.animated) {
-                const animation = this.roomAnimationBuilder.createRoomAnimation(
-                    this.stageObjectGetter.getObject(object.attrs.id)
-                );
-                roomAnimations.push(animation);
-            }
-        }
-        return roomAnimations;
     }
 
     /** 

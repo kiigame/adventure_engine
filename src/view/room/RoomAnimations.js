@@ -3,9 +3,10 @@ import EventEmitter from "../../events/EventEmitter.js";
 class RoomAnimations {
     /**
      * @param {EventEmitter} gameEventEmitter
+     * @param {Konva.Tween[]} animatedObjects
      */
-    constructor(gameEventEmitter) {
-        this.animatedObjects = []; // Tween[]
+    constructor(gameEventEmitter, animatedObjects) {
+        this.animatedObjects = animatedObjects;
         this.runningAnimations = new Set();
         gameEventEmitter.on('remove_object', (objectName) => {
             this.removeAnimation(objectName);
