@@ -27,11 +27,11 @@ class InventoryView {
         // The item number where the shown items start from (how many items from the beginning are not shown)
         this.inventoryIndex = 0;
 
-        this.gameEventEmitter.on('inventory_add', (itemName) => {
-            this.inventoryAdd(itemName);
+        this.gameEventEmitter.on('inventory_item_added', (inventoryList, itemNameAdded) => {
+            this.inventoryAdd(itemNameAdded, inventoryList);
         });
-        this.gameEventEmitter.on('inventory_remove', (itemName) => {
-            this.inventoryRemove(itemName);
+        this.gameEventEmitter.on('inventory_item_removed', (inventoryList, itemNameRemoved) => {
+            this.inventoryRemove(itemNameRemoved, inventoryList);
         });
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             // Slightly kludgy way of checking if we want to show inventory
@@ -84,8 +84,9 @@ class InventoryView {
      * and adds a new one.
      *
      * @param {string} itemNameAdded The name of the item added to the inventory.
+     * @param {string[]} _itemList
      */
-    inventoryAdd(itemNameAdded) {
+    inventoryAdd(itemNameAdded, _itemList) {
         const item = this.stageObjectGetter.getObject(itemNameAdded);
         item.show();
         item.moveTo(this.inventoryLayer);
@@ -110,8 +111,9 @@ class InventoryView {
      * Removing an item from the inventory.
      *
      * @param {string} itemNameRemoved Name of the item removed from the inventory
+     * @param {string[]} _itemList
      */
-    inventoryRemove(itemNameRemoved) {
+    inventoryRemove(itemNameRemoved, _itemList) {
         const itemRemoved = this.stageObjectGetter.getObject(itemNameRemoved);
         itemRemoved.hide();
         this.inventoryList = this.inventoryList.filter((item) => itemRemoved !== item);

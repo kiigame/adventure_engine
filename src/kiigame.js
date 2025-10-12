@@ -31,6 +31,7 @@ import InventoryView from './view/InventoryView.js';
 // TODO: Move DI up
 import "reflect-metadata";
 import { container, TYPES } from "./inversify.config.js";
+import Inventory from 'model/Inventory.js';
 
 export class KiiGame {
     constructor(
@@ -164,6 +165,9 @@ export class KiiGame {
         this.fader_full = this.stageObjectGetter.getObject("fader_full");
         this.room_layer = this.stageObjectGetter.getObject("room_layer");
         this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
+
+        // Inventory model component
+        this.inventory = new Inventory(this.gameEventEmitter, this.uiEventEmitter);
 
         // Inventory and item UI related
         this.inventoryView = new InventoryView(
