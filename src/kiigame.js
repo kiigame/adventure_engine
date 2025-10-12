@@ -264,7 +264,10 @@ export class KiiGame {
         // Prepare room animations
         for (const child of this.room_layer.children) {
             if (child.attrs.category === 'room') {
-                this.prepareRoomAnimation(child);
+                const newAnimations = this.prepareRoomAnimation(child);
+                newAnimations.forEach((animation) => {
+                    this.roomAnimations.animatedObjects.push(animation);
+                })
             }
         }
 
@@ -595,16 +598,19 @@ export class KiiGame {
     /**
      * Prepare room animations
      * @param {Konva.Group} room
+     * @returns {Konva.Tween[]} the array of room animations
      */
     prepareRoomAnimation(room) {
+        const roomAnimations = [];
         for (const object of room.children) {
             if (object.className == 'Image' && object.attrs.animated) {
                 const animation = this.roomAnimationBuilder.createRoomAnimation(
                     this.getObject(object.attrs.id)
                 );
-                this.roomAnimations.animatedObjects.push(animation);
+                roomAnimations.push(animation);
             }
         }
+        return roomAnimations;
     }
 
     /** 
