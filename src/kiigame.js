@@ -910,15 +910,17 @@ export class KiiGame {
     }
 
     /**
+     * TODO: Move to inventory view component
+     *
      * Adding an item to the inventory. Adds new items, but also an item that
      * has been dragged out of the inventory is put back with this function.
      * May become problematic if interaction both returns the dragged item
      * and adds a new one.
      *
-     * @param {string} itemName The name of the item to be added to the inventory.
+     * @param {string} itemNameAdded The name of the item added to the inventory.
      */
-    inventoryAdd(itemName) {
-        const item = this.stageObjectGetter.getObject(itemName);
+    inventoryAdd(itemNameAdded) {
+        const item = this.stageObjectGetter.getObject(itemNameAdded);
         item.show();
         item.moveTo(this.inventory_layer);
         item.clearCache();
@@ -940,16 +942,18 @@ export class KiiGame {
     }
 
     /**
+     * TODO: Move to inventory view component
+     *
      * Removing an item from the inventory. Dragged items are currently just
      * hidden, and inventory is redrawn only after drag ends.
      *
-     * @param {string} itemName of the item to be removed from the inventory
+     * @param {string} itemNameRemoved Name of the item removed from the inventory
      */
-    inventoryRemove(itemName) {
-        const itemToRemove = this.stageObjectGetter.getObject(itemName);
-        itemToRemove.hide();
-        itemToRemove.moveTo(this.room_layer); // but why?
-        this.inventory_list = this.inventory_list.filter((item) => itemToRemove !== item);
+    inventoryRemove(itemNameRemoved) {
+        const itemRemoved = this.stageObjectGetter.getObject(itemNameRemoved);
+        itemRemoved.hide();
+        itemRemoved.moveTo(this.room_layer); // but why?
+        this.inventory_list = this.inventory_list.filter((item) => itemRemoved !== item);
         this.uiEventEmitter.emit('redraw_inventory');
     }
 
