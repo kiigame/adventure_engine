@@ -952,10 +952,10 @@ export class KiiGame {
      * @param {string} itemName of the item to be removed from the inventory
      */
     inventoryRemove(itemName) {
-        const item = this.stageObjectGetter.getObject(itemName);
-        item.hide();
-        item.moveTo(this.room_layer); // but why?
-        this.inventory_list.splice(this.inventory_list.indexOf(item), 1);
+        const itemToRemove = this.stageObjectGetter.getObject(itemName);
+        itemToRemove.hide();
+        itemToRemove.moveTo(this.room_layer); // but why?
+        this.inventory_list = this.inventory_list.filter((item) => itemToRemove !== item);
         this.uiEventEmitter.emit('redraw_inventory');
     }
 
