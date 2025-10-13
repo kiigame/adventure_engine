@@ -388,6 +388,7 @@ export class KiiGame {
 
         // Set up event listeners for the gameplay commands
         this.gameEventEmitter.on('monologue', (text) => {
+            this.clearMonologues();
             this.setMonologue(text);
         });
         this.gameEventEmitter.on('remove_object', (objectName) => {
@@ -399,7 +400,8 @@ export class KiiGame {
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
         });
-        this.gameEventEmitter.on('npc_monologue', (npc, text) => {
+        this.gameEventEmitter.on('npc_monologue', ({npc, text}) => {
+            this.clearMonologues();
             this.npcMonologue(npc, text);
         });
         this.gameEventEmitter.on('left_room', (from) => {
@@ -759,7 +761,7 @@ export class KiiGame {
         } else if (command.command == "npc_monologue") {
             const npc = this.stageObjectGetter.getObject(command.npc);
             const text = this.text.getText(command.textkey.object, command.textkey.string);
-            this.gameEventEmitter.emit('npc_monologue', npc, text);
+            this.gameEventEmitter.emit('npc_monologue', {npc, text});
         } else if (command.command == "play_character_animation") {
             const animationName = command.animation;
             const duration = command.length;
@@ -836,14 +838,12 @@ export class KiiGame {
             if (this.npc_monologue.width() > npc.x() - 100) {
                 this.npc_monologue.width(npc.x() - 100);
             }
-            this.npc_monologue.text(text);
             this.npc_speech_bubble.x(npc.x());
         } else {
             npc_tag.pointerDirection("left");
             if (this.npc_monologue.width() > this.stage.width() - (npc.x() + npc.width() + 100)) {
                 this.npc_monologue.width(this.stage.width() - (npc.x() + npc.width() + 100));
             }
-            this.npc_monologue.text(text);
             this.npc_speech_bubble.x(npc.x() + npc.width());
         }
 
