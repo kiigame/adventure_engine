@@ -59,6 +59,7 @@ const kiigame = new KiiGame(
             new CategoryValidator(['secret'])
         ]
     ),
+    ['furniture', 'secret'],
     gameEventEmitter,
     uiEventEmitter,
     gameData,

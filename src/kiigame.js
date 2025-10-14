@@ -27,6 +27,7 @@ import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBu
 import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';
 import InventoryView from './view/InventoryView.js';
+import RoomView from './view/room/RoomView';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -40,6 +41,7 @@ export class KiiGame {
         dragResolvers = [],
         hitRegionInitializer = null,
         intersection = null,
+        roomObjectCategories = ['furniture'],
         gameEventEmitter = new EventEmitter(),
         uiEventEmitter = new EventEmitter(),
         gameData = {},
@@ -162,8 +164,16 @@ export class KiiGame {
         this.character_layer = this.stageObjectGetter.getObject("character_layer");
         this.text_layer = this.stageObjectGetter.getObject("text_layer");
         this.fader_full = this.stageObjectGetter.getObject("fader_full");
-        this.room_layer = this.stageObjectGetter.getObject("room_layer");
         this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
+
+        // Room layer & furniture
+        this.roomView = new RoomView(
+            this.uiEventEmitter,
+            this.gameEventEmitter,
+            this.hitRegionInitializer,
+            this.stageObjectGetter.getObject("room_layer"),
+            roomObjectCategories,
+        );
 
         // Inventory and item UI related
         this.inventoryView = new InventoryView(
@@ -191,8 +201,6 @@ export class KiiGame {
         // Intersection target (object below dragged item)
         this.target;
 
-        // The current room view
-        this.current_room = null;
         // "Player character in room" model status
         new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
 
@@ -229,13 +237,10 @@ export class KiiGame {
         );
 
         // Build room object animations and set up RoomAnimations view component
-        const rooms = this.room_layer.children.filter((child) => {
-            return child.attrs.category === 'room';
-        });
         const animatedRoomObjects = new RoomAnimationsBuilder(
             new RoomAnimationBuilder(),
             this.stageObjectGetter
-        ).build(rooms);
+        ).build(this.roomView.getRooms());
         new RoomAnimations(this.gameEventEmitter, animatedRoomObjects);
 
         // Creating all image objects from json file based on their attributes
@@ -249,12 +254,6 @@ export class KiiGame {
                 this.prepareImages(layer);
             }
         }
-
-        // On window load we create image hit regions for furniture in rooms
-        window.onload = () => {
-            this.hitRegionInitializer.initHitRegions(this.room_layer);
-            this.stage.draw();
-        };
 
         // Drag start events
         this.stage.find('Image').on('dragstart', (event) => {
@@ -270,9 +269,10 @@ export class KiiGame {
                 // Setting a small delay to not spam intersection check on every moved pixel
                 this.setDelay(10);
 
+                const currentRoomObjects = this.roomView.getObjectsFromCurrentRoom();
                 // Loop through all the items on the current object layer
-                for (let i = 0; i < this.current_room.children.length; i++) {
-                    const object = (this.current_room.getChildren())[i];
+                for (let i = 0; i < currentRoomObjects.length; i++) {
+                    const object = currentRoomObjects[i];
 
                     if (object != undefined && object.getAttr('category') != 'room_background') {
                         // Break if still intersecting with the same target
@@ -336,8 +336,6 @@ export class KiiGame {
                 } else {
                     this.uiEventEmitter.emit('dragmove_hover_on_nothing');
                 }
-
-                this.drawRoomLayer();
             }
         });
 
@@ -391,12 +389,6 @@ export class KiiGame {
             this.clearMonologues();
             this.setMonologue(text);
         });
-        this.gameEventEmitter.on('remove_object', (objectName) => {
-            this.removeObject(objectName);
-        });
-        this.gameEventEmitter.on('add_object', (objectName) => {
-            this.addObject(objectName);
-        });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
         });
@@ -404,19 +396,18 @@ export class KiiGame {
             this.clearMonologues();
             this.npcMonologue(npc, text);
         });
-        this.gameEventEmitter.on('left_room', (from) => {
-            this.hidePreviousRoom(from);
-        });
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.sequenceLayer.hide();
-            this.showRoom(roomId);
+        });
+
+        this.uiEventEmitter.on('current_room_changed', (room) => {
+            this.stage.draw();
             // Slightly kludgy way of checking if we want to show character
-            if (this.stageObjectGetter.getObject(roomId).attrs.fullScreen) {
+            if (room.attrs.fullScreen) {
                 return;
             }
             this.showCharacter();
         });
-
         // Set up event listeners for UI commands
         this.uiEventEmitter.on('play_full_fade_out', () => {
             this.playFullFadeOut();
@@ -435,9 +426,6 @@ export class KiiGame {
                 this.fader_full.hide();
             }, this.fade_full.tween.duration);
         });
-        this.uiEventEmitter.on('room_fade_in_done', () => {
-            this.drawRoomLayer();
-        });
         this.uiEventEmitter.on('furniture_clicked', (target) => {
             this.handleClick(target);
         });
@@ -447,28 +435,23 @@ export class KiiGame {
         this.uiEventEmitter.on('character_animation_started', () => {
             this.drawCharacterLayer();
         });
-        this.uiEventEmitter.on('inventory_redrawn', () => {
-            this.drawRoomLayer();
-        });
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.clearMonologues();
         });
-        this.uiEventEmitter.on('inventory_drag_start', (draggedItem) => {
+        this.uiEventEmitter.on('inventory_drag_start', (_draggedItem) => {
             this.clearMonologues();
-            this.moveItemToRoomLayer(draggedItem);
         });
         this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
-            this.clearRoomObjectBlur();
-            this.glowRoomObject(target);
             this.showTextOnDragMove(target);
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
-            this.clearRoomObjectBlur();
             this.clearInteractionText();
         });
         this.uiEventEmitter.on('dragend_ended', () => {
-            this.clearRoomObjectBlur();
             this.clearInteractionText();
+        });
+        this.uiEventEmitter.on('room_hit_regions_initialized', () => {
+            this.stage.draw();
         });
 
         this.stage.draw();
@@ -492,30 +475,6 @@ export class KiiGame {
      */
     clearInteractionText() {
         this.clearText(this.interaction_text);
-    }
-
-    /**
-     * TODO: move to room view component
-     */
-    clearRoomObjectBlur() {
-        this.current_room.getChildren().each((shape, _i) => {
-            shape.shadowBlur(0);
-        });
-    }
-
-    /**
-     * TODO: move to room view component
-     * @param {*} target
-     * @returns {void}
-     */
-    glowRoomObject(target) {
-        if (!this.current_room.getChildren((object) => { return object === target; })) {
-            return;
-        }
-        target.clearCache();
-        target.shadowColor('purple');
-        target.shadowOffset({ x: 0, y: 0 });
-        target.shadowBlur(20);
     }
 
     /**
@@ -647,33 +606,6 @@ export class KiiGame {
 
     /**
      * TODO: move to a "stage manager" view component
-     * @param {string} from room id of the room we have faded out
-     */
-    hidePreviousRoom(from) {
-        const room = this.stageObjectGetter.getObject(from);
-        room.hide();
-    }
-
-    /**
-     * TODO: move to a "stage manager" view component
-     * @param {string} roomId room to make visible
-     */
-    showRoom(roomId) {
-        const room = this.stageObjectGetter.getObject(roomId);
-        room.show();
-        this.current_room = room;
-        this.stage.draw();
-    }
-
-    /**
-     * TODO: move to a "stage manager" view component
-     */
-    drawRoomLayer() {
-        this.room_layer.draw();
-    }
-
-    /**
-     * TODO: move to a "stage manager" view component
      */
     drawCharacterLayer() {
         this.character_layer.draw();
@@ -782,31 +714,6 @@ export class KiiGame {
         }
     }
 
-    /**
-     * Add an object to the stage. Currently, this means setting its visibility to true.
-     * TODO: Add animations & related parts.
-     * @param {string} objectName
-     */
-    addObject(objectName) {
-        const object = this.stageObjectGetter.getObject(objectName);
-        object.clearCache();
-        object.show();
-        object.cache();
-        this.room_layer.draw();
-    }
-
-    /**
-     * Remove an object from stage. Called after interactions that remove objects.
-     * The removed object is simply hidden.
-     *
-     * @param {string} objectName
-     */
-    removeObject(objectName) {
-        const object = this.stageObjectGetter.getObject(objectName);
-        object.hide();
-        this.room_layer.draw();
-    }
-
     // Clearing the given text
     clearText(text) {
         text.text("");
@@ -883,15 +790,6 @@ export class KiiGame {
             this.stageObjectGetter.getObject(id).image(window[id]);
         };
         window[id].src = imageSrc;
-    }
-
-    /**
-     * Move item to room layer, for example on drag start, so that it can be "hidden" from inventory.
-     * @param {Konva.Image} item
-     */
-    moveItemToRoomLayer(item) {
-        item.moveTo(this.room_layer);
-        this.uiEventEmitter.emit('item_moved_to_room_layer');
     }
 
     /**
