@@ -1,5 +1,5 @@
-import EventEmitter from "events/EventEmitter";
-import HitRegionInitializer from "view/stage/HitRegionInitializer";
+import EventEmitter from "../../events/EventEmitter.js";
+import HitRegionInitializer from "../stage/HitRegionInitializer.js";
 
 class RoomView {
     /**
