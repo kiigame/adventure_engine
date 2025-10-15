@@ -1,7 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import pkg from './package.json' with { type: "json" };
+import typescript from '@rollup/plugin-typescript';
+import commonjs from '@rollup/plugin-commonjs';
 
 export const build = [
     {
@@ -13,7 +14,8 @@ export const build = [
         },
         plugins: [
             resolve(),
-            commonjs()
+            commonjs(),
+            typescript()
         ]
     },
     {
@@ -32,11 +34,16 @@ export const dev = {
         name: 'kiigame',
         file: 'public/src/latkazombit.js',
         format: 'iife',
-        sourcemap: true
+        sourcemap: true,
+//        sourcemapExcludeSources: true
     },
     plugins: [
         resolve(),
         commonjs(),
+        typescript({
+            tsconfig: './tsconfig.json',
+            sourceMap: true
+        }),
         copy({
             targets: [
                 { src: 'index.html', dest: 'public/' },
@@ -49,9 +56,8 @@ export const dev = {
 }
 
 export default cli => {
-  if (cli.configBuild === true) {
-    return build;
-  }
-  return dev;
+    if (cli.configBuild === true) {
+        return build;
+    }
+    return dev;
 }
-

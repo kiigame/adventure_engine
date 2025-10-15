@@ -1,5 +1,5 @@
-import pkg from 'konva';
-const { Tween } = pkg;
+import Konva from 'konva';
+const { Tween } = Konva;
 
 class RoomAnimationBuilder {
     /**
