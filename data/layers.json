@@ -66,18 +66,18 @@
             ]
           },
           "className": "Line"
-        }
+        },
+            {
+      "attrs": {
+        "id": "inventory_items"
+      },
+      "children": [],
+      "className": "Group"
+            }
       ],
       "className": "Layer"
     },
-    {
-      "attrs": {
-        "id": "inventory_layer"
-      },
-      "children": [],
-      "className": "Layer"
-    },
-    {
+            {
       "attrs": {
         "id": "inventory_item_cache",
         "visible": false

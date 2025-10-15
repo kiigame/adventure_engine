@@ -1,21 +1,21 @@
-import EventEmitter from "../events/EventEmitter";
-import StageObjectGetter from "./stage/StageObjectGetter";
+import EventEmitter from "../events/EventEmitter.js";
+import StageObjectGetter from "./stage/StageObjectGetter.js";
 
 class InventoryView {
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {EventEmitter} gameEventEmitter
      * @param {StageObjectGetter} stageObjectGetter
-     * @param {Konva.Layer} inventoryLayer
+     * @param {Konva.Group} inventoryItems
      * @param {Konva.Layer} inventoryBarLayer
      * @param {int} offsetFromTop
      */
-    constructor(uiEventEmitter, gameEventEmitter, stageObjectGetter, inventoryLayer, inventoryBarLayer, offsetFromTop) {
+    constructor(uiEventEmitter, gameEventEmitter, stageObjectGetter, inventoryBarLayer, offsetFromTop) {
         this.uiEventEmitter = uiEventEmitter;
         this.gameEventEmitter = gameEventEmitter;
         this.stageObjectGetter = stageObjectGetter;
-        this.inventoryLayer = inventoryLayer;
         this.inventoryBarLayer = inventoryBarLayer;
+        this.inventoryItems = this.inventoryBarLayer.findOne((node) => node.attrs.id === 'inventory_items');
         // Offset from top for drawing inventory items starting from proper position
         this.offsetFromTop = offsetFromTop;
         // Offset from left for drawing inventory items starting from proper position
@@ -47,11 +47,11 @@ class InventoryView {
         this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
             this.clearInventoryItemBlur();
             this.glowInventoryItem(target);
-            this.drawInventoryLayers();
+            this.drawInventoryLayer();
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
             this.clearInventoryItemBlur();
-            this.drawInventoryLayers();
+            this.drawInventoryLayer();
         });
         this.uiEventEmitter.on('inventory_left_arrow_draghovered', () => {
             this.handleInventoryLeftArrowEngaged();
@@ -63,10 +63,10 @@ class InventoryView {
             this.hideInventory();
         });
         this.uiEventEmitter.on('item_moved_to_room_layer', () => {
-            this.drawInventoryLayers();
+            this.drawInventoryLayer();
         });
-        // Handle clicks on inventory items
-        this.inventoryLayer.on('click tap', (event) => {
+        // Handle clicks etc on inventory items and arrows
+        this.inventoryItems.on('click tap', (event) => {
             this.uiEventEmitter.emit('inventory_click', event.target);
         });
         this.stageObjectGetter.getObject('inventory_left_arrow').on('click tap', () => {
@@ -74,6 +74,9 @@ class InventoryView {
         });
         this.stageObjectGetter.getObject('inventory_right_arrow').on('click tap', () => {
             this.handleInventoryRightArrowEngaged();
+        });
+        this.inventoryItems.on('touchstart mousedown', (event) => {
+            this.uiEventEmitter.emit('inventory_touchstart', event.target);
         });
     }
 
@@ -88,7 +91,7 @@ class InventoryView {
     inventoryAdd(itemNameAdded) {
         const item = this.stageObjectGetter.getObject(itemNameAdded);
         item.show();
-        item.moveTo(this.inventoryLayer);
+        item.moveTo(this.inventoryItems);
         item.clearCache();
         item.size({ width: 80, height: 80 });
 
@@ -137,7 +140,7 @@ class InventoryView {
     redrawInventory() {
         // At first reset all items. Adding or removing items, as well as clicking
         // arrows, may change which items should be shown.
-        this.inventoryLayer.getChildren().each((shape, i) => {
+        this.inventoryItems.getChildren().each((shape, i) => {
             shape.setAttr('visible', false);
         });
 
@@ -166,28 +169,28 @@ class InventoryView {
             this.stageObjectGetter.getObject("inventory_right_arrow").hide();
         }
 
-        this.drawInventoryLayers();
+        this.drawInventoryLayer();
         this.uiEventEmitter.emit('inventory_redrawn');
     }
 
     showInventory() {
-        this.inventoryLayer.show();
         this.inventoryBarLayer.show();
-        this.drawInventoryLayers();
+        this.inventoryItems.show();
+        this.drawInventoryLayer();
     }
 
     hideInventory() {
-        this.inventoryLayer.hide();
+        this.inventoryItems.hide();
         this.inventoryBarLayer.hide();
     }
 
-    drawInventoryLayers() {
+    drawInventoryLayer() {
+        this.inventoryItems.draw();
         this.inventoryBarLayer.draw();
-        this.inventoryLayer.draw();
     }
 
     clearInventoryItemBlur() {
-        this.inventoryLayer.getChildren().each((shape, _i) => {
+        this.inventoryItems.getChildren().each((shape, _i) => {
             shape.shadowBlur(0);
         });
     }
@@ -201,6 +204,10 @@ class InventoryView {
         target.shadowColor('purple');
         target.shadowOffset({ x: 0, y: 0 });
         target.shadowBlur(20);
+    }
+
+    getVisibleInventoryItems() {
+        return this.inventoryItems.find((item) => item.attrs.visible === true);
     }
 }
 

@@ -249,7 +249,7 @@ stage.find('#start')[0].on('tap click', function () {
 stage.find('#poster_onthewall')[0].on('tap click', function () {
     const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text");
     let rewardsCount = 0;
-    for (const inventoryItem of kiigame.inventory_layer.children) {
+    for (const inventoryItem of kiigame.inventoryView.inventoryList) {
         if (inventoryItem.getAttr('category') === 'reward') {
             rewardsCount++;
         }
