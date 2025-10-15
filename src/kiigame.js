@@ -158,9 +158,6 @@ export class KiiGame {
         this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
         this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
         this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
-
-        this.inventory_layer = this.stageObjectGetter.getObject("inventory_layer");
-        this.inventory_bar_layer = this.stageObjectGetter.getObject("inventory_bar_layer");
         this.character_layer = this.stageObjectGetter.getObject("character_layer");
         this.text_layer = this.stageObjectGetter.getObject("text_layer");
         this.fader_full = this.stageObjectGetter.getObject("fader_full");
@@ -175,15 +172,20 @@ export class KiiGame {
             roomObjectCategories,
         );
 
+        // Set the drag start listener -> ui event emitting for the prospective inventory items
+        this.stageObjectGetter.getObject("inventory_item_cache").find('Image').on('dragstart', (event) => {
+            this.uiEventEmitter.emit('inventory_drag_start', event.target);
+        });
+
         // Inventory and item UI related
         this.inventoryView = new InventoryView(
             this.uiEventEmitter,
             this.gameEventEmitter,
             this.stageObjectGetter,
-            this.inventory_layer,
-            this.inventory_bar_layer,
+            this.stageObjectGetter.getObject("inventory_bar_layer"),
             this.stage.height() - 90
         );
+
         // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
         this.dragStartX;
         this.dragStartY;
@@ -255,12 +257,6 @@ export class KiiGame {
             }
         }
 
-        // Drag start events
-        this.stage.find('Image').on('dragstart', (event) => {
-            this.dragged_item = event.target;
-            this.uiEventEmitter.emit('inventory_drag_start', this.dragged_item);
-        });
-
         // While dragging events (use item on item or object)
         this.stage.on('dragmove', (event) => {
             this.dragged_item = event.target;
@@ -293,9 +289,10 @@ export class KiiGame {
 
                 // If no intersecting targets were found on object layer, check the inventory
                 if (this.target == null) {
+                    const visibleInventoryItems = this.inventoryView.getVisibleInventoryItems();
                     // Loop through all the items on the inventory layer
-                    for (let i = 0; i < this.inventory_layer.children.length; i++) {
-                        const object = (this.inventory_layer.getChildren())[i];
+                    for (let i = 0; i < visibleInventoryItems.length; i++) {
+                        const object = visibleInventoryItems[i];
                         if (object != undefined) {
                             // Look for intersecting targets
                             if (this.intersection.check(this.dragged_item, object)) {
@@ -310,7 +307,7 @@ export class KiiGame {
                     }
                 }
 
-                // Next, check the inventory_bar_layer, if the item is dragged over the inventory arrows
+                // Next, check if the item is dragged over the inventory arrows
                 if (this.target == null) {
                     const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
                     const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
@@ -341,12 +338,6 @@ export class KiiGame {
 
         this.stage.on('touchstart mousedown', () => {
             this.uiEventEmitter.emit('clicked_on_stage');
-        });
-
-        /// Touch start and mouse down events (save the coordinates before dragging)
-        this.inventory_layer.on('touchstart mousedown', (event) => {
-            this.dragStartX = event.target.x();
-            this.dragStartY = event.target.y();
         });
 
         /// Drag end events for inventory items.
@@ -438,8 +429,13 @@ export class KiiGame {
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.clearMonologues();
         });
-        this.uiEventEmitter.on('inventory_drag_start', (_draggedItem) => {
+        this.uiEventEmitter.on('inventory_drag_start', (target) => {
+            this.dragged_item = target;
             this.clearMonologues();
+        });
+        this.uiEventEmitter.on('inventory_touchstart', (target) => {
+            this.dragStartX = target.x();
+            this.dragStartY = target.y();
         });
         this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
             this.showTextOnDragMove(target);
