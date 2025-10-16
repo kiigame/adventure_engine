@@ -126,12 +126,39 @@ export class KiiGame {
         this.uiEventEmitter.on('play_sequence_started', (_id) => {
             this.playFullFadeOut();
         });
+        this.uiEventEmitter.on('sequence_hid_previous_slide', () => {
+            this.playFullFadeOut();
+        });
         this.uiEventEmitter.on('play_full_fade_in', () => {
             // Assumes fade_full has first faded out
             this.fade_full.reverse();
             setTimeout(() => {
                 this.fader_full.hide();
             }, this.fade_full.tween.duration);
+        });
+        this.uiEventEmitter.on('sequence_last_slide_fade_out', (finalFadeDuration) => {
+            this.fade_full.tween.duration = finalFadeDuration;
+            this.fade_full.play();
+
+            setTimeout(() => {
+                this.uiEventEmitter.emit('play_full_fade_in');
+                setTimeout(() => {
+                    this.fade_full.tween.duration = 600; // reset to default
+                }, finalFadeDuration);
+            }, finalFadeDuration);
+        });
+        this.uiEventEmitter.on('sequence_last_slide_immediate', () => {
+            this.fader_full.hide();
+        });
+        this.uiEventEmitter.on('sequence_show_next_slide_fade', () => {
+            setTimeout(() => {
+                this.uiEventEmitter.emit('play_full_fade_in');
+                this.stage.draw();
+            }, this.fade_full.tween.duration);
+        });
+        this.uiEventEmitter.on('sequence_show_next_slide_immediate', () => {
+            this.fade_full.reset();
+            this.stage.draw();
         });
         this.uiEventEmitter.on('room_hit_regions_initialized', () => {
             this.stage.draw();
@@ -534,7 +561,7 @@ export class KiiGame {
                 setTimeout(() => {
                     if (previousSlide) {
                         previousSlide.hide();
-                        this.uiEventEmitter.emit('play_full_fade_out');
+                        this.uiEventEmitter.emit('sequence_hid_previous_slide');
                     }
 
                     // Show current slide (note stage.draw only below)
@@ -543,14 +570,9 @@ export class KiiGame {
                     // Fade in?
                     const slideFade = sequenceData.slides[i].do_fade;
                     if (slideFade === true) {
-                        setTimeout(() => {
-                            this.uiEventEmitter.emit('play_full_fade_in');
-                            this.stage.draw();
-                        }, this.fade_full.tween.duration);
+                        this.uiEventEmitter.emit('sequence_show_next_slide_fade');
                     } else {
-                        // Immediately display the slide
-                        this.fade_full.reset();
-                        this.stage.draw();
+                        this.uiEventEmitter.emit('sequence_show_next_slide_immediate');
                     }
                 }, delay);
             }
@@ -562,22 +584,14 @@ export class KiiGame {
         // After last slide, do the final fade
         if (final_fade_duration > 0) {
             setTimeout(() => {
-                this.fade_full.tween.duration = final_fade_duration;
-                this.fade_full.play();
-
-                setTimeout(() => {
-                    this.uiEventEmitter.emit('play_full_fade_in');
-                    setTimeout(() => {
-                        this.fade_full.tween.duration = 600; // reset to default
-                    }, final_fade_duration);
-                }, final_fade_duration);
+                this.uiEventEmitter.emit('sequence_last_slide_fade_out', final_fade_duration);
             }, delay);
 
             // Doesn't include the fade-in!
             delay = delay + final_fade_duration;
         } else {
             setTimeout(() => {
-                this.fader_full.hide();
+                this.uiEventEmitter.emit('sequence_last_slide_immediate');
             }, delay);
         }
     }
