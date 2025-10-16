@@ -45,26 +45,23 @@ export class KiiGame {
         uiEventEmitter = new EventEmitter(),
         gameData = {},
     ) {
-        this.sequencesBuilder = sequencesBuilder;
-        this.itemsBuilder = itemsBuilder;
         this.clickResolvers = clickResolvers;
         this.dragResolvers = dragResolvers;
-        this.hitRegionInitializer = hitRegionInitializer;
         this.intersection = intersection;
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
 
-        if (this.sequencesBuilder === null) {
+        if (sequencesBuilder === null) {
             // TODO: Move DI up
             const slideBuilder = container.get(TYPES.SlideBuilder);
-            this.sequencesBuilder = new SequencesBuilder(
+            sequencesBuilder = new SequencesBuilder(
                 new SequenceBuilder(
                     slideBuilder
                 )
             );
         }
-        if (this.itemsBuilder === null) {
-            this.itemsBuilder = new ItemsBuilder(
+        if (itemsBuilder === null) {
+            itemsBuilder = new ItemsBuilder(
                 new ItemBuilder()
             );
         }
@@ -81,10 +78,9 @@ export class KiiGame {
                 new DefaultInteractionResolver('item')
             );
         }
-        this.startInteractionResolver = new DefaultInteractionResolver('start');
 
-        if (this.hitRegionInitializer === null) {
-            this.hitRegionInitializer = new HitRegionInitializer(
+        if (hitRegionInitializer === null) {
+            hitRegionInitializer = new HitRegionInitializer(
                 new HitRegionFilter([], ['Image']),
                 this.uiEventEmitter
             );
@@ -144,7 +140,7 @@ export class KiiGame {
         // Sequences start
         // Build sequences and push them to the sequence layer
         this.sequences_json = gameData.sequences_json;
-        const builtSequences = this.sequencesBuilder.build(this.sequences_json);
+        const builtSequences = sequencesBuilder.build(this.sequences_json);
         this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
         builtSequences.forEach((builtSequence) => {
             Konva.Node.create(
@@ -182,7 +178,7 @@ export class KiiGame {
         this.roomView = new RoomView(
             this.uiEventEmitter,
             this.gameEventEmitter,
-            this.hitRegionInitializer,
+            hitRegionInitializer,
             roomLayer,
             roomObjectCategories,
         );
@@ -206,7 +202,7 @@ export class KiiGame {
         // Inventory & items view start
         // Build items and push them to the inventory item cache layer
         const inventoryItemCache = this.stageObjectGetter.getObject('inventory_item_cache');
-        const items = this.itemsBuilder.build(gameData.items_json);
+        const items = itemsBuilder.build(gameData.items_json);
         items.forEach((item) => {
             Konva.Node.create(
               JSON.stringify(item)
@@ -456,7 +452,7 @@ export class KiiGame {
         // Preparation done, final steps:
         this.stage.draw();
         this.handle_commands(
-            this.startInteractionResolver.resolveCommands(
+            new DefaultInteractionResolver('start').resolveCommands(
                 this.interactions,
                 gameData.startInteraction,
                 'start'
