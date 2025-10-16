@@ -74,6 +74,7 @@ stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 10
 
 const input_text = stage.find('#input_text')[0];
 const input_layer = stage.find('#input_layer')[0];
+kiigame.prepareImages(input_layer);
 
 // For checking whether player has selected their jersey number
 let number_selected = false;
