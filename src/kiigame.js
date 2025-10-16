@@ -26,7 +26,8 @@ import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBu
 import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';
 import InventoryView from './view/InventoryView.js';
-import RoomView from './view/room/RoomView';
+import RoomView from './view/room/RoomView.js';
+import CharacterView from './view/character/CharacterView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -243,15 +244,15 @@ export class KiiGame {
 
         // Character view start
         // Push character animation frames to correct layer.
-        this.character_layer = this.stageObjectGetter.getObject("character_layer");
+        const characterLayer = this.stageObjectGetter.getObject("character_layer");
         const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
         characterFrames.forEach((characterFrame) => {
             Konva.Node.create(
                 JSON.stringify(characterFrame)
-            ).moveTo(this.character_layer);
+            ).moveTo(characterLayer);
         });
         // Creating all image objects from json
-        this.prepareImages(this.character_layer.toObject());
+        this.prepareImages(characterLayer.toObject());
         // Load up frames from json and set up CharacterAnimations view component
         const characterAnimationData = gameData.character_json.animations;
         const characterAnimations = new CharacterAnimationsBuilder(
@@ -262,9 +263,11 @@ export class KiiGame {
             this.uiEventEmitter,
             this.gameEventEmitter
         );
-        this.uiEventEmitter.on('character_animation_started', () => {
-            this.drawCharacterLayer();
-        });
+        // Character view component
+        new CharacterView(
+            characterLayer,
+            this.uiEventEmitter
+        );
         // Character view end
 
         // Text view start (not sure what to do with these yet)
@@ -427,16 +430,10 @@ export class KiiGame {
             this.uiEventEmitter.emit('dragend_ended');
         });
 
-        this.uiEventEmitter.on('current_room_changed', (room) => {
+        this.uiEventEmitter.on('current_room_changed', (_room) => {
             this.stage.draw();
-            // Slightly kludgy way of checking if we want to show character
-            if (room.attrs.fullScreen) {
-                return;
-            }
-            this.showCharacter();
         });
         this.uiEventEmitter.on('first_sequence_slide_shown', () => {
-            this.hideCharacter();
             this.sequenceLayer.show();
         });
         this.uiEventEmitter.on('inventory_drag_start', (target) => {
@@ -486,21 +483,6 @@ export class KiiGame {
         });
 
         this.text_layer.draw();
-    }
-
-    /**
-     * TODO: move to character view component
-     */
-    showCharacter() {
-        this.character_layer.show();
-        this.drawCharacterLayer();
-    }
-
-    /**
-     * TODO: move to character view component
-     */
-    hideCharacter() {
-        this.character_layer.hide();
     }
 
     /**
@@ -598,13 +580,6 @@ export class KiiGame {
                 this.fader_full.hide();
             }, delay);
         }
-    }
-
-    /**
-     * TODO: move to a character view component
-     */
-    drawCharacterLayer() {
-        this.character_layer.draw();
     }
 
     /**
