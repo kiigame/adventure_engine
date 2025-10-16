@@ -1,6 +1,5 @@
 import Konva from 'konva';
 
-import LayerChildAdder from './view/stage/konvadata/LayerChildAdder.js';
 import SequencesBuilder from './view/sequence/konvadata/SequencesBuilder.js';
 import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
 import DefaultInteractionResolver from './controller/DefaultInteractionResolver.js';
@@ -99,126 +98,102 @@ export class KiiGame {
             );
         }
 
-        this.interactions = new Interactions(gameData.interactions_json);
-        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
-        this.text = new Text(gameData.text_json);
-
-        let layerJson = gameData.layersJson;
-        this.sequences_json = gameData.sequences_json;
-
-        // Build sequences and push them to the sequence layer
-        const builtSequences = this.sequencesBuilder.build(this.sequences_json);
-        const stageLayerChildAdder = new LayerChildAdder();
-        layerJson = stageLayerChildAdder.add(
-            layerJson,
-            builtSequences,
-            'sequence_layer'
-        );
-        // Push rooms into the room layer
-        layerJson = stageLayerChildAdder.add(
-            layerJson,
-            gameData.rooms_json,
-            'room_layer'
-        );
-        // Push room fader into the room layer after rooms, so it's on top
-        const faderRoomJson = new RoomFaderBuilder().buildRoomFader();
-        layerJson = stageLayerChildAdder.add(
-            layerJson,
-            [faderRoomJson],
-            'room_layer'
-        )
-        // Build items and push them to the inventory item cache layer
-        const items = this.itemsBuilder.build(gameData.items_json);
-        layerJson = stageLayerChildAdder.add(
-            layerJson,
-            items,
-            'inventory_item_cache'
-        );
-        // Push character animation frames to correct layer.
-        const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
-        layerJson = stageLayerChildAdder.add(
-            layerJson,
-            characterFrames,
-            'character_layer'
-        );
-
-        // Create stage and everything in it from json
-        this.stage = Konva.Node.create(
-            JSON.stringify(layerJson),
-            'container'
-        );
-
-        this.stageObjectGetter = new StageObjectGetter(this.stage);
-
-        // Define variables from stage for easier use
-
-        // Texts & layers
-        this.monologue = this.stageObjectGetter.getObject("monologue");
-        this.character_speech_bubble = this.stageObjectGetter.getObject("character_speech_bubble");
-        this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
-        this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
-        this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
-        this.character_layer = this.stageObjectGetter.getObject("character_layer");
-        this.text_layer = this.stageObjectGetter.getObject("text_layer");
-        this.fader_full = this.stageObjectGetter.getObject("fader_full");
-        this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
-
-        // Room layer & furniture
-        this.roomView = new RoomView(
-            this.uiEventEmitter,
-            this.gameEventEmitter,
-            this.hitRegionInitializer,
-            this.stageObjectGetter.getObject("room_layer"),
-            roomObjectCategories,
-        );
-
-        // Set the drag start listener -> ui event emitting for the prospective inventory items
-        this.stageObjectGetter.getObject("inventory_item_cache").find('Image').on('dragstart', (event) => {
-            this.uiEventEmitter.emit('inventory_drag_start', event.target);
-        });
-
-        // Inventory and item UI related
-        this.inventoryView = new InventoryView(
-            this.uiEventEmitter,
-            this.gameEventEmitter,
-            this.stageObjectGetter,
-            this.stageObjectGetter.getObject("inventory_bar_layer"),
-            this.stage.height() - 90
-        );
-
-        // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
-        this.dragStartX;
-        this.dragStartY;
-
-        // For limiting the amount of intersection checks
-        this.delayEnabled = false;
-
-        // For limiting the speed of inventory browsing when dragging an item
-        this.dragDelay = 500;
-        this.dragDelayEnabled = false;
-
-        // The item dragged from the inventory
-        this.dragged_item;
-
-        // Intersection target (object below dragged item)
-        this.target;
-
+        // Model start
         // "Player character in room" model status
         new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
+        // Model end
 
-        // Scale background and UI elements
+        // View start
+        // Stage view start
+        this.stage = Konva.Node.create(
+            JSON.stringify(gameData.layersJson),
+            'container'
+        );
+        this.stageObjectGetter = new StageObjectGetter(this.stage);
+        this.fader_full = this.stageObjectGetter.getObject("fader_full");
+        this.prepareImages(this.fader_full);
+        // Scale full screen fader
         this.stageObjectGetter.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
-        this.stageObjectGetter.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
-        this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
-        this.stageObjectGetter.getObject("inventory_bar").width(this.stage.width());
-
-        // Animation for fading the screen
+        // Animation for fading the whole screen
         this.fade_full = new Konva.Tween({
             node: this.fader_full,
             duration: 0.6,
             opacity: 1
         });
+        this.stage.on('touchstart mousedown', () => {
+            this.uiEventEmitter.emit('clicked_on_stage');
+        });
+        this.uiEventEmitter.on('play_full_fade_out', () => {
+            this.playFullFadeOut();
+        });
+        this.uiEventEmitter.on('play_sequence_started', (_id) => {
+            this.playFullFadeOut();
+        });
+        this.uiEventEmitter.on('play_full_fade_in', () => {
+            // Assumes fade_full has first faded out
+            this.fade_full.reverse();
+            setTimeout(() => {
+                this.fader_full.hide();
+            }, this.fade_full.tween.duration);
+        });
+        this.uiEventEmitter.on('room_hit_regions_initialized', () => {
+            this.stage.draw();
+        });
+        // Stage view end
 
+        // Sequences start
+        // Build sequences and push them to the sequence layer
+        this.sequences_json = gameData.sequences_json;
+        const builtSequences = this.sequencesBuilder.build(this.sequences_json);
+        this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
+        builtSequences.forEach((builtSequence) => {
+            Konva.Node.create(
+                JSON.stringify(builtSequence),
+            ).moveTo(this.sequenceLayer);
+        })
+        // Creating sequence image objects
+        for (const child of this.sequenceLayer.toObject().children) {
+            this.prepareImages(child);
+        }
+        this.gameEventEmitter.on('arrived_in_room', (roomId) => {
+            this.sequenceLayer.hide();
+        });
+        this.gameEventEmitter.on('play_sequence', (sequence_id) => {
+            this.play_sequence(sequence_id);
+        });
+        // Sequences end
+
+        // Rooms view start
+        // Build rooms
+        const roomLayer = this.stageObjectGetter.getObject("room_layer");
+        gameData.rooms_json.forEach((roomJson) => {
+        Konva.Node.create(
+            JSON.stringify(roomJson)
+        ).moveTo(roomLayer);
+        });
+        Konva.Node.create(
+            JSON.stringify(new RoomFaderBuilder().buildRoomFader())
+        ).moveTo(roomLayer);
+        // Prepare room object images
+        for (const child of roomLayer.toObject().children) {
+            this.prepareImages(child);
+        }
+        // Room view component
+        this.roomView = new RoomView(
+            this.uiEventEmitter,
+            this.gameEventEmitter,
+            this.hitRegionInitializer,
+            roomLayer,
+            roomObjectCategories,
+        );
+        // Build room object animations and set up RoomAnimations view component
+        const animatedRoomObjects = new RoomAnimationsBuilder(
+            new RoomAnimationBuilder(),
+            this.stageObjectGetter
+        ).build(this.roomView.getRooms());
+        new RoomAnimations(this.gameEventEmitter, animatedRoomObjects);
+        // Scale room fader UI
+        this.stageObjectGetter.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
         // Animation for fading the room portion of the screen
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
@@ -226,7 +201,61 @@ export class KiiGame {
             this.uiEventEmitter,
             this.gameEventEmitter
         );
+        // Rooms view end
 
+        // Inventory & items view start
+        // Build items and push them to the inventory item cache layer
+        const inventoryItemCache = this.stageObjectGetter.getObject('inventory_item_cache');
+        const items = this.itemsBuilder.build(gameData.items_json);
+        items.forEach((item) => {
+            Konva.Node.create(
+              JSON.stringify(item)
+         ).moveTo(inventoryItemCache);
+        });
+        // Creating all item image objects from json
+        this.prepareImages(inventoryItemCache.toObject());
+        // Set the drag start listener -> ui event emitting for the prospective inventory items
+        inventoryItemCache.find('Image').on('dragstart', (event) => {
+            this.uiEventEmitter.emit('inventory_drag_start', event.target);
+        });
+        const inventoryBarLayer = this.stageObjectGetter.getObject('inventory_bar_layer');
+        this.prepareImages(inventoryBarLayer.toObject());
+        // Scale inventory bar to stage
+        this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
+        this.stageObjectGetter.getObject("inventory_bar").width(this.stage.width());
+        // Inventory view component
+        this.inventoryView = new InventoryView(
+            this.uiEventEmitter,
+            this.gameEventEmitter,
+            this.stageObjectGetter,
+            inventoryBarLayer,
+            this.stage.height() - 90
+        );
+        // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
+        this.dragStartX;
+        this.dragStartY;
+        // For limiting the amount of intersection checks
+        this.delayEnabled = false;
+        // For limiting the speed of inventory browsing when dragging an item
+        this.dragDelay = 500;
+        this.dragDelayEnabled = false;
+        // The item dragged from the inventory
+        this.dragged_item;
+        // Intersection target (object below dragged item)
+        this.target;
+        // Inventory & items view end
+
+        // Character view start
+        // Push character animation frames to correct layer.
+        this.character_layer = this.stageObjectGetter.getObject("character_layer");
+        const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
+        characterFrames.forEach((characterFrame) => {
+            Konva.Node.create(
+                JSON.stringify(characterFrame)
+            ).moveTo(this.character_layer);
+        });
+        // Creating all image objects from json
+        this.prepareImages(this.character_layer.toObject());
         // Load up frames from json and set up CharacterAnimations view component
         const characterAnimationData = gameData.character_json.animations;
         const characterAnimations = new CharacterAnimationsBuilder(
@@ -237,26 +266,57 @@ export class KiiGame {
             this.uiEventEmitter,
             this.gameEventEmitter
         );
+        this.uiEventEmitter.on('character_animation_started', () => {
+            this.drawCharacterLayer();
+        });
+        // Character view end
 
-        // Build room object animations and set up RoomAnimations view component
-        const animatedRoomObjects = new RoomAnimationsBuilder(
-            new RoomAnimationBuilder(),
-            this.stageObjectGetter
-        ).build(this.roomView.getRooms());
-        new RoomAnimations(this.gameEventEmitter, animatedRoomObjects);
+        // Text view start (not sure what to do with these yet)
+        this.monologue = this.stageObjectGetter.getObject("monologue");
+        this.character_speech_bubble = this.stageObjectGetter.getObject("character_speech_bubble");
+        this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
+        this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
+        this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
+        this.text_layer = this.stageObjectGetter.getObject("text_layer");
+        this.gameEventEmitter.on('monologue', (text) => {
+            this.clearMonologues();
+            this.setMonologue(text);
+        });
+        this.gameEventEmitter.on('npc_monologue', ({npc, text}) => {
+            this.clearMonologues();
+            this.npcMonologue(npc, text);
+        });
+        this.uiEventEmitter.on('clicked_on_stage', () => {
+            this.clearMonologues();
+        });
+        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
+            this.showTextOnDragMove(target);
+        });
+        this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
+            this.clearInteractionText();
+        });
+        this.uiEventEmitter.on('dragend_ended', () => {
+            this.clearInteractionText();
+        });
+        // Text view end
 
-        // Creating all image objects from json file based on their attributes
-        const imageData = this.stage.toObject();
-        for (const layer of imageData.children) {
-            if (['room_layer', 'sequence_layer'].includes(layer.attrs.id)) {
-                for (const child of layer.children) {
-                    this.prepareImages(child);
-                }
-            } else {
-                this.prepareImages(layer);
-            }
-        }
+        // Music view
+        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
+        // Music view end
+        // View end
 
+        // Controller(?) start
+        this.text = new Text(gameData.text_json);
+        this.interactions = new Interactions(gameData.interactions_json);
+        this.uiEventEmitter.on('furniture_clicked', (target) => {
+            this.handleClick(target);
+        });
+        this.uiEventEmitter.on('inventory_click', (target) => {
+            this.handleClick(target);
+        });
+        // Controller(?) end
+
+        // To be refactored - split into appropriate components
         // While dragging events (use item on item or object)
         this.stage.on('dragmove', (event) => {
             this.dragged_item = event.target;
@@ -336,10 +396,6 @@ export class KiiGame {
             }
         });
 
-        this.stage.on('touchstart mousedown', () => {
-            this.uiEventEmitter.emit('clicked_on_stage');
-        });
-
         /// Drag end events for inventory items.
         this.stage.find('Image').on('dragend', (event) => {
             const dragged_item = event.target;
@@ -375,22 +431,6 @@ export class KiiGame {
             this.uiEventEmitter.emit('dragend_ended');
         });
 
-        // Set up event listeners for the gameplay commands
-        this.gameEventEmitter.on('monologue', (text) => {
-            this.clearMonologues();
-            this.setMonologue(text);
-        });
-        this.gameEventEmitter.on('play_sequence', (sequence_id) => {
-            this.play_sequence(sequence_id);
-        });
-        this.gameEventEmitter.on('npc_monologue', ({npc, text}) => {
-            this.clearMonologues();
-            this.npcMonologue(npc, text);
-        });
-        this.gameEventEmitter.on('arrived_in_room', (roomId) => {
-            this.sequenceLayer.hide();
-        });
-
         this.uiEventEmitter.on('current_room_changed', (room) => {
             this.stage.draw();
             // Slightly kludgy way of checking if we want to show character
@@ -399,35 +439,9 @@ export class KiiGame {
             }
             this.showCharacter();
         });
-        // Set up event listeners for UI commands
-        this.uiEventEmitter.on('play_full_fade_out', () => {
-            this.playFullFadeOut();
-        });
-        this.uiEventEmitter.on('play_sequence_started', (_id) => {
-            this.playFullFadeOut();
-        });
         this.uiEventEmitter.on('first_sequence_slide_shown', () => {
             this.hideCharacter();
             this.sequenceLayer.show();
-        });
-        this.uiEventEmitter.on('play_full_fade_in', () => {
-            // Assumes fade_full has first faded out
-            this.fade_full.reverse();
-            setTimeout(() => {
-                this.fader_full.hide();
-            }, this.fade_full.tween.duration);
-        });
-        this.uiEventEmitter.on('furniture_clicked', (target) => {
-            this.handleClick(target);
-        });
-        this.uiEventEmitter.on('inventory_click', (target) => {
-            this.handleClick(target);
-        });
-        this.uiEventEmitter.on('character_animation_started', () => {
-            this.drawCharacterLayer();
-        });
-        this.uiEventEmitter.on('clicked_on_stage', () => {
-            this.clearMonologues();
         });
         this.uiEventEmitter.on('inventory_drag_start', (target) => {
             this.dragged_item = target;
@@ -437,19 +451,9 @@ export class KiiGame {
             this.dragStartX = target.x();
             this.dragStartY = target.y();
         });
-        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
-            this.showTextOnDragMove(target);
-        });
-        this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
-            this.clearInteractionText();
-        });
-        this.uiEventEmitter.on('dragend_ended', () => {
-            this.clearInteractionText();
-        });
-        this.uiEventEmitter.on('room_hit_regions_initialized', () => {
-            this.stage.draw();
-        });
+        // To be refactored - end
 
+        // Preparation done, final steps:
         this.stage.draw();
         this.handle_commands(
             this.startInteractionResolver.resolveCommands(
@@ -489,15 +493,15 @@ export class KiiGame {
     }
 
     /**
-     * TODO: move to character view component (or stage manager?)
+     * TODO: move to character view component
      */
     showCharacter() {
         this.character_layer.show();
-        this.character_layer.draw();
+        this.drawCharacterLayer();
     }
 
     /**
-     * TODO: move to character view component (or stage manager?)
+     * TODO: move to character view component
      */
     hideCharacter() {
         this.character_layer.hide();
@@ -601,7 +605,7 @@ export class KiiGame {
     }
 
     /**
-     * TODO: move to a "stage manager" view component
+     * TODO: move to a character view component
      */
     drawCharacterLayer() {
         this.character_layer.draw();
