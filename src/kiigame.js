@@ -163,6 +163,9 @@ export class KiiGame {
         this.uiEventEmitter.on('room_hit_regions_initialized', () => {
             this.stage.draw();
         });
+        this.uiEventEmitter.on('current_room_changed', (_room) => {
+            this.stage.draw();
+        });
         // Stage view end
 
         // Sequences start
@@ -184,6 +187,9 @@ export class KiiGame {
         });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
+        });
+        this.uiEventEmitter.on('first_sequence_slide_shown', () => {
+            this.sequenceLayer.show();
         });
         // Sequences end
 
@@ -267,6 +273,13 @@ export class KiiGame {
         this.dragged_item;
         // Intersection target (object below dragged item)
         this.target;
+        this.uiEventEmitter.on('inventory_drag_start', (target) => {
+            this.dragged_item = target;
+        });
+        this.uiEventEmitter.on('inventory_touchstart', (target) => {
+            this.dragStartX = target.x();
+            this.dragStartY = target.y();
+        });
         // Inventory & items view end
 
         // Character view start
@@ -323,6 +336,9 @@ export class KiiGame {
         });
         this.uiEventEmitter.on('dragend_ended', () => {
             this.clearInteractionText();
+        });
+        this.uiEventEmitter.on('inventory_drag_start', (target) => {
+            this.clearMonologues();
         });
         // Text view end
 
@@ -455,21 +471,6 @@ export class KiiGame {
             }
 
             this.uiEventEmitter.emit('dragend_ended');
-        });
-
-        this.uiEventEmitter.on('current_room_changed', (_room) => {
-            this.stage.draw();
-        });
-        this.uiEventEmitter.on('first_sequence_slide_shown', () => {
-            this.sequenceLayer.show();
-        });
-        this.uiEventEmitter.on('inventory_drag_start', (target) => {
-            this.dragged_item = target;
-            this.clearMonologues();
-        });
-        this.uiEventEmitter.on('inventory_touchstart', (target) => {
-            this.dragStartX = target.x();
-            this.dragStartY = target.y();
         });
         // To be refactored - end
 
