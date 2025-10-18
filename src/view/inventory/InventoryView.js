@@ -1,5 +1,5 @@
-import EventEmitter from "../events/EventEmitter.js";
-import StageObjectGetter from "./stage/StageObjectGetter.js";
+import EventEmitter from "../../events/EventEmitter.js";
+import StageObjectGetter from "../stage/StageObjectGetter.js";
 
 class InventoryView {
     /**

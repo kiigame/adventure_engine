@@ -25,7 +25,7 @@ import StageObjectGetter from './view/stage/StageObjectGetter.js';
 import CharacterFramesBuilder from './view/character/konvadata/CharacterFramesBuilder.js';
 import CharacterAnimationsBuilder from './view/character/konvadata/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';
-import InventoryView from './view/InventoryView.js';
+import InventoryView from './view/inventory/InventoryView.js';
 import RoomView from './view/room/RoomView.js';
 import CharacterView from './view/character/CharacterView.js';
 
