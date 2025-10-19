@@ -1,6 +1,7 @@
 class Text {
-    constructor(textJson) {
+    constructor(textJson, logger = console) {
         this.texts = textJson;
+        this.logger = logger;
     }
 
     setText(id, key, text) {
@@ -35,12 +36,12 @@ class Text {
         // If no text found, use default text
         if (!text || text.length == 0) {
             // Item's own default
-            console.warn("No text " + key + " found for " + object_id);
+            this.logger.warn("No text " + key + " found for " + object_id);
             text = this.texts[object_id]['default'];
 
             if (!text) {
                 // Master default
-                console.warn("Default text not found for " + object_id + ". Using master default.");
+                this.logger.warn("Default text not found for " + object_id + ". Using master default.");
                 text = this.getDefaultExamine();
             }
         }

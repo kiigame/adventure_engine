@@ -1,4 +1,5 @@
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
+import { spy } from 'sinon';
 import Text from './Text.js';
 
 describe('Test Text getName function', function() {
@@ -17,6 +18,11 @@ describe('Test Text getName function', function() {
 });
 
 describe('Test Text getText function', function() {
+    let loggerSpy;
+    beforeEach(() => {
+        loggerSpy = { warn: spy() };
+    });
+
     it('getText returns examine text of the object if called without specific key', function() {
         const json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}}";
         const text = new Text(JSON.parse(json));
@@ -31,15 +37,20 @@ describe('Test Text getText function', function() {
     });
     it('getText returns object default text when called with nonexisting key for the object', function() {
         const json = "{\"object\": {\"default\": \"Hello default\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}, \"default\": {\"examine\": \"Default examine\"}}";
-        const text = new Text(JSON.parse(json));
+        const text = new Text(JSON.parse(json), loggerSpy);
         const result = text.getText('object', 'key2');
         assert.deepEqual(result, 'Hello default');
+        expect(loggerSpy.warn.calledOnce, 'logger warn was called once').to.be.true;
+        expect(loggerSpy.warn.firstCall.args[0]).to.equal('No text key2 found for object');
     });
     it('getText returns default master examine when called with nonexisting key for the object and no default text for the object exists', function() {
         const json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}, \"default\": {\"examine\": \"Default examine\"}}";
-        const text = new Text(JSON.parse(json));
+        const text = new Text(JSON.parse(json), loggerSpy);
         const result = text.getText('object', 'key2');
         assert.deepEqual(result, 'Default examine');
+        expect(loggerSpy.warn.calledTwice, 'logger warn was called twice').to.be.true;
+        expect(loggerSpy.warn.firstCall.args[0]).to.equal('No text key2 found for object');
+        expect(loggerSpy.warn.secondCall.args[0]).to.equal('Default text not found for object. Using master default.');
     });
     it('getText returns error text if default section is missing from texts.json', function() {
         const json = "{\"object\": {\"key1\": \"Hello\", \"examine\": \"The examine text\", \"name\": \"ObjectName\"}}";
