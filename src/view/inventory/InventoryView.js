@@ -39,13 +39,10 @@ class InventoryView {
             this.drawInventoryLayer();
         });
         this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
-            this.inventoryItemsView.clearInventoryItemBlur();
-            this.inventoryItemsView.glowInventoryItem(target);
-            this.drawInventoryLayer();
+            this.handleDragMoveHoverOnObject(target);
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
-            this.inventoryItemsView.clearInventoryItemBlur();
-            this.drawInventoryLayer();
+            this.handleDragMoveHoverOnNothing();
         });
         // Handle clicks on arrows
         this.leftArrow.on('click tap', () => {
@@ -108,6 +105,17 @@ class InventoryView {
             return;
         }
         this.showInventory();
+    }
+
+    handleDragMoveHoverOnObject(target) {
+        this.inventoryItemsView.clearInventoryItemBlur();
+        this.inventoryItemsView.glowInventoryItem(target);
+        this.drawInventoryLayer();
+    }
+
+    handleDragMoveHoverOnNothing() {
+        this.inventoryItemsView.clearInventoryItemBlur();
+        this.drawInventoryLayer();
     }
 }
 

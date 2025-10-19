@@ -104,7 +104,7 @@ describe('inventory view tests', () => {
         });
     });
     describe('handle arrived in room', () => {
-        it('should show inventory if the room is not full screen', () =>{
+        it('should show inventory if the room is not full screen', () => {
             stageObjectGetterStub = createStubInstance(StageObjectGetter, {
                 getObject: { attrs: {} }
             });
@@ -139,6 +139,44 @@ describe('inventory view tests', () => {
             handleArrivedInRoomCallback('room-id');
             expect(inventoryItemsViewStub.show).to.not.have.been.called;
             expect(inventoryBarLayerStub.show).to.not.have.been.called;
+        });
+    });
+    describe('handle drag move hover on object', () => {
+        it('should handle drag move hover on object', () => {
+            new InventoryView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryBarLayerStub,
+                inventoryItemsViewStub
+            );
+            const handleDragMoveHoverOnObjectCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragmove_hover_on_object';
+            }).args[1];
+            const shapeStub = createStubInstance(Shape);
+            handleDragMoveHoverOnObjectCallback(shapeStub);
+            expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
+            expect(inventoryItemsViewStub.glowInventoryItem).to.have.been.calledWith(shapeStub);
+            expect(inventoryItemsViewStub.draw).to.have.been.called;
+            expect(inventoryBarLayerStub.draw).to.have.been.called;
+        });
+    });
+    describe('handle drag move hover on nothing', () => {
+        it('should handle drag move hover on nothing', () => {
+            new InventoryView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryBarLayerStub,
+                inventoryItemsViewStub
+            );
+            const handleDragMoveHoverOnNothingCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragmove_hover_on_nothing';
+            }).args[1];
+            handleDragMoveHoverOnNothingCallback();
+            expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
+            expect(inventoryItemsViewStub.draw).to.have.been.called;
+            expect(inventoryBarLayerStub.draw).to.have.been.called;
         });
     });
 });
