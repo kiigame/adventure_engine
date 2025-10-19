@@ -9,7 +9,7 @@ import InventoryItemsView from './InventoryItemsView.js';
 const { Shape, Layer } = pkg;
 use(sinonChai);
 
-describe('room view tests', () => {
+describe('inventory view tests', () => {
     let gameEventEmitterStub;
     let uiEventEmitterStub;
     let stageObjectGetterStub;
