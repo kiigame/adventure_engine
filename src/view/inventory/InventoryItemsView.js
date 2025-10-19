@@ -74,7 +74,7 @@ class InventoryItemsView {
 
     glowInventoryItem(target) {
         // check that target is in inventory
-        if (!this.inventoryItems.find((item) => item === target)) {
+        if (!this.inventoryItems.findOne((item) => item === target)) {
             return;
         }
         target.clearCache();
@@ -91,7 +91,7 @@ class InventoryItemsView {
         if (!draggedItem) {
             return;
         }
-        draggedItem.moveTo(this.inventoryItems)
+        draggedItem.moveTo(this.inventoryItems);
     }
 }
 

@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { createStubInstance, restore } from 'sinon';
+import { createStubInstance, restore, assert } from 'sinon';
 import sinonChai from "sinon-chai";
 import EventEmitter from '../../events/EventEmitter.js';
 import StageObjectGetter from '../stage/StageObjectGetter.js';
@@ -102,6 +102,96 @@ describe('inventory item view tests', () => {
             expect(shapeStubs[0].x).to.have.been.calledWith(50);
             expect(shapeStubs[1].x).to.have.been.calledWith(150);
             expect(shapeStubs[2].x).to.have.been.calledWith(250);
+        });
+    });
+    describe('clear inventory item blur', () => {
+        // Don't know how to stub multiple shapes in the collection!
+        it('should clear blur from items in inventory', () => {
+            const shapeStub = createStubInstance(Shape);
+            const collectionStub = createStubInstance(Collection);
+            collectionStub.each.yields(shapeStub);
+            inventoryItemsStub = createStubInstance(Group, {
+                getChildren: collectionStub
+            });
+            const inventoryItemsView = new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryItemsStub,
+                100
+            );
+            inventoryItemsView.clearInventoryItemBlur();
+            expect(shapeStub.shadowBlur).to.have.been.calledWith(0);
+        });
+    });
+    describe('glow inventory item', () => {
+        it('should glow an item if found', () => {
+            const shapeStub = createStubInstance(Shape);
+            inventoryItemsStub = createStubInstance(Group);
+            inventoryItemsStub.findOne.yields(shapeStub);
+            const inventoryItemsView = new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryItemsStub,
+                100
+            );
+            inventoryItemsView.glowInventoryItem(shapeStub);
+            expect(shapeStub.clearCache).to.have.been.called;
+            expect(shapeStub.shadowColor).to.have.been.calledWith('purple');
+            expect(shapeStub.shadowOffset).to.have.been.calledWith({ x: 0, y: 0});
+            expect(shapeStub.shadowBlur).to.have.been.calledWith(20);
+        });
+        it('should not glow an item not found', () => {
+            const shapeStub = createStubInstance(Shape);
+            inventoryItemsStub = createStubInstance(Group);
+            inventoryItemsStub.findOne.yields(null);
+            const inventoryItemsView = new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryItemsStub,
+                100
+            );
+            inventoryItemsView.glowInventoryItem(shapeStub);
+            expect(shapeStub.clearCache).to.not.have.been.called;
+            expect(shapeStub.shadowColor).to.not.have.been.called;
+            expect(shapeStub.shadowOffset).to.not.have.been.called;
+            expect(shapeStub.shadowBlur).to.not.have.been.called;
+        });
+    });
+    describe('move dragged item back to inventory', () => {
+        it('should move the dragged item back to inventory after dragging', () => {
+            new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryItemsStub,
+                100
+            );
+            const moveDraggedItemBackToInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend_ended';
+            }).args[1];
+            const targetStub = createStubInstance(Shape);
+            moveDraggedItemBackToInventoryCallback(targetStub);
+            expect(targetStub.moveTo).to.have.been.calledWith(inventoryItemsStub);
+        });
+        it('should not try to move a non-existing dragged item back to inventory after dragging', () => {
+            new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryItemsStub,
+                100
+            );
+            const moveDraggedItemBackToInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend_ended';
+            }).args[1];
+            try {
+                moveDraggedItemBackToInventoryCallback(null);
+            } catch (e) {
+                assert.fail('should not throw error');
+            }
         });
     });
 });
