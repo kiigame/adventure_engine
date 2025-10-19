@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { createStubInstance, stub } from 'sinon';
+import { createStubInstance } from 'sinon';
 import sinonChai from "sinon-chai";
 import InventoryView from './InventoryView.js';
 import EventEmitter from '../../events/EventEmitter.js';
