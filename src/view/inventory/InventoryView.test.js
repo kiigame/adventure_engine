@@ -103,4 +103,42 @@ describe('inventory view tests', () => {
             expect(rightArrowStub.hide).to.have.been.called;
         });
     });
+    describe('handle arrived in room', () => {
+        it('should show inventory if the room is not full screen', () =>{
+            stageObjectGetterStub = createStubInstance(StageObjectGetter, {
+                getObject: { attrs: {} }
+            });
+            new InventoryView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryBarLayerStub,
+                inventoryItemsViewStub
+            );
+            const handleArrivedInRoomCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'arrived_in_room';
+            }).args[1];
+            handleArrivedInRoomCallback('room-id');
+            expect(inventoryItemsViewStub.show).to.have.been.called;
+            expect(inventoryBarLayerStub.show).to.have.been.called;
+        });
+        it('shoud not show inventory it the room is full screen', () => {
+            stageObjectGetterStub = createStubInstance(StageObjectGetter, {
+                getObject: { attrs: { fullScreen: true } }
+            });
+            new InventoryView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryBarLayerStub,
+                inventoryItemsViewStub
+            );
+            const handleArrivedInRoomCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'arrived_in_room';
+            }).args[1];
+            handleArrivedInRoomCallback('room-id');
+            expect(inventoryItemsViewStub.show).to.not.have.been.called;
+            expect(inventoryBarLayerStub.show).to.not.have.been.called;
+        });
+    });
 });

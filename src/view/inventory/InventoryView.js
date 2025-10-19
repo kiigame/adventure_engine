@@ -24,11 +24,7 @@ class InventoryView {
             this.redrawInventory(visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible);
         });
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
-            // Slightly kludgy way of checking if we want to show inventory
-            if (this.stageObjectGetter.getObject(roomId).attrs.fullScreen) {
-                return;
-            }
-            this.showInventory();
+            this.handleArrivedInRoom(roomId);
         });
         this.uiEventEmitter.on('inventory_left_arrow_draghovered', () => {
             this.uiEventEmitter.emit('inventory_left_arrow_engaged');
@@ -104,6 +100,14 @@ class InventoryView {
     drawInventoryLayer() {
         this.inventoryItemsView.draw();
         this.inventoryBarLayer.draw();
+    }
+
+    handleArrivedInRoom(roomId) {
+        // Slightly kludgy way of checking if we want to show inventory
+        if (this.stageObjectGetter.getObject(roomId).attrs.fullScreen) {
+            return;
+        }
+        this.showInventory();
     }
 }
 
