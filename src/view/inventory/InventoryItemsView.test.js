@@ -61,5 +61,48 @@ describe('inventory item view tests', () => {
             expect(shapeStub.y).to.have.been.calledWith(100);
             expect(shapeStub.setAttr).to.have.been.calledWith('visible', true);
         });
+        it('should fetch and setup a newly added item and make it visible', () => {
+            const shapeStub = createStubInstance(Shape);
+            inventoryItemsStub = createStubInstance(Group);
+            stageObjectGetterStub = createStubInstance(StageObjectGetter, { getObject: shapeStub })
+            const inventoryItemsView = new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryItemsStub,
+                100
+            );
+            inventoryItemsView.handleInventoryItemVisibility(['blabla']);
+            expect(shapeStub.moveTo).to.have.been.calledWith(inventoryItemsStub);
+            expect(shapeStub.clearCache).to.have.been.called;
+            expect(shapeStub.size).to.have.been.calledWith({ width: 80, height: 80 });
+            expect(shapeStub.x).to.have.been.calledWith(50);
+            expect(shapeStub.y).to.have.been.calledWith(100);
+            expect(shapeStub.setAttr).to.have.been.calledWith('visible', true);
+        });
+        it('should set mulitple inventory items\' y coordinates correctly', () => {
+            const shapeStubs = [
+                createStubInstance(Shape),
+                createStubInstance(Shape),
+                createStubInstance(Shape),
+            ];
+
+            inventoryItemsStub = createStubInstance(Group);
+            stageObjectGetterStub = createStubInstance(StageObjectGetter);
+            shapeStubs.forEach((shapeStub, index) => {
+                stageObjectGetterStub.getObject.onCall(index).returns(shapeStub);
+            });
+            const inventoryItemsView = new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                stageObjectGetterStub,
+                inventoryItemsStub,
+                100
+            );
+            inventoryItemsView.handleInventoryItemVisibility(['1', '2', '3']);
+            expect(shapeStubs[0].x).to.have.been.calledWith(50);
+            expect(shapeStubs[1].x).to.have.been.calledWith(150);
+            expect(shapeStubs[2].x).to.have.been.calledWith(250);
+        });
     });
 });
