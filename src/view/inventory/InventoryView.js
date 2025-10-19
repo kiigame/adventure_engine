@@ -19,6 +19,8 @@ class InventoryView {
         this.offsetFromTop = offsetFromTop;
         // Offset from left for drawing inventory items starting from proper position
         this.offsetFromLeft = 50;
+        this.leftArrow = this.inventoryBarLayer.find('#inventory_left_arrow');
+        this.rightArrow = this.inventoryBarLayer.find('#inventory_right_arrow');
 
         this.uiEventEmitter.on('inventory_view_model_updated', ({ visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible }) => {
             this.redrawInventory(visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible);
@@ -58,10 +60,10 @@ class InventoryView {
         this.inventoryItems.on('click tap', (event) => {
             this.uiEventEmitter.emit('inventory_click', event.target);
         });
-        this.stageObjectGetter.getObject('inventory_left_arrow').on('click tap', () => {
+        this.leftArrow.on('click tap', () => {
             this.uiEventEmitter.emit('inventory_left_arrow_engaged');
         });
-        this.stageObjectGetter.getObject('inventory_right_arrow').on('click tap', () => {
+        this.rightArrow.on('click tap', () => {
             this.uiEventEmitter.emit('inventory_right_arrow_engaged');
         });
         this.inventoryItems.on('touchstart mousedown', (event) => {
@@ -98,15 +100,15 @@ class InventoryView {
         });
 
         if (isInventoryLeftArrowVisible) {
-            this.stageObjectGetter.getObject("inventory_left_arrow").show();
+            this.leftArrow.show();
         } else {
-            this.stageObjectGetter.getObject("inventory_left_arrow").hide();
+            this.leftArrow.hide();
         }
 
         if (isInventoryRightArrowVisible) {
-            this.stageObjectGetter.getObject("inventory_right_arrow").show();
+            this.rightArrow.show();
         } else {
-            this.stageObjectGetter.getObject("inventory_right_arrow").hide();
+            this.rightArrow.hide();
         }
 
         this.clearInventoryItemBlur();
