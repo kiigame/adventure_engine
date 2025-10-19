@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { createStubInstance, stub } from 'sinon';
+import { createStubInstance, stub, restore } from 'sinon';
 import RoomAnimations from './RoomAnimations.js';
 import EventEmitter from '../../events/EventEmitter.js';
 import pkg from 'konva';
@@ -8,14 +8,15 @@ const { Container, Node, Animation } = pkg;
 describe('Room animations player tests', function () {
     let gameEventEmitterStub;
     beforeEach(() => {
-        gameEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
+        gameEventEmitterStub = createStubInstance(EventEmitter);
+    });
+    afterEach(() => {
+        restore();
     });
     const buildMockTween = (roomId, nodeId) => {
         const mockContainer = createStubInstance(Container, { id: roomId });
         const mockNode = createStubInstance(Node, { getParent: mockContainer, id: nodeId });
-        const mockAnimation = createStubInstance(Animation, {
-            stop: () => null,
-        });
+        const mockAnimation = createStubInstance(Animation);
         const mockTween = {
             play: stub(),
             node: mockNode,

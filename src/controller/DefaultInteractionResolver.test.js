@@ -1,9 +1,9 @@
 import { assert } from 'chai';
-import sinon from 'sinon';
+import { createStubInstance } from 'sinon';
 import DefaultInteractionResolver from './DefaultInteractionResolver.js';
 import Interactions from './Interactions.js';
 
-const interactionsStub = sinon.createStubInstance(Interactions);
+const interactionsStub = createStubInstance(Interactions);
 
 describe('Test DefaultInteractionResolver', function() {
     it('returns the target category set in constructor', function() {
@@ -29,7 +29,6 @@ describe('Test DefaultInteractionResolver', function() {
         const result = defaultInteractionResolver.resolveCommands(interactionsStub, target);
         assert.deepEqual(expected, result);
     });
-
 
     it('returns something from Interactions for click', function() {
         const defaultInteractionResolver = new DefaultInteractionResolver('test');

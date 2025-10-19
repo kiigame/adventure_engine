@@ -1,14 +1,20 @@
-import { assert } from 'chai';
-import sinon from 'sinon';
+import { assert } from 'chai';
+import { createStubInstance, restore } from 'sinon';
 import SequencesBuilder from './SequencesBuilder.js';
 import SequenceBuilder from './SequenceBuilder.js';
 
-const sequenceBuilderStub = sinon.createStubInstance(SequenceBuilder);
-sequenceBuilderStub.build.withArgs([], "intro").returns({ "data": "intro"});
-sequenceBuilderStub.build.withArgs([], "outro").returns({ "data": "outro"});
+describe('Test SequencesBuilder', function () {
+    let sequenceBuilderStub;
+    beforeEach(() => {
+        sequenceBuilderStub = createStubInstance(SequenceBuilder);
+    });
+    afterEach(() => {
+        restore();
+    });
+    it('build full sequence data with two sequences', function () {
+        sequenceBuilderStub.build.withArgs([], "intro").returns({ "data": "intro" });
+        sequenceBuilderStub.build.withArgs([], "outro").returns({ "data": "outro" });
 
-describe('Test SequencesBuilder', function(){
-    it('build full sequence data with two sequences', function(){
         const sequencesBuilder = new SequencesBuilder(sequenceBuilderStub);
 
         const expected = [

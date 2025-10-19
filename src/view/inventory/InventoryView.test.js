@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { createStubInstance } from 'sinon';
+import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import InventoryView from './InventoryView.js';
 import EventEmitter from '../../events/EventEmitter.js';
@@ -18,32 +18,18 @@ describe('inventory view tests', () => {
     let leftArrowStub;
     let rightArrowStub;
     beforeEach(() => {
-        gameEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
-        uiEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
-        stageObjectGetterStub = createStubInstance(StageObjectGetter, {});
-        leftArrowStub = createStubInstance(Shape, {
-            on: () => null,
-            hide: () => null,
-        });
-        rightArrowStub = createStubInstance(Shape, {
-            on: () => null,
-            hide: () => null,
-        });
-        inventoryBarLayerStub = createStubInstance(Layer, {
-            show: () => null,
-            hide: () => null,
-            draw: () => null
-        });
+        gameEventEmitterStub = createStubInstance(EventEmitter);
+        uiEventEmitterStub = createStubInstance(EventEmitter);
+        stageObjectGetterStub = createStubInstance(StageObjectGetter);
+        leftArrowStub = createStubInstance(Shape);
+        rightArrowStub = createStubInstance(Shape, { on: null });
+        inventoryBarLayerStub = createStubInstance(Layer);
         inventoryBarLayerStub.find.withArgs('#inventory_left_arrow').returns(leftArrowStub);
         inventoryBarLayerStub.find.withArgs('#inventory_right_arrow').returns(rightArrowStub);
-        inventoryItemsViewStub = createStubInstance(InventoryItemsView, {
-            resetItems: () => null,
-            handleInventoryItemVisibility: () => null,
-            clearInventoryItemBlur: () => null,
-            show: () => null,
-            hide: () => null,
-            draw: () => null
-        });
+        inventoryItemsViewStub = createStubInstance(InventoryItemsView);
+    });
+    afterEach(() => {
+        restore();
     });
     describe('redraw inventory', () => {
         it('should redraw inventory on inventory_view_model_updated', () => {

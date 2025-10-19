@@ -7,11 +7,8 @@ describe('Character in room model tests', () => {
     let uiEventEmitterStub;
     let gameEventEmitterStub;
     beforeEach(() => {
-        uiEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
-        gameEventEmitterStub = createStubInstance(EventEmitter, {
-            on: () => null,
-            emit: () => null
-        });
+        uiEventEmitterStub = createStubInstance(EventEmitter);
+        gameEventEmitterStub = createStubInstance(EventEmitter);
     });
     describe('start transition to room', () => {
         it('should go from NOT_IN_ROOM to IN_ROOM directly', () => {

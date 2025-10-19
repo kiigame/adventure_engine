@@ -1,17 +1,22 @@
-import { assert } from 'chai';
-import sinon from 'sinon';
+import { assert } from 'chai';
+import { createStubInstance, restore } from 'sinon';
 import SlideBuilder from './SlideBuilder.js';
 import TextBuilder from './TextBuilder.js';
 
-const textBuilderStub = sinon.createStubInstance(TextBuilder);
-textBuilderStub.build.returns(
-    {
-        "text": "text"
-    }
-);
-
-describe('Test sequence SlideBuilder', function(){
-    it('from only text, build text and rect wrapped in group', function(){
+describe('Test sequence SlideBuilder', function () {
+    let textBuilderStub;
+    beforeEach(() => {
+        textBuilderStub = createStubInstance(TextBuilder);
+        textBuilderStub.build.returns(
+            {
+                "text": "text"
+            }
+        );
+    });
+    afterEach(() => {
+        restore();
+    });
+    it('from only text, build text and rect wrapped in group', function () {
         const slideBuilder = new SlideBuilder(textBuilderStub);
 
         const expected = {
@@ -49,8 +54,8 @@ describe('Test sequence SlideBuilder', function(){
         };
         const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
-    }),
-    it('from only imageSrc, it should build an image', function(){
+    });
+    it('from only imageSrc, it should build an image', function () {
         const slideBuilder = new SlideBuilder(textBuilderStub);
 
         const expected = {
@@ -70,8 +75,8 @@ describe('Test sequence SlideBuilder', function(){
         };
         const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
-    }),
-    it('from text and image, build text and image wrapped in group', function(){
+    });
+    it('from text and image, build text and image wrapped in group', function () {
         const slideBuilder = new SlideBuilder(textBuilderStub);
 
         const expected = {
@@ -106,29 +111,29 @@ describe('Test sequence SlideBuilder', function(){
         };
         const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
-    }),
-    it('from no text or imageSrc, it should build a rect', function(){
-        const slideBuilder = new SlideBuilder(textBuilderStub);
-
-        const expected = {
-            "attrs": {
-                "category": "sequence",
-                "id": "intro_7",
-                "visible": false,
-                "x": 0,
-                "y": 0,
-                "fill": "black",
-                "height": 643,
-                "width": 981
-            },
-            "className": "Rect"
-        };
-        const slide = {
-            "do_fade": false,
-            "id": "intro_7",
-            "show_time": 1000
-        };
-        const result = slideBuilder.build(slide);
-        assert.deepEqual(expected, result);
     });
+        it('from no text or imageSrc, it should build a rect', function () {
+            const slideBuilder = new SlideBuilder(textBuilderStub);
+
+            const expected = {
+                "attrs": {
+                    "category": "sequence",
+                    "id": "intro_7",
+                    "visible": false,
+                    "x": 0,
+                    "y": 0,
+                    "fill": "black",
+                    "height": 643,
+                    "width": 981
+                },
+                "className": "Rect"
+            };
+            const slide = {
+                "do_fade": false,
+                "id": "intro_7",
+                "show_time": 1000
+            };
+            const result = slideBuilder.build(slide);
+            assert.deepEqual(expected, result);
+        });
 });

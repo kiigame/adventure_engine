@@ -1,13 +1,18 @@
 import { assert } from 'chai';
-import sinon from 'sinon';
+import { createStubInstance, restore } from 'sinon';
 import SequenceBuilder from './SequenceBuilder.js';
 import SlideBuilder from './SlideBuilder.js';
 
 describe('Test SequenceBuilder', function () {
+    let slideBuilderStub;
+    beforeEach(() => {
+        slideBuilderStub = createStubInstance(SlideBuilder);
+    });
+    afterEach(() => {
+        restore();
+    });
     it('build sequence with two slides', function () {
-        // stubbing - we don't test what SlideBuilder really returns, just that
-        // we call it correctly
-        const slideBuilderStub = sinon.createStubInstance(SlideBuilder);
+        // don't test what SlideBuilder really returns, just that it's called correctly
         slideBuilderStub.build.withArgs(
             {
                 "do_fade": true,

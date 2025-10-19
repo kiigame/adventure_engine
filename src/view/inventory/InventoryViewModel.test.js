@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { createStubInstance } from 'sinon';
+import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import InventoryViewModel from './InventoryViewModel.js';
 import EventEmitter from '../../events/EventEmitter.js';
@@ -7,12 +7,15 @@ import pkg from 'konva';
 const { Shape } = pkg;
 use(sinonChai);
 
-describe('room view model tests', () => {
+describe('inventory view model tests', () => {
     let gameEventEmitterStub;
     let uiEventEmitterStub;
     beforeEach(() => {
-        gameEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
-        uiEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
+        gameEventEmitterStub = createStubInstance(EventEmitter);
+        uiEventEmitterStub = createStubInstance(EventEmitter);
+    });
+    afterEach(() => {
+        restore();
     });
     describe('add inventory item', () => {
         it('should emit visible items and arrows when receiving inventory_item_added event', () => {

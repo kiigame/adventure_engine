@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
+import { spy } from 'sinon';
 import EventEmitter from './EventEmitter.js';
 
 describe('EventEmitter', () => {
@@ -7,25 +7,25 @@ describe('EventEmitter', () => {
     let loggerSpy;
 
     beforeEach(() => {
-        loggerSpy = { debug: sinon.spy() };
+        loggerSpy = { debug: spy() };
         emitter = new EventEmitter(loggerSpy);
     });
 
     it('should call listener when event is emitted', () => {
-        const spy = sinon.spy();
-        emitter.on('event', spy);
+        const callbackSpy = spy();
+        emitter.on('event', callbackSpy);
         emitter.emit('event', 'data');
-        expect(spy.calledOnceWith('data')).to.be.true;
+        expect(callbackSpy.calledOnceWith('data')).to.be.true;
     });
 
     it('should call all listeners for an event', () => {
-        const spy1 = sinon.spy();
-        const spy2 = sinon.spy();
-        emitter.on('event', spy1);
-        emitter.on('event', spy2);
+        const callbackSpy1 = spy();
+        const callbackSpy2 = spy();
+        emitter.on('event', callbackSpy1);
+        emitter.on('event', callbackSpy2);
         emitter.emit('event', 'data');
-        expect(spy1.calledOnceWith('data')).to.be.true;
-        expect(spy2.calledOnceWith('data')).to.be.true;
+        expect(callbackSpy1.calledOnceWith('data')).to.be.true;
+        expect(callbackSpy2.calledOnceWith('data')).to.be.true;
     });
 
     it('should not fail if emitting an event with no listeners', () => {
@@ -39,9 +39,9 @@ describe('EventEmitter', () => {
     });
 
     it('should not call listeners for other events', () => {
-        const spy = sinon.spy();
-        emitter.on('event_a', spy);
+        const callbackSpy = spy();
+        emitter.on('event_a', callbackSpy);
         emitter.emit('event_b', 'data');
-        expect(spy.notCalled).to.be.true;
+        expect(callbackSpy.notCalled).to.be.true;
     });
 });

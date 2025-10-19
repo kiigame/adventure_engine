@@ -1,23 +1,29 @@
 import { assert } from 'chai';
-import { createStubInstance, useFakeTimers, stub } from 'sinon';
+import { createStubInstance, useFakeTimers, stub, restore } from 'sinon';
 import Music from './Music.js';
 import AudioFactory from './AudioFactory.js';
 import EventEmitter from '../../events/EventEmitter.js';
 
-const audioFactoryStub = createStubInstance(AudioFactory);
 class AudioStub {
     play() { return; };
     pause() { return; };
 };
-const audioStubStub = createStubInstance(AudioStub, { play: null, pause: null });
-audioFactoryStub.create.returns(audioStubStub);
 
 describe('test Music methods', function () {
     let uiEventEmitterStub;
     let gameEventEmitterStub;
+    let audioFactoryStub;
+    let audioStubStub;
+
     beforeEach(() => {
-        uiEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
-        gameEventEmitterStub = createStubInstance(EventEmitter, { on: () => null});
+        uiEventEmitterStub = createStubInstance(EventEmitter);
+        gameEventEmitterStub = createStubInstance(EventEmitter);
+        audioFactoryStub = createStubInstance(AudioFactory);
+        audioStubStub = createStubInstance(AudioStub, { play: null, pause: null });
+        audioFactoryStub.create.returns(audioStubStub);
+    });
+    afterEach(() => {
+        restore();
     });
     it('calling play for undefined music does play music or crash', function () {
         const json = {
@@ -168,9 +174,18 @@ describe('test Music methods', function () {
 describe('test Music event management', function () {
     let uiEventEmitterStub;
     let gameEventEmitterStub;
+    let audioFactoryStub;
+    let audioStubStub;
+
     beforeEach(() => {
-        uiEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
-        gameEventEmitterStub = createStubInstance(EventEmitter, { on: () => null });
+        uiEventEmitterStub = createStubInstance(EventEmitter);
+        gameEventEmitterStub = createStubInstance(EventEmitter);
+        audioFactoryStub = createStubInstance(AudioFactory);
+        audioStubStub = createStubInstance(AudioStub, { play: null, pause: null });
+        audioFactoryStub.create.returns(audioStubStub);
+    });
+    afterEach(() => {
+        restore();
     });
     it('should handle play_music event by calling playMusic', function () {
         const playMusicStub = stub(Music.prototype, 'playMusic');
@@ -181,7 +196,6 @@ describe('test Music event management', function () {
         }).args[1];
         playMusicCallback(musicData);
         assert.isTrue(playMusicStub.calledOnceWith(musicData));
-        playMusicStub.restore();
     });
     it('should handle play_sequence_started event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
@@ -192,7 +206,6 @@ describe('test Music event management', function () {
         }).args[1];
         playMusicByIdCallback(musicId);
         assert.isTrue(playMusicByIdStub.calledOnceWith(musicId));
-        playMusicByIdStub.restore();
     });
     it('should handle arrived_in_room event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
@@ -203,6 +216,5 @@ describe('test Music event management', function () {
         }).args[1];
         playMusicByIdCallback(roomId);
         assert.isTrue(playMusicByIdStub.calledOnceWith(roomId));
-        playMusicByIdStub.restore();
     });
 });
