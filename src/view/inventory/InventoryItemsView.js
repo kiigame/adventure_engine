@@ -19,15 +19,6 @@ class InventoryItemsView {
         // Offset from left for drawing inventory items starting from proper position
         this.offsetFromLeft = 50;
 
-        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
-            this.clearInventoryItemBlur();
-            this.glowInventoryItem(target);
-            this.draw();
-        });
-        this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
-            this.clearInventoryItemBlur();
-            this.draw();
-        });
         this.uiEventEmitter.on('dragend_ended', (draggedItem) => {
             this.moveDraggedItemBackToInventory(draggedItem);
         });
