@@ -112,28 +112,28 @@ describe('Test sequence SlideBuilder', function () {
         const result = slideBuilder.build(slide);
         assert.deepEqual(expected, result);
     });
-        it('from no text or imageSrc, it should build a rect', function () {
-            const slideBuilder = new SlideBuilder(textBuilderStub);
+    it('from no text or imageSrc, it should build a rect', function () {
+        const slideBuilder = new SlideBuilder(textBuilderStub);
 
-            const expected = {
-                "attrs": {
-                    "category": "sequence",
-                    "id": "intro_7",
-                    "visible": false,
-                    "x": 0,
-                    "y": 0,
-                    "fill": "black",
-                    "height": 643,
-                    "width": 981
-                },
-                "className": "Rect"
-            };
-            const slide = {
-                "do_fade": false,
+        const expected = {
+            "attrs": {
+                "category": "sequence",
                 "id": "intro_7",
-                "show_time": 1000
-            };
-            const result = slideBuilder.build(slide);
-            assert.deepEqual(expected, result);
-        });
+                "visible": false,
+                "x": 0,
+                "y": 0,
+                "fill": "black",
+                "height": 643,
+                "width": 981
+            },
+            "className": "Rect"
+        };
+        const slide = {
+            "do_fade": false,
+            "id": "intro_7",
+            "show_time": 1000
+        };
+        const result = slideBuilder.build(slide);
+        assert.deepEqual(expected, result);
+    });
 });
