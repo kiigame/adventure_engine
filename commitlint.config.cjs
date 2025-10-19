@@ -16,6 +16,7 @@ module.exports = {
           'drive',
           'play',
           'model',
+          'divide',
         ],
       }
     ]

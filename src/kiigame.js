@@ -30,6 +30,7 @@ import RoomView from './view/room/RoomView.js';
 import CharacterView from './view/character/CharacterView.js';
 import Inventory from './model/Inventory.js';
 import InventoryViewModel from './view/inventory/InventoryViewModel.js';
+import InventoryItemsView from './view/inventory/InventoryItemsView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -257,13 +258,21 @@ export class KiiGame {
         // Scale inventory bar to stage
         this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
         this.stageObjectGetter.getObject("inventory_bar").width(this.stage.width());
+        // Inventory items view component
+        const inventoryItemsView = new InventoryItemsView(
+            uiEventEmitter,
+            gameEventEmitter,
+            this.stageObjectGetter,
+            inventoryBarLayer.findOne((node) => node.attrs.id === 'inventory_items'),
+            this.stage.height() - 90
+        );
         // Inventory view component
         this.inventoryView = new InventoryView(
             this.uiEventEmitter,
             this.gameEventEmitter,
             this.stageObjectGetter,
             inventoryBarLayer,
-            this.stage.height() - 90
+            inventoryItemsView
         );
         new InventoryViewModel(
             this.uiEventEmitter,
@@ -400,7 +409,7 @@ export class KiiGame {
 
                 // If no intersecting targets were found on object layer, check the inventory
                 if (this.target == null) {
-                    const visibleInventoryItems = this.inventoryView.getVisibleInventoryItems();
+                    const visibleInventoryItems = this.inventoryView.inventoryItemsView.getVisibleInventoryItems();
                     // Loop through all the items on the inventory layer
                     for (let i = 0; i < visibleInventoryItems.length; i++) {
                         const object = visibleInventoryItems[i];
