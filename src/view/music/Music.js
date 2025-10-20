@@ -1,6 +1,13 @@
-/**
- */
+import EventEmitter from "../../events/EventEmitter.js";
+import AudioFactory from "./AudioFactory.js";
+
 class Music {
+    /**
+     * @param {object} musicJson
+     * @param {AudioFactory} audioFactory
+     * @param {EventEmitter} uiEventEmitter
+     * @param {EventEmitter} gameEventEmitter
+     */
     constructor(musicJson, audioFactory, uiEventEmitter, gameEventEmitter) {
         this.musicJson = musicJson;
         this.audioFactory = audioFactory;
@@ -21,7 +28,7 @@ class Music {
 
     /**
      * Get music by id from music.json data and play it. Backwards compatibility method.
-     * @param string id Object id; looks for music for this room/sequence/other from music.json data
+     * @param {string} id Object id; looks for music for this room/sequence/other from music.json data
      */
     playMusicById(id) {
         if (id == undefined) {
@@ -38,7 +45,7 @@ class Music {
      * Stops previous music if no music is found for this id. Note that moving to a room and
      * playing a sequence always call this; if you want the music to continue, it needs to be
      * the same as in previous room/sequence.
-     * @param data Object { music: string, fade_in: boolean, facde_out: boolean; loop: boolean }
+     * @param {object} data Object { music: string, fade_in: boolean, facde_out: boolean; loop: boolean }
      */
     playMusic(data) {
         // If no new music is to be played, stop the old music.
@@ -85,8 +92,7 @@ class Music {
     }
 
     /**
-     * @param Audio music
-     * @param boolean fade_out
+     * @param {Audio} audio
      */
     stopMusic(audio) {
         if (audio == null) {
