@@ -46,7 +46,6 @@ class InventoryItemsView {
                 shape = this.stageObjectGetter.getObject(visibleItemName);
                 shape.moveTo(this.inventoryItems);
                 shape.clearCache();
-                shape.size({ width: 80, height: 80 });
             }
             shape.x(this.offsetFromLeft + (index * 100));
             shape.y(this.offsetFromTop);

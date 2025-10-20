@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import ItemBuilder from './ItemBuilder.js';
 
-describe('Test ItemBuilder', function(){
-    it('build item from data', function(){
+describe('Test ItemBuilder', () => {
+    it('build item from data', () => {
         const itemBuilder = new ItemBuilder();
 
         const expected = {
@@ -13,6 +13,8 @@ describe('Test ItemBuilder', function(){
                 "visible": false,
                 "draggable": true,
                 "animated": false,
+                "width": 80,
+                "height": 80
             },
             "className": "Image"
         };

@@ -74,7 +74,6 @@ describe('inventory item view tests', () => {
             inventoryItemsView.handleInventoryItemVisibility(['blabla']);
             expect(shapeStub.moveTo).to.have.been.calledWith(inventoryItemsStub);
             expect(shapeStub.clearCache).to.have.been.called;
-            expect(shapeStub.size).to.have.been.calledWith({ width: 80, height: 80 });
             expect(shapeStub.x).to.have.been.calledWith(50);
             expect(shapeStub.y).to.have.been.calledWith(100);
             expect(shapeStub.setAttr).to.have.been.calledWith('visible', true);

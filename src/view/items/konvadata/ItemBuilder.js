@@ -13,6 +13,8 @@ class ItemBuilder {
                 "visible": false,
                 "draggable": true,
                 "animated": false,
+                "width": 80,
+                "height": 80,
             },
             className: "Image"
         };
