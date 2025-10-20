@@ -279,6 +279,7 @@ export class KiiGame {
             this.gameEventEmitter,
             7 // inventoryMax, TODO make configurable/responsive
         )
+        // Item Drag View Model
         // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
         this.dragStartX;
         this.dragStartY;
@@ -298,85 +299,6 @@ export class KiiGame {
             this.dragStartX = target.x();
             this.dragStartY = target.y();
         });
-        // Inventory & items view end
-
-        // Character view start
-        // Push character animation frames to correct layer.
-        const characterLayer = this.stageObjectGetter.getObject("character_layer");
-        const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
-        characterFrames.forEach((characterFrame) => {
-            Konva.Node.create(
-                JSON.stringify(characterFrame)
-            ).moveTo(characterLayer);
-        });
-        // Creating all image objects from json
-        this.prepareImages(characterLayer.toObject());
-        // Load up frames from json and set up CharacterAnimations view component
-        const characterAnimationData = gameData.character_json.animations;
-        const characterAnimations = new CharacterAnimationsBuilder(
-            this.stageObjectGetter
-        ).build(characterAnimationData);
-        new CharacterAnimations(
-            characterAnimations,
-            this.uiEventEmitter,
-            this.gameEventEmitter
-        );
-        // Character view component
-        new CharacterView(
-            characterLayer,
-            this.uiEventEmitter
-        );
-        // Character view end
-
-        // Text view start (not sure what to do with these yet)
-        this.monologue = this.stageObjectGetter.getObject("monologue");
-        this.character_speech_bubble = this.stageObjectGetter.getObject("character_speech_bubble");
-        this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
-        this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
-        this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
-        this.text_layer = this.stageObjectGetter.getObject("text_layer");
-        this.gameEventEmitter.on('monologue', (text) => {
-            this.clearMonologues();
-            this.setMonologue(text);
-        });
-        this.gameEventEmitter.on('npc_monologue', ({npc, text}) => {
-            this.clearMonologues();
-            this.npcMonologue(npc, text);
-        });
-        this.uiEventEmitter.on('clicked_on_stage', () => {
-            this.clearMonologues();
-        });
-        this.uiEventEmitter.on('inventory_drag_start', (_target) => {
-            this.clearMonologues();
-        });
-        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
-            this.showTextOnDragMove(target);
-        });
-        this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
-            this.clearInteractionText();
-        });
-        this.uiEventEmitter.on('dragend_ended', (_draggedItem) => {
-            this.clearInteractionText();
-        });
-        // Text view end
-
-        // Music view
-        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
-        // Music view end
-        // View end
-
-        // Controller(?) start
-        this.text = new Text(gameData.text_json);
-        this.interactions = new Interactions(gameData.interactions_json);
-        this.uiEventEmitter.on('furniture_clicked', (target) => {
-            this.handleClick(target);
-        });
-        this.uiEventEmitter.on('inventory_click', (target) => {
-            this.handleClick(target);
-        });
-        // Controller(?) end
-
-        // To be refactored - split into appropriate components
         // While dragging events (use item on item or object)
         this.stage.on('dragmove', (event) => {
             this.dragged_item = event.target;
@@ -455,7 +377,6 @@ export class KiiGame {
                 }
             }
         });
-
         // Drag end events for inventory items.
         this.stage.find('Image').on('dragend', (event) => {
             const dragged_item = event.target;
@@ -485,7 +406,6 @@ export class KiiGame {
 
             this.uiEventEmitter.emit('dragend_ended', this.dragged_item);
         });
-
         // Remove the dragged item if it was removed as a result of drag end -> interaction -> remove item
         this.gameEventEmitter.on('inventory_item_removed', ({ itemList: _itemList, itemNameRemoved }) => {
             if (this.dragged_item && this.dragged_item.attrs.id === itemNameRemoved) {
@@ -493,7 +413,84 @@ export class KiiGame {
                 this.dragged_item = null;
             }
         });
-        // To be refactored - end
+        // Item Drag View Model end
+        // Inventory & items view end
+
+        // Character view start
+        // Push character animation frames to correct layer.
+        const characterLayer = this.stageObjectGetter.getObject("character_layer");
+        const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
+        characterFrames.forEach((characterFrame) => {
+            Konva.Node.create(
+                JSON.stringify(characterFrame)
+            ).moveTo(characterLayer);
+        });
+        // Creating all image objects from json
+        this.prepareImages(characterLayer.toObject());
+        // Load up frames from json and set up CharacterAnimations view component
+        const characterAnimationData = gameData.character_json.animations;
+        const characterAnimations = new CharacterAnimationsBuilder(
+            this.stageObjectGetter
+        ).build(characterAnimationData);
+        new CharacterAnimations(
+            characterAnimations,
+            this.uiEventEmitter,
+            this.gameEventEmitter
+        );
+        // Character view component
+        new CharacterView(
+            characterLayer,
+            this.uiEventEmitter
+        );
+        // Character view end
+
+        // Text view start (not sure what to do with these yet)
+        this.monologue = this.stageObjectGetter.getObject("monologue");
+        this.character_speech_bubble = this.stageObjectGetter.getObject("character_speech_bubble");
+        this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
+        this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
+        this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
+        this.text_layer = this.stageObjectGetter.getObject("text_layer");
+        this.gameEventEmitter.on('monologue', (text) => {
+            this.clearMonologues();
+            this.setMonologue(text);
+        });
+        this.gameEventEmitter.on('npc_monologue', ({npc, text}) => {
+            this.clearMonologues();
+            this.npcMonologue(npc, text);
+        });
+        this.uiEventEmitter.on('clicked_on_stage', () => {
+            this.clearMonologues();
+        });
+        this.uiEventEmitter.on('inventory_drag_start', (_target) => {
+            this.clearMonologues();
+        });
+        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
+            this.showTextOnDragMove(target);
+        });
+        this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
+            this.clearInteractionText();
+        });
+        this.uiEventEmitter.on('dragend_ended', (_draggedItem) => {
+            this.clearInteractionText();
+        });
+        // Text view end
+
+        // Music view
+        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
+        // Music view end
+        // View end
+
+        // Controller(?) start
+        this.text = new Text(gameData.text_json);
+        this.interactions = new Interactions(gameData.interactions_json);
+        this.uiEventEmitter.on('furniture_clicked', (target) => {
+            this.handleClick(target);
+        });
+        this.uiEventEmitter.on('inventory_click', (target) => {
+            this.handleClick(target);
+        });
+        // Controller(?) end
 
         // Preparation done, final steps:
         this.stage.draw();
