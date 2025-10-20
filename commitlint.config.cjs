@@ -17,6 +17,7 @@ module.exports = {
           'play',
           'model',
           'divide',
+          'cover',
         ],
       }
     ]
