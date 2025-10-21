@@ -1,5 +1,5 @@
 import { KiiGame } from './kiigame.js';
-import DefaultInteractionResolver from './controller/DefaultInteractionResolver.js';
+import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 import Intersection from './view/Intersection.js';
@@ -216,7 +216,7 @@ input_layer.on('tap click', function (event) {
         kiigame.text.setText('icehockey_jersey', 'examine', kiigame.text.getText('input_text', 'wikistart') + input_text.getText() + kiigame.text.getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
         input_layer.hide();
 
-        kiigame.handle_commands(new DefaultInteractionResolver().resolveCommands(
+        kiigame.commandsHandler.handleCommands(new DefaultInteractionResolver().resolveCommands(
             kiigame.interactions,
             'start_button_ok'
         ));

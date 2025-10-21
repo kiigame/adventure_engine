@@ -2,8 +2,10 @@ import Konva from 'konva';
 
 import SequencesBuilder from './view/sequence/konvadata/SequencesBuilder.js';
 import SequenceBuilder from './view/sequence/konvadata/SequenceBuilder.js';
-import DefaultInteractionResolver from './controller/DefaultInteractionResolver.js';
-import Interactions from './controller/Interactions.js';
+import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
+import Interactions from './controller/interactions/Interactions.js';
+import CommandsHandler from './controller/interactions/CommandsHandler.js';
+import CommandHandler from  './controller/interactions/CommandHandler.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 import Intersection from './view/Intersection.js';
@@ -395,7 +397,7 @@ export class KiiGame {
                 }).pop();
 
                 if (dragResolver) {
-                    this.handle_commands(dragResolver.resolveCommands(
+                    this.commandsHandler.handleCommands(dragResolver.resolveCommands(
                         this.interactions,
                         dragged_item.id(),
                         this.target.id(),
@@ -490,11 +492,20 @@ export class KiiGame {
         this.uiEventEmitter.on('inventory_click', (target) => {
             this.handleClick(target);
         });
+        const commandHandler = new CommandHandler(
+            this.gameEventEmitter,
+            this.uiEventEmitter,
+            this.stageObjectGetter,
+            this.text,
+        );
+        this.commandsHandler = new CommandsHandler(
+            commandHandler
+        )
         // Controller(?) end
 
         // Preparation done, final steps:
         this.stage.draw();
-        this.handle_commands(
+        this.commandsHandler.handleCommands(
             new DefaultInteractionResolver('start').resolveCommands(
                 this.interactions,
                 gameData.startInteraction,
@@ -626,95 +637,10 @@ export class KiiGame {
         });
 
         if (clickResolver) {
-            this.handle_commands(clickResolver.resolveCommands(
+            this.commandsHandler.handleCommands(clickResolver.resolveCommands(
                 this.interactions,
                 target.id()
             ));
-        }
-    }
-
-    /// Loop through a list of interaction commands and execute them with
-    /// handle_command, with timeout if specified.
-    handle_commands(commands) {
-        for (const i in commands) {
-            if (commands[i].timeout != null) {
-                ((commands, i) => {
-                    setTimeout(() => {
-                        this.handle_command(commands[i]);
-                    }, commands[i].timeout);
-                })(commands, i);
-            } else {
-                this.handle_command(commands[i]);
-            }
-        }
-    }
-
-    /// Handle each interaction. Check what command is coming in, and do the thing.
-    /// Timeouts are done in handle_commands. Order of commands in interactions.json
-    /// can be important: for instance, monologue plays the speaking animation, so
-    /// play_character_animation should come after it, so that the speaking
-    /// animation is stopped and the defined animation plays, and not vice versa.
-    handle_command(command) {
-        if (command.command == "monologue") {
-            const text = this.text.getText(command.textkey.object, command.textkey.string);
-            this.gameEventEmitter.emit('monologue', text);
-        } else if (command.command == "inventory_add") {
-            const items = Array.isArray(command.item) ? command.item : [command.item];
-            items.forEach((itemName) =>
-                this.gameEventEmitter.emit('inventory_add', itemName)
-            );
-        } else if (command.command == "inventory_remove") {
-            const items = Array.isArray(command.item) ? command.item : [command.item];
-            items.forEach((itemName) =>
-                this.gameEventEmitter.emit('inventory_remove', itemName)
-            );
-        } else if (command.command == "remove_object") {
-            const objects = Array.isArray(command.object) ? command.object : [command.object];
-            objects.forEach((objectName) =>
-                this.gameEventEmitter.emit('remove_object', objectName)
-            );
-        } else if (command.command == "add_object") {
-            const objects = Array.isArray(command.object) ? command.object : [command.object];
-            objects.forEach((objectName) =>
-                this.gameEventEmitter.emit('add_object', objectName)
-            );
-        } else if (command.command == "do_transition") {
-            if (command.instant) {
-                this.gameEventEmitter.emit('do_instant_transition', {
-                    roomId: command.destination
-                });
-                return;
-            }
-            this.gameEventEmitter.emit('do_transition', {
-                roomId: command.destination
-            });
-        } else if (command.command == "play_sequence") {
-            this.gameEventEmitter.emit('play_sequence', command.sequence);
-        } else if (command.command == "set_idle_animation") {
-            this.gameEventEmitter.emit('set_idle_animation', command.animation);
-        } else if (command.command == "set_speak_animation") {
-            this.gameEventEmitter.emit('set_speak_animation', command.animation);
-        } else if (command.command == "npc_monologue") {
-            const npc = this.stageObjectGetter.getObject(command.npc);
-            const text = this.text.getText(command.textkey.object, command.textkey.string);
-            this.gameEventEmitter.emit('npc_monologue', {npc, text});
-        } else if (command.command == "play_character_animation") {
-            const animationName = command.animation;
-            const duration = command.length;
-            this.uiEventEmitter.emit('play_character_animation', { animationName, duration });
-        } else if (command.command == "play_music") {
-            const musicParams = {
-                music: command.music,
-                loop: command.loop !== undefined ? command.loop : false,
-                fade: command.fade !== undefined ? command.fade : 0
-            };
-            this.uiEventEmitter.emit('play_music', musicParams);
-        } else if (command.command === 'play_full_fade_out') {
-            this.uiEventEmitter.emit('play_full_fade_out');
-        } else if (command.command === 'play_full_fade_in') {
-            this.uiEventEmitter.emit('play_full_fade_in');
-        } else {
-            console.warn("Unknown interaction command " + command.command);
         }
     }
 
