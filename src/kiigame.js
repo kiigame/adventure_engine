@@ -58,6 +58,8 @@ export class KiiGame {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
 
+        const konvaObjectLayerPusher = new KonvaObjectLayerPusher();
+
         if (sequenceLayerBuilder === null) {
             // TODO: Move DI up
             const slideBuilder = container.get(TYPES.SlideBuilder);
@@ -65,7 +67,7 @@ export class KiiGame {
                 new SequenceBuilder(
                     slideBuilder
                 ),
-                new KonvaObjectLayerPusher()
+                konvaObjectLayerPusher
             );
         }
         if (itemsBuilder === null) {
@@ -202,14 +204,8 @@ export class KiiGame {
         // Rooms view start
         // Build rooms
         const roomLayer = this.stageObjectGetter.getObject("room_layer");
-        gameData.rooms_json.forEach((roomJson) => {
-        Konva.Node.create(
-            JSON.stringify(roomJson)
-        ).moveTo(roomLayer);
-        });
-        Konva.Node.create(
-            JSON.stringify(new RoomFaderBuilder().buildRoomFader())
-        ).moveTo(roomLayer);
+        konvaObjectLayerPusher.execute(gameData.rooms_json, roomLayer);
+        konvaObjectLayerPusher.execute([new RoomFaderBuilder().buildRoomFader()], roomLayer);
         // Prepare room object images
         for (const child of roomLayer.toObject().children) {
             this.prepareImages(child);
