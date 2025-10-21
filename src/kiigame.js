@@ -20,10 +20,10 @@ import ItemBuilder from './viewbuilder/item/konva/ItemBuilder.js';
 import RoomAnimationBuilder from './viewbuilder/room/konva/RoomAnimationBuilder.js';
 import RoomAnimationsBuilder from './viewbuilder/room/konva/RoomAnimationsBuilder.js';
 import RoomAnimations from './view/room/RoomAnimations.js';
-import RoomFaderBuilder from './viewbuilder/stage/konva/RoomFaderBuilder.js';
+import RoomFaderBuilder from './viewbuilder/room/konva/RoomFaderBuilder.js';
 import RoomFader from './view/room/RoomFader.js';
 import CharacterInRoom from './model/CharacterInRoom.js';
-import StageObjectGetter from './view/stage/StageObjectGetter.js';
+import StageObjectGetter from './util/konva/StageObjectGetter.js';
 import CharacterFramesBuilder from './viewbuilder/character/konva/CharacterFramesBuilder.js';
 import CharacterAnimationsBuilder from './viewbuilder/character/konva/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';
@@ -34,7 +34,10 @@ import Inventory from './model/Inventory.js';
 import InventoryViewModel from './view/inventory/InventoryViewModel.js';
 import InventoryItemsView from './view/inventory/InventoryItemsView.js';
 import KonvaObjectLayerPusher from './viewbuilder/util/konva/KonvaObjectLayerPusher.js';
+import StageInitializer from './viewbuilder/stage/konva/StageInitializer.js';
 import StageBuilder from './viewbuilder/stage/konva/StageBuilder.js';
+import ImagePreparer from './viewbuilder/stage/konva/ImagePreparer.js';
+import FullFaderPreparer from './viewbuilder/stage/konva/FullFaderPreparer.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -59,18 +62,6 @@ export class KiiGame {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
 
-        const konvaObjectLayerPusher = new KonvaObjectLayerPusher();
-
-        if (sequenceLayerBuilder === null) {
-            // TODO: Move DI up
-            const slideBuilder = container.get(TYPES.SlideBuilder);
-            sequenceLayerBuilder = new SequenceLayerBuilder(
-                new SequenceBuilder(
-                    slideBuilder
-                ),
-                konvaObjectLayerPusher
-            );
-        }
         if (itemsBuilder === null) {
             itemsBuilder = new ItemsBuilder(
                 new ItemBuilder()
@@ -112,15 +103,38 @@ export class KiiGame {
         this.inventory = new Inventory(this.gameEventEmitter, this.uiEventEmitter);
         // Model end
 
+        // View builder start
+        // Bootstrap
+        this.stage = new StageInitializer().initialize(gameData.layersJson);
+        this.stageObjectGetter = new StageObjectGetter(this.stage);
+        const imagePreparer = new ImagePreparer(this.stageObjectGetter);
+        const konvaObjectLayerPusher = new KonvaObjectLayerPusher();
+        // Build stage
+        if (sequenceLayerBuilder === null) {
+            // TODO: Move DI up
+            const slideBuilder = container.get(TYPES.SlideBuilder);
+            sequenceLayerBuilder = new SequenceLayerBuilder(
+                new SequenceBuilder(
+                    slideBuilder
+                ),
+                konvaObjectLayerPusher,
+                gameData.sequences_json,
+                this.stageObjectGetter.getObject("sequence_layer")
+            );
+        }
+        const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter, imagePreparer);
+        const stageBuilder = new StageBuilder(
+            this.stage,
+            fullFadeBuilder,
+            sequenceLayerBuilder,
+            imagePreparer
+        );
+        stageBuilder.build();
+        // View builder end
+
         // View start
         // Stage view start
-        const stageBuilder = new StageBuilder();
-        this.stage = stageBuilder.build(gameData.layersJson);
-        this.stageObjectGetter = new StageObjectGetter(this.stage);
         this.fader_full = this.stageObjectGetter.getObject("fader_full");
-        this.prepareImages(this.fader_full);
-        // Scale full screen fader
-        this.stageObjectGetter.getObject("black_screen_full").size({ width: this.stage.width(), height: this.stage.height() });
         // Animation for fading the whole screen
         this.fade_full = new Konva.Tween({
             node: this.fader_full,
@@ -178,17 +192,9 @@ export class KiiGame {
         });
         // Stage view end
 
-        // Sequences start
-        // Build the sequence layer
+        // Sequences view start
         this.sequences_json = gameData.sequences_json;
-        this.sequenceLayer = sequenceLayerBuilder.build(
-            this.sequences_json,
-            this.stageObjectGetter.getObject("sequence_layer")
-        );
-        // Creating sequence image objects
-        for (const child of this.sequenceLayer.toObject().children) {
-            this.prepareImages(child);
-        }
+        this.sequenceLayer = this.stageObjectGetter.getObject('sequence_layer');
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.sequenceLayer.hide();
         });
@@ -207,7 +213,7 @@ export class KiiGame {
         konvaObjectLayerPusher.execute([new RoomFaderBuilder().buildRoomFader()], roomLayer);
         // Prepare room object images
         for (const child of roomLayer.toObject().children) {
-            this.prepareImages(child);
+            imagePreparer.prepareImages(child);
         }
         // Room view component
         this.roomView = new RoomView(
@@ -240,13 +246,13 @@ export class KiiGame {
         const items = itemsBuilder.build(gameData.items_json);
         konvaObjectLayerPusher.execute(items, inventoryItemCache);
         // Creating all item image objects from json
-        this.prepareImages(inventoryItemCache.toObject());
+        imagePreparer.prepareImages(inventoryItemCache.toObject());
         // Set the drag start listener -> ui event emitting for the prospective inventory items
         inventoryItemCache.find('Image').on('dragstart', (event) => {
             this.uiEventEmitter.emit('inventory_drag_start', event.target);
         });
         const inventoryBarLayer = this.stageObjectGetter.getObject('inventory_bar_layer');
-        this.prepareImages(inventoryBarLayer.toObject());
+        imagePreparer.prepareImages(inventoryBarLayer.toObject());
         // Scale inventory bar to stage
         this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
         this.stageObjectGetter.getObject("inventory_bar").width(this.stage.width());
@@ -414,7 +420,7 @@ export class KiiGame {
         const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
         konvaObjectLayerPusher.execute(characterFrames, characterLayer);
         // Creating all image objects from json
-        this.prepareImages(characterLayer.toObject());
+        imagePreparer.prepareImages(characterLayer.toObject());
         // Load up frames from json and set up CharacterAnimations view component
         const characterAnimationData = gameData.character_json.animations;
         const characterAnimations = new CharacterAnimationsBuilder(
@@ -536,18 +542,6 @@ export class KiiGame {
         this.fade_full.reset();
         this.fader_full.show();
         this.fade_full.play();
-    }
-
-    /**
-     * Prepare images from a container (layer or group)
-     * @param {Konva.Node} container
-     */
-    prepareImages(container) {
-        for (const object of container.children) {
-            if (object.className == 'Image') {
-                this.loadImageObject(object.attrs.id, object.attrs.src);
-            }
-        }
     }
 
     /** 
@@ -693,20 +687,6 @@ export class KiiGame {
             'play_character_speak_animation',
             { duration: 3000 }
         );
-    }
-
-    /**
-     * Loads an image for the stage and sets up its onload handler.
-     * The image is cached globally to ensure it stays in memory while loading.
-     * @param {string} id - The identifier for the image object
-     * @param {string} imageSrc - The source URL of the image
-     */
-    loadImageObject(id, imageSrc) {
-        window[id] = new Image();
-        window[id].onload = () => {
-            this.stageObjectGetter.getObject(id).image(window[id]);
-        };
-        window[id].src = imageSrc;
     }
 
     /**

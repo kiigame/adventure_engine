@@ -1,4 +1,4 @@
-import StageObjectGetter from "../../view/stage/StageObjectGetter";
+import StageObjectGetter from "../../util/konva/StageObjectGetter";
 import EventEmitter from "../../events/EventEmitter.js";
 import Text from "../Text.js";
 

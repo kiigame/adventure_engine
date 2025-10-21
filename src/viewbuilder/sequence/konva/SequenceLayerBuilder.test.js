@@ -21,9 +21,22 @@ describe('Test SequencesBuilder', function () {
     it('build full sequence data with two sequences', function () {
         sequenceBuilderStub.build.withArgs([], "intro").returns({ "data": "intro" });
         sequenceBuilderStub.build.withArgs([], "outro").returns({ "data": "outro" });
+        const sequences = {
+            "intro": {
+                slides: []
+            },
+            "outro": {
+                slides: []
+            }
+        };
         const layerStub = createStubInstance(Layer);
-
-        const sequenceLayerBuilder = new SequenceLayerBuilder(sequenceBuilderStub, konvaObjectLayerPusherStub);
+        konvaObjectLayerPusherStub.execute.returns(layerStub);
+        const sequenceLayerBuilder = new SequenceLayerBuilder(
+            sequenceBuilderStub,
+            konvaObjectLayerPusherStub,
+            sequences,
+            layerStub
+        );
 
         const expected = [
             {
@@ -33,16 +46,7 @@ describe('Test SequencesBuilder', function () {
                 "data": "outro"
             }
         ];
-        const sequences = {
-            "intro": {
-                slides: []
-            },
-            "outro": {
-                slides: []
-            }
-        };
-        konvaObjectLayerPusherStub.execute.returns(layerStub);
-        const result = sequenceLayerBuilder.build(sequences, layerStub);
+        const result = sequenceLayerBuilder.build();
         expect(konvaObjectLayerPusherStub.execute).to.be.calledWith(expected, layerStub);
         expect(result).to.be.equal(layerStub);
     });

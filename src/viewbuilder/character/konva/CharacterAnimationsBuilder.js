@@ -1,4 +1,4 @@
-import StageObjectGetter from "../../../view/stage/StageObjectGetter";
+import StageObjectGetter from "../../../util/konva/StageObjectGetter";
 
 class CharacterAnimationsBuilder {
     /**

@@ -7,6 +7,7 @@ import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
 import EventEmitter from './events/EventEmitter.js';
+import ImagePreparer from './viewbuilder/stage/konva/ImagePreparer.js';
 
 const jsonGetter = new JSONGetter();
 
@@ -74,7 +75,7 @@ stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 10
 
 const input_text = stage.find('#input_text')[0];
 const input_layer = stage.find('#input_layer')[0];
-kiigame.prepareImages(input_layer);
+new ImagePreparer(kiigame.stageObjectGetter).prepareImages(input_layer);
 
 // For checking whether player has selected their jersey number
 let number_selected = false;

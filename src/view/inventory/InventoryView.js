@@ -1,5 +1,5 @@
 import EventEmitter from "../../events/EventEmitter.js";
-import StageObjectGetter from "../stage/StageObjectGetter.js";
+import StageObjectGetter from "../../util/konva/StageObjectGetter.js";
 import InventoryItemsView from "./InventoryItemsView.js"
 
 class InventoryView {
