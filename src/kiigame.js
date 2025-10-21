@@ -38,6 +38,7 @@ import StageInitializer from './viewbuilder/stage/konva/StageInitializer.js';
 import StageBuilder from './viewbuilder/stage/konva/StageBuilder.js';
 import ImagePreparer from './viewbuilder/stage/konva/ImagePreparer.js';
 import FullFaderPreparer from './viewbuilder/stage/konva/FullFaderPreparer.js';
+import RoomLayerBuilder from './viewbuilder/room/konva/RoomLayerBuilder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -110,6 +111,7 @@ export class KiiGame {
         const imagePreparer = new ImagePreparer(this.stageObjectGetter);
         const konvaObjectLayerPusher = new KonvaObjectLayerPusher();
         // Build stage
+        const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter, imagePreparer);
         if (sequenceLayerBuilder === null) {
             // TODO: Move DI up
             const slideBuilder = container.get(TYPES.SlideBuilder);
@@ -122,22 +124,21 @@ export class KiiGame {
                 this.stageObjectGetter.getObject("sequence_layer")
             );
         }
-        const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter, imagePreparer);
+        const roomLayerBuilder = new RoomLayerBuilder(
+            konvaObjectLayerPusher,
+            new RoomFaderBuilder(),
+            imagePreparer,
+            gameData.rooms_json,
+            this.stageObjectGetter.getObject("room_layer")
+        );
         const stageBuilder = new StageBuilder(
             this.stage,
             fullFadeBuilder,
             sequenceLayerBuilder,
+            roomLayerBuilder,
             imagePreparer
         );
         stageBuilder.build();
-        // Build rooms
-        const roomLayer = this.stageObjectGetter.getObject("room_layer");
-        konvaObjectLayerPusher.execute(gameData.rooms_json, roomLayer);
-        konvaObjectLayerPusher.execute([new RoomFaderBuilder().buildRoomFader()], roomLayer);
-        // Prepare room object images
-        for (const child of roomLayer.toObject().children) {
-            imagePreparer.prepareImages(child);
-        }
         // Scale room fader UI
         this.stageObjectGetter.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
         // Build rooms end
@@ -240,6 +241,7 @@ export class KiiGame {
         // Sequences end
 
         // Rooms view start
+        const roomLayer = this.stageObjectGetter.getObject('room_layer');
         // Room view component
         this.roomView = new RoomView(
             this.uiEventEmitter,
