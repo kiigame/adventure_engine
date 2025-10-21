@@ -1,12 +1,19 @@
-import { assert } from 'chai';
+import { expect, use } from 'chai';
 import { createStubInstance, restore } from 'sinon';
-import SequencesBuilder from './SequencesBuilder.js';
+import sinonChai from "sinon-chai";
+import SequenceLayerBuilder from './SequenceLayerBuilder.js';
 import SequenceBuilder from './SequenceBuilder.js';
+import KonvaObjectLayerPusher from '../../util/konva/KonvaObjectLayerPusher.js';
+import pkg from 'konva';
+const { Layer } = pkg;
+use(sinonChai);
 
 describe('Test SequencesBuilder', function () {
     let sequenceBuilderStub;
+    let konvaObjectLayerPusherStub;
     beforeEach(() => {
         sequenceBuilderStub = createStubInstance(SequenceBuilder);
+        konvaObjectLayerPusherStub = createStubInstance(KonvaObjectLayerPusher);
     });
     afterEach(() => {
         restore();
@@ -14,8 +21,9 @@ describe('Test SequencesBuilder', function () {
     it('build full sequence data with two sequences', function () {
         sequenceBuilderStub.build.withArgs([], "intro").returns({ "data": "intro" });
         sequenceBuilderStub.build.withArgs([], "outro").returns({ "data": "outro" });
+        const layerStub = createStubInstance(Layer);
 
-        const sequencesBuilder = new SequencesBuilder(sequenceBuilderStub);
+        const sequenceLayerBuilder = new SequenceLayerBuilder(sequenceBuilderStub, konvaObjectLayerPusherStub);
 
         const expected = [
             {
@@ -33,7 +41,9 @@ describe('Test SequencesBuilder', function () {
                 slides: []
             }
         };
-        const result = sequencesBuilder.build(sequences);
-        assert.deepEqual(expected, result);
+        konvaObjectLayerPusherStub.execute.returns(layerStub);
+        const result = sequenceLayerBuilder.build(sequences, layerStub);
+        expect(konvaObjectLayerPusherStub.execute).to.be.calledWith(expected, layerStub);
+        expect(result).to.be.equal(layerStub);
     });
 });

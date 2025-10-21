@@ -1,6 +1,6 @@
 import Konva from 'konva';
 
-import SequencesBuilder from './viewbuilder/sequence/konva/SequencesBuilder.js';
+import SequenceLayerBuilder from './viewbuilder/sequence/konva/SequenceLayerBuilder.js';
 import SequenceBuilder from './viewbuilder/sequence/konva/SequenceBuilder.js';
 import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
 import Interactions from './controller/interactions/Interactions.js';
@@ -33,6 +33,7 @@ import CharacterView from './view/character/CharacterView.js';
 import Inventory from './model/Inventory.js';
 import InventoryViewModel from './view/inventory/InventoryViewModel.js';
 import InventoryItemsView from './view/inventory/InventoryItemsView.js';
+import KonvaObjectLayerPusher from './viewbuilder/util/konva/KonvaObjectLayerPusher.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -40,7 +41,7 @@ import { container, TYPES } from "./inversify.config.js";
 
 export class KiiGame {
     constructor(
-        sequencesBuilder = null,
+        sequenceLayerBuilder = null,
         itemsBuilder = null,
         clickResolvers = [],
         dragResolvers = [],
@@ -57,13 +58,14 @@ export class KiiGame {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
 
-        if (sequencesBuilder === null) {
+        if (sequenceLayerBuilder === null) {
             // TODO: Move DI up
             const slideBuilder = container.get(TYPES.SlideBuilder);
-            sequencesBuilder = new SequencesBuilder(
+            sequenceLayerBuilder = new SequenceLayerBuilder(
                 new SequenceBuilder(
                     slideBuilder
-                )
+                ),
+                new KonvaObjectLayerPusher()
             );
         }
         if (itemsBuilder === null) {
@@ -176,15 +178,12 @@ export class KiiGame {
         // Stage view end
 
         // Sequences start
-        // Build sequences and push them to the sequence layer
+        // Build the sequence layer
         this.sequences_json = gameData.sequences_json;
-        const builtSequences = sequencesBuilder.build(this.sequences_json);
-        this.sequenceLayer = this.stageObjectGetter.getObject("sequence_layer");
-        builtSequences.forEach((builtSequence) => {
-            Konva.Node.create(
-                JSON.stringify(builtSequence),
-            ).moveTo(this.sequenceLayer);
-        })
+        this.sequenceLayer = sequenceLayerBuilder.build(
+            this.sequences_json,
+            this.stageObjectGetter.getObject("sequence_layer")
+        );
         // Creating sequence image objects
         for (const child of this.sequenceLayer.toObject().children) {
             this.prepareImages(child);
