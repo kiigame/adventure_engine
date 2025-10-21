@@ -1,4 +1,4 @@
-import StageObjectGetter from "../../stage/StageObjectGetter.js";
+import StageObjectGetter from "../../../view/stage/StageObjectGetter.js";
 import RoomAnimationBuilder from "./RoomAnimationBuilder.js";
 
 class RoomAnimationsBuilder {

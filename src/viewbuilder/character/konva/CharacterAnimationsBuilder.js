@@ -1,4 +1,4 @@
-import StageObjectGetter from "../../stage/StageObjectGetter";
+import StageObjectGetter from "../../../view/stage/StageObjectGetter";
 
 class CharacterAnimationsBuilder {
     /**

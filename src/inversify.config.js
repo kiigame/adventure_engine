@@ -1,6 +1,6 @@
 import { decorate, injectable, inject, Container } from "inversify";
-import SlideBuilder from "./view/sequence/konvadata/SlideBuilder.js";
-import TextBuilder from "./view/sequence/konvadata/TextBuilder.js";
+import SlideBuilder from "./viewbuilder/sequence/konva/SlideBuilder.js";
+import TextBuilder from "./viewbuilder/sequence/konva/TextBuilder.js";
 
 export const TYPES = {
     TextBuilder: "TextBuilder",
