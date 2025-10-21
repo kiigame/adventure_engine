@@ -8,29 +8,30 @@ class Inventory {
     constructor(gameEventEmitter, uiEventEmitter) {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
-        this.items = []; // string[]
-        this.gameEventEmitter.on('inventory_add', (itemName) => {
-            this.inventoryAdd(itemName);
+        this.items = []; // Object { name, category }[]
+        this.gameEventEmitter.on('inventory_add', ({ name, category }) => {
+            this.inventoryAdd(name, category);
         });
-        this.gameEventEmitter.on('inventory_remove', (itemName) => {
-            this.inventoryRemove(itemName);
+        this.gameEventEmitter.on('inventory_remove', (name) => {
+            this.inventoryRemove(name);
         });
     }
 
     /**
-     * @param {string} itemName
+     * @param {string} name
+     * @param {string} category category/type of the inventory item
      */
-    inventoryAdd(itemName) {
-        this.items.push(itemName);
-        this.gameEventEmitter.emit('inventory_item_added', { itemList: this.items, itemNameAdded: itemName });
+    inventoryAdd(name, category) {
+        this.items.push({ name, category });
+        this.gameEventEmitter.emit('inventory_item_added', { itemList: this.items, itemNameAdded: name });
     }
 
     /**
-     * @param {string} itemNameToRemove
+     * @param {string} name
      */
-    inventoryRemove(itemNameToRemove) {
-        this.items = this.items.filter((item) => itemNameToRemove !== item);
-        this.gameEventEmitter.emit('inventory_item_removed', { itemList: this.items, itemNameRemoved: itemNameToRemove });
+    inventoryRemove(name) {
+        this.items = this.items.filter((item) => name !== item.name);
+        this.gameEventEmitter.emit('inventory_item_removed', { itemList: this.items, itemNameRemoved: name });
     }
 }
 

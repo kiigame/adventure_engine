@@ -24,7 +24,7 @@ describe('inventory view model tests', () => {
             const inventoryItemAddedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_item_added';
             }).args[1];
-            const itemList = ['really_nice_item', 'even_better_item'];
+            const itemList = [{ name: 'really_nice_item', category: 'item' }, { name: 'even_better_item', category: 'item' }];
             const itemNameAdded = 'even_better_item';
             inventoryItemAddedCallback({ itemList, itemNameAdded });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
@@ -42,7 +42,16 @@ describe('inventory view model tests', () => {
             const inventoryItemAddedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_item_added';
             }).args[1];
-            const itemList = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'EIGHT'];
+            const itemList = [
+                { name: 'one', category: 'item' },
+                { name: 'two', category: 'item' },
+                { name: 'three', category: 'item' },
+                { name: 'four', category: 'item' },
+                { name: 'five', category: 'item' },
+                { name: 'six', category: 'item' },
+                { name: 'seven', category: 'item' },
+                { name: 'EIGHT', category: 'item' }
+            ];
             const itemNameAdded = 'EIGHT';
             inventoryItemAddedCallback({ itemList, itemNameAdded });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
@@ -120,7 +129,7 @@ describe('inventory view model tests', () => {
             const inventoryItemRemovedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_item_removed';
             }).args[1];
-            const itemList = ['really_nice_item'];
+            const itemList = [{ name: 'really_nice_item', category: 'item' }];
             const itemNameRemoved = 'even_better_item';
             inventoryItemRemovedCallback({ itemList, itemNameRemoved });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
@@ -139,7 +148,16 @@ describe('inventory view model tests', () => {
             const inventoryItemRemovedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_item_removed';
             }).args[1];
-            const itemList = ['one', 'two', 'three', 'four', 'six', 'seven', 'eight', 'nine'];
+            const itemList = [
+                { name: 'one', category: 'item' },
+                { name: 'two', category: 'item' },
+                { name: 'three', category: 'item' },
+                { name: 'four', category: 'item' },
+                { name: 'six', category: 'item' },
+                { name: 'seven', category: 'item' },
+                { name: 'eight', category: 'item' },
+                { name: 'nine', category: 'item' }
+            ];
             const itemNameRemoved = 'FIVE';
             inventoryItemRemovedCallback({ itemList, itemNameRemoved: itemNameRemoved });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(

@@ -251,8 +251,8 @@ gameEventEmitter.on('arrived_in_room', function (roomId) {
     if (roomId === 'end_layer') {
         const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text");
         let rewardsCount = 0;
-        for (const inventoryItem of kiigame.inventoryView.inventoryItemsView.inventoryItems.children) {
-            if (inventoryItem.getAttr('category') === 'reward') {
+        for (const inventoryItem of kiigame.inventory.items) {
+            if (inventoryItem.category === 'reward') {
                 rewardsCount++;
             }
         }

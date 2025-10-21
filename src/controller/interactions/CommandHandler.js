@@ -8,12 +8,14 @@ class CommandHandler {
      * @param {EventEmitter} uiEventEmitter
      * @param {StageObjectGetter} stageObjectGetter
      * @param {Text} text
+     * @param {object} items_json
      */
-    constructor(gameEventEmitter, uiEventEmitter, stageObjectGetter, text) {
+    constructor(gameEventEmitter, uiEventEmitter, stageObjectGetter, text, items_json) {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
         this.stageObjectGetter = stageObjectGetter;
         this.text = text;
+        this.items_json = items_json;
     }
 
     /**
@@ -30,13 +32,13 @@ class CommandHandler {
             this.gameEventEmitter.emit('monologue', text);
         } else if (command.command == "inventory_add") {
             const items = Array.isArray(command.item) ? command.item : [command.item];
-            items.forEach((itemName) =>
-                this.gameEventEmitter.emit('inventory_add', itemName)
+            items.forEach((name) =>
+                this.gameEventEmitter.emit('inventory_add', { name, category: this.items_json[name].category })
             );
         } else if (command.command == "inventory_remove") {
             const items = Array.isArray(command.item) ? command.item : [command.item];
-            items.forEach((itemName) =>
-                this.gameEventEmitter.emit('inventory_remove', itemName)
+            items.forEach((name) =>
+                this.gameEventEmitter.emit('inventory_remove', name)
             );
         } else if (command.command == "remove_object") {
             const objects = Array.isArray(command.object) ? command.object : [command.object];

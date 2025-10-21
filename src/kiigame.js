@@ -104,7 +104,7 @@ export class KiiGame {
         // "Player character in room" model status
         new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
         // Inventory model
-        new Inventory(this.gameEventEmitter, this.uiEventEmitter);
+        this.inventory = new Inventory(this.gameEventEmitter, this.uiEventEmitter);
         // Model end
 
         // View start
@@ -497,6 +497,7 @@ export class KiiGame {
             this.uiEventEmitter,
             this.stageObjectGetter,
             this.text,
+            gameData.items_json, // TODO: items model?
         );
         this.commandsHandler = new CommandsHandler(
             commandHandler

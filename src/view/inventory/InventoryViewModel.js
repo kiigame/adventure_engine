@@ -40,13 +40,25 @@ class InventoryViewModel {
     }
 
     /**
+     * @param {object[]} modelItemList Object { name, category }
+     * @returns {string[]} the viewModelItemList
+     */
+    modelItemListToViewModelItemList(modelItemList) {
+        const viewModelItemList = [];
+        modelItemList.forEach((modelItem) => {
+            viewModelItemList.push(modelItem.name);
+        });
+        return viewModelItemList;
+    }
+
+    /**
      * Handle item having been added to the inventory. Updates which items should be visible in UI.
      *
-     * @param {string[]} itemList Current inventory model status (list of items in inventory, names)
+     * @param {string[]} itemList Current inventory model status (list of items in inventory, Object { name, category })
      * @param {string} itemNameAdded The name of the item added to the inventory.
      */
     handleInventoryItemAdded(itemList, itemNameAdded) {
-        this.inventoryList = itemList;
+        this.inventoryList = this.modelItemListToViewModelItemList(itemList);
 
         if (this.inventoryList.indexOf(itemNameAdded) > -1) {
             this.inventoryList.splice(this.inventoryList.indexOf(itemNameAdded), 1, itemNameAdded);
@@ -65,7 +77,7 @@ class InventoryViewModel {
      * @param {string[]} itemList
      */
     handleInventoryItemRemoved(itemList) {
-        this.inventoryList = itemList;
+        this.inventoryList = this.modelItemListToViewModelItemList(itemList);
 
         // If there's empty room on the right, move index to the left
         if (this.inventoryIndex + this.inventoryMax > this.inventoryList.length) {
