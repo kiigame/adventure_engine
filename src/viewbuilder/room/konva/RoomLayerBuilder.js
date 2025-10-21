@@ -1,17 +1,17 @@
-import KonvaObjectLayerPusher from "../../util/konva/KonvaObjectLayerPusher";
+import KonvaObjectContainerPusher from "../../util/konva/KonvaObjectContainerPusher";
 import RoomFaderBuilder from "./RoomFaderBuilder";
 import ImagePreparer from "../../stage/konva/ImagePreparer";
 
 class RoomLayerBuilder {
     /**
-     * @param {KonvaObjectLayerPusher} konvaObjectLayerPusher
+     * @param {KonvaObjectContainerPusher} konvaObjectContainerPusher
      * @param {RoomFaderBuilder} roomFaderBuilder
      * @param {ImagePreparer} imagePreparer
      * @param {object} rooms_json
      * @param {Konva.Layer} roomLayer
      */
-    constructor(konvaObjectLayerPusher, roomFaderBuilder, imagePreparer, rooms_json, roomLayer) {
-        this.konvaObjectLayerPusher = konvaObjectLayerPusher;
+    constructor(konvaObjectContainerPusher, roomFaderBuilder, imagePreparer, rooms_json, roomLayer) {
+        this.konvaObjectContainerPusher = konvaObjectContainerPusher;
         this.roomFaderBuilder = roomFaderBuilder;
         this.imagePreparer = imagePreparer;
         this.roomsJson = rooms_json;
@@ -19,8 +19,8 @@ class RoomLayerBuilder {
     }
 
     build(width, height) {
-        this.konvaObjectLayerPusher.execute(this.roomsJson, this.roomLayer);
-        this.konvaObjectLayerPusher.execute([this.roomFaderBuilder.buildRoomFader()], this.roomLayer);
+        this.konvaObjectContainerPusher.execute(this.roomsJson, this.roomLayer);
+        this.konvaObjectContainerPusher.execute([this.roomFaderBuilder.buildRoomFader()], this.roomLayer);
         for (const child of this.roomLayer.toObject().children) {
             this.imagePreparer.prepareImages(child);
         }

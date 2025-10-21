@@ -3,17 +3,17 @@ import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import SequenceLayerBuilder from './SequenceLayerBuilder.js';
 import SequenceBuilder from './SequenceBuilder.js';
-import KonvaObjectLayerPusher from '../../util/konva/KonvaObjectLayerPusher.js';
+import KonvaObjectContainerPusher from '../../util/konva/KonvaObjectContainerPusher.js';
 import pkg from 'konva';
 const { Layer } = pkg;
 use(sinonChai);
 
 describe('Test SequencesBuilder', function () {
     let sequenceBuilderStub;
-    let konvaObjectLayerPusherStub;
+    let konvaObjectContainerPusherStub;
     beforeEach(() => {
         sequenceBuilderStub = createStubInstance(SequenceBuilder);
-        konvaObjectLayerPusherStub = createStubInstance(KonvaObjectLayerPusher);
+        konvaObjectContainerPusherStub = createStubInstance(KonvaObjectContainerPusher);
     });
     afterEach(() => {
         restore();
@@ -30,10 +30,10 @@ describe('Test SequencesBuilder', function () {
             }
         };
         const layerStub = createStubInstance(Layer);
-        konvaObjectLayerPusherStub.execute.returns(layerStub);
+        konvaObjectContainerPusherStub.execute.returns(layerStub);
         const sequenceLayerBuilder = new SequenceLayerBuilder(
             sequenceBuilderStub,
-            konvaObjectLayerPusherStub,
+            konvaObjectContainerPusherStub,
             sequences,
             layerStub
         );
@@ -47,7 +47,7 @@ describe('Test SequencesBuilder', function () {
             }
         ];
         const result = sequenceLayerBuilder.build();
-        expect(konvaObjectLayerPusherStub.execute).to.be.calledWith(expected, layerStub);
+        expect(konvaObjectContainerPusherStub.execute).to.be.calledWith(expected, layerStub);
         expect(result).to.be.equal(layerStub);
     });
 });

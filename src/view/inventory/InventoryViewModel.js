@@ -16,11 +16,11 @@ class InventoryViewModel {
         // The item number where the shown items start from (how many items from the beginning are not shown)
         this.inventoryIndex = 0;
 
-        this.gameEventEmitter.on('inventory_item_added', ({ itemList, itemNameAdded }) => {
-            this.handleInventoryItemAdded(itemList, itemNameAdded);
+        this.gameEventEmitter.on('inventory_items_added', ({ itemList, itemNamesAdded }) => {
+            this.handleInventoryItemsAdded(itemList, itemNamesAdded);
         });
-        this.gameEventEmitter.on('inventory_item_removed', ({ itemList, itemNameRemoved: _itemNameRemoved }) => {
-            this.handleInventoryItemRemoved(itemList);
+        this.gameEventEmitter.on('inventory_items_removed', ({ itemList }) => {
+            this.handleInventoryItemsRemoved(itemList);
         });
         this.uiEventEmitter.on('inventory_left_arrow_engaged', () => {
             this.handleInventoryLeftArrowEngaged();
@@ -33,7 +33,7 @@ class InventoryViewModel {
         });
     }
 
-    scrollInventoryToItem (itemName) {
+    scrollInventoryToItem(itemName) {
         if (this.inventoryList.indexOf(itemName) > this.inventoryIndex + this.inventoryMax - 1) {
             this.inventoryIndex = Math.max(this.inventoryList.indexOf(itemName) + 1 - this.inventoryMax, 0);
         }
@@ -55,18 +55,13 @@ class InventoryViewModel {
      * Handle item having been added to the inventory. Updates which items should be visible in UI.
      *
      * @param {string[]} itemList Current inventory model status (list of items in inventory, Object { name, category })
-     * @param {string} itemNameAdded The name of the item added to the inventory.
+     * @param {string[]} itemNamesAdded The names of the items added to the inventory.
      */
-    handleInventoryItemAdded(itemList, itemNameAdded) {
+    handleInventoryItemsAdded(itemList, itemNamesAdded) {
         this.inventoryList = this.modelItemListToViewModelItemList(itemList);
 
-        if (this.inventoryList.indexOf(itemNameAdded) > -1) {
-            this.inventoryList.splice(this.inventoryList.indexOf(itemNameAdded), 1, itemNameAdded);
-        } else {
-            this.inventoryList.push(itemNameAdded);
-        }
-        // The picked up item should be visible in the inventory. Scroll inventory to the right if necessary.
-        this.scrollInventoryToItem(itemNameAdded);
+        // The last picked up item should be visible in the inventory. Scroll inventory to the right if necessary.
+        this.scrollInventoryToItem(itemNamesAdded.at(-1));
 
         this.calculateVisibleItems();
     }
@@ -76,7 +71,7 @@ class InventoryViewModel {
      *
      * @param {string[]} itemList
      */
-    handleInventoryItemRemoved(itemList) {
+    handleInventoryItemsRemoved(itemList) {
         this.inventoryList = this.modelItemListToViewModelItemList(itemList);
 
         // If there's empty room on the right, move index to the left

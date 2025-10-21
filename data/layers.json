@@ -79,14 +79,6 @@
     },
     {
       "attrs": {
-        "id": "inventory_item_cache",
-        "visible": false
-      },
-      "children": [],
-      "className": "Layer"
-    },
-    {
-      "attrs": {
         "id": "room_layer",
         "visible": true
       },

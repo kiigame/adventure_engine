@@ -33,7 +33,7 @@ import CharacterView from './view/character/CharacterView.js';
 import Inventory from './model/Inventory.js';
 import InventoryViewModel from './view/inventory/InventoryViewModel.js';
 import InventoryItemsView from './view/inventory/InventoryItemsView.js';
-import KonvaObjectLayerPusher from './viewbuilder/util/konva/KonvaObjectLayerPusher.js';
+import KonvaObjectContainerPusher from './viewbuilder/util/konva/KonvaObjectContainerPusher.js';
 import StageInitializer from './viewbuilder/stage/konva/StageInitializer.js';
 import StageBuilder from './viewbuilder/stage/konva/StageBuilder.js';
 import ImagePreparer from './viewbuilder/stage/konva/ImagePreparer.js';
@@ -109,7 +109,7 @@ export class KiiGame {
         this.stage = new StageInitializer().initialize(gameData.layersJson);
         this.stageObjectGetter = new StageObjectGetter(this.stage);
         const imagePreparer = new ImagePreparer(this.stageObjectGetter);
-        const konvaObjectLayerPusher = new KonvaObjectLayerPusher();
+        const konvaObjectContainerPusher = new KonvaObjectContainerPusher();
         // Build stage
         const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter, imagePreparer);
         if (sequenceLayerBuilder === null) {
@@ -119,13 +119,13 @@ export class KiiGame {
                 new SequenceBuilder(
                     slideBuilder
                 ),
-                konvaObjectLayerPusher,
+                konvaObjectContainerPusher,
                 gameData.sequences_json,
                 this.stageObjectGetter.getObject("sequence_layer")
             );
         }
         const roomLayerBuilder = new RoomLayerBuilder(
-            konvaObjectLayerPusher,
+            konvaObjectContainerPusher,
             new RoomFaderBuilder(),
             imagePreparer,
             gameData.rooms_json,
@@ -140,11 +140,17 @@ export class KiiGame {
         );
         stageBuilder.build();
         // Build items and push them to the inventory item cache layer
-        const inventoryItemCache = this.stageObjectGetter.getObject('inventory_item_cache');
+        const inventoryItems = this.stageObjectGetter.getObject('inventory_items');
         const items = itemsBuilder.build(gameData.items_json);
-        konvaObjectLayerPusher.execute(items, inventoryItemCache);
+        konvaObjectContainerPusher.execute(items, inventoryItems);
         // Creating all item image objects from json
-        imagePreparer.prepareImages(inventoryItemCache.toObject());
+        imagePreparer.prepareImages(inventoryItems.toObject());
+        // Not sure if this is necessary
+        inventoryItems.getChildren((shape) => {
+            if (shape.getClassName === 'Image') {
+                shape.clearCache();
+            }
+        });
         // Build items end
         // Build inventory
         const inventoryBarLayer = this.stageObjectGetter.getObject('inventory_bar_layer');
@@ -157,7 +163,7 @@ export class KiiGame {
         // Push character animation frames to correct layer.
         const characterLayer = this.stageObjectGetter.getObject("character_layer");
         const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
-        konvaObjectLayerPusher.execute(characterFrames, characterLayer);
+        konvaObjectContainerPusher.execute(characterFrames, characterLayer);
         // Creating all image objects from json
         imagePreparer.prepareImages(characterLayer.toObject());
         // Build character layer end
@@ -263,16 +269,11 @@ export class KiiGame {
         // Rooms view end
 
         // Inventory & items view start
-        // Set the drag start listener -> ui event emitting for the prospective inventory items
-        inventoryItemCache.find('Image').on('dragstart', (event) => {
-            this.uiEventEmitter.emit('inventory_drag_start', event.target);
-        });
         // Inventory items view component
         const inventoryItemsView = new InventoryItemsView(
             uiEventEmitter,
             gameEventEmitter,
-            this.stageObjectGetter,
-            inventoryBarLayer.findOne((node) => node.attrs.id === 'inventory_items'),
+            inventoryItems,
             this.stage.height() - 90
         );
         // Inventory view component
@@ -297,20 +298,15 @@ export class KiiGame {
         // For limiting the speed of inventory browsing when dragging an item
         this.dragDelay = 500;
         this.dragDelayEnabled = false;
-        // The item dragged from the inventory
-        this.dragged_item;
         // Intersection target (object below dragged item)
         this.target;
-        this.uiEventEmitter.on('inventory_drag_start', (target) => {
-            this.dragged_item = target;
-        });
         this.uiEventEmitter.on('inventory_touchstart', (target) => {
             this.dragStartX = target.x();
             this.dragStartY = target.y();
         });
         // While dragging events (use item on item or object)
         this.stage.on('dragmove', (event) => {
-            this.dragged_item = event.target;
+            const dragged_item = event.target;
 
             if (!this.delayEnabled) {
                 // Setting a small delay to not spam intersection check on every moved pixel
@@ -323,9 +319,9 @@ export class KiiGame {
 
                     if (object != undefined && object.getAttr('category') != 'room_background') {
                         // Break if still intersecting with the same target
-                        if (this.target != null && this.intersection.check(this.dragged_item, this.target)) {
+                        if (this.target != null && this.intersection.check(dragged_item, this.target)) {
                             break;
-                        } else if (this.intersection.check(this.dragged_item, object)) {
+                        } else if (this.intersection.check(dragged_item, object)) {
                             // If not, check for a new target
                             if (this.target != object) {
                                 this.target = object;
@@ -346,7 +342,7 @@ export class KiiGame {
                         const object = visibleInventoryItems[i];
                         if (object != undefined) {
                             // Look for intersecting targets
-                            if (this.intersection.check(this.dragged_item, object)) {
+                            if (this.intersection.check(dragged_item, object)) {
                                 if (this.target != object) {
                                     this.target = object;
                                 }
@@ -363,11 +359,11 @@ export class KiiGame {
                     const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
                     const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
                     if (!this.dragDelayEnabled) {
-                        if (this.intersection.check(this.dragged_item, leftArrow)) {
+                        if (this.intersection.check(dragged_item, leftArrow)) {
                             this.dragDelayEnabled = true;
                             this.uiEventEmitter.emit('inventory_left_arrow_draghovered');
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
-                        } else if (this.intersection.check(this.dragged_item, rightArrow)) {
+                        } else if (this.intersection.check(dragged_item, rightArrow)) {
                             this.dragDelayEnabled = true;
                             this.uiEventEmitter.emit('inventory_right_arrow_draghovered');
                             setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
@@ -380,7 +376,7 @@ export class KiiGame {
 
                 // If target is found, highlight it and show the interaction text
                 if (this.target != null) {
-                    this.uiEventEmitter.emit('dragmove_hover_on_object', this.target);
+                    this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem: dragged_item });
                 } else {
                     this.uiEventEmitter.emit('dragmove_hover_on_nothing');
                 }
@@ -413,14 +409,7 @@ export class KiiGame {
                 }
             }
 
-            this.uiEventEmitter.emit('dragend_ended', this.dragged_item);
-        });
-        // Remove the dragged item if it was removed as a result of drag end -> interaction -> remove item
-        this.gameEventEmitter.on('inventory_item_removed', ({ itemList: _itemList, itemNameRemoved }) => {
-            if (this.dragged_item && this.dragged_item.attrs.id === itemNameRemoved) {
-                this.dragged_item.hide();
-                this.dragged_item = null;
-            }
+            this.uiEventEmitter.emit('dragend_ended', dragged_item);
         });
         // Item Drag View Model end
         // Inventory & items view end
@@ -464,8 +453,8 @@ export class KiiGame {
         this.uiEventEmitter.on('inventory_drag_start', (_target) => {
             this.clearMonologues();
         });
-        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
-            this.showTextOnDragMove(target);
+        this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, draggedItem }) => {
+            this.showTextOnDragMove(target, draggedItem);
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
             this.clearInteractionText();
@@ -527,12 +516,13 @@ export class KiiGame {
 
     /**
      * TODO: clean up and move to a view component (but which?)
-     * @param {*} target
+     * @param {Konva.Shape} target
+     * @param {Konva.Shape} draggedItem
      */
-    showTextOnDragMove(target) {
+    showTextOnDragMove(target, draggedItem) {
         this.interaction_text.text(this.text.getName(target.id()));
-        this.interaction_text.x(this.dragged_item.x() + (this.dragged_item.width() / 2));
-        this.interaction_text.y(this.dragged_item.y() - 30);
+        this.interaction_text.x(draggedItem.x() + (draggedItem.width() / 2));
+        this.interaction_text.y(draggedItem.y() - 30);
         this.interaction_text.offset({
             x: this.interaction_text.width() / 2
         });

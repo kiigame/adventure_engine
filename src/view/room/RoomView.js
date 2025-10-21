@@ -27,7 +27,7 @@ class RoomView {
         this.uiEventEmitter.on('inventory_drag_start', (draggedItem) => {
             this.moveItemToRoomLayer(draggedItem);
         });
-        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
+        this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, dragged_item: _dragged_item }) => {
             this.clearRoomObjectBlur();
             this.glowRoomObject(target);
             this.drawRoomLayer();

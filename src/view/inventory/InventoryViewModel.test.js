@@ -18,15 +18,15 @@ describe('inventory view model tests', () => {
         restore();
     });
     describe('add inventory item', () => {
-        it('should emit visible items and arrows when receiving inventory_item_added event', () => {
+        it('should emit visible items and arrows when receiving inventory_items_added event', () => {
             const inventoryViewModel = new InventoryViewModel(uiEventEmitterStub, gameEventEmitterStub, 7);
             inventoryViewModel.inventoryList = ['really_nice_item'];
-            const inventoryItemAddedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_added';
+            const inventoryItemsAddedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'inventory_items_added';
             }).args[1];
             const itemList = [{ name: 'really_nice_item', category: 'item' }, { name: 'even_better_item', category: 'item' }];
-            const itemNameAdded = 'even_better_item';
-            inventoryItemAddedCallback({ itemList, itemNameAdded });
+            const itemNamesAdded = ['even_better_item'];
+            inventoryItemsAddedCallback({ itemList, itemNamesAdded });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {
@@ -39,8 +39,8 @@ describe('inventory view model tests', () => {
         it('should show left arrow and latest item when adding item and inventory size is larger than max', () => {
             const inventoryViewModel = new InventoryViewModel(uiEventEmitterStub, gameEventEmitterStub, 7);
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
-            const inventoryItemAddedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_added';
+            const inventoryItemsAddedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'inventory_items_added';
             }).args[1];
             const itemList = [
                 { name: 'one', category: 'item' },
@@ -52,8 +52,8 @@ describe('inventory view model tests', () => {
                 { name: 'seven', category: 'item' },
                 { name: 'EIGHT', category: 'item' }
             ];
-            const itemNameAdded = 'EIGHT';
-            inventoryItemAddedCallback({ itemList, itemNameAdded });
+            const itemNamesAdded = ['EIGHT'];
+            inventoryItemsAddedCallback({ itemList, itemNamesAdded });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {
@@ -103,14 +103,15 @@ describe('inventory view model tests', () => {
                 }
             );
         });
-        it('should not update index if the dragged item no longer exists (was removed)', () => {
+        it('should not update index if the dragged item was not visible in the inventory and dragged item was removed', () => {
             const inventoryViewModel = new InventoryViewModel(uiEventEmitterStub, gameEventEmitterStub, 7);
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
             inventoryViewModel.inventoryIndex = 0;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'dragend_ended';
             }).args[1];
-            const draggedItemMock = null;
+            const draggedItemMock = createStubInstance(Shape);
+            draggedItemMock.attrs = { id: 'EIGHT' };
             dragendEndedHandler(draggedItemMock);
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
@@ -121,17 +122,35 @@ describe('inventory view model tests', () => {
                 }
             );
         });
+        it('should not add dragged item back to the visible items at drag end if the item was removed', () => {
+            const inventoryViewModel = new InventoryViewModel(uiEventEmitterStub, gameEventEmitterStub, 7);
+            inventoryViewModel.inventoryList = ['one', 'two'];
+            inventoryViewModel.inventoryIndex = 0;
+            const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend_ended';
+            }).args[1];
+            const draggedItemMock = createStubInstance(Shape);
+            draggedItemMock.attrs = { id: 'THREE' };
+            dragendEndedHandler(draggedItemMock);
+            expect(uiEventEmitterStub.emit).to.have.been.calledWith(
+                'inventory_view_model_updated',
+                {
+                    visibleInventoryItems: ['one', 'two'],
+                    isLeftArrowVisible: false,
+                    isRightArrowVisible: false
+                }
+            );
+        });
     });
     describe('remove inventory item', () => {
-        it('should emit visible items and arrows when receiving inventory_item_removed event', () => {
+        it('should emit visible items and arrows when receiving inventory_items_removed event', () => {
             const inventoryViewModel = new InventoryViewModel(uiEventEmitterStub, gameEventEmitterStub, 7);
             inventoryViewModel.inventoryList = ['really_nice_item', 'even_better_item'];
-            const inventoryItemRemovedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_removed';
+            const inventoryItemsRemovedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'inventory_items_removed';
             }).args[1];
             const itemList = [{ name: 'really_nice_item', category: 'item' }];
-            const itemNameRemoved = 'even_better_item';
-            inventoryItemRemovedCallback({ itemList, itemNameRemoved });
+            inventoryItemsRemovedCallback({ itemList });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {
@@ -145,8 +164,8 @@ describe('inventory view model tests', () => {
             const inventoryViewModel = new InventoryViewModel(uiEventEmitterStub, gameEventEmitterStub, 7);
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'four', 'FIVE', 'six', 'seven', 'eight', 'nine'];
             inventoryViewModel.inventoryIndex = 2;
-            const inventoryItemRemovedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_removed';
+            const inventoryItemsRemovedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'inventory_items_removed';
             }).args[1];
             const itemList = [
                 { name: 'one', category: 'item' },
@@ -158,8 +177,7 @@ describe('inventory view model tests', () => {
                 { name: 'eight', category: 'item' },
                 { name: 'nine', category: 'item' }
             ];
-            const itemNameRemoved = 'FIVE';
-            inventoryItemRemovedCallback({ itemList, itemNameRemoved: itemNameRemoved });
+            inventoryItemsRemovedCallback({ itemList });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {

@@ -1,18 +1,15 @@
 import EventEmitter from "../../events/EventEmitter.js";
-import StageObjectGetter from "../../util/konva/StageObjectGetter.js";
 
 class InventoryItemsView {
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {EventEmitter} gameEventEmitter
-     * @param {StageObjectGetter} stageObjectGetter
      * @param {Konva.Group} inventoryItems
      * @param {int} offsetFromTop
      */
-    constructor(uiEventEmitter, gameEventEmitter, stageObjectGetter, inventoryItems, offsetFromTop) {
+    constructor(uiEventEmitter, gameEventEmitter, inventoryItems, offsetFromTop) {
         this.uiEventEmitter = uiEventEmitter;
         this.gameEventEmitter = gameEventEmitter;
-        this.stageObjectGetter = stageObjectGetter;
         this.inventoryItems = inventoryItems;
         // Offset from top for drawing inventory items starting from proper position
         this.offsetFromTop = offsetFromTop;
@@ -22,7 +19,10 @@ class InventoryItemsView {
         this.uiEventEmitter.on('dragend_ended', (draggedItem) => {
             this.moveDraggedItemBackToInventory(draggedItem);
         });
-        // Handle clicks etc on inventory items
+        // Handle drags and clicks on inventory items
+        this.inventoryItems.find('Image').on('dragstart', (event) => {
+            this.uiEventEmitter.emit('inventory_drag_start', event.target);
+        });
         this.inventoryItems.on('click tap', (event) => {
             this.uiEventEmitter.emit('inventory_click', event.target);
         });
@@ -40,13 +40,8 @@ class InventoryItemsView {
     handleInventoryItemVisibility(visibleInventoryItems) {
         visibleInventoryItems.forEach((visibleItemName, index) => {
             let shape = this.inventoryItems.findOne((item) => {
-                item.attrs.id === visibleItemName;
+                return item.attrs.id === visibleItemName;
             });
-            if (!shape) {
-                shape = this.stageObjectGetter.getObject(visibleItemName);
-                shape.moveTo(this.inventoryItems);
-                shape.clearCache();
-            }
             shape.x(this.offsetFromLeft + (index * 100));
             shape.y(this.offsetFromTop);
             shape.setAttr('visible', true);

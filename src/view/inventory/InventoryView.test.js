@@ -153,10 +153,11 @@ describe('inventory view tests', () => {
             const handleDragMoveHoverOnObjectCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'dragmove_hover_on_object';
             }).args[1];
-            const shapeStub = createStubInstance(Shape);
-            handleDragMoveHoverOnObjectCallback(shapeStub);
+            const targetStub = createStubInstance(Shape);
+            const draggedStub = createStubInstance(Shape);
+            handleDragMoveHoverOnObjectCallback({ target: targetStub, dragged_item: draggedStub });
             expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
-            expect(inventoryItemsViewStub.glowInventoryItem).to.have.been.calledWith(shapeStub);
+            expect(inventoryItemsViewStub.glowInventoryItem).to.have.been.calledWith(targetStub);
             expect(inventoryItemsViewStub.draw).to.have.been.called;
             expect(inventoryBarLayerStub.draw).to.have.been.called;
         });

@@ -9,29 +9,38 @@ class Inventory {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
         this.items = []; // Object { name, category }[]
-        this.gameEventEmitter.on('inventory_add', ({ name, category }) => {
-            this.inventoryAdd(name, category);
+        this.gameEventEmitter.on('inventory_add', (items) => {
+            this.inventoryAdd(items);
         });
-        this.gameEventEmitter.on('inventory_remove', (name) => {
-            this.inventoryRemove(name);
+        this.gameEventEmitter.on('inventory_remove', (names) => {
+            this.inventoryRemove(names);
         });
     }
 
     /**
-     * @param {string} name
-     * @param {string} category category/type of the inventory item
+     * @param {object[]} items Object { name: string, category: string }[]
      */
-    inventoryAdd(name, category) {
-        this.items.push({ name, category });
-        this.gameEventEmitter.emit('inventory_item_added', { itemList: this.items, itemNameAdded: name });
+    inventoryAdd(items) {
+        items.forEach((item) => {
+            if (!this.items.find((existingItem) => existingItem.name === item.name)) {
+                this.items.push(item);
+            }
+        });
+        const itemNamesAdded = []
+        items.forEach((item) => {
+            itemNamesAdded.push(item.name);
+        });
+        this.gameEventEmitter.emit('inventory_items_added', { itemList: this.items, itemNamesAdded });
     }
 
     /**
-     * @param {string} name
+     * @param {string[]} names
      */
-    inventoryRemove(name) {
-        this.items = this.items.filter((item) => name !== item.name);
-        this.gameEventEmitter.emit('inventory_item_removed', { itemList: this.items, itemNameRemoved: name });
+    inventoryRemove(names) {
+        names.forEach((name) => {
+            this.items = this.items.filter((item) => name !== item.name);
+        });
+        this.gameEventEmitter.emit('inventory_items_removed', { itemList: this.items });
     }
 }
 

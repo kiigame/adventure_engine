@@ -2,7 +2,6 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore, assert } from 'sinon';
 import sinonChai from "sinon-chai";
 import EventEmitter from '../../events/EventEmitter.js';
-import StageObjectGetter from '../../util/konva/StageObjectGetter.js';
 import InventoryItemsView from './InventoryItemsView.js';
 import pkg from 'konva';
 const { Shape, Group, Collection } = pkg;
@@ -11,12 +10,10 @@ use(sinonChai);
 describe('inventory item view tests', () => {
     let gameEventEmitterStub;
     let uiEventEmitterStub;
-    let stageObjectGetterStub;
     let inventoryItemsStub;
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
         gameEventEmitterStub = createStubInstance(EventEmitter);
-        stageObjectGetterStub = createStubInstance(StageObjectGetter);
         inventoryItemsStub = createStubInstance(Group);
     });
     afterEach(() => {
@@ -29,12 +26,12 @@ describe('inventory item view tests', () => {
             const collectionStub = createStubInstance(Collection);
             collectionStub.each.yields(shapeStub);
             inventoryItemsStub = createStubInstance(Group, {
-                getChildren: collectionStub
+                getChildren: collectionStub,
+                find: shapeStub
             });
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );
@@ -42,38 +39,20 @@ describe('inventory item view tests', () => {
             expect(shapeStub.setAttr).to.have.been.calledWith('visible', false);
         });
     });
+    //describe('should remove items from layer ')
     describe('handle inventory item visibilty', () => {
         it('should set existing item in the inventory visible', () => {
             const shapeStub = createStubInstance(Shape);
             shapeStub.attrs = { id: 'blabla' };
-            inventoryItemsStub = createStubInstance(Group);
+            inventoryItemsStub = createStubInstance(Group, { find: shapeStub });
             inventoryItemsStub.findOne.yields(shapeStub).returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );
             inventoryItemsView.handleInventoryItemVisibility(['blabla']);
-            expect(shapeStub.x).to.have.been.calledWith(50);
-            expect(shapeStub.y).to.have.been.calledWith(100);
-            expect(shapeStub.setAttr).to.have.been.calledWith('visible', true);
-        });
-        it('should fetch and setup a newly added item and make it visible', () => {
-            const shapeStub = createStubInstance(Shape);
-            inventoryItemsStub = createStubInstance(Group);
-            stageObjectGetterStub = createStubInstance(StageObjectGetter, { getObject: shapeStub })
-            const inventoryItemsView = new InventoryItemsView(
-                uiEventEmitterStub,
-                gameEventEmitterStub,
-                stageObjectGetterStub,
-                inventoryItemsStub,
-                100
-            );
-            inventoryItemsView.handleInventoryItemVisibility(['blabla']);
-            expect(shapeStub.moveTo).to.have.been.calledWith(inventoryItemsStub);
-            expect(shapeStub.clearCache).to.have.been.called;
             expect(shapeStub.x).to.have.been.calledWith(50);
             expect(shapeStub.y).to.have.been.calledWith(100);
             expect(shapeStub.setAttr).to.have.been.calledWith('visible', true);
@@ -86,14 +65,13 @@ describe('inventory item view tests', () => {
             ];
 
             inventoryItemsStub = createStubInstance(Group);
-            stageObjectGetterStub = createStubInstance(StageObjectGetter);
             shapeStubs.forEach((shapeStub, index) => {
-                stageObjectGetterStub.getObject.onCall(index).returns(shapeStub);
+                inventoryItemsStub.findOne.onCall(index).returns(shapeStub);
             });
+            inventoryItemsStub.find.returns(shapeStubs[0]);
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );
@@ -110,12 +88,12 @@ describe('inventory item view tests', () => {
             const collectionStub = createStubInstance(Collection);
             collectionStub.each.yields(shapeStub);
             inventoryItemsStub = createStubInstance(Group, {
-                getChildren: collectionStub
+                getChildren: collectionStub,
+                find: shapeStub
             });
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );
@@ -128,10 +106,10 @@ describe('inventory item view tests', () => {
             const shapeStub = createStubInstance(Shape);
             inventoryItemsStub = createStubInstance(Group);
             inventoryItemsStub.findOne.yields(shapeStub);
+            inventoryItemsStub.find.returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );
@@ -145,10 +123,10 @@ describe('inventory item view tests', () => {
             const shapeStub = createStubInstance(Shape);
             inventoryItemsStub = createStubInstance(Group);
             inventoryItemsStub.findOne.yields(null);
+            inventoryItemsStub.find.returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );
@@ -161,10 +139,10 @@ describe('inventory item view tests', () => {
     });
     describe('move dragged item back to inventory', () => {
         it('should move the dragged item back to inventory after dragging', () => {
+            inventoryItemsStub.find.returns(createStubInstance(Shape));
             new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );
@@ -175,11 +153,11 @@ describe('inventory item view tests', () => {
             moveDraggedItemBackToInventoryCallback(targetStub);
             expect(targetStub.moveTo).to.have.been.calledWith(inventoryItemsStub);
         });
-        it('should not try to move a non-existing dragged item back to inventory after dragging', () => {
+        it('should not try to move a non-existing dragged item back to inventory after dragging (null safety)', () => {
+            inventoryItemsStub.find.returns(createStubInstance(Shape));
             new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
-                stageObjectGetterStub,
                 inventoryItemsStub,
                 100
             );

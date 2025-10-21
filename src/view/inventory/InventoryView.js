@@ -38,7 +38,7 @@ class InventoryView {
         this.uiEventEmitter.on('item_moved_to_room_layer', () => {
             this.drawInventoryLayer();
         });
-        this.uiEventEmitter.on('dragmove_hover_on_object', (target) => {
+        this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, dragged_item: _dragged_item }) => {
             this.handleDragMoveHoverOnObject(target);
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
