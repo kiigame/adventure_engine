@@ -130,6 +130,39 @@ export class KiiGame {
             imagePreparer
         );
         stageBuilder.build();
+        // Build rooms
+        const roomLayer = this.stageObjectGetter.getObject("room_layer");
+        konvaObjectLayerPusher.execute(gameData.rooms_json, roomLayer);
+        konvaObjectLayerPusher.execute([new RoomFaderBuilder().buildRoomFader()], roomLayer);
+        // Prepare room object images
+        for (const child of roomLayer.toObject().children) {
+            imagePreparer.prepareImages(child);
+        }
+        // Scale room fader UI
+        this.stageObjectGetter.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
+        // Build rooms end
+        // Build items and push them to the inventory item cache layer
+        const inventoryItemCache = this.stageObjectGetter.getObject('inventory_item_cache');
+        const items = itemsBuilder.build(gameData.items_json);
+        konvaObjectLayerPusher.execute(items, inventoryItemCache);
+        // Creating all item image objects from json
+        imagePreparer.prepareImages(inventoryItemCache.toObject());
+        // Build items end
+        // Build inventory
+        const inventoryBarLayer = this.stageObjectGetter.getObject('inventory_bar_layer');
+        imagePreparer.prepareImages(inventoryBarLayer.toObject());
+        // Scale inventory bar to stage
+        this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
+        this.stageObjectGetter.getObject("inventory_bar").width(this.stage.width());
+        // Build inventory end
+        // Build character layer
+        // Push character animation frames to correct layer.
+        const characterLayer = this.stageObjectGetter.getObject("character_layer");
+        const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
+        konvaObjectLayerPusher.execute(characterFrames, characterLayer);
+        // Creating all image objects from json
+        imagePreparer.prepareImages(characterLayer.toObject());
+        // Build character layer end
         // View builder end
 
         // View start
@@ -207,14 +240,6 @@ export class KiiGame {
         // Sequences end
 
         // Rooms view start
-        // Build rooms
-        const roomLayer = this.stageObjectGetter.getObject("room_layer");
-        konvaObjectLayerPusher.execute(gameData.rooms_json, roomLayer);
-        konvaObjectLayerPusher.execute([new RoomFaderBuilder().buildRoomFader()], roomLayer);
-        // Prepare room object images
-        for (const child of roomLayer.toObject().children) {
-            imagePreparer.prepareImages(child);
-        }
         // Room view component
         this.roomView = new RoomView(
             this.uiEventEmitter,
@@ -229,8 +254,6 @@ export class KiiGame {
             this.stageObjectGetter
         ).build(this.roomView.getRooms());
         new RoomAnimations(this.gameEventEmitter, animatedRoomObjects);
-        // Scale room fader UI
-        this.stageObjectGetter.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
         // Animation for fading the room portion of the screen
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
@@ -241,21 +264,10 @@ export class KiiGame {
         // Rooms view end
 
         // Inventory & items view start
-        // Build items and push them to the inventory item cache layer
-        const inventoryItemCache = this.stageObjectGetter.getObject('inventory_item_cache');
-        const items = itemsBuilder.build(gameData.items_json);
-        konvaObjectLayerPusher.execute(items, inventoryItemCache);
-        // Creating all item image objects from json
-        imagePreparer.prepareImages(inventoryItemCache.toObject());
         // Set the drag start listener -> ui event emitting for the prospective inventory items
         inventoryItemCache.find('Image').on('dragstart', (event) => {
             this.uiEventEmitter.emit('inventory_drag_start', event.target);
         });
-        const inventoryBarLayer = this.stageObjectGetter.getObject('inventory_bar_layer');
-        imagePreparer.prepareImages(inventoryBarLayer.toObject());
-        // Scale inventory bar to stage
-        this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
-        this.stageObjectGetter.getObject("inventory_bar").width(this.stage.width());
         // Inventory items view component
         const inventoryItemsView = new InventoryItemsView(
             uiEventEmitter,
@@ -415,12 +427,6 @@ export class KiiGame {
         // Inventory & items view end
 
         // Character view start
-        // Push character animation frames to correct layer.
-        const characterLayer = this.stageObjectGetter.getObject("character_layer");
-        const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
-        konvaObjectLayerPusher.execute(characterFrames, characterLayer);
-        // Creating all image objects from json
-        imagePreparer.prepareImages(characterLayer.toObject());
         // Load up frames from json and set up CharacterAnimations view component
         const characterAnimationData = gameData.character_json.animations;
         const characterAnimations = new CharacterAnimationsBuilder(
