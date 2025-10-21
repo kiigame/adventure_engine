@@ -18,6 +18,7 @@ module.exports = {
           'model',
           'divide',
           'cover',
+          'arrange',
         ],
       }
     ]
