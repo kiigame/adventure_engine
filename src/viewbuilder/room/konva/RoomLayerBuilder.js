@@ -1,6 +1,6 @@
-import KonvaObjectLayerPusher from "viewbuilder/util/konva/KonvaObjectLayerPusher";
+import KonvaObjectLayerPusher from "../../util/konva/KonvaObjectLayerPusher";
 import RoomFaderBuilder from "./RoomFaderBuilder";
-import ImagePreparer from "viewbuilder/stage/konva/ImagePreparer";
+import ImagePreparer from "../../stage/konva/ImagePreparer";
 
 class RoomLayerBuilder {
     /**
@@ -18,12 +18,14 @@ class RoomLayerBuilder {
         this.roomLayer = roomLayer;
     }
 
-    build() {
+    build(width, height) {
         this.konvaObjectLayerPusher.execute(this.roomsJson, this.roomLayer);
         this.konvaObjectLayerPusher.execute([this.roomFaderBuilder.buildRoomFader()], this.roomLayer);
         for (const child of this.roomLayer.toObject().children) {
             this.imagePreparer.prepareImages(child);
         }
+        // Scale room fader UI
+        this.roomLayer.find('#black_screen_room').size({ width, height: height - 100 });
     }
 }
 

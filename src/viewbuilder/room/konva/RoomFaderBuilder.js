@@ -1,6 +1,6 @@
 class RoomFaderBuilder {
     /**
-     * @returns {*} JSON object with the konva data for the room fader Group
+     * @returns {object} JSON object with the konva data for the room fader Group
      */
     buildRoomFader() {
         return {

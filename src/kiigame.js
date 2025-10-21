@@ -139,9 +139,6 @@ export class KiiGame {
             imagePreparer
         );
         stageBuilder.build();
-        // Scale room fader UI
-        this.stageObjectGetter.getObject("black_screen_room").size({ width: this.stage.width(), height: this.stage.height() - 100 });
-        // Build rooms end
         // Build items and push them to the inventory item cache layer
         const inventoryItemCache = this.stageObjectGetter.getObject('inventory_item_cache');
         const items = itemsBuilder.build(gameData.items_json);

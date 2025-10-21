@@ -1,4 +1,4 @@
-import RoomLayerBuilder from "viewbuilder/room/konva/RoomLayerBuilder.js";
+import RoomLayerBuilder from "../../room/konva/RoomLayerBuilder.js";
 import SequenceLayerBuilder from "../../sequence/konva/SequenceLayerBuilder.js";
 import FullFaderPreparer from "./FullFaderPreparer.js";
 import ImagePreparer from "./ImagePreparer.js";
@@ -25,7 +25,7 @@ class StageBuilder {
         for (const child of sequenceLayer.toObject().children) {
             this.imagePreparer.prepareImages(child);
         }
-        this.roomLayerBuilder.build();
+        this.roomLayerBuilder.build(this.stage.width(), this.stage.height());
     }
 }
 
