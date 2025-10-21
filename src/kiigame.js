@@ -34,6 +34,7 @@ import Inventory from './model/Inventory.js';
 import InventoryViewModel from './view/inventory/InventoryViewModel.js';
 import InventoryItemsView from './view/inventory/InventoryItemsView.js';
 import KonvaObjectLayerPusher from './viewbuilder/util/konva/KonvaObjectLayerPusher.js';
+import StageBuilder from './viewbuilder/stage/konva/StageBuilder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -113,10 +114,8 @@ export class KiiGame {
 
         // View start
         // Stage view start
-        this.stage = Konva.Node.create(
-            JSON.stringify(gameData.layersJson),
-            'container'
-        );
+        const stageBuilder = new StageBuilder();
+        this.stage = stageBuilder.build(gameData.layersJson);
         this.stageObjectGetter = new StageObjectGetter(this.stage);
         this.fader_full = this.stageObjectGetter.getObject("fader_full");
         this.prepareImages(this.fader_full);
