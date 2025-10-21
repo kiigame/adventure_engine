@@ -239,11 +239,7 @@ export class KiiGame {
         // Build items and push them to the inventory item cache layer
         const inventoryItemCache = this.stageObjectGetter.getObject('inventory_item_cache');
         const items = itemsBuilder.build(gameData.items_json);
-        items.forEach((item) => {
-            Konva.Node.create(
-                JSON.stringify(item)
-            ).moveTo(inventoryItemCache);
-        });
+        konvaObjectLayerPusher.execute(items, inventoryItemCache);
         // Creating all item image objects from json
         this.prepareImages(inventoryItemCache.toObject());
         // Set the drag start listener -> ui event emitting for the prospective inventory items
