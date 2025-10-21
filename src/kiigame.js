@@ -413,11 +413,7 @@ export class KiiGame {
         // Push character animation frames to correct layer.
         const characterLayer = this.stageObjectGetter.getObject("character_layer");
         const characterFrames = new CharacterFramesBuilder({ x: 764, y: 443 }).build(gameData.character_json.frames);
-        characterFrames.forEach((characterFrame) => {
-            Konva.Node.create(
-                JSON.stringify(characterFrame)
-            ).moveTo(characterLayer);
-        });
+        konvaObjectLayerPusher.execute(characterFrames, characterLayer);
         // Creating all image objects from json
         this.prepareImages(characterLayer.toObject());
         // Load up frames from json and set up CharacterAnimations view component
