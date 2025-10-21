@@ -5,7 +5,7 @@ import SequenceBuilder from './viewbuilder/sequence/konva/SequenceBuilder.js';
 import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
 import Interactions from './controller/interactions/Interactions.js';
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
-import CommandHandler from  './controller/interactions/CommandHandler.js';
+import CommandHandler from './controller/interactions/CommandHandler.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
 import Intersection from './view/Intersection.js';
@@ -245,8 +245,8 @@ export class KiiGame {
         const items = itemsBuilder.build(gameData.items_json);
         items.forEach((item) => {
             Konva.Node.create(
-              JSON.stringify(item)
-         ).moveTo(inventoryItemCache);
+                JSON.stringify(item)
+            ).moveTo(inventoryItemCache);
         });
         // Creating all item image objects from json
         this.prepareImages(inventoryItemCache.toObject());
@@ -456,7 +456,7 @@ export class KiiGame {
             this.clearMonologues();
             this.setMonologue(text);
         });
-        this.gameEventEmitter.on('npc_monologue', ({npc, text}) => {
+        this.gameEventEmitter.on('npc_monologue', ({ npc, text }) => {
             this.clearMonologues();
             this.npcMonologue(npc, text);
         });
