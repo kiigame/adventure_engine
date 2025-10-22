@@ -28,7 +28,7 @@
         "children": [
             {
                 "attrs": {
-                    "category": "room_background",
+                    "category": "furniture",
                     "height": 543,
                     "id": "start",
                     "src": "data/images/start.png",
