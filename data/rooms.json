@@ -1,7 +1,6 @@
 {
     "start_layer": {
         "attrs": {
-            "category": "room",
             "fullScreen": true
         },
         "children": [
@@ -20,9 +19,6 @@
         "className": "Group"
     },
     "start_layer_menu": {
-        "attrs": {
-            "category": "room"
-        },
         "children": [
             {
                 "attrs": {
@@ -100,9 +96,6 @@
         "className": "Group"
     },
     "object_layer_locker_room_2": {
-        "attrs": {
-            "category": "room"
-        },
         "background": {
             "id": "locker_room_2",
             "src": "data/images/locker_room_2.png"
@@ -250,9 +243,6 @@
         "className": "Group"
     },
     "object_layer_locker_room_1": {
-        "attrs": {
-            "category": "room"
-        },
         "background": {
             "id": "locker_room_1",
             "src": "data/images/locker_room_1.png"
@@ -485,9 +475,6 @@
         "className": "Group"
     },
     "object_layer_wc_2": {
-        "attrs": {
-            "category": "room"
-        },
         "background": {
             "id": "wc_2",
             "src": "data/images/wc_2.png"
@@ -545,9 +532,6 @@
         "className": "Group"
     },
     "object_layer_shower_room": {
-        "attrs": {
-            "category": "room"
-        },
         "background": {
             "id": "shower_room",
             "src": "data/images/shower_room.png"
@@ -691,9 +675,6 @@
         "className": "Group"
     },
     "object_layer_wc_1": {
-        "attrs": {
-            "category": "room"
-        },
         "background": {
             "id": "wc_1",
             "src": "data/images/wc_1.png"
@@ -772,9 +753,6 @@
         "className": "Group"
     },
     "end_layer": {
-        "attrs": {
-            "category": "room"
-        },
         "children": [
             {
                 "attrs": {

@@ -3,16 +3,26 @@ import RoomBuilder from './RoomBuilder.js';
 
 describe('konva room builder tests', () => {
     const roomName = "roomy_room";
-    describe('visibility', () => {
-        it('should set initial visibility to false', () => {
+    describe('basic Konva attrs (id, visibility, category)', () => {
+        it('should set initial visibility to false, add id by json object key, and set category to room', () => {
             const roomBuilder = new RoomBuilder();
-            const roomJson = {
-                "attrs": {
-                    "category": "room",
-                }
-            };
+            const roomJson = {};
             const expected = {
                 "attrs": {
+                    "category": "room",
+                    "id": "roomy_room",
+                    "visible": false
+                }
+            };
+            const result = roomBuilder.build(roomName, roomJson);
+            expect(result).to.deep.equal(expected);
+        });
+        it('should retain existing attrs fields other than category, id and visible', () => {
+            const roomBuilder = new RoomBuilder();
+            const roomJson = { attrs: { "fullScreen": true } };
+            const expected = {
+                "attrs": {
+                    "fullScreen": true,
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false
@@ -27,9 +37,6 @@ describe('konva room builder tests', () => {
             const roomBuilder = new RoomBuilder();
             const roomName = "roomy_room";
             const roomJson = {
-                "attrs": {
-                    "category": "room",
-                },
                 "background": {
                     "id": "roomy_room_bg",
                     "src": "data/images/locker_room_1.png"
@@ -61,9 +68,6 @@ describe('konva room builder tests', () => {
         it('should insert background as the first child of the room so that it will not cover furniture', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "attrs": {
-                    "category": "room",
-                },
                 "background": {
                     "id": "roomy_room_bg",
                     "src": "data/images/locker_room_1.png"
@@ -102,11 +106,7 @@ describe('konva room builder tests', () => {
         });
         it('should handle rooms without background object in data gracefully', () => {
             const roomBuilder = new RoomBuilder();
-            const roomJson = {
-                "attrs": {
-                    "category": "room",
-                }
-            };
+            const roomJson = {};
             const expected = {
                 "attrs": {
                     "category": "room",
@@ -120,9 +120,6 @@ describe('konva room builder tests', () => {
         it('should handle rooms with null background object in data gracefully', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "attrs": {
-                    "category": "room",
-                },
                 "background": null
             };
             const expected = {
@@ -138,9 +135,6 @@ describe('konva room builder tests', () => {
         it('should handle rooms with empty background object in data gracefully', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "attrs": {
-                    "category": "room",
-                },
                 "background": {}
             };
             const expected = {
