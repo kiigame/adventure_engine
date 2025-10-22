@@ -39,6 +39,8 @@ import StageBuilder from './viewbuilder/stage/konva/StageBuilder.js';
 import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
 import FullFaderPreparer from './viewbuilder/stage/konva/FullFaderPreparer.js';
 import RoomLayerBuilder from './viewbuilder/room/konva/RoomLayerBuilder.js';
+import RoomBuilder from './viewbuilder/room/konva/RoomBuilder.js';
+import RoomsBuilder from './viewbuilder/room/konva/RoomsBuilder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -125,6 +127,9 @@ export class KiiGame {
             );
         }
         const roomLayerBuilder = new RoomLayerBuilder(
+            new RoomsBuilder(
+                new RoomBuilder()
+            ),
             konvaObjectContainerPusher,
             new RoomFaderBuilder(),
             imagePreparer,
