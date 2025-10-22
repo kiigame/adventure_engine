@@ -7,7 +7,7 @@ import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
 import EventEmitter from './events/EventEmitter.js';
-import ImagePreparer from './viewbuilder/stage/konva/ImagePreparer.js';
+import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
 
 const jsonGetter = new JSONGetter();
 

@@ -1,6 +1,6 @@
 import KonvaObjectContainerPusher from "../../util/konva/KonvaObjectContainerPusher";
 import RoomFaderBuilder from "./RoomFaderBuilder";
-import ImagePreparer from "../../stage/konva/ImagePreparer";
+import ImagePreparer from "../../util/konva/ImagePreparer";
 
 class RoomLayerBuilder {
     /**

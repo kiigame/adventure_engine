@@ -36,7 +36,7 @@ import InventoryItemsView from './view/inventory/InventoryItemsView.js';
 import KonvaObjectContainerPusher from './viewbuilder/util/konva/KonvaObjectContainerPusher.js';
 import StageInitializer from './viewbuilder/stage/konva/StageInitializer.js';
 import StageBuilder from './viewbuilder/stage/konva/StageBuilder.js';
-import ImagePreparer from './viewbuilder/stage/konva/ImagePreparer.js';
+import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
 import FullFaderPreparer from './viewbuilder/stage/konva/FullFaderPreparer.js';
 import RoomLayerBuilder from './viewbuilder/room/konva/RoomLayerBuilder.js';
 
