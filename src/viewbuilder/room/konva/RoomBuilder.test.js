@@ -3,7 +3,7 @@ import RoomBuilder from './RoomBuilder.js';
 
 describe('konva room builder tests', () => {
     const roomName = "roomy_room";
-    describe('basic Konva attrs (id, visibility, category)', () => {
+    describe('basic Konva attrs (id, visibility) and custom attrs (category, fullScreen)', () => {
         it('should set initial visibility to false, add id by json object key, and set category to room', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {};
@@ -17,12 +17,26 @@ describe('konva room builder tests', () => {
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
         });
-        it('should retain existing attrs fields other than category, id and visible', () => {
+        it('should add fullscreen flag to attrs if it\'s true', () => {
             const roomBuilder = new RoomBuilder();
-            const roomJson = { attrs: { "fullScreen": true } };
+            const roomJson = { "fullScreen": true };
             const expected = {
                 "attrs": {
                     "fullScreen": true,
+                    "category": "room",
+                    "id": "roomy_room",
+                    "visible": false
+                }
+            };
+            const result = roomBuilder.build(roomName, roomJson);
+            expect(result).to.deep.equal(expected);
+        });
+        it('should add fullscreen flag to attrs as false if it\'s false', () => {
+            const roomBuilder = new RoomBuilder();
+            const roomJson = { "fullScreen": false };
+            const expected = {
+                "attrs": {
+                    "fullScreen": false,
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false

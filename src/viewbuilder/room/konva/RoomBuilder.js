@@ -5,12 +5,14 @@ class RoomBuilder {
      * @returns {object} room data prepared for Konva to add to the rooms layer
      */
     build(name, roomJson) {
-        if (!Object.keys(roomJson).includes('attrs')) {
-            roomJson.attrs = {};
-        }
+        roomJson.attrs = {};
         roomJson.attrs.id = name;
         roomJson.attrs.category = "room";
         roomJson.attrs.visible = false;
+        if (Object.keys(roomJson).includes('fullScreen')) {
+            roomJson.attrs.fullScreen = roomJson.fullScreen;
+            delete roomJson.fullScreen;
+        }
         roomJson = this.buildBackground(roomJson);
         return roomJson;
     }

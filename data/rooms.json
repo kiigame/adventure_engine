@@ -1,8 +1,6 @@
 {
     "start_layer": {
-        "attrs": {
-            "fullScreen": true
-        },
+        "fullScreen": true,
         "children": [
             {
                 "attrs": {
