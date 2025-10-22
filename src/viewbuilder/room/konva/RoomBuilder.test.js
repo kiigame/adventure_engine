@@ -12,7 +12,8 @@ describe('konva room builder tests', () => {
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false
-                }
+                },
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
@@ -26,7 +27,8 @@ describe('konva room builder tests', () => {
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false
-                }
+                },
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
@@ -40,7 +42,8 @@ describe('konva room builder tests', () => {
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false
-                }
+                },
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
@@ -54,7 +57,8 @@ describe('konva room builder tests', () => {
                 "background": {
                     "id": "roomy_room_bg",
                     "src": "data/images/locker_room_1.png"
-                }
+                },
+                "className": "Group"
             };
             const expected = {
                 "attrs": {
@@ -74,7 +78,8 @@ describe('konva room builder tests', () => {
                         },
                         "className": "Image"
                     }
-                ]
+                ],
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
@@ -90,7 +95,8 @@ describe('konva room builder tests', () => {
                     {
                         "data": "mock_data"
                     }
-                ]
+                ],
+                "className": "Group"
             };
             const expected = {
                 "attrs": {
@@ -113,7 +119,8 @@ describe('konva room builder tests', () => {
                     {
                         "data": "mock_data"
                     }
-                ]
+                ],
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
@@ -126,7 +133,8 @@ describe('konva room builder tests', () => {
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false
-                }
+                },
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
@@ -141,7 +149,8 @@ describe('konva room builder tests', () => {
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false
-                }
+                },
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);
@@ -156,7 +165,8 @@ describe('konva room builder tests', () => {
                     "category": "room",
                     "id": "roomy_room",
                     "visible": false
-                }
+                },
+                "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
             expect(result).to.deep.equal(expected);

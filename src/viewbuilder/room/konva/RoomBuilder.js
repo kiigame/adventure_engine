@@ -14,6 +14,7 @@ class RoomBuilder {
             delete roomJson.fullScreen;
         }
         roomJson = this.buildBackground(roomJson);
+        roomJson.className = "Group";
         return roomJson;
     }
 

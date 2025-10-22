@@ -13,8 +13,7 @@
                 },
                 "className": "Image"
             }
-        ],
-        "className": "Group"
+        ]
     },
     "start_layer_menu": {
         "children": [
@@ -90,8 +89,7 @@
                 },
                 "className": "Image"
             }
-        ],
-        "className": "Group"
+        ]
     },
     "object_layer_locker_room_2": {
         "background": {
@@ -237,8 +235,7 @@
                 },
                 "className": "Image"
             }
-        ],
-        "className": "Group"
+        ]
     },
     "object_layer_locker_room_1": {
         "background": {
@@ -469,8 +466,7 @@
                 },
                 "className": "Image"
             }
-        ],
-        "className": "Group"
+        ]
     },
     "object_layer_wc_2": {
         "background": {
@@ -526,8 +522,7 @@
                 },
                 "className": "Image"
             }
-        ],
-        "className": "Group"
+        ]
     },
     "object_layer_shower_room": {
         "background": {
@@ -669,8 +664,7 @@
                 },
                 "className": "Image"
             }
-        ],
-        "className": "Group"
+        ]
     },
     "object_layer_wc_1": {
         "background": {
@@ -747,8 +741,7 @@
                 },
                 "className": "Image"
             }
-        ],
-        "className": "Group"
+        ]
     },
     "end_layer": {
         "children": [
@@ -774,7 +767,6 @@
                 },
                 "className": "Text"
             }
-        ],
-        "className": "Group"
+        ]
     }
 }
