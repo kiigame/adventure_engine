@@ -106,18 +106,11 @@
             "category": "room",
             "id": "object_layer_locker_room_2"
         },
+        "background": {
+            "id": "locker_room_2",
+            "src": "data/images/locker_room_2.png"
+        },
         "children": [
-            {
-                "attrs": {
-                    "category": "room_background",
-                    "height": 543,
-                    "id": "locker_room_2",
-                    "src": "data/images/locker_room_2.png",
-                    "width": 981,
-                    "visible": true
-                },
-                "className": "Image"
-            },
             {
                 "attrs": {
                     "category": "furniture",
@@ -264,18 +257,11 @@
             "category": "room",
             "id": "object_layer_locker_room_1"
         },
+        "background": {
+            "id": "locker_room_1",
+            "src": "data/images/locker_room_1.png"
+        },
         "children": [
-            {
-                "attrs": {
-                    "category": "room_background",
-                    "height": 543,
-                    "id": "locker_room_1",
-                    "src": "data/images/locker_room_1.png",
-                    "width": 981,
-                    "visible": true
-                },
-                "className": "Image"
-            },
             {
                 "attrs": {
                     "category": "furniture",
@@ -507,18 +493,11 @@
             "category": "room",
             "id": "object_layer_wc_2"
         },
+        "background": {
+            "id": "wc_2",
+            "src": "data/images/wc_2.png"
+        },
         "children": [
-            {
-                "attrs": {
-                    "category": "room_background",
-                    "height": 543,
-                    "id": "wc_2",
-                    "src": "data/images/wc_2.png",
-                    "width": 981,
-                    "visible": true
-                },
-                "className": "Image"
-            },
             {
                 "attrs": {
                     "category": "furniture",
@@ -575,18 +554,11 @@
             "category": "room",
             "id": "object_layer_shower_room"
         },
+        "background": {
+            "id": "shower_room",
+            "src": "data/images/shower_room.png"
+        },
         "children": [
-            {
-                "attrs": {
-                    "category": "room_background",
-                    "height": 543,
-                    "id": "shower_room",
-                    "src": "data/images/shower_room.png",
-                    "width": 981,
-                    "visible": true
-                },
-                "className": "Image"
-            },
             {
                 "attrs": {
                     "category": "furniture",
@@ -729,18 +701,11 @@
             "category": "room",
             "id": "object_layer_wc_1"
         },
+        "background": {
+            "id": "wc_1",
+            "src": "data/images/wc_1.png"
+        },
         "children": [
-            {
-                "attrs": {
-                    "category": "room_background",
-                    "height": 543,
-                    "id": "wc_1",
-                    "src": "data/images/wc_1.png",
-                    "width": 981,
-                    "visible": true
-                },
-                "className": "Image"
-            },
             {
                 "attrs": {
                     "category": "secret",
