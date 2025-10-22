@@ -26,7 +26,7 @@ const gameData = {
     music_json: music_json,
     text_json: text_json,
     layersJson: layersJson,
-    rooms_json: rooms_json['rooms'],
+    rooms_json: rooms_json,
     character_json: character_json,
     sequences_json: sequences_json,
     items_json: items_json,
