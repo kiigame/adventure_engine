@@ -1034,8 +1034,9 @@
         "shower_middle": "Tässä lukee, että käytetään kuiviin hiuksiin.",
         "shower_right": "Tässä lukee, että käytetään kuiviin hiuksiin."
     },
-    "character_panic": {
-        "text": "...ja sit mä olin niinku :O"
+    "start": {
+        "name": "Alkukuva",
+        "examine": "...ja sit mä olin niinku :O"
     },
     "oikotie": {
         "name": "Oikotieovi",

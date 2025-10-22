@@ -24,6 +24,22 @@
             }
         ]
     },
+    "start": {
+        "click": [
+            {
+                "command": "monologue",
+                "textkey": {
+                    "object": "start",
+                    "string": "examine"
+                }
+            },
+            {
+                "command": "play_character_animation",
+                "animation": "panic",
+                "length": 6000
+            }
+        ]
+    },
     "start_game": {
         "click": []
     },

@@ -241,12 +241,6 @@ input_layer.on('tap click', function (event) {
     input_layer.draw();
 });
 
-// Easter egg, click the image on the start screen and get a funny reaction from the character
-stage.find('#start')[0].on('tap click', function () {
-    gameEventEmitter.emit('monologue', kiigame.text.getText('character_panic', 'text'));
-    uiEventEmitter.emit('play_character_animation', { animationName: "panic", duration: 6000 });
-});
-
 // When arriving to the final room (the final step of the game), count rewards in invetory.
 gameEventEmitter.on('arrived_in_room', function (roomId) {
     if (roomId === 'end_layer') {
