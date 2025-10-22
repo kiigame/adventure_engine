@@ -14,11 +14,11 @@ class RoomsBuilder {
      */
     build(roomsJson) {
         const konvaRoomData = [];
-        roomsJson.forEach((room) => {
+        for (const [name, room] of Object.entries(roomsJson)) {
             konvaRoomData.push(
-                this.roomBuilder.build(room)
+                this.roomBuilder.build(name, room)
             );
-        });
+        };
         return konvaRoomData;
     }
 }

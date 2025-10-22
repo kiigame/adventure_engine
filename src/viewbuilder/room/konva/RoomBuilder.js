@@ -1,9 +1,11 @@
 class RoomBuilder {
     /**
+     * @param {string} name the name of the room
      * @param {object} roomJson room data to prepare
      * @returns {object} room data prepared for Konva to add to the rooms layer
      */
-    build(roomJson) {
+    build(name, roomJson) {
+        roomJson.attrs.id = name;
         roomJson.attrs.visible = false;
         roomJson = this.buildBackground(roomJson);
         return roomJson;

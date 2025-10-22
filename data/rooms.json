@@ -1,8 +1,7 @@
-[
-    {
+{
+    "start_layer": {
         "attrs": {
             "category": "room",
-            "id": "start_layer",
             "fullScreen": true
         },
         "children": [
@@ -20,10 +19,9 @@
         ],
         "className": "Group"
     },
-    {
+    "start_layer_menu": {
         "attrs": {
-            "category": "room",
-            "id": "start_layer_menu"
+            "category": "room"
         },
         "children": [
             {
@@ -101,10 +99,9 @@
         ],
         "className": "Group"
     },
-    {
+    "object_layer_locker_room_2": {
         "attrs": {
-            "category": "room",
-            "id": "object_layer_locker_room_2"
+            "category": "room"
         },
         "background": {
             "id": "locker_room_2",
@@ -252,10 +249,9 @@
         ],
         "className": "Group"
     },
-    {
+    "object_layer_locker_room_1": {
         "attrs": {
-            "category": "room",
-            "id": "object_layer_locker_room_1"
+            "category": "room"
         },
         "background": {
             "id": "locker_room_1",
@@ -488,10 +484,9 @@
         ],
         "className": "Group"
     },
-    {
+    "object_layer_wc_2": {
         "attrs": {
-            "category": "room",
-            "id": "object_layer_wc_2"
+            "category": "room"
         },
         "background": {
             "id": "wc_2",
@@ -549,10 +544,9 @@
         ],
         "className": "Group"
     },
-    {
+    "object_layer_shower_room": {
         "attrs": {
-            "category": "room",
-            "id": "object_layer_shower_room"
+            "category": "room"
         },
         "background": {
             "id": "shower_room",
@@ -696,10 +690,9 @@
         ],
         "className": "Group"
     },
-    {
+    "object_layer_wc_1": {
         "attrs": {
-            "category": "room",
-            "id": "object_layer_wc_1"
+            "category": "room"
         },
         "background": {
             "id": "wc_1",
@@ -778,10 +771,9 @@
         ],
         "className": "Group"
     },
-    {
+    "end_layer": {
         "attrs": {
-            "category": "room",
-            "id": "end_layer"
+            "category": "room"
         },
         "children": [
             {
@@ -809,4 +801,4 @@
         ],
         "className": "Group"
     }
-]
+}
