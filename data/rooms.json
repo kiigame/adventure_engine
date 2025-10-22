@@ -30,7 +30,7 @@
                 "attrs": {
                     "category": "furniture",
                     "height": 543,
-                    "id": "start",
+                    "id": "title_image",
                     "src": "data/images/start.png",
                     "width": 724,
                     "visible": true

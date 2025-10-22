@@ -24,12 +24,12 @@
             }
         ]
     },
-    "start": {
+    "title_image": {
         "click": [
             {
                 "command": "monologue",
                 "textkey": {
-                    "object": "start",
+                    "object": "title_image",
                     "string": "examine"
                 }
             },
