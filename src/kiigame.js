@@ -58,7 +58,7 @@ export class KiiGame {
         dragResolvers = [],
         hitRegionInitializer = null,
         intersection = null,
-        roomObjectCategories = ['furniture'],
+        roomObjectCategories = { 'furniture': { 'roomChildrenTypeBuilder': new FurnitureBuilder() }},
         gameEventEmitter = new EventEmitter(),
         uiEventEmitter = new EventEmitter(),
         gameData = {},
@@ -130,14 +130,22 @@ export class KiiGame {
                 this.stageObjectGetter.getObject("sequence_layer")
             );
         }
+        // Read room children type builders from the config given to the constructor
+        const roomObjectCategoryBuilders = [];
+        for (const [key, roomObjectCategory] of Object.entries(roomObjectCategories) ) {
+            if (roomObjectCategory.roomChildrenTypeBuilder) {
+                roomObjectCategoryBuilders.push(
+                    new RoomChildrenTypeBuilder(key, roomObjectCategory.roomChildrenTypeBuilder)
+                );
+            }
+        }
         const roomLayerBuilder = new RoomLayerBuilder(
             new RoomsBuilder(
                 new RoomBuilder([
-                    // TODO: allow configuring these by moving DI up
                     // Order may be important - for example, backgrounds should go in first so
                     // they don't overlap furniture
                     new RoomChildrenTypeBuilder('backgrounds', new BackgroundsBuilder()),
-                    new RoomChildrenTypeBuilder('furniture', new FurnitureBuilder()),
+                    ...roomObjectCategoryBuilders, // consider using inversify for DI here
                     new RoomChildrenTypeBuilder('other', new OtherChildrenBuilder())
                 ])
             ),
@@ -267,7 +275,7 @@ export class KiiGame {
             this.gameEventEmitter,
             hitRegionInitializer,
             roomLayer,
-            roomObjectCategories,
+            Object.keys(roomObjectCategories),
         );
         // Build room object animations and set up RoomAnimations view component
         const animatedRoomObjects = new RoomAnimationsBuilder(
