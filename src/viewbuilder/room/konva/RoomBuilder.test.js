@@ -13,6 +13,7 @@ describe('konva room builder tests', () => {
                     "id": "roomy_room",
                     "visible": false
                 },
+                "children": [],
                 "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
@@ -28,6 +29,7 @@ describe('konva room builder tests', () => {
                     "id": "roomy_room",
                     "visible": false
                 },
+                "children": [],
                 "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
@@ -43,6 +45,7 @@ describe('konva room builder tests', () => {
                     "id": "roomy_room",
                     "visible": false
                 },
+                "children": [],
                 "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
@@ -134,6 +137,7 @@ describe('konva room builder tests', () => {
                     "id": "roomy_room",
                     "visible": false
                 },
+                "children": [],
                 "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
@@ -150,6 +154,7 @@ describe('konva room builder tests', () => {
                     "id": "roomy_room",
                     "visible": false
                 },
+                "children": [],
                 "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
@@ -166,6 +171,7 @@ describe('konva room builder tests', () => {
                     "id": "roomy_room",
                     "visible": false
                 },
+                "children": [],
                 "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);

@@ -13,6 +13,9 @@ class RoomBuilder {
             roomJson.attrs.fullScreen = roomJson.fullScreen;
             delete roomJson.fullScreen;
         }
+        if (!roomJson.children) {
+            roomJson.children = [];
+        }
         roomJson = this.buildBackground(roomJson);
         roomJson.className = "Group";
         return roomJson;
@@ -28,9 +31,6 @@ class RoomBuilder {
             delete roomJson.background;
             if (!backgroundJson || !Object.keys(backgroundJson).length) {
                 return roomJson;
-            }
-            if (!roomJson.children) {
-                roomJson.children = [];
             }
             const background = {};
             if (backgroundJson.src) {
