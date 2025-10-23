@@ -15,6 +15,10 @@ class FurnitureBuilder {
             }
             furniture.attrs.id = key;
             furniture.attrs.category = "furniture";
+            if (furniture.initiallyVisible !== undefined && furniture.initiallyVisible !== null) {
+                furniture.attrs.visible = furniture.initiallyVisible;
+                delete furniture.initiallyVisible;
+            }
             furnitureResult.push(furniture);
         }
         return furnitureResult;
