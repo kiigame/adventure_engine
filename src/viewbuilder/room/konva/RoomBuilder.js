@@ -92,12 +92,20 @@ class RoomBuilder {
     }
 
     /**
-     * TODO: Once the rooms.json data is simplified, actually transform the furniture data
+     * Transform furniture data in to Konva object json.
      * @param {object[]} furnitureJson an array of furniture from room.json
      * @returns {object[]} an array of furniture as Konva objects
      */
     buildFurniture(furnitureJson) {
-        return furnitureJson;
+        const furnitureResult = [];
+        furnitureJson.forEach((furniture) => {
+            if (!furniture.attrs) {
+                furniture.attrs = {};
+            }
+            furniture.attrs.category = "furniture";
+            furnitureResult.push(furniture);
+        });
+        return furnitureResult;
     }
 
     /**

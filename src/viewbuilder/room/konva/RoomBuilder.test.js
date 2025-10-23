@@ -120,6 +120,9 @@ describe('konva room builder tests', () => {
                         "className": "Image"
                     },
                     {
+                        "attrs": {
+                            "category": "furniture"
+                        },
                         "data": "mock_data"
                     }
                 ],
@@ -238,7 +241,10 @@ describe('konva room builder tests', () => {
                 },
                 "children": [
                     {
-                        "data": "mock_data"
+                        "data": "mock_data",
+                        "attrs": {
+                            "category": "furniture"
+                        }
                     }
                 ],
                 "className": "Group"
