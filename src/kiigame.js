@@ -237,7 +237,7 @@ export class KiiGame {
         // Sequences view start
         this.sequences_json = gameData.sequences_json;
         this.sequenceLayer = this.stageObjectGetter.getObject('sequence_layer');
-        this.gameEventEmitter.on('arrived_in_room', (roomId) => {
+        this.gameEventEmitter.on('arrived_in_room', (_roomId) => {
             this.sequenceLayer.hide();
         });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
