@@ -16,41 +16,55 @@ class RoomBuilder {
         if (!roomJson.children) {
             roomJson.children = [];
         }
-        roomJson = this.buildBackground(roomJson);
+        roomJson = this.addBackground(roomJson);
         roomJson.className = "Group";
         return roomJson;
     }
 
-    buildBackground(roomJson) {
-        // TODO: make configurable / responsive / etc / etc
-        const bgWidth = 981;
-        const bgHeight = 543;
+    prepareObject(key, roomJson) {
+        if (!Object.keys(roomJson).includes(key)) {
+            return undefined;
+        }
+        const json = JSON.parse(JSON.stringify(roomJson[key]));
+        delete roomJson[key];
+        if (!json || !Object.keys(json).length) {
+            return undefined;
+        }
+        return json;
+    }
 
-        if (Object.keys(roomJson).includes('background')) {
-            const backgroundJson = JSON.parse(JSON.stringify(roomJson.background));
-            delete roomJson.background;
-            if (!backgroundJson || !Object.keys(backgroundJson).length) {
-                return roomJson;
-            }
-            const background = {};
-            if (backgroundJson.src) {
-                background.attrs = {
-                    "category": "room_background",
-                    "src": backgroundJson.src,
-                    "visible": true,
-                    "width": bgWidth,
-                    "height": bgHeight
-                };
-                background.className = "Image";
-            }
-            if (backgroundJson.id) {
-                background.attrs.id = backgroundJson.id;
-            }
+    addBackground(roomJson) {
+        const backgroundJson = this.prepareObject('background', roomJson);
+        if (backgroundJson) {
+            const background = this.buildBackground(backgroundJson);
             if (Object.keys(background).length > 0) {
                 roomJson.children.unshift(background);
             }
         }
+
         return roomJson;
+    }
+
+    buildBackground(backgroundJson) {
+        // TODO: make configurable / responsive / etc / etc
+        const bgWidth = 981;
+        const bgHeight = 543;
+
+        const background = {};
+        if (backgroundJson.src) {
+            background.attrs = {
+                "category": "room_background",
+                "src": backgroundJson.src,
+                "visible": true,
+                "width": bgWidth,
+                "height": bgHeight
+            };
+            background.className = "Image";
+        }
+        if (backgroundJson.id) {
+            background.attrs.id = backgroundJson.id;
+        }
+        return background;
     }
 }
 
