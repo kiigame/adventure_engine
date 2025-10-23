@@ -1,7 +1,7 @@
 {
     "start_layer": {
         "fullScreen": true,
-        "children": [
+        "furniture": [
             {
                 "attrs": {
                     "category": "furniture",
@@ -16,7 +16,7 @@
         ]
     },
     "start_layer_menu": {
-        "children": [
+        "furniture": [
             {
                 "attrs": {
                     "category": "furniture",
@@ -96,7 +96,7 @@
             "id": "locker_room_2",
             "src": "data/images/locker_room_2.png"
         },
-        "children": [
+        "furniture": [
             {
                 "attrs": {
                     "category": "furniture",
@@ -223,7 +223,9 @@
                     "y": 155
                 },
                 "className": "Image"
-            },
+            }
+        ],
+        "other": [
             {
                 "attrs": {
                     "category": "secret",
@@ -242,7 +244,7 @@
             "id": "locker_room_1",
             "src": "data/images/locker_room_1.png"
         },
-        "children": [
+        "furniture": [
             {
                 "attrs": {
                     "category": "furniture",
@@ -273,16 +275,6 @@
                     "visible": false,
                     "x": 590,
                     "y": 120
-                },
-                "className": "Image"
-            },
-            {
-                "attrs": {
-                    "category": "secret",
-                    "id": "reward_1",
-                    "src": "data/images/reward_1.png",
-                    "x": 480,
-                    "y": 61
                 },
                 "className": "Image"
             },
@@ -466,6 +458,18 @@
                 },
                 "className": "Image"
             }
+        ],
+        "other": [
+            {
+                "attrs": {
+                    "category": "secret",
+                    "id": "reward_1",
+                    "src": "data/images/reward_1.png",
+                    "x": 480,
+                    "y": 61
+                },
+                "className": "Image"
+            }
         ]
     },
     "object_layer_wc_2": {
@@ -473,7 +477,7 @@
             "id": "wc_2",
             "src": "data/images/wc_2.png"
         },
-        "children": [
+        "furniture": [
             {
                 "attrs": {
                     "category": "furniture",
@@ -529,7 +533,7 @@
             "id": "shower_room",
             "src": "data/images/shower_room.png"
         },
-        "children": [
+        "furniture": [
             {
                 "attrs": {
                     "category": "furniture",
@@ -671,17 +675,7 @@
             "id": "wc_1",
             "src": "data/images/wc_1.png"
         },
-        "children": [
-            {
-                "attrs": {
-                    "category": "secret",
-                    "id": "reward_2",
-                    "src": "data/images/reward_2.png",
-                    "x": 635,
-                    "y": 233
-                },
-                "className": "Image"
-            },
+        "furniture": [
             {
                 "attrs": {
                     "category": "furniture",
@@ -741,10 +735,22 @@
                 },
                 "className": "Image"
             }
+        ],
+        "other": [
+            {
+                "attrs": {
+                    "category": "secret",
+                    "id": "reward_2",
+                    "src": "data/images/reward_2.png",
+                    "x": 635,
+                    "y": 233
+                },
+                "className": "Image"
+            }
         ]
     },
     "end_layer": {
-        "children": [
+        "other": [
             {
                 "attrs": {
                     "id": "end_picture",

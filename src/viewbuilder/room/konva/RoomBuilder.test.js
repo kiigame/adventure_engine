@@ -94,7 +94,48 @@ describe('konva room builder tests', () => {
                     "id": "roomy_room_bg",
                     "src": "data/images/locker_room_1.png"
                 },
+                "furniture": [
+                    {
+                        "data": "mock_data"
+                    }
+                ],
+                "className": "Group"
+            };
+            const expected = {
+                "attrs": {
+                    "category": "room",
+                    "id": "roomy_room",
+                    "visible": false
+                },
                 "children": [
+                    {
+                        "attrs": {
+                            "category": "room_background",
+                            "id": "roomy_room_bg",
+                            "src": "data/images/locker_room_1.png",
+                            "visible": true,
+                            "width": 981,
+                            "height": 543
+                        },
+                        "className": "Image"
+                    },
+                    {
+                        "data": "mock_data"
+                    }
+                ],
+                "className": "Group"
+            };
+            const result = roomBuilder.build(roomName, roomJson);
+            expect(result).to.deep.equal(expected);
+        });
+        it('should insert background as the first child of the room so that it will not cover other class of children', () => {
+            const roomBuilder = new RoomBuilder();
+            const roomJson = {
+                "background": {
+                    "id": "roomy_room_bg",
+                    "src": "data/images/locker_room_1.png"
+                },
+                "other": [
                     {
                         "data": "mock_data"
                     }
@@ -172,6 +213,62 @@ describe('konva room builder tests', () => {
                     "visible": false
                 },
                 "children": [],
+                "className": "Group"
+            };
+            const result = roomBuilder.build(roomName, roomJson);
+            expect(result).to.deep.equal(expected);
+        });
+    });
+    describe('furniture', () => {
+        it('should add furniture as children', () => {
+            const roomBuilder = new RoomBuilder();
+            const roomJson = {
+                "furniture": [
+                    {
+                        "data": "mock_data"
+                    }
+                ],
+                "className": "Group"
+            };
+            const expected = {
+                "attrs": {
+                    "category": "room",
+                    "id": "roomy_room",
+                    "visible": false
+                },
+                "children": [
+                    {
+                        "data": "mock_data"
+                    }
+                ],
+                "className": "Group"
+            };
+            const result = roomBuilder.build(roomName, roomJson);
+            expect(result).to.deep.equal(expected);
+        });
+    });
+    describe('other Konva objects in the room', () => {
+        it('should add other objects as children', () => {
+            const roomBuilder = new RoomBuilder();
+            const roomJson = {
+                "other": [
+                    {
+                        "data": "mock_data"
+                    }
+                ],
+                "className": "Group"
+            };
+            const expected = {
+                "attrs": {
+                    "category": "room",
+                    "id": "roomy_room",
+                    "visible": false
+                },
+                "children": [
+                    {
+                        "data": "mock_data"
+                    }
+                ],
                 "className": "Group"
             };
             const result = roomBuilder.build(roomName, roomJson);
