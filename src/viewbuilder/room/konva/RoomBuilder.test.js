@@ -57,9 +57,10 @@ describe('konva room builder tests', () => {
             const roomBuilder = new RoomBuilder();
             const roomName = "roomy_room";
             const roomJson = {
-                "background": {
-                    "id": "roomy_room_bg",
-                    "src": "data/images/locker_room_1.png"
+                "backgrounds": {
+                    "roomy_room_bg": {
+                        "src": "data/images/locker_room_1.png"
+                    }
                 },
                 "className": "Group"
             };
@@ -90,15 +91,16 @@ describe('konva room builder tests', () => {
         it('should insert background as the first child of the room so that it will not cover furniture', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "background": {
-                    "id": "roomy_room_bg",
-                    "src": "data/images/locker_room_1.png"
+                "backgrounds": {
+                    "roomy_room_bg": {
+                        "src": "data/images/locker_room_1.png"
+                    }
                 },
-                "furniture": [
-                    {
+                "furniture": {
+                    "some_furniture": {
                         "data": "mock_data"
                     }
-                ],
+                },
                 "className": "Group"
             };
             const expected = {
@@ -121,6 +123,7 @@ describe('konva room builder tests', () => {
                     },
                     {
                         "attrs": {
+                            "id": "some_furniture",
                             "category": "furniture"
                         },
                         "data": "mock_data"
@@ -134,15 +137,16 @@ describe('konva room builder tests', () => {
         it('should insert background as the first child of the room so that it will not cover other class of children', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "background": {
-                    "id": "roomy_room_bg",
-                    "src": "data/images/locker_room_1.png"
+                "backgrounds": {
+                    "roomy_room_bg": {
+                        "src": "data/images/locker_room_1.png"
+                    }
                 },
-                "other": [
-                    {
+                "other": {
+                    "some_other": {
                         "data": "mock_data"
                     }
-                ],
+                },
                 "className": "Group"
             };
             const expected = {
@@ -164,6 +168,9 @@ describe('konva room builder tests', () => {
                         "className": "Image"
                     },
                     {
+                        "attrs": {
+                            "id": "some_other"
+                        },
                         "data": "mock_data"
                     }
                 ],
@@ -190,7 +197,7 @@ describe('konva room builder tests', () => {
         it('should handle rooms with null background object in data gracefully', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "background": null
+                "backgrounds": null
             };
             const expected = {
                 "attrs": {
@@ -207,7 +214,7 @@ describe('konva room builder tests', () => {
         it('should handle rooms with empty background object in data gracefully', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "background": {}
+                "backgrounds": {}
             };
             const expected = {
                 "attrs": {
@@ -226,11 +233,12 @@ describe('konva room builder tests', () => {
         it('should add furniture as children', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "furniture": [
+                "furniture": {
+                    "some_furniture":
                     {
                         "data": "mock_data"
                     }
-                ],
+                },
                 "className": "Group"
             };
             const expected = {
@@ -243,7 +251,8 @@ describe('konva room builder tests', () => {
                     {
                         "data": "mock_data",
                         "attrs": {
-                            "category": "furniture"
+                            "category": "furniture",
+                            "id": "some_furniture"
                         }
                     }
                 ],
@@ -257,11 +266,11 @@ describe('konva room builder tests', () => {
         it('should add other objects as children', () => {
             const roomBuilder = new RoomBuilder();
             const roomJson = {
-                "other": [
-                    {
+                "other": {
+                    "some_other": {
                         "data": "mock_data"
                     }
-                ],
+                },
                 "className": "Group"
             };
             const expected = {
@@ -272,7 +281,10 @@ describe('konva room builder tests', () => {
                 },
                 "children": [
                     {
-                        "data": "mock_data"
+                        "data": "mock_data",
+                        "attrs": {
+                            "id": "some_other"
+                        }
                     }
                 ],
                 "className": "Group"

@@ -16,7 +16,7 @@ class RoomBuilder {
         if (!roomJson.children) {
             roomJson.children = [];
         }
-        roomJson = this.addChildren(roomJson, 'background', this.buildBackgrounds);
+        roomJson = this.addChildren(roomJson, 'backgrounds', this.buildBackgrounds);
         roomJson = this.addChildren(roomJson, 'furniture', this.buildFurniture);
         roomJson = this.addChildren(roomJson, 'other', this.buildOther);
         roomJson.className = "Group";
@@ -63,48 +63,49 @@ class RoomBuilder {
     }
 
     /**
-     * Build Konva-ready json data from background data in rooms.json.
-     * Only supports a single background for now, but returns it as an array.
+     * Build Konva-ready json data from background data in rooms.json. The engine only supports one backgorund
+     * image for a room, but from data we technically can build multiple.
      *
-     * @param {object} backgroundJson Konva-agnostic background json object
+     * @param {object} backgroundsJson background json objects from rooms.json
      * @returns {object[]} array of backgrounds as Konva object jsons
      */
-    buildBackgrounds(backgroundJson) {
+    buildBackgrounds(backgroundsJson) {
         // TODO: make configurable / responsive / etc / etc
         const bgWidth = 981;
         const bgHeight = 543;
 
-        const background = {};
-        if (backgroundJson.src) {
+        const backgrounds = [];
+        for (const [key, backgroundJson] of Object.entries(backgroundsJson)) {
+            const background = {};
             background.attrs = {
                 "category": "room_background",
+                "id": key,
                 "src": backgroundJson.src,
                 "visible": true,
                 "width": bgWidth,
                 "height": bgHeight
             };
             background.className = "Image";
+            backgrounds.push(background);
         }
-        if (backgroundJson.id) {
-            background.attrs.id = backgroundJson.id;
-        }
-        return [background];
+        return backgrounds;
     }
 
     /**
      * Transform furniture data in to Konva object json.
-     * @param {object[]} furnitureJson an array of furniture from room.json
+     * @param {object} furnitureJson furniture from room.json
      * @returns {object[]} an array of furniture as Konva objects
      */
     buildFurniture(furnitureJson) {
         const furnitureResult = [];
-        furnitureJson.forEach((furniture) => {
+        for (const [key, furniture] of Object.entries(furnitureJson)) {
             if (!furniture.attrs) {
                 furniture.attrs = {};
             }
+            furniture.attrs.id = key;
             furniture.attrs.category = "furniture";
             furnitureResult.push(furniture);
-        });
+        }
         return furnitureResult;
     }
 
@@ -112,11 +113,19 @@ class RoomBuilder {
      * TODO: maybe do something with the 'other' data? Currently it allows defining any kind of additional
      * Konva objects to the room.
      *
-     * @param {object[]} otherJson an array of other child objects from room.json
+     * @param {object} otherJson other child objects from room.json
      * @returns {object[]} an array of other child objects as Konva objects
      */
     buildOther(otherJson) {
-        return otherJson;
+        const otherResult = [];
+        for (const [key, other] of Object.entries(otherJson)) {
+            if (!other.attrs) {
+                other.attrs = {};
+            }
+            other.attrs.id = key;
+            otherResult.push(other);
+        }
+        return otherResult;
     }
 }
 
