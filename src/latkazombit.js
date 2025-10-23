@@ -9,6 +9,7 @@ import JSONGetter from './util/JSONGetter.js';
 import EventEmitter from './events/EventEmitter.js';
 import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
 import FurnitureBuilder from './viewbuilder/room/konva/FurnitureBuilder.js';
+import SecretBuilder from './latkazombit/viewbuilder/room/konva/SecretBuilder.js';
 
 const jsonGetter = new JSONGetter();
 
@@ -65,7 +66,9 @@ const kiigame = new KiiGame(
         'furniture': {
             'roomChildrenTypeBuilder': new FurnitureBuilder()
         },
-        'secret': {}
+        'secret': {
+            'roomChildrenTypeBuilder': new SecretBuilder()
+        }
     },
     gameEventEmitter,
     uiEventEmitter,

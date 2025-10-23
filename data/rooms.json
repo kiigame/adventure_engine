@@ -190,11 +190,10 @@
                 "className": "Image"
             }
         },
-        "other": {
+        "secret": {
             "reward_3": {
                 "initiallyVisible": true,
                 "attrs": {
-                    "category": "secret",
                     "src": "data/images/reward_3.png",
                     "x": 290,
                     "y": 345
@@ -386,10 +385,9 @@
                 "className": "Image"
             }
         },
-        "other": {
+        "secret": {
             "reward_1": {
                 "attrs": {
-                    "category": "secret",
                     "src": "data/images/reward_1.png",
                     "x": 480,
                     "y": 61
@@ -625,10 +623,9 @@
                 "className": "Image"
             }
         },
-        "other": {
+        "secret": {
             "reward_2": {
                 "attrs": {
-                    "category": "secret",
                     "src": "data/images/reward_2.png",
                     "x": 635,
                     "y": 233
