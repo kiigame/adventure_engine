@@ -1,19 +1,11 @@
-import BackgroundsBuilder from "./BackgroundsBuilder.js";
-import FurnitureBuilder from "./FurnitureBuilder.js";
-import OtherChildrenBuilder from "./OtherChildrenBuilder.js";
 import RoomChildrenTypeBuilder from "./RoomChildrenTypeBuilder.js";
 
 class RoomBuilder {
     /**
-     * TODO: Dependency injection
+     * @param {RoomChildrenTypeBuilder[]} roomChildrenBuilders
      */
-    constructor() {
-        // Order may be important - for example, backgrounds should go in first so they don't overlap furniture
-        this.roomChildrenBuilders = [
-            new RoomChildrenTypeBuilder('backgrounds', new BackgroundsBuilder()),
-            new RoomChildrenTypeBuilder('furniture', new FurnitureBuilder()),
-            new RoomChildrenTypeBuilder('other', new OtherChildrenBuilder())
-        ];
+    constructor(roomChildrenBuilders) {
+        this.roomChildrenBuilders = roomChildrenBuilders;
     }
 
     /**

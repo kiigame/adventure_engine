@@ -1,11 +1,18 @@
 import { expect } from 'chai';
+import { createStubInstance } from 'sinon';
 import RoomBuilder from './RoomBuilder.js';
+import RoomChildrenTypeBuilder from './RoomChildrenTypeBuilder.js';
 
 describe('konva room builder tests', () => {
     const roomName = "roomy_room";
     describe('basic Konva attrs (id, visibility) and custom attrs (category, fullScreen)', () => {
+        let roomChildrenTypeBuilder;
+        beforeEach(() => {
+            roomChildrenTypeBuilder = createStubInstance(RoomChildrenTypeBuilder);
+            roomChildrenTypeBuilder.addChildren.returnsArg(0); // return the roomJson unmodified
+        });
         it('should set initial visibility to false, add id by json object key, and set category to room', () => {
-            const roomBuilder = new RoomBuilder();
+            const roomBuilder = new RoomBuilder([roomChildrenTypeBuilder]);
             const roomJson = {};
             const expected = {
                 "attrs": {
@@ -20,7 +27,7 @@ describe('konva room builder tests', () => {
             expect(result).to.deep.equal(expected);
         });
         it('should add fullscreen flag to attrs if it\'s true', () => {
-            const roomBuilder = new RoomBuilder();
+            const roomBuilder = new RoomBuilder([roomChildrenTypeBuilder]);
             const roomJson = { "fullScreen": true };
             const expected = {
                 "attrs": {
@@ -36,7 +43,7 @@ describe('konva room builder tests', () => {
             expect(result).to.deep.equal(expected);
         });
         it('should add fullscreen flag to attrs as false if it\'s false', () => {
-            const roomBuilder = new RoomBuilder();
+            const roomBuilder = new RoomBuilder([roomChildrenTypeBuilder]);
             const roomJson = { "fullScreen": false };
             const expected = {
                 "attrs": {
@@ -52,69 +59,58 @@ describe('konva room builder tests', () => {
             expect(result).to.deep.equal(expected);
         });
     });
-    // TODO: generalize once the constructor uses dependency injection
     describe('order of children', () => {
-        it('should insert background as the first child of the room so that it will not cover furniture', () => {
-            const roomBuilder = new RoomBuilder();
-            const roomJson = {
-                "backgrounds": {
-                    "roomy_room_bg": {
-                        "src": "data/images/locker_room_1.png"
-                    }
-                },
-                "furniture": {
-                    "some_furniture": {
-                        "data": "mock_data"
-                    }
-                },
-                "className": "Group"
-            };
-            const expected = {
-                "attrs": {
-                    "category": "room",
-                    "id": "roomy_room",
-                    "visible": false
-                },
-                "children": [
-                    {
-                        "attrs": {
-                            "category": "room_background",
-                            "id": "roomy_room_bg",
-                            "src": "data/images/locker_room_1.png",
-                            "visible": true,
-                            "width": 981,
-                            "height": 543
-                        },
-                        "className": "Image"
-                    },
-                    {
-                        "attrs": {
-                            "id": "some_furniture",
-                            "category": "furniture"
-                        },
-                        "data": "mock_data"
-                    }
-                ],
-                "className": "Group"
-            };
-            const result = roomBuilder.build(roomName, roomJson);
-            expect(result).to.deep.equal(expected);
+        let firstRoomChildrenTypeBuilder;
+        let lastRoomChildrenTypeBuilder;
+        beforeEach(() => {
+            firstRoomChildrenTypeBuilder = createStubInstance(RoomChildrenTypeBuilder);
+            lastRoomChildrenTypeBuilder = createStubInstance(RoomChildrenTypeBuilder);
         });
-        it('should insert background as the first child of the room so that it will not cover other class of children', () => {
-            const roomBuilder = new RoomBuilder();
-            const roomJson = {
-                "backgrounds": {
-                    "roomy_room_bg": {
-                        "src": "data/images/locker_room_1.png"
-                    }
-                },
-                "other": {
-                    "some_other": {
-                        "data": "mock_data"
-                    }
-                },
-                "className": "Group"
-            };
+        it('should insert first children builder result first so that e.g. backgrounds will not cover furniture', () => {
+            // Fairly annoying stubbing to mimick RoomChildrenTypeBuilder
+            firstRoomChildrenTypeBuilder.addChildren.withArgs(
+                {
+                    "attrs": {
+                        "category": "room",
+                        "id": "roomy_room",
+                        "visible": false
+                    },
+                    "children": []
+                }
+            ).returns(
+                {
+                    "attrs": {
+                        "category": "room",
+                        "id": "roomy_room",
+                        "visible": false
+                    },
+                    "children": ['first_children']
+                }
+            );
+            lastRoomChildrenTypeBuilder.addChildren.withArgs(
+                {
+                    "attrs": {
+                        "category": "room",
+                        "id": "roomy_room",
+                        "visible": false
+                    },
+                    "children": ['first_children']
+                }
+            ).returns(
+                {
+                    "attrs": {
+                        "category": "room",
+                        "id": "roomy_room",
+                        "visible": false
+                    },
+                     "children": ['first_children', 'last_children']
+                }
+            );
+            const roomBuilder = new RoomBuilder([
+                firstRoomChildrenTypeBuilder,
+                lastRoomChildrenTypeBuilder
+            ]);
+            const roomJson = {}; // input data doesn't matter in this test
             const expected = {
                 "attrs": {
                     "category": "room",
@@ -122,23 +118,8 @@ describe('konva room builder tests', () => {
                     "visible": false
                 },
                 "children": [
-                    {
-                        "attrs": {
-                            "category": "room_background",
-                            "id": "roomy_room_bg",
-                            "src": "data/images/locker_room_1.png",
-                            "visible": true,
-                            "width": 981,
-                            "height": 543
-                        },
-                        "className": "Image"
-                    },
-                    {
-                        "attrs": {
-                            "id": "some_other"
-                        },
-                        "data": "mock_data"
-                    }
+                    'first_children',
+                    'last_children'
                 ],
                 "className": "Group"
             };

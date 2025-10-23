@@ -41,6 +41,10 @@ import FullFaderPreparer from './viewbuilder/stage/konva/FullFaderPreparer.js';
 import RoomLayerBuilder from './viewbuilder/room/konva/RoomLayerBuilder.js';
 import RoomBuilder from './viewbuilder/room/konva/RoomBuilder.js';
 import RoomsBuilder from './viewbuilder/room/konva/RoomsBuilder.js';
+import RoomChildrenTypeBuilder from './viewbuilder/room/konva/RoomChildrenTypeBuilder.js';
+import BackgroundsBuilder from './viewbuilder/room/konva/BackgroundsBuilder.js';
+import FurnitureBuilder from './viewbuilder/room/konva/FurnitureBuilder.js';
+import OtherChildrenBuilder from './viewbuilder/room/konva/OtherChildrenBuilder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -128,7 +132,14 @@ export class KiiGame {
         }
         const roomLayerBuilder = new RoomLayerBuilder(
             new RoomsBuilder(
-                new RoomBuilder()
+                new RoomBuilder([
+                    // TODO: allow configuring these by moving DI up
+                    // Order may be important - for example, backgrounds should go in first so
+                    // they don't overlap furniture
+                    new RoomChildrenTypeBuilder('backgrounds', new BackgroundsBuilder()),
+                    new RoomChildrenTypeBuilder('furniture', new FurnitureBuilder()),
+                    new RoomChildrenTypeBuilder('other', new OtherChildrenBuilder())
+                ])
             ),
             konvaObjectContainerPusher,
             new RoomFaderBuilder(),
