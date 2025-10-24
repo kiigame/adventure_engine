@@ -6,14 +6,13 @@ import EventEmitter from '../events/EventEmitter.js';
 use(sinonChai);
 
 describe('Objects in rooms model tests', () => {
+    let initialState = {};
     let gameEventEmitterStub;
     let uiEventEmitterStub;
     beforeEach(() => {
         gameEventEmitterStub = createStubInstance(EventEmitter);
         uiEventEmitterStub = createStubInstance(EventEmitter);
-    });
-    describe('remove object from room', () => {
-        const initialState = {
+        initialState = {
             'room_one': {
                 'furniture': {
                     'object_1': {
@@ -33,6 +32,8 @@ describe('Objects in rooms model tests', () => {
                 }
             }
         };
+    });
+    describe('remove objects from room', () => {
         it('should set visible to false for a visible object existing in room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub, uiEventEmitterStub);
             const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
@@ -55,6 +56,33 @@ describe('Objects in rooms model tests', () => {
                         },
                     },
                     'objectsRemoved': ['object_1']
+                }
+            );
+        });
+    });
+    describe('add objects to room', () => {
+        it('should set visible to true for a non-visible object existing in room', () => {
+            new ObjectsInRooms(initialState, gameEventEmitterStub, uiEventEmitterStub);
+            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'add_objects';
+            }).args[1];
+            addObjectsCallback(['object_2']);
+            expect(uiEventEmitterStub.emit, 'added_objects not emitted as expected').to.have.been.calledWith(
+                'added_objects',
+                {
+                    'objectList': {
+                        'room_one': {
+                            'furniture': {
+                                'object_1': { 'visible': true },
+                                'object_2': { 'visible': true }
+                            },
+                            'other_type': {
+                                'object_3': { 'visible': false },
+                                'object_4': { 'visible': true }
+                            }
+                        },
+                    },
+                    'objectsAdded': ['object_2']
                 }
             );
         });
