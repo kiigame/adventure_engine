@@ -112,7 +112,7 @@ export class KiiGame {
         const initialObjectsInRoomsState = new ObjectsInRoomsBuilder(
             new ObjectsInRoomBuilder(Object.keys(roomObjectCategories))
         ).build(gameData.rooms_json);
-        new ObjectsInRooms(initialObjectsInRoomsState, gameEventEmitter, uiEventEmitter);
+        new ObjectsInRooms(initialObjectsInRoomsState, gameEventEmitter);
         // "Player character in room" model
         new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
         // Inventory model

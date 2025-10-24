@@ -4,7 +4,6 @@ class ObjectsInRooms {
     /**
      * @param {object} objectsInRoomsData initial state of the objects in rooms as json
      * @param {EventEmitter} gameEventEmitter
-     * @param {EventEmitter} uiEventEmitter
      */
     constructor(objectsInRoomsData, gameEventEmitter, uiEventEmitter) {
         this.objectsInRoomsData = objectsInRoomsData;
@@ -26,18 +25,16 @@ class ObjectsInRooms {
         const removedObjectNames = [];
         // TODO: I'm sure there's a more elegant way than this!
         objectNames.forEach((objectName) => {
-            for (const [room, types] of Object.entries(this.objectsInRoomsData)) {
-                for (const [typeName, objects] of Object.entries(types)) {
-                    for (const [name, values] of Object.entries(objects)) {
-                        if (name === objectName) {
-                            this.objectsInRoomsData[room][typeName][name].visible = false;
-                            removedObjectNames.push(name);
-                        }
+            for (const [room, objects] of Object.entries(this.objectsInRoomsData)) {
+                for (const [name, _values] of Object.entries(objects)) {
+                    if (name === objectName) {
+                        this.objectsInRoomsData[room][name].visible = false;
+                        removedObjectNames.push(name);
                     }
                 }
             }
         });
-        this.uiEventEmitter.emit(
+        this.gameEventEmitter.emit(
             'removed_objects',
             {
                 'objectList': this.objectsInRoomsData,
@@ -53,18 +50,16 @@ class ObjectsInRooms {
         const addedObjectNames = [];
         // TODO: I'm sure there's a more elegant way than this!
         objectNames.forEach((objectName) => {
-            for (const [room, types] of Object.entries(this.objectsInRoomsData)) {
-                for (const [typeName, objects] of Object.entries(types)) {
-                    for (const [name, values] of Object.entries(objects)) {
-                        if (name === objectName) {
-                            this.objectsInRoomsData[room][typeName][name].visible = true;
-                            addedObjectNames.push(name);
-                        }
+            for (const [room, objects] of Object.entries(this.objectsInRoomsData)) {
+                for (const [name, _values] of Object.entries(objects)) {
+                    if (name === objectName) {
+                        this.objectsInRoomsData[room][name].visible = true;
+                        addedObjectNames.push(name);
                     }
                 }
             }
         });
-        this.uiEventEmitter.emit(
+        this.gameEventEmitter.emit(
             'added_objects',
             {
                 'objectList': this.objectsInRoomsData,
