@@ -1,0 +1,62 @@
+import { expect, use } from 'chai';
+import { createStubInstance } from 'sinon';
+import sinonChai from "sinon-chai";
+import ObjectsInRooms from './ObjectsInRooms.js';
+import EventEmitter from '../events/EventEmitter.js';
+use(sinonChai);
+
+describe('Objects in rooms model tests', () => {
+    let gameEventEmitterStub;
+    let uiEventEmitterStub;
+    beforeEach(() => {
+        gameEventEmitterStub = createStubInstance(EventEmitter);
+        uiEventEmitterStub = createStubInstance(EventEmitter);
+    });
+    describe('remove object from room', () => {
+        const initialState = {
+            'room_one': {
+                'furniture': {
+                    'object_1': {
+                        'visible': true
+                    },
+                    'object_2': {
+                        'visible': false
+                    }
+                },
+                'other_type': {
+                    'object_3': {
+                        'visible': false
+                    },
+                    'object_4': {
+                        'visible': true
+                    }
+                }
+            }
+        };
+        it('should set visible to false for a visible object existing in room', () => {
+            new ObjectsInRooms(initialState, gameEventEmitterStub, uiEventEmitterStub);
+            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'remove_objects';
+            }).args[1];
+            removeObjectsCallback(['object_1']);
+            expect(uiEventEmitterStub.emit, 'removed_objects not emitted as expected').to.have.been.calledWith(
+                'removed_objects',
+                {
+                    'objectList': {
+                        'room_one': {
+                            'furniture': {
+                                'object_1': { 'visible': false },
+                                'object_2': { 'visible': false }
+                            },
+                            'other_type': {
+                                'object_3': { 'visible': false },
+                                'object_4': { 'visible': true }
+                            }
+                        },
+                    },
+                    'objectsRemoved': ['object_1']
+                }
+            );
+        });
+    });
+});
