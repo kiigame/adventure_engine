@@ -52,11 +52,11 @@ class RoomView {
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.showRoom(roomId);
         });
-        this.gameEventEmitter.on('remove_objects', (objectNames) => {
-            this.removeObject(objectNames);
+        this.gameEventEmitter.on('removed_objects', ({ objectList: _objectList, objectsRemoved}) => {
+            this.removeObject(objectsRemoved);
         });
-        this.gameEventEmitter.on('add_objects', (objectNames) => {
-            this.addObject(objectNames);
+        this.gameEventEmitter.on('added_objects', ({ objectList: _objectList, objectsAdded}) => {
+            this.addObject(objectsAdded);
         });
     }
 

@@ -45,6 +45,9 @@ import RoomChildrenTypeBuilder from './viewbuilder/room/konva/RoomChildrenTypeBu
 import BackgroundsBuilder from './viewbuilder/room/konva/BackgroundsBuilder.js';
 import FurnitureBuilder from './viewbuilder/room/konva/FurnitureBuilder.js';
 import OtherChildrenBuilder from './viewbuilder/room/konva/OtherChildrenBuilder.js';
+import ObjectsInRoomsBuilder from './modelbuilder/ObjectsInRoomsBuilder.js';
+import ObjectsInRoomBuilder from './modelbuilder/ObjectsInRoomBuilder.js';
+import ObjectsInRooms from './model/ObjectsInRooms.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -104,7 +107,13 @@ export class KiiGame {
         }
 
         // Model start
-        // "Player character in room" model status
+        // "Objects in rooms" model
+        // Build the initial "objects in rooms" state
+        const initialObjectsInRoomsState = new ObjectsInRoomsBuilder(
+            new ObjectsInRoomBuilder(Object.keys(roomObjectCategories))
+        ).build(gameData.rooms_json);
+        new ObjectsInRooms(initialObjectsInRoomsState, gameEventEmitter);
+        // "Player character in room" model
         new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
         // Inventory model
         this.inventory = new Inventory(this.gameEventEmitter, this.uiEventEmitter);
