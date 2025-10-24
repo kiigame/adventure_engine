@@ -46,14 +46,18 @@ class CommandHandler {
             this.gameEventEmitter.emit('inventory_remove', itemsToRemove);
         } else if (command.command == "remove_object") {
             const objects = Array.isArray(command.object) ? command.object : [command.object];
-            objects.forEach((objectName) =>
-                this.gameEventEmitter.emit('remove_object', objectName)
-            );
+            const objectsToRemove = [];
+            objects.forEach((objectName) => {
+                objectsToRemove.push(objectName)
+            });
+            this.gameEventEmitter.emit('remove_objects', objectsToRemove);
         } else if (command.command == "add_object") {
             const objects = Array.isArray(command.object) ? command.object : [command.object];
-            objects.forEach((objectName) =>
-                this.gameEventEmitter.emit('add_object', objectName)
-            );
+            const objectsToAdd = [];
+            objects.forEach((objectName) => {
+                objectsToAdd.push(objectName)
+            });
+            this.gameEventEmitter.emit('add_objects', objectsToAdd);
         } else if (command.command == "do_transition") {
             if (command.instant) {
                 this.gameEventEmitter.emit('do_instant_transition', {

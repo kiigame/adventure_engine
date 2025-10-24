@@ -52,11 +52,11 @@ class RoomView {
         this.gameEventEmitter.on('arrived_in_room', (roomId) => {
             this.showRoom(roomId);
         });
-        this.gameEventEmitter.on('remove_object', (objectName) => {
-            this.removeObject(objectName);
+        this.gameEventEmitter.on('remove_objects', (objectNames) => {
+            this.removeObject(objectNames);
         });
-        this.gameEventEmitter.on('add_object', (objectName) => {
-            this.addObject(objectName);
+        this.gameEventEmitter.on('add_objects', (objectNames) => {
+            this.addObject(objectNames);
         });
     }
 
@@ -169,13 +169,15 @@ class RoomView {
     /**
      * Add an object to the stage. Currently, this means setting its visibility to true.
      * TODO: Add animations & related parts.
-     * @param {string} objectName
+     * @param {string[]} objectNames
      */
-    addObject(objectName) {
-        const object = this.getObject(objectName);
-        object.clearCache();
-        object.show();
-        object.cache();
+    addObject(objectNames) {
+        objectNames.forEach((objectName) => {
+            const object = this.getObject(objectName);
+            object.clearCache();
+            object.show();
+            object.cache();
+        });
         this.drawRoomLayer();
     }
 
@@ -183,11 +185,13 @@ class RoomView {
      * Remove an object from stage. Called after interactions that remove objects.
      * The removed object is simply hidden.
      *
-     * @param {string} objectName
+     * @param {string[]} objectNames
      */
-    removeObject(objectName) {
-        const object = this.getObject(objectName);
-        object.hide();
+    removeObject(objectNames) {
+        objectNames.forEach((objectName) => {
+            const object = this.getObject(objectName);
+            object.hide();
+        });
         this.drawRoomLayer();
     }
 
