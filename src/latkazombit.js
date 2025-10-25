@@ -251,7 +251,7 @@ input_layer.on('tap click', function (event) {
 });
 
 // When arriving to the final room (the final step of the game), count rewards in invetory.
-gameEventEmitter.on('arrived_in_room', function (roomId) {
+uiEventEmitter.on('arrived_in_room', function (roomId) {
     if (roomId === 'end_layer') {
         const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text");
         let rewardsCount = 0;

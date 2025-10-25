@@ -5,14 +5,12 @@ import InventoryItemsView from "./InventoryItemsView.js"
 class InventoryView {
     /**
      * @param {EventEmitter} uiEventEmitter
-     * @param {EventEmitter} gameEventEmitter
      * @param {StageObjectGetter} stageObjectGetter
      * @param {Konva.Layer} inventoryBarLayer
      * @param {InventoryItemsView} inventoryItemsView
      */
-    constructor(uiEventEmitter, gameEventEmitter, stageObjectGetter, inventoryBarLayer, inventoryItemsView) {
+    constructor(uiEventEmitter, stageObjectGetter, inventoryBarLayer, inventoryItemsView) {
         this.uiEventEmitter = uiEventEmitter;
-        this.gameEventEmitter = gameEventEmitter;
         this.stageObjectGetter = stageObjectGetter;
         this.inventoryBarLayer = inventoryBarLayer;
         this.inventoryItemsView = inventoryItemsView;
@@ -23,7 +21,7 @@ class InventoryView {
         this.uiEventEmitter.on('inventory_view_model_updated', ({ visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible }) => {
             this.redrawInventory(visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible);
         });
-        this.gameEventEmitter.on('arrived_in_room', (roomId) => {
+        this.uiEventEmitter.on('arrived_in_room', (roomId) => {
             this.handleArrivedInRoom(roomId);
         });
         this.uiEventEmitter.on('inventory_left_arrow_draghovered', () => {
