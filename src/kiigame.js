@@ -331,7 +331,7 @@ export class KiiGame {
         this.inventoryScrollDelayEnabled = false;
         // Intersection target (object below dragged item)
         this.target;
-        // While dragging events (use item on item or object)
+        // While dragging events (use item on, in order of priority: room object, inventory item, or inventory arrows)
         this.stage.on('dragmove', (event) => {
             const draggedItem = event.target;
 
