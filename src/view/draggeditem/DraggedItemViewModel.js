@@ -30,6 +30,9 @@ class DraggedItemViewModel {
         this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
             this.handleInventoryItemDragEnd(draggedItem);
         });
+        this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
+            this.target = undefined;
+        });
     }
 
     /**
@@ -81,6 +84,13 @@ class DraggedItemViewModel {
      * @param {Konva.Shape} draggedItem
      */
     handleInventoryItemDragEnd(draggedItem) {
+        // If we are already hovering a target, use it
+        if (this.target !== undefined) {
+            this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target: this.target, draggedItem });
+            return;
+        }
+
+        // In case we didn't yet get the target set during hover (for example during intersection delay), check now
         const target = this.findDragTarget(
             [
                 ...this.roomView.getObjectsFromCurrentRoom(),
@@ -88,11 +98,12 @@ class DraggedItemViewModel {
             ],
             draggedItem
         );
-        if (target == null) {
-            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+        if (target !== undefined) {
+            this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
             return;
         }
-        this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
+
+        this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
     }
 
     /**
