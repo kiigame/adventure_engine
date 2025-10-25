@@ -1,3 +1,5 @@
+import CommandHandler from "./CommandHandler.js";
+
 class CommandsHandler {
     /**
      * @param {CommandHandler} commandHandler 
