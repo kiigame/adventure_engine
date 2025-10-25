@@ -62,7 +62,7 @@ export class KiiGame {
         dragResolvers = [],
         hitRegionInitializer = null,
         intersection = null,
-        roomObjectCategories = { 'furniture': { 'roomChildrenTypeBuilder': new FurnitureBuilder() }},
+        roomObjectCategories = { 'furniture': { 'roomChildrenTypeBuilder': new FurnitureBuilder() } },
         gameEventEmitter = new EventEmitter(),
         uiEventEmitter = new EventEmitter(),
         gameData = {},
@@ -142,7 +142,7 @@ export class KiiGame {
         }
         // Read room children type builders from the config given to the constructor
         const roomObjectCategoryBuilders = [];
-        for (const [key, roomObjectCategory] of Object.entries(roomObjectCategories) ) {
+        for (const [key, roomObjectCategory] of Object.entries(roomObjectCategories)) {
             if (roomObjectCategory.roomChildrenTypeBuilder) {
                 roomObjectCategoryBuilders.push(
                     new RoomChildrenTypeBuilder(key, roomObjectCategory.roomChildrenTypeBuilder)
@@ -331,10 +331,8 @@ export class KiiGame {
         this.inventoryScrollDelayEnabled = false;
         // Intersection target (object below dragged item)
         this.target;
-        // While dragging events (use item on, in order of priority: room object, inventory item, or inventory arrows)
-        this.stage.on('dragmove', (event) => {
-            const draggedItem = event.target;
-
+        // Drag move events (hover item over, in order of priority: room object, inventory item, or inventory arrows)
+        this.uiEventEmitter.on('inventory_item_drag_move', ({ draggedItem }) => {
             if (!this.intersectionDelayEnabled) {
                 // Setting a small delay to not spam intersection check on every moved pixel
                 this.setIntersectionDelay(10);

@@ -17,13 +17,16 @@ class InventoryItemsView {
         this.offsetFromLeft = 50;
 
         // Handle drags and clicks on inventory items
-        this.inventoryItems.find('Image').on('dragstart', (event) => {
-            this.uiEventEmitter.emit('inventory_item_drag_start', event.target);
-        });
-        this.inventoryItems.on('click tap', (event) => {
-            this.uiEventEmitter.emit('inventory_click', event.target);
-        });
         this.inventoryItems.getChildren().each((child) => {
+            child.on('click tap', (event) => {
+                this.uiEventEmitter.emit('inventory_click', event.target);
+            });
+            child.on('dragstart', (event) => {
+                this.uiEventEmitter.emit('inventory_item_drag_start', event.target);
+            });
+            child.on('dragmove', (event) => {
+                this.uiEventEmitter.emit('inventory_item_drag_move', { draggedItem: event.target });
+            });
             child.on('dragend', (event) => {
                 this.uiEventEmitter.emit('inventory_item_drag_end', { draggedItem: event.target });
             });
