@@ -339,47 +339,14 @@ export class KiiGame {
                 // Setting a small delay to not spam intersection check on every moved pixel
                 this.setDelay(10);
 
-                const currentRoomObjects = this.roomView.getObjectsFromCurrentRoom();
-                // Loop through all the items on the current object layer
-                for (let i = 0; i < currentRoomObjects.length; i++) {
-                    const object = currentRoomObjects[i];
-
-                    if (object != undefined && object.getAttr('category') != 'room_background') {
-                        // Break if still intersecting with the same target
-                        if (this.target != null && this.intersection.check(dragged_item, this.target)) {
-                            break;
-                        } else if (this.intersection.check(dragged_item, object)) {
-                            // If not, check for a new target
-                            if (this.target != object) {
-                                this.target = object;
-                            }
-                            break;
-                        } else {
-                            // No target, move on
-                            this.target = null;
-                        }
-                    }
-                }
-
-                // If no intersecting targets were found on object layer, check the inventory
-                if (this.target == null) {
-                    const visibleInventoryItems = this.inventoryView.inventoryItemsView.getVisibleInventoryItems();
-                    // Loop through all the items on the inventory layer
-                    for (let i = 0; i < visibleInventoryItems.length; i++) {
-                        const object = visibleInventoryItems[i];
-                        if (object != undefined) {
-                            // Look for intersecting targets
-                            if (this.intersection.check(dragged_item, object)) {
-                                if (this.target != object) {
-                                    this.target = object;
-                                }
-                                break;
-                            } else {
-                                this.target = null;
-                            }
-                        }
-                    }
-                }
+                this.target = this.findDragTarget(
+                    [
+                        ...this.roomView.getObjectsFromCurrentRoom(),
+                        ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
+                    ],
+                    dragged_item,
+                    this.target
+                );
 
                 // Next, check if the item is dragged over the inventory arrows
                 if (this.target == null) {
@@ -488,7 +455,18 @@ export class KiiGame {
         )
         // handle using inventory item on room objects and inventory items
         this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
-            const targetCategory = this.target.getAttr('category');
+            const target = this.findDragTarget(
+                [
+                    ...this.roomView.getObjectsFromCurrentRoom(),
+                    ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
+                ],
+                draggedItem
+            );
+            if (target == null) {
+                this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+                return;
+            }
+            const targetCategory = target.getAttr('category');
 
             const dragResolver = this.dragResolvers.find((dragResolver) =>
                 dragResolver.getTargetCategory() === targetCategory
@@ -498,8 +476,8 @@ export class KiiGame {
                 this.commandsHandler.handleCommands(dragResolver.resolveCommands(
                     this.interactions,
                     draggedItem.id(),
-                    this.target.id(),
-                    this.target.id()
+                    target.id(),
+                    target.id()
                 ));
             }
 
@@ -516,6 +494,23 @@ export class KiiGame {
                 'start'
             )
         );
+    }
+
+    findDragTarget(candidates, draggedItem, previousTarget = null) {
+        let newTarget = undefined;
+        for (let i = 0; i < candidates.length; i++) {
+            const object = candidates[i];
+            // Break if still intersecting with the same target
+            if (previousTarget != null && this.intersection.check(draggedItem, previousTarget)) {
+                break;
+            } else if (this.intersection.check(draggedItem, object)) {
+                newTarget = object;
+                break;
+            } else {
+                newTarget = null;
+            }
+        }
+        return newTarget !== undefined ? newTarget : previousTarget;
     }
 
     // Delay to be set after each intersection check
