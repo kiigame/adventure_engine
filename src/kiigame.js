@@ -50,6 +50,7 @@ import ObjectsInRoomBuilder from './modelbuilder/ObjectsInRoomBuilder.js';
 import ObjectsInRooms from './model/ObjectsInRooms.js';
 import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
 import InventoryArrowsView from './view/inventory/InventoryArrowsView.js';
+import InventoryArrowsViewModel from './view/inventory/InventoryArrowsViewModel.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -331,12 +332,13 @@ export class KiiGame {
             this.gameEventEmitter,
             7 // inventoryMax, TODO make configurable/responsive
         )
+        // Inventory arrows view model
+        this.inventoryArrowsViewModel = new InventoryArrowsViewModel(
+            this.uiEventEmitter
+        );
         // Item Drag View Model
         // For limiting the amount of intersection checks
         this.intersectionDelayEnabled = false;
-        // For limiting the speed of inventory browsing when dragging an item
-        this.inventoryScrollDelay = 500;
-        this.inventoryScrollDelayEnabled = false;
         // Intersection target (object below dragged item)
         this.target;
         // Drag move events (hover item over, in order of priority: room object, inventory item, or inventory arrows)
@@ -366,19 +368,15 @@ export class KiiGame {
                 }
 
                 // Check if we are dragging over inventory arrows
-                if (!this.inventoryScrollDelayEnabled) {
+                if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
                     const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
                     const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
                     if (this.intersection.check(draggedItem, leftArrow)) {
-                        this.inventoryScrollDelayEnabled = true;
-                        this.uiEventEmitter.emit('inventory_left_arrow_draghovered');
-                        setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+                        this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
                         return;
                     }
                     if (this.intersection.check(draggedItem, rightArrow)) {
-                        this.inventoryScrollDelayEnabled = true;
-                        this.uiEventEmitter.emit('inventory_right_arrow_draghovered');
-                        setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+                        this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
                         return;
                     }
                 }
