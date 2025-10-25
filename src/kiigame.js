@@ -51,6 +51,8 @@ import ObjectsInRooms from './model/ObjectsInRooms.js';
 import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
 import InventoryArrowsView from './view/inventory/InventoryArrowsView.js';
 import InventoryArrowsViewModel from './view/inventory/InventoryArrowsViewModel.js';
+import ClickHandler from './controller/ClickHandler.js';
+import DragEndHandler from './controller/DragEngHandler.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -69,7 +71,7 @@ export class KiiGame {
         uiEventEmitter = new EventEmitter(),
         gameData = {},
     ) {
-        this.clickResolvers = clickResolvers;
+        clickResolvers;
         this.dragResolvers = dragResolvers;
         this.intersection = intersection;
         this.gameEventEmitter = gameEventEmitter;
@@ -81,8 +83,8 @@ export class KiiGame {
             );
         }
 
-        if (this.clickResolvers.length == 0) {
-            this.clickResolvers.push(
+        if (clickResolvers.length == 0) {
+            clickResolvers.push(
                 new DefaultInteractionResolver('furniture'),
                 new DefaultInteractionResolver('item')
             );
@@ -381,6 +383,21 @@ export class KiiGame {
                 this.uiEventEmitter.emit('dragmove_hover_on_nothing');
             }
         });
+        // Drag end view model
+        this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
+            const target = this.findDragTarget(
+                [
+                    ...this.roomView.getObjectsFromCurrentRoom(),
+                    ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
+                ],
+                draggedItem
+            );
+            if (target == null) {
+                this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+                return;
+            }
+            this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
+        });
         // Item Drag View Model end
         // Inventory & items view end
 
@@ -445,15 +462,9 @@ export class KiiGame {
         // Music view end
         // View end
 
-        // Controller(?) start
+        // Controller start
         this.text = new Text(gameData.text_json);
         this.interactions = new Interactions(gameData.interactions_json);
-        this.uiEventEmitter.on('furniture_clicked', (target) => {
-            this.handleClick(target);
-        });
-        this.uiEventEmitter.on('inventory_click', (target) => {
-            this.handleClick(target);
-        });
         const commandHandler = new CommandHandler(
             this.gameEventEmitter,
             this.uiEventEmitter,
@@ -464,37 +475,19 @@ export class KiiGame {
         this.commandsHandler = new CommandsHandler(
             commandHandler
         )
-        // handle using inventory item on room objects and inventory items
-        this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
-            const target = this.findDragTarget(
-                [
-                    ...this.roomView.getObjectsFromCurrentRoom(),
-                    ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
-                ],
-                draggedItem
-            );
-            if (target == null) {
-                this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
-                return;
-            }
-            const targetCategory = target.getAttr('category');
-
-            const dragResolver = this.dragResolvers.find((dragResolver) =>
-                dragResolver.getTargetCategory() === targetCategory
-            );
-
-            if (dragResolver) {
-                this.commandsHandler.handleCommands(dragResolver.resolveCommands(
-                    this.interactions,
-                    draggedItem.id(),
-                    target.id(),
-                    target.id()
-                ));
-            }
-
-            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
-        });
-        // Controller(?) end
+        new ClickHandler(
+            this.uiEventEmitter,
+            this.commandsHandler,
+            clickResolvers,
+            this.interactions
+        );
+        new DragEndHandler(
+            this.uiEventEmitter,
+            this.commandsHandler,
+            this.dragResolvers,
+            this.interactions
+        );
+        // Controller end
 
         // Preparation done, final steps:
         this.stage.draw();
@@ -617,24 +610,6 @@ export class KiiGame {
             setTimeout(() => {
                 this.uiEventEmitter.emit('sequence_last_slide_immediate');
             }, delay);
-        }
-    }
-
-    /**
-     * Handle click interactions on room objects, inventory items & any resolver category ...
-     * @param {*} target
-     */
-    handleClick(target) {
-        const targetCategory = target.getAttr('category');
-        const clickResolver = this.clickResolvers.find(function (clickResolver) {
-            return clickResolver.getTargetCategory() === targetCategory;
-        });
-
-        if (clickResolver) {
-            this.commandsHandler.handleCommands(clickResolver.resolveCommands(
-                this.interactions,
-                target.id()
-            ));
         }
     }
 
