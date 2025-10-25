@@ -8,9 +8,9 @@ import CommandsHandler from './controller/interactions/CommandsHandler.js';
 import CommandHandler from './controller/interactions/CommandHandler.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
-import Intersection from './view/intersection/Intersection.js';
-import VisibilityValidator from './view/intersection/VisibilityValidator.js';
-import CategoryValidator from './view/intersection/CategoryValidator.js';
+import Intersection from './view/draggeditem/intersection/Intersection.js';
+import VisibilityValidator from './view/draggeditem/intersection/VisibilityValidator.js';
+import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
 import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './controller/Text.js';
@@ -53,6 +53,7 @@ import InventoryArrowsView from './view/inventory/InventoryArrowsView.js';
 import InventoryArrowsViewModel from './view/inventory/InventoryArrowsViewModel.js';
 import ClickHandler from './controller/ClickHandler.js';
 import DragEndHandler from './controller/DragEngHandler.js';
+import DraggedItemViewModel from './view/draggeditem/DraggedItemViewModel.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -71,10 +72,6 @@ export class KiiGame {
         uiEventEmitter = new EventEmitter(),
         gameData = {},
     ) {
-        clickResolvers;
-        this.dragResolvers = dragResolvers;
-        this.intersection = intersection;
-        this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
 
         if (itemsBuilder === null) {
@@ -89,8 +86,8 @@ export class KiiGame {
                 new DefaultInteractionResolver('item')
             );
         }
-        if (this.dragResolvers.length == 0) {
-            this.dragResolvers.push(
+        if (dragResolvers.length == 0) {
+            dragResolvers.push(
                 new DefaultInteractionResolver('furniture'),
                 new DefaultInteractionResolver('item')
             );
@@ -102,8 +99,8 @@ export class KiiGame {
                 this.uiEventEmitter
             );
         }
-        if (this.intersection === null) {
-            this.intersection = new Intersection(
+        if (intersection === null) {
+            intersection = new Intersection(
                 [
                     new VisibilityValidator(),
                     new CategoryValidator()
@@ -119,9 +116,9 @@ export class KiiGame {
         ).build(gameData.rooms_json);
         new ObjectsInRooms(initialObjectsInRoomsState, gameEventEmitter);
         // "Player character in room" model
-        new CharacterInRoom(this.gameEventEmitter);
+        new CharacterInRoom(gameEventEmitter);
         // Inventory model
-        this.inventory = new Inventory(this.gameEventEmitter, this.uiEventEmitter);
+        this.inventory = new Inventory(gameEventEmitter, this.uiEventEmitter);
         // Model end
 
         // View builder start
@@ -273,7 +270,7 @@ export class KiiGame {
         this.uiEventEmitter.on('arrived_in_room', (_roomId) => {
             this.sequenceLayer.hide();
         });
-        this.gameEventEmitter.on('play_sequence', (sequence_id) => {
+        gameEventEmitter.on('play_sequence', (sequence_id) => {
             this.play_sequence(sequence_id);
         });
         this.uiEventEmitter.on('first_sequence_slide_shown', () => {
@@ -284,9 +281,9 @@ export class KiiGame {
         // Rooms view start
         const roomLayer = this.stageObjectGetter.getObject('room_layer');
         // Room view component
-        this.roomView = new RoomView(
+        const roomView = new RoomView(
             this.uiEventEmitter,
-            this.gameEventEmitter,
+            gameEventEmitter,
             hitRegionInitializer,
             roomLayer,
             Object.keys(roomObjectCategories),
@@ -295,8 +292,8 @@ export class KiiGame {
         const animatedRoomObjects = new RoomAnimationsBuilder(
             new RoomAnimationBuilder(),
             this.stageObjectGetter
-        ).build(this.roomView.getRooms());
-        new RoomAnimations(this.gameEventEmitter, this.uiEventEmitter, animatedRoomObjects);
+        ).build(roomView.getRooms());
+        new RoomAnimations(gameEventEmitter, this.uiEventEmitter, animatedRoomObjects);
         // Animation for fading the room portion of the screen
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
@@ -304,7 +301,7 @@ export class KiiGame {
             this.uiEventEmitter
         );
         // Character in room view model
-        new CharacterInRoomViewModel(this.uiEventEmitter, this.gameEventEmitter);
+        new CharacterInRoomViewModel(this.uiEventEmitter, gameEventEmitter);
         // Rooms view end
 
         // Inventory & items view start
@@ -315,13 +312,13 @@ export class KiiGame {
             inventoryItems,
             this.stage.height() - 90
         );
-        // Inventory arrows view componen
+        // Inventory arrows view component
         const inventoryArrowsView = new InventoryArrowsView(
             uiEventEmitter,
             inventoryBarLayer.find('#inventory_arrows')[0]
         );
         // Inventory view component
-        this.inventoryView = new InventoryView(
+        const inventoryView = new InventoryView(
             this.uiEventEmitter,
             this.stageObjectGetter,
             inventoryBarLayer,
@@ -330,75 +327,21 @@ export class KiiGame {
         );
         new InventoryViewModel(
             this.uiEventEmitter,
-            this.gameEventEmitter,
+            gameEventEmitter,
             7 // inventoryMax, TODO make configurable/responsive
         )
         // Inventory arrows view model
-        this.inventoryArrowsViewModel = new InventoryArrowsViewModel(
+        const inventoryArrowsViewModel = new InventoryArrowsViewModel(
             this.uiEventEmitter
         );
-        // Item Drag View Model
-        // For limiting the amount of intersection checks
-        this.intersectionDelayEnabled = false;
-        // Intersection target (object below dragged item)
-        this.target;
-        // Drag move events (hover item over, in order of priority: room object, inventory item, or inventory arrows)
-        this.uiEventEmitter.on('inventory_item_drag_move', ({ draggedItem }) => {
-            if (!this.intersectionDelayEnabled) {
-                // Setting a small delay to not spam intersection check on every moved pixel
-                this.setIntersectionDelay(10);
-
-                // Check if the item is still over the previous target
-                if (this.target !== undefined && this.intersection.check(draggedItem, this.target)) {
-                    this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
-                    return;
-                }
-
-                // Check if we are dragging over valid room objects or inventory items
-                this.target = this.findDragTarget(
-                    [
-                        ...this.roomView.getVisibleObjectsFromCurrentRoom(),
-                        ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
-                    ],
-                    draggedItem
-                );
-
-                if (this.target !== undefined) {
-                    this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
-                    return;
-                }
-
-                // Check if we are dragging over inventory arrows
-                if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
-                    if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.leftArrow)) {
-                        this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
-                        return;
-                    }
-                    if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.rightArrow)) {
-                        this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
-                        return;
-                    }
-                }
-
-                this.uiEventEmitter.emit('dragmove_hover_on_nothing');
-            }
-        });
-        // Drag end view model
-        this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
-            const target = this.findDragTarget(
-                [
-                    ...this.roomView.getObjectsFromCurrentRoom(),
-                    ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
-                ],
-                draggedItem
-            );
-            if (target == null) {
-                this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
-                return;
-            }
-            this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
-        });
-        // Item Drag View Model end
+        // Dragged item view model
+        new DraggedItemViewModel(
+            this.uiEventEmitter,
+            intersection,
+            roomView,
+            inventoryView,
+            inventoryArrowsViewModel
+        );
         // Inventory & items view end
 
         // Character view start
@@ -410,7 +353,7 @@ export class KiiGame {
         new CharacterAnimations(
             characterAnimations,
             this.uiEventEmitter,
-            this.gameEventEmitter
+            gameEventEmitter
         );
         // Character view component
         new CharacterView(
@@ -426,11 +369,11 @@ export class KiiGame {
         this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
         this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
         this.text_layer = this.stageObjectGetter.getObject("text_layer");
-        this.gameEventEmitter.on('monologue', (text) => {
+        gameEventEmitter.on('monologue', (text) => {
             this.clearMonologues();
             this.setMonologue(text);
         });
-        this.gameEventEmitter.on('npc_monologue', ({ npc, text }) => {
+        gameEventEmitter.on('npc_monologue', ({ npc, text }) => {
             this.clearMonologues();
             this.npcMonologue(npc, text);
         });
@@ -458,7 +401,7 @@ export class KiiGame {
         // Text view end
 
         // Music view
-        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, this.gameEventEmitter);
+        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, gameEventEmitter);
         // Music view end
         // View end
 
@@ -466,56 +409,38 @@ export class KiiGame {
         this.text = new Text(gameData.text_json);
         this.interactions = new Interactions(gameData.interactions_json);
         const commandHandler = new CommandHandler(
-            this.gameEventEmitter,
+            gameEventEmitter,
             this.uiEventEmitter,
             this.stageObjectGetter,
             this.text,
             gameData.items_json, // TODO: items model?
         );
-        this.commandsHandler = new CommandsHandler(
+        const commandsHandler = new CommandsHandler(
             commandHandler
         )
         new ClickHandler(
             this.uiEventEmitter,
-            this.commandsHandler,
+            commandsHandler,
             clickResolvers,
             this.interactions
         );
         new DragEndHandler(
             this.uiEventEmitter,
-            this.commandsHandler,
-            this.dragResolvers,
+            commandsHandler,
+            dragResolvers,
             this.interactions
         );
         // Controller end
 
         // Preparation done, final steps:
         this.stage.draw();
-        this.commandsHandler.handleCommands(
+        commandsHandler.handleCommands(
             new DefaultInteractionResolver('start').resolveCommands(
                 this.interactions,
                 gameData.startInteraction,
                 'start'
             )
         );
-    }
-
-    findDragTarget(candidates, draggedItem) {
-        let target = undefined;
-        for (let i = 0; i < candidates.length; i++) {
-            const object = candidates[i];
-            if (this.intersection.check(draggedItem, object)) {
-                target = object;
-                break;
-            }
-        }
-        return target;
-    }
-
-    // Delay to be set after each intersection check
-    setIntersectionDelay(delay) {
-        this.intersectionDelayEnabled = true;
-        setTimeout(() => this.intersectionDelayEnabled = false, delay);
     }
 
     /**

@@ -1,0 +1,125 @@
+import EventEmitter from "../../events/EventEmitter.js";
+import Intersection from "./intersection/Intersection.js";
+import RoomView from "../room/RoomView.js";
+import InventoryView from "../inventory/InventoryView.js";
+import InventoryArrowsViewModel from "../inventory/InventoryArrowsViewModel.js";
+
+class DraggedItemViewModel {
+    /**
+     * @param {EventEmitter} uiEventEmitter
+     * @param {Intersection} intersection
+     * @param {RoomView} roomView
+     * @param {InventoryView} inventoryView
+     * @param {InventoryArrowsViewModel} inventoryArrowsViewModel
+     */
+    constructor(uiEventEmitter, intersection, roomView, inventoryView, inventoryArrowsViewModel) {
+        this.uiEventEmitter = uiEventEmitter;
+        this.intersection = intersection;
+        this.roomView = roomView;
+        this.inventoryView = inventoryView;
+        this.inventoryArrowsViewModel = inventoryArrowsViewModel;
+
+        // For limiting the amount of intersection checks
+        this.intersectionDelayEnabled = false;
+        // Intersection target (object below dragged item)
+        this.target = undefined;
+
+        this.uiEventEmitter.on('inventory_item_drag_move', ({ draggedItem }) => {
+            this.handleInventoryItemDragMove(draggedItem);
+        });
+        this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
+            this.handleInventoryItemDragEnd(draggedItem);
+        });
+    }
+
+    /**
+     * Drag move events (hover item over, in order of priority: room object, inventory item, or inventory arrows)
+     * @param {Konva.Shape} draggedItem
+     */
+    handleInventoryItemDragMove(draggedItem) {
+        if (!this.intersectionDelayEnabled) {
+            // Setting a small delay to not spam intersection check on every moved pixel
+            this.setIntersectionDelay(10);
+
+            // Check if the item is still over the previous target
+            if (this.target !== undefined && this.intersection.check(draggedItem, this.target)) {
+                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
+                return;
+            }
+
+            // Check if we are dragging over valid room objects or inventory items
+            this.target = this.findDragTarget(
+                [
+                    ...this.roomView.getVisibleObjectsFromCurrentRoom(),
+                    ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
+                ],
+                draggedItem
+            );
+
+            if (this.target !== undefined) {
+                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
+                return;
+            }
+
+            // Check if we are dragging over inventory arrows
+            if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
+                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.leftArrow)) {
+                    this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
+                    return;
+                }
+                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.rightArrow)) {
+                    this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
+                    return;
+                }
+            }
+
+            this.uiEventEmitter.emit('dragmove_hover_on_nothing');
+        }
+    }
+
+    /**
+     * @param {Konva.Shape} draggedItem
+     */
+    handleInventoryItemDragEnd(draggedItem) {
+        const target = this.findDragTarget(
+            [
+                ...this.roomView.getObjectsFromCurrentRoom(),
+                ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
+            ],
+            draggedItem
+        );
+        if (target == null) {
+            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+            return;
+        }
+        this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
+    }
+
+    /**
+     * @param {Konva.Shape[]} candidates
+     * @param {Konva.Shape} draggedItem
+     * @returns {Konva.Shape|undefined}
+     */
+    findDragTarget(candidates, draggedItem) {
+        let target = undefined;
+        for (let i = 0; i < candidates.length; i++) {
+            const object = candidates[i];
+            if (this.intersection.check(draggedItem, object)) {
+                target = object;
+                break;
+            }
+        }
+        return target;
+    }
+
+    /**
+     * Delay to be set after each intersection check
+     * @param {int} delay
+     */
+    setIntersectionDelay(delay) {
+        this.intersectionDelayEnabled = true;
+        setTimeout(() => this.intersectionDelayEnabled = false, delay);
+    }
+}
+
+export default DraggedItemViewModel;
