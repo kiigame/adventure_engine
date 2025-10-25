@@ -11,10 +11,12 @@ describe('inventory item view tests', () => {
     let gameEventEmitterStub;
     let uiEventEmitterStub;
     let inventoryItemsStub;
+    let inventoryItemsCollectionStub;
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
         gameEventEmitterStub = createStubInstance(EventEmitter);
-        inventoryItemsStub = createStubInstance(Group);
+        inventoryItemsCollectionStub = createStubInstance(Collection, { each: null });
+        inventoryItemsStub = createStubInstance(Group, { getChildren: inventoryItemsCollectionStub });
     });
     afterEach(() => {
         restore();
@@ -23,12 +25,8 @@ describe('inventory item view tests', () => {
         // Don't know how to stub multiple shapes in the collection!
         it('should set Shapes in the inventory items group to not visible', () => {
             const shapeStub = createStubInstance(Shape);
-            const collectionStub = createStubInstance(Collection);
-            collectionStub.each.yields(shapeStub);
-            inventoryItemsStub = createStubInstance(Group, {
-                getChildren: collectionStub,
-                find: shapeStub
-            });
+            inventoryItemsCollectionStub.each.yields(shapeStub);
+            inventoryItemsStub.find.returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
@@ -39,12 +37,11 @@ describe('inventory item view tests', () => {
             expect(shapeStub.setAttr).to.have.been.calledWith('visible', false);
         });
     });
-    //describe('should remove items from layer ')
     describe('handle inventory item visibilty', () => {
         it('should set existing item in the inventory visible', () => {
             const shapeStub = createStubInstance(Shape);
             shapeStub.attrs = { id: 'blabla' };
-            inventoryItemsStub = createStubInstance(Group, { find: shapeStub });
+            inventoryItemsStub.find.returns(shapeStub);
             inventoryItemsStub.findOne.yields(shapeStub).returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
@@ -64,7 +61,6 @@ describe('inventory item view tests', () => {
                 createStubInstance(Shape),
             ];
 
-            inventoryItemsStub = createStubInstance(Group);
             shapeStubs.forEach((shapeStub, index) => {
                 inventoryItemsStub.findOne.onCall(index).returns(shapeStub);
             });
@@ -85,12 +81,8 @@ describe('inventory item view tests', () => {
         // Don't know how to stub multiple shapes in the collection!
         it('should clear blur from items in inventory', () => {
             const shapeStub = createStubInstance(Shape);
-            const collectionStub = createStubInstance(Collection);
-            collectionStub.each.yields(shapeStub);
-            inventoryItemsStub = createStubInstance(Group, {
-                getChildren: collectionStub,
-                find: shapeStub
-            });
+            inventoryItemsCollectionStub.each.yields(shapeStub);
+            inventoryItemsStub.find.returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
                 uiEventEmitterStub,
                 gameEventEmitterStub,
@@ -104,7 +96,6 @@ describe('inventory item view tests', () => {
     describe('glow inventory item', () => {
         it('should glow an item if found', () => {
             const shapeStub = createStubInstance(Shape);
-            inventoryItemsStub = createStubInstance(Group);
             inventoryItemsStub.findOne.yields(shapeStub);
             inventoryItemsStub.find.returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
@@ -121,7 +112,6 @@ describe('inventory item view tests', () => {
         });
         it('should not glow an item not found', () => {
             const shapeStub = createStubInstance(Shape);
-            inventoryItemsStub = createStubInstance(Group);
             inventoryItemsStub.findOne.yields(null);
             inventoryItemsStub.find.returns(shapeStub);
             const inventoryItemsView = new InventoryItemsView(
@@ -147,7 +137,7 @@ describe('inventory item view tests', () => {
                 100
             );
             const moveDraggedItemBackToInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'dragend_ended';
+                return callback.args[0] === 'inventory_item_drag_end_handled';
             }).args[1];
             const targetStub = createStubInstance(Shape);
             moveDraggedItemBackToInventoryCallback(targetStub);
@@ -162,7 +152,7 @@ describe('inventory item view tests', () => {
                 100
             );
             const moveDraggedItemBackToInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'dragend_ended';
+                return callback.args[0] === 'inventory_item_drag_end_handled';
             }).args[1];
             try {
                 moveDraggedItemBackToInventoryCallback(null);

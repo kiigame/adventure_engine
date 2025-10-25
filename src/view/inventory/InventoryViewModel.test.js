@@ -70,7 +70,7 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'FOUR', 'five', 'six', 'seven', 'eight'];
             inventoryViewModel.inventoryIndex = 1;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'dragend_ended';
+                return callback.args[0] === 'inventory_item_drag_end_handled';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'FOUR' };
@@ -89,7 +89,7 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'EIGHT'];
             inventoryViewModel.inventoryIndex = 0;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'dragend_ended';
+                return callback.args[0] === 'inventory_item_drag_end_handled';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'EIGHT' };
@@ -108,7 +108,7 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
             inventoryViewModel.inventoryIndex = 0;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'dragend_ended';
+                return callback.args[0] === 'inventory_item_drag_end_handled';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'EIGHT' };
@@ -127,7 +127,7 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two'];
             inventoryViewModel.inventoryIndex = 0;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'dragend_ended';
+                return callback.args[0] === 'inventory_item_drag_end_handled';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'THREE' };

@@ -30,7 +30,7 @@ class CharacterAnimations {
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.resetCharacterAnimations();
         });
-        this.uiEventEmitter.on('inventory_drag_start', (_draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_start', (_draggedItem) => {
             this.resetCharacterAnimations();
         });
         gameEventEmitter.on('set_idle_animation', (animation_id) => {

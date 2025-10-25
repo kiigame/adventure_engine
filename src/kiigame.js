@@ -409,27 +409,6 @@ export class KiiGame {
                 }
             }
         });
-        // Drag end events for inventory items.
-        this.stage.find('Image').on('dragend', (event) => {
-            const dragged_item = event.target;
-
-            const target_category = this.target.getAttr('category');
-
-            const dragResolver = this.dragResolvers.filter(function (dragResolver) {
-                return dragResolver.getTargetCategory() === target_category;
-            }).pop();
-
-            if (dragResolver) {
-                this.commandsHandler.handleCommands(dragResolver.resolveCommands(
-                    this.interactions,
-                    dragged_item.id(),
-                    this.target.id(),
-                    this.target.id()
-                ));
-            }
-
-            this.uiEventEmitter.emit('dragend_ended', dragged_item);
-        });
         // Item Drag View Model end
         // Inventory & items view end
 
@@ -469,7 +448,7 @@ export class KiiGame {
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.clearMonologues();
         });
-        this.uiEventEmitter.on('inventory_drag_start', (_target) => {
+        this.uiEventEmitter.on('inventory_item_drag_start', (_target) => {
             this.clearMonologues();
         });
         this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, draggedItem }) => {
@@ -478,7 +457,7 @@ export class KiiGame {
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
             this.clearInteractionText();
         });
-        this.uiEventEmitter.on('dragend_ended', (_draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
             this.clearInteractionText();
         });
         // Text view end
@@ -507,6 +486,25 @@ export class KiiGame {
         this.commandsHandler = new CommandsHandler(
             commandHandler
         )
+        // handle using inventory item on room objects and inventory items
+        this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
+            const targetCategory = this.target.getAttr('category');
+
+            const dragResolver = this.dragResolvers.filter(function (dragResolver) {
+                return dragResolver.getTargetCategory() === targetCategory;
+            }).pop();
+
+            if (dragResolver) {
+                this.commandsHandler.handleCommands(dragResolver.resolveCommands(
+                    this.interactions,
+                    draggedItem.id(),
+                    this.target.id(),
+                    this.target.id()
+                ));
+            }
+
+            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+        });
         // Controller(?) end
 
         // Preparation done, final steps:

@@ -24,7 +24,7 @@ class RoomView {
             this.hitRegionInitializer.initHitRegions(this.roomLayer);
             this.uiEventEmitter.emit('room_hit_regions_initialized');
         };
-        this.uiEventEmitter.on('inventory_drag_start', (draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_start', (draggedItem) => {
             this.moveItemToRoomLayer(draggedItem);
         });
         this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, dragged_item: _dragged_item }) => {
@@ -36,7 +36,7 @@ class RoomView {
             this.clearRoomObjectBlur();
             this.drawRoomLayer();
         });
-        this.uiEventEmitter.on('dragend_ended', (_draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
             this.clearRoomObjectBlur();
         });
         this.uiEventEmitter.on('room_fade_in_done', () => {
@@ -52,10 +52,10 @@ class RoomView {
             this.showRoom(roomId);
         });
 
-        this.gameEventEmitter.on('removed_objects', ({ objectList: _objectList, objectsRemoved}) => {
+        this.gameEventEmitter.on('removed_objects', ({ objectList: _objectList, objectsRemoved }) => {
             this.removeObject(objectsRemoved);
         });
-        this.gameEventEmitter.on('added_objects', ({ objectList: _objectList, objectsAdded}) => {
+        this.gameEventEmitter.on('added_objects', ({ objectList: _objectList, objectsAdded }) => {
             this.addObject(objectsAdded);
         });
     }
@@ -96,7 +96,7 @@ class RoomView {
     /**
      * @param {Konva.Group} room
      * @param {string} id
-     * @returns {Konva.Image} furniture
+     * @returns {Konva.Shape} furniture
      */
     getObjectFromRoom(room, id) {
         return room.findOne((child) =>
@@ -106,7 +106,7 @@ class RoomView {
 
     /**
      * @param {Konva.Group} room
-     * @returns {Konva.Image} all furniture in the room
+     * @returns {Konva.Shape[]} all furniture in the room
      */
     getObjectsFromRoom(room) {
         return room.find((child) => this.matchNodeByCategories(child, this.roomObjectCategories));
