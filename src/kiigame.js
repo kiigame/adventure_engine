@@ -325,55 +325,61 @@ export class KiiGame {
         )
         // Item Drag View Model
         // For limiting the amount of intersection checks
-        this.delayEnabled = false;
+        this.intersectionDelayEnabled = false;
         // For limiting the speed of inventory browsing when dragging an item
-        this.dragDelay = 500;
-        this.dragDelayEnabled = false;
+        this.inventoryScrollDelay = 500;
+        this.inventoryScrollDelayEnabled = false;
         // Intersection target (object below dragged item)
         this.target;
         // While dragging events (use item on item or object)
         this.stage.on('dragmove', (event) => {
-            const dragged_item = event.target;
+            const draggedItem = event.target;
 
-            if (!this.delayEnabled) {
+            if (!this.intersectionDelayEnabled) {
                 // Setting a small delay to not spam intersection check on every moved pixel
-                this.setDelay(10);
+                this.setIntersectionDelay(10);
 
+                // Check if the item is still over the previous target
+                if (this.target !== undefined && this.intersection.check(draggedItem, this.target)) {
+                    this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
+                    return;
+                }
+
+                // Check if we are dragging over valid room objects or inventory items
                 this.target = this.findDragTarget(
                     [
                         ...this.roomView.getObjectsFromCurrentRoom(),
                         ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
                     ],
-                    dragged_item,
-                    this.target
+                    draggedItem
                 );
 
-                // Next, check if the item is dragged over the inventory arrows
-                if (this.target == null) {
-                    const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
-                    const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
-                    if (!this.dragDelayEnabled) {
-                        if (this.intersection.check(dragged_item, leftArrow)) {
-                            this.dragDelayEnabled = true;
-                            this.uiEventEmitter.emit('inventory_left_arrow_draghovered');
-                            setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
-                        } else if (this.intersection.check(dragged_item, rightArrow)) {
-                            this.dragDelayEnabled = true;
-                            this.uiEventEmitter.emit('inventory_right_arrow_draghovered');
-                            setTimeout(() => this.dragDelayEnabled = false, this.dragDelay);
-                        } else {
-                            this.target = null;
-                        }
-                    }
-                    this.clearInteractionText();
+                if (this.target !== undefined) {
+                    this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
+                    return;
                 }
 
-                // If target is found, highlight it and show the interaction text
-                if (this.target != null) {
-                    this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem: dragged_item });
-                } else {
-                    this.uiEventEmitter.emit('dragmove_hover_on_nothing');
+                // Not hovering over room objects or inventory items
+                this.clearInteractionText();
+
+                if (!this.inventoryScrollDelayEnabled) {
+                    const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
+                    const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
+                    if (this.intersection.check(draggedItem, leftArrow)) {
+                        this.inventoryScrollDelayEnabled = true;
+                        this.uiEventEmitter.emit('inventory_left_arrow_draghovered');
+                        setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+                        return;
+                    }
+                    if (this.intersection.check(draggedItem, rightArrow)) {
+                        this.inventoryScrollDelayEnabled = true;
+                        this.uiEventEmitter.emit('inventory_right_arrow_draghovered');
+                        setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+                        return;
+                    }
                 }
+
+                this.uiEventEmitter.emit('dragmove_hover_on_nothing');
             }
         });
         // Item Drag View Model end
@@ -496,27 +502,22 @@ export class KiiGame {
         );
     }
 
-    findDragTarget(candidates, draggedItem, previousTarget = null) {
-        let newTarget = undefined;
+    findDragTarget(candidates, draggedItem) {
+        let target = undefined;
         for (let i = 0; i < candidates.length; i++) {
             const object = candidates[i];
-            // Break if still intersecting with the same target
-            if (previousTarget != null && this.intersection.check(draggedItem, previousTarget)) {
+            if (this.intersection.check(draggedItem, object)) {
+                target = object;
                 break;
-            } else if (this.intersection.check(draggedItem, object)) {
-                newTarget = object;
-                break;
-            } else {
-                newTarget = null;
             }
         }
-        return newTarget !== undefined ? newTarget : previousTarget;
+        return target;
     }
 
     // Delay to be set after each intersection check
-    setDelay(delay) {
-        this.delayEnabled = true;
-        setTimeout(() => this.delayEnabled = false, delay);
+    setIntersectionDelay(delay) {
+        this.intersectionDelayEnabled = true;
+        setTimeout(() => this.intersectionDelayEnabled = false, delay);
     }
 
     /**
