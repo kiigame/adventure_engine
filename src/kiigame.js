@@ -356,7 +356,7 @@ export class KiiGame {
                 // Check if we are dragging over valid room objects or inventory items
                 this.target = this.findDragTarget(
                     [
-                        ...this.roomView.getObjectsFromCurrentRoom(),
+                        ...this.roomView.getVisibleObjectsFromCurrentRoom(),
                         ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
                     ],
                     draggedItem

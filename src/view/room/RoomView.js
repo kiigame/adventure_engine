@@ -1,3 +1,4 @@
+import Konva from "konva";
 import EventEmitter from "../../events/EventEmitter.js";
 import HitRegionInitializer from "../stage/HitRegionInitializer.js";
 
@@ -113,10 +114,27 @@ class RoomView {
     }
 
     /**
-     * @returns {Konva.Image} all furniture in the current room
+     * @returns {Konva.Shape[]} all furniture in the current room
      */
     getObjectsFromCurrentRoom() {
         return this.getObjectsFromRoom(this.currentRoom);
+    }
+
+    /**
+     * @param {Konva.Group} room
+     * @returns {Konva.Shape[]} visible objects in the room
+     */
+    getVisibleObjectsFromRoom(room) {
+        return room.find((child) =>
+            this.matchNodeByCategories(child, this.roomObjectCategories) && child.isVisible()
+        );
+    }
+
+    /**
+     * @returns {Konva.Shape[]} visible objects in the current room
+     */
+    getVisibleObjectsFromCurrentRoom() {
+        return this.getVisibleObjectsFromRoom(this.currentRoom);
     }
 
     /**
