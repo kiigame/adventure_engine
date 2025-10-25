@@ -19,6 +19,7 @@ module.exports = {
           'divide',
           'cover',
           'arrange',
+          'prioritize',
         ],
       }
     ]

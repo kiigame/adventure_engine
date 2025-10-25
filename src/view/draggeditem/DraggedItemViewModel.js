@@ -36,13 +36,25 @@ class DraggedItemViewModel {
     }
 
     /**
-     * Drag move events (hover item over, in order of priority: room object, inventory item, or inventory arrows)
+     * Drag move events (hover item over, in order of priority: inventory arrows, room object, inventory item)
      * @param {Konva.Shape} draggedItem
      */
     handleInventoryItemDragMove(draggedItem) {
         if (!this.intersectionDelayEnabled) {
             // Setting a small delay to not spam intersection check on every moved pixel
             this.setIntersectionDelay(10);
+
+            // Check if we are dragging over inventory arrows
+            if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
+                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.leftArrow)) {
+                    this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
+                    return;
+                }
+                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.rightArrow)) {
+                    this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
+                    return;
+                }
+            }
 
             // Check if the item is still over the previous target
             if (this.target !== undefined && this.intersection.check(draggedItem, this.target)) {
@@ -62,18 +74,6 @@ class DraggedItemViewModel {
             if (this.target !== undefined) {
                 this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
                 return;
-            }
-
-            // Check if we are dragging over inventory arrows
-            if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
-                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.leftArrow)) {
-                    this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
-                    return;
-                }
-                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.rightArrow)) {
-                    this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
-                    return;
-                }
             }
 
             this.uiEventEmitter.emit('dragmove_hover_on_nothing');
