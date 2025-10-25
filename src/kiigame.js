@@ -324,9 +324,6 @@ export class KiiGame {
             7 // inventoryMax, TODO make configurable/responsive
         )
         // Item Drag View Model
-        // Temporary location for inventory items if they need to be moved back to the location because of invalid interaction
-        this.dragStartX;
-        this.dragStartY;
         // For limiting the amount of intersection checks
         this.delayEnabled = false;
         // For limiting the speed of inventory browsing when dragging an item
@@ -334,10 +331,6 @@ export class KiiGame {
         this.dragDelayEnabled = false;
         // Intersection target (object below dragged item)
         this.target;
-        this.uiEventEmitter.on('inventory_touchstart', (target) => {
-            this.dragStartX = target.x();
-            this.dragStartY = target.y();
-        });
         // While dragging events (use item on item or object)
         this.stage.on('dragmove', (event) => {
             const dragged_item = event.target;
@@ -420,27 +413,19 @@ export class KiiGame {
         this.stage.find('Image').on('dragend', (event) => {
             const dragged_item = event.target;
 
-            // If nothing's under the dragged item
-            if (this.target == null) {
-                dragged_item.x(this.dragStartX);
-                dragged_item.y(this.dragStartY);
-            }
-            // Look up the possible interaction from interactions.json.
-            else {
-                const target_category = this.target.getAttr('category');
+            const target_category = this.target.getAttr('category');
 
-                const dragResolver = this.dragResolvers.filter(function (dragResolver) {
-                    return dragResolver.getTargetCategory() === target_category;
-                }).pop();
+            const dragResolver = this.dragResolvers.filter(function (dragResolver) {
+                return dragResolver.getTargetCategory() === target_category;
+            }).pop();
 
-                if (dragResolver) {
-                    this.commandsHandler.handleCommands(dragResolver.resolveCommands(
-                        this.interactions,
-                        dragged_item.id(),
-                        this.target.id(),
-                        this.target.id()
-                    ));
-                }
+            if (dragResolver) {
+                this.commandsHandler.handleCommands(dragResolver.resolveCommands(
+                    this.interactions,
+                    dragged_item.id(),
+                    this.target.id(),
+                    this.target.id()
+                ));
             }
 
             this.uiEventEmitter.emit('dragend_ended', dragged_item);
