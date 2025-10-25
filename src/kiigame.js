@@ -48,6 +48,7 @@ import OtherChildrenBuilder from './viewbuilder/room/konva/OtherChildrenBuilder.
 import ObjectsInRoomsBuilder from './modelbuilder/ObjectsInRoomsBuilder.js';
 import ObjectsInRoomBuilder from './modelbuilder/ObjectsInRoomBuilder.js';
 import ObjectsInRooms from './model/ObjectsInRooms.js';
+import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -114,7 +115,7 @@ export class KiiGame {
         ).build(gameData.rooms_json);
         new ObjectsInRooms(initialObjectsInRoomsState, gameEventEmitter);
         // "Player character in room" model
-        new CharacterInRoom(this.uiEventEmitter, this.gameEventEmitter);
+        new CharacterInRoom(this.gameEventEmitter);
         // Inventory model
         this.inventory = new Inventory(this.gameEventEmitter, this.uiEventEmitter);
         // Model end
@@ -265,7 +266,7 @@ export class KiiGame {
         // Sequences view start
         this.sequences_json = gameData.sequences_json;
         this.sequenceLayer = this.stageObjectGetter.getObject('sequence_layer');
-        this.gameEventEmitter.on('arrived_in_room', (_roomId) => {
+        this.uiEventEmitter.on('arrived_in_room', (_roomId) => {
             this.sequenceLayer.hide();
         });
         this.gameEventEmitter.on('play_sequence', (sequence_id) => {
@@ -291,14 +292,15 @@ export class KiiGame {
             new RoomAnimationBuilder(),
             this.stageObjectGetter
         ).build(this.roomView.getRooms());
-        new RoomAnimations(this.gameEventEmitter, animatedRoomObjects);
+        new RoomAnimations(this.gameEventEmitter, this.uiEventEmitter, animatedRoomObjects);
         // Animation for fading the room portion of the screen
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
             roomFaderNode,
-            this.uiEventEmitter,
-            this.gameEventEmitter
+            this.uiEventEmitter
         );
+        // Character in room view model
+        new CharacterInRoomViewModel(this.uiEventEmitter, this.gameEventEmitter);
         // Rooms view end
 
         // Inventory & items view start
@@ -312,7 +314,6 @@ export class KiiGame {
         // Inventory view component
         this.inventoryView = new InventoryView(
             this.uiEventEmitter,
-            this.gameEventEmitter,
             this.stageObjectGetter,
             inventoryBarLayer,
             inventoryItemsView

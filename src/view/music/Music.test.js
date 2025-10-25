@@ -11,13 +11,11 @@ class AudioStub {
 
 describe('test Music methods', function () {
     let uiEventEmitterStub;
-    let gameEventEmitterStub;
     let audioFactoryStub;
     let audioStubStub;
 
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
-        gameEventEmitterStub = createStubInstance(EventEmitter);
         audioFactoryStub = createStubInstance(AudioFactory);
         audioStubStub = createStubInstance(AudioStub, { play: null, pause: null });
         audioFactoryStub.create.returns(audioStubStub);
@@ -31,7 +29,7 @@ describe('test Music methods', function () {
                 "music": "music.ogg",
             },
         };
-        const music = new Music(json, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusic(undefined);
         assert(audioStubStub.play.notCalled);
         const current_audio = music.current_audio;
@@ -43,7 +41,7 @@ describe('test Music methods', function () {
                 "music": "music.ogg",
             },
         };
-        const music = new Music(json, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById("layer");
         assert(audioStubStub.play.called, "play not called for first music");
         const current_audio = music.current_audio;
@@ -61,7 +59,7 @@ describe('test Music methods', function () {
                 "music": "music.ogg",
             },
         };
-        const music = new Music(json, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('layer');
         const result = music.current_audio;
         assert.isNotNull(result);
@@ -79,7 +77,7 @@ describe('test Music methods', function () {
                 "loop": false,
             },
         };
-        const music = new Music(json, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('layer');
         assert(audioStubStub.play.called);
         const result = music.current_audio;
@@ -99,7 +97,7 @@ describe('test Music methods', function () {
                 "music": "music.ogg"
             }
         };
-        const music = new Music(json, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
         assert(audioStubStub.play.called);
         const audioStubStubNotToBeCreated = createStubInstance(AudioStub, { play: null, pause: null });
@@ -120,7 +118,7 @@ describe('test Music methods', function () {
                 "loop": false
             }
         };
-        const music = new Music(json, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
         music.playMusicById('loop');
         assert(audioStubStub.play.called);
         const audioStubStubNotToBeCreated = createStubInstance(AudioStub, { play: null, pause: null });
@@ -148,7 +146,7 @@ describe('test Music methods', function () {
                     "loop": true,
                 },
             };
-            const music = new Music(json, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+            const music = new Music(json, audioFactoryStub, uiEventEmitterStub);
             music.playMusicById('layer');
             assert(audioStubStub.play.called);
             const result = music.current_audio;
@@ -173,13 +171,11 @@ describe('test Music methods', function () {
  */
 describe('test Music event management', function () {
     let uiEventEmitterStub;
-    let gameEventEmitterStub;
     let audioFactoryStub;
     let audioStubStub;
 
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
-        gameEventEmitterStub = createStubInstance(EventEmitter);
         audioFactoryStub = createStubInstance(AudioFactory);
         audioStubStub = createStubInstance(AudioStub, { play: null, pause: null });
         audioFactoryStub.create.returns(audioStubStub);
@@ -189,7 +185,7 @@ describe('test Music event management', function () {
     });
     it('should handle play_music event by calling playMusic', function () {
         const playMusicStub = stub(Music.prototype, 'playMusic');
-        new Music({}, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicData = { music: 'test.ogg' };
         const playMusicCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
             return callback.args[0] === 'play_music';
@@ -199,7 +195,7 @@ describe('test Music event management', function () {
     });
     it('should handle play_sequence_started event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
-        new Music({}, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        new Music({}, audioFactoryStub, uiEventEmitterStub);
         const musicId = 'testId';
         const playMusicByIdCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
             return callback.args[0] === 'play_sequence_started';
@@ -209,9 +205,9 @@ describe('test Music event management', function () {
     });
     it('should handle arrived_in_room event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
-        new Music({}, audioFactoryStub, uiEventEmitterStub, gameEventEmitterStub);
+        new Music({}, audioFactoryStub, uiEventEmitterStub);
         const roomId = 'testId';
-        const playMusicByIdCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+        const playMusicByIdCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
             return callback.args[0] === 'arrived_in_room';
         }).args[1];
         playMusicByIdCallback(roomId);

@@ -10,7 +10,6 @@ const { Shape, Layer } = pkg;
 use(sinonChai);
 
 describe('inventory view tests', () => {
-    let gameEventEmitterStub;
     let uiEventEmitterStub;
     let stageObjectGetterStub;
     let inventoryBarLayerStub;
@@ -18,7 +17,6 @@ describe('inventory view tests', () => {
     let leftArrowStub;
     let rightArrowStub;
     beforeEach(() => {
-        gameEventEmitterStub = createStubInstance(EventEmitter);
         uiEventEmitterStub = createStubInstance(EventEmitter);
         stageObjectGetterStub = createStubInstance(StageObjectGetter);
         leftArrowStub = createStubInstance(Shape);
@@ -35,7 +33,6 @@ describe('inventory view tests', () => {
         it('should redraw inventory on inventory_view_model_updated', () => {
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub
@@ -57,7 +54,6 @@ describe('inventory view tests', () => {
         it('should show both arrows if requested', () => {
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub
@@ -73,7 +69,6 @@ describe('inventory view tests', () => {
         it('should show only right arrow if requested', () => {
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub
@@ -89,7 +84,6 @@ describe('inventory view tests', () => {
         it('should show only left arrow if requested', () => {
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub
@@ -110,12 +104,11 @@ describe('inventory view tests', () => {
             });
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub
             );
-            const handleArrivedInRoomCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const handleArrivedInRoomCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'arrived_in_room';
             }).args[1];
             handleArrivedInRoomCallback('room-id');
@@ -128,12 +121,11 @@ describe('inventory view tests', () => {
             });
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub
             );
-            const handleArrivedInRoomCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const handleArrivedInRoomCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'arrived_in_room';
             }).args[1];
             handleArrivedInRoomCallback('room-id');
@@ -145,7 +137,6 @@ describe('inventory view tests', () => {
         it('should handle drag move hover on object', () => {
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub
@@ -166,7 +157,6 @@ describe('inventory view tests', () => {
         it('should handle drag move hover on nothing', () => {
             new InventoryView(
                 uiEventEmitterStub,
-                gameEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub

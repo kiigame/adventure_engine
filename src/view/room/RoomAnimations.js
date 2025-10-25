@@ -3,15 +3,16 @@ import EventEmitter from "../../events/EventEmitter.js";
 class RoomAnimations {
     /**
      * @param {EventEmitter} gameEventEmitter
+     * @param {EventEmitter} uiEventEmitter
      * @param {Konva.Tween[]} animatedObjects
      */
-    constructor(gameEventEmitter, animatedObjects) {
+    constructor(gameEventEmitter, uiEventEmitter, animatedObjects) {
         this.animatedObjects = animatedObjects;
         this.runningAnimations = new Set();
-        gameEventEmitter.on('remove_object', (objectName) => {
-            this.removeAnimation(objectName);
+        gameEventEmitter.on('removed_objects', ({ objectList: _objectList, objectsRemoved }) => {
+            this.removeAnimations(objectsRemoved);
         });
-        gameEventEmitter.on('arrived_in_room', (roomId) => {
+        uiEventEmitter.on('arrived_in_room', (roomId) => {
             this.playRoomAnimations(roomId);
         });
     }
@@ -32,12 +33,12 @@ class RoomAnimations {
     }
 
     /**
-     * Remove an object from the list of animated objects
-     * @param {string} id The id of the object to be de-animated
+     * Removes objects from the list of animated objects
+     * @param {string[]} ids The ids of the object to be de-animated
      */
-    removeAnimation(id) {
+    removeAnimations(ids) {
         this.animatedObjects = this.animatedObjects.filter((animatedObject) => {
-            return animatedObject.node.id() !== id;
+            return !ids.includes(animatedObject.node.id());
         });
     }
 }

@@ -59,12 +59,10 @@ class CommandHandler {
             });
             this.gameEventEmitter.emit('add_objects', objectsToAdd);
         } else if (command.command == "do_transition") {
-            if (command.instant) {
-                this.gameEventEmitter.emit('do_instant_transition', {
-                    roomId: command.destination
-                });
-                return;
-            }
+            this.uiEventEmitter.emit('ready_transition', ({
+                type: command.instant ? 'instant' : 'regular',
+                roomId: command.destination
+            }));
             this.gameEventEmitter.emit('do_transition', {
                 roomId: command.destination
             });

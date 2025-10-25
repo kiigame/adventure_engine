@@ -45,13 +45,13 @@ class RoomView {
         this.uiEventEmitter.on('inventory_redrawn', () => {
             this.drawRoomLayer();
         });
-
-        this.gameEventEmitter.on('left_room', (from) => {
+        this.uiEventEmitter.on('left_room', (from) => {
             this.hidePreviousRoom(from);
         });
-        this.gameEventEmitter.on('arrived_in_room', (roomId) => {
+        this.uiEventEmitter.on('arrived_in_room', (roomId) => {
             this.showRoom(roomId);
         });
+
         this.gameEventEmitter.on('removed_objects', ({ objectList: _objectList, objectsRemoved}) => {
             this.removeObject(objectsRemoved);
         });

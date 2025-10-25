@@ -1,5 +1,5 @@
 class RoomFader {
-    constructor(faderNode, uiEventEmitter, gameEventEmitter) {
+    constructor(faderNode, uiEventEmitter) {
         this.faderNode = faderNode;
         // Should we have a Tween factory?
         this.animation =  new Konva.Tween({
@@ -9,12 +9,11 @@ class RoomFader {
         });
 
         this.uiEventEmitter = uiEventEmitter;
-        this.gameEventEmitter = gameEventEmitter;
 
-        this.gameEventEmitter.on('leaving_room', () => {
+        this.uiEventEmitter.on('leaving_room', () => {
             this.roomFadeOut();
         });
-        this.gameEventEmitter.on('arriving_in_room', () => {
+        this.uiEventEmitter.on('arriving_in_room', () => {
             this.roomFadeIn();
         });
     }
