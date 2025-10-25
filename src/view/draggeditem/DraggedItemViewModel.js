@@ -44,39 +44,29 @@ class DraggedItemViewModel {
             // Setting a small delay to not spam intersection check on every moved pixel
             this.setIntersectionDelay(10);
 
-            // Check if we are dragging over inventory arrows
-            if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
-                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.leftArrow)) {
-                    this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
-                    return;
-                }
-                if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.rightArrow)) {
-                    this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
-                    return;
-                }
-            }
-
-            // Check if the item is still over the previous target
-            if (this.target !== undefined && this.intersection.check(draggedItem, this.target)) {
-                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
-                return;
-            }
-
             // Check if we are dragging over valid room objects or inventory items
-            this.target = this.findDragTarget(
-                [
-                    ...this.roomView.getVisibleObjectsFromCurrentRoom(),
-                    ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
-                ],
-                draggedItem
-            );
+            this.target = this.findDragTarget(draggedItem, this.target);
 
-            if (this.target !== undefined) {
-                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
+            if (this.target === undefined) {
+                this.uiEventEmitter.emit('dragmove_hover_on_nothing');
                 return;
             }
 
-            this.uiEventEmitter.emit('dragmove_hover_on_nothing');
+            if (this.target.attrs.category === 'invArrow') {
+                if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
+                    if (this.target.attrs.id === 'inventory_left_arrow') {
+                        this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
+                        return;
+                    }
+                    if (this.target.attrs.id === 'inventory_right_arrow') {
+                        this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
+                        return;
+                    }
+                }
+                return;
+            }
+
+            this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
         }
     }
 
@@ -84,6 +74,11 @@ class DraggedItemViewModel {
      * @param {Konva.Shape} draggedItem
      */
     handleInventoryItemDragEnd(draggedItem) {
+        // Ending the drag on an inventory arrow does nothing
+        if (this.target !== undefined && this.target.attrs.category === 'invArrow') {
+            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+            return;
+        }
         // If we are already hovering a target, use it
         if (this.target !== undefined) {
             this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target: this.target, draggedItem });
@@ -91,31 +86,32 @@ class DraggedItemViewModel {
         }
 
         // In case we didn't yet get the target set during hover (for example during intersection delay), check now
-        const target = this.findDragTarget(
-            [
-                ...this.roomView.getObjectsFromCurrentRoom(),
-                ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
-            ],
-            draggedItem
-        );
-        if (target !== undefined) {
-            this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
+        const target = this.findDragTarget(draggedItem);
+
+        if (target === undefined || target.attrs.category === 'invArrow') {
+            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
             return;
         }
 
-        this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+        this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
     }
 
     /**
-     * @param {Konva.Shape[]} candidates
      * @param {Konva.Shape} draggedItem
+     * @param {Konva.Shape|undefined} previousTarget
      * @returns {Konva.Shape|undefined}
      */
-    findDragTarget(candidates, draggedItem) {
+    findDragTarget(draggedItem, previousTarget = undefined) {
+        const candidates = [
+            ...[this.inventoryView.inventoryArrowsView.leftArrow, this.inventoryView.inventoryArrowsView.rightArrow],
+            ...[previousTarget],
+            ...this.roomView.getVisibleObjectsFromCurrentRoom(),
+            ...this.inventoryView.inventoryItemsView.getVisibleInventoryItems()
+        ];
         let target = undefined;
         for (let i = 0; i < candidates.length; i++) {
             const object = candidates[i];
-            if (this.intersection.check(draggedItem, object)) {
+            if (object !== undefined && this.intersection.check(draggedItem, object)) {
                 target = object;
                 break;
             }
