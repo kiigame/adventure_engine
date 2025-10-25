@@ -2,7 +2,7 @@ import { KiiGame } from './kiigame.js';
 import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
 import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
 import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
-import Intersection from './view/Intersection.js';
+import Intersection from './view/intersection/Intersection.js';
 import VisibilityValidator from './view/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
