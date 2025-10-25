@@ -49,6 +49,7 @@ import ObjectsInRoomsBuilder from './modelbuilder/ObjectsInRoomsBuilder.js';
 import ObjectsInRoomBuilder from './modelbuilder/ObjectsInRoomBuilder.js';
 import ObjectsInRooms from './model/ObjectsInRooms.js';
 import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
+import InventoryArrowsView from './view/inventory/InventoryArrowsView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -311,12 +312,19 @@ export class KiiGame {
             inventoryItems,
             this.stage.height() - 90
         );
+        // Inventory arrows view componen
+        const inventoryArrowsView = new InventoryArrowsView(
+            uiEventEmitter,
+            inventoryBarLayer.find('#inventory_left_arrow'),
+            inventoryBarLayer.find('#inventory_right_arrow')
+        );
         // Inventory view component
         this.inventoryView = new InventoryView(
             this.uiEventEmitter,
             this.stageObjectGetter,
             inventoryBarLayer,
-            inventoryItemsView
+            inventoryItemsView,
+            inventoryArrowsView
         );
         new InventoryViewModel(
             this.uiEventEmitter,

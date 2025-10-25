@@ -6,6 +6,7 @@ import EventEmitter from '../../events/EventEmitter.js';
 import pkg from 'konva';
 import StageObjectGetter from '../../util/konva/StageObjectGetter.js';
 import InventoryItemsView from './InventoryItemsView.js';
+import InventoryArrowsView from './InventoryArrowsView.js';
 const { Shape, Layer } = pkg;
 use(sinonChai);
 
@@ -14,16 +15,12 @@ describe('inventory view tests', () => {
     let stageObjectGetterStub;
     let inventoryBarLayerStub;
     let inventoryItemsViewStub;
-    let leftArrowStub;
-    let rightArrowStub;
+    let inventoryArrowsViewStub;
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
         stageObjectGetterStub = createStubInstance(StageObjectGetter);
-        leftArrowStub = createStubInstance(Shape);
-        rightArrowStub = createStubInstance(Shape, { on: null });
+        inventoryArrowsViewStub = createStubInstance(InventoryArrowsView);
         inventoryBarLayerStub = createStubInstance(Layer);
-        inventoryBarLayerStub.find.withArgs('#inventory_left_arrow').returns(leftArrowStub);
-        inventoryBarLayerStub.find.withArgs('#inventory_right_arrow').returns(rightArrowStub);
         inventoryItemsViewStub = createStubInstance(InventoryItemsView);
     });
     afterEach(() => {
@@ -35,7 +32,8 @@ describe('inventory view tests', () => {
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                inventoryArrowsViewStub
             );
             const redrawInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_view_model_updated';
@@ -44,8 +42,7 @@ describe('inventory view tests', () => {
             redrawInventoryCallback({ visibleInventoryItems, isLeftArrowVisible: false, isRightArrowVisible: false });
             expect(inventoryItemsViewStub.resetItems).to.have.been.called;
             expect(inventoryItemsViewStub.handleInventoryItemVisibility).to.have.been.calledWith(visibleInventoryItems);
-            expect(leftArrowStub.hide).to.have.been.called;
-            expect(rightArrowStub.hide).to.have.been.called;
+            expect(inventoryArrowsViewStub.toggleArrowVisibility).to.have.been.calledWith(false, false);
             expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
             expect(inventoryItemsViewStub.draw).to.have.been.called;
             expect(inventoryBarLayerStub.draw).to.have.been.called;
@@ -56,45 +53,45 @@ describe('inventory view tests', () => {
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                inventoryArrowsViewStub
             );
             const redrawInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_view_model_updated';
             }).args[1];
             const visibleInventoryItems = ['one', 'two'];
             redrawInventoryCallback({ visibleInventoryItems, isLeftArrowVisible: true, isRightArrowVisible: true });
-            expect(leftArrowStub.show).to.have.been.called;
-            expect(rightArrowStub.show).to.have.been.called;
+            expect(inventoryArrowsViewStub.toggleArrowVisibility).to.have.been.calledWith(true, true);
         });
         it('should show only right arrow if requested', () => {
             new InventoryView(
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                inventoryArrowsViewStub
             );
             const redrawInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_view_model_updated';
             }).args[1];
             const visibleInventoryItems = ['one', 'two'];
             redrawInventoryCallback({ visibleInventoryItems, isLeftArrowVisible: false, isRightArrowVisible: true });
-            expect(leftArrowStub.hide).to.have.been.called;
-            expect(rightArrowStub.show).to.have.been.called;
+            expect(inventoryArrowsViewStub.toggleArrowVisibility).to.have.been.calledWith(false, true);
         });
         it('should show only left arrow if requested', () => {
             new InventoryView(
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                                inventoryArrowsViewStub
             );
             const redrawInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_view_model_updated';
             }).args[1];
             const visibleInventoryItems = ['one', 'two'];
             redrawInventoryCallback({ visibleInventoryItems, isLeftArrowVisible: true, isRightArrowVisible: false });
-            expect(leftArrowStub.show).to.have.been.called;
-            expect(rightArrowStub.hide).to.have.been.called;
+            expect(inventoryArrowsViewStub.toggleArrowVisibility).to.have.been.calledWith(true, false);
         });
     });
     describe('handle arrived in room', () => {
@@ -106,7 +103,8 @@ describe('inventory view tests', () => {
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                inventoryArrowsViewStub
             );
             const handleArrivedInRoomCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'arrived_in_room';
@@ -123,7 +121,8 @@ describe('inventory view tests', () => {
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                inventoryArrowsViewStub
             );
             const handleArrivedInRoomCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'arrived_in_room';
@@ -139,7 +138,8 @@ describe('inventory view tests', () => {
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                inventoryArrowsViewStub
             );
             const handleDragMoveHoverOnObjectCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'dragmove_hover_on_object';
@@ -159,7 +159,8 @@ describe('inventory view tests', () => {
                 uiEventEmitterStub,
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
-                inventoryItemsViewStub
+                inventoryItemsViewStub,
+                inventoryArrowsViewStub
             );
             const handleDragMoveHoverOnNothingCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'dragmove_hover_on_nothing';

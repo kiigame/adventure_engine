@@ -1,6 +1,7 @@
 import EventEmitter from "../../events/EventEmitter.js";
 import StageObjectGetter from "../../util/konva/StageObjectGetter.js";
 import InventoryItemsView from "./InventoryItemsView.js"
+import InventoryArrowsView from "./InventoryArrowsView.js"
 
 class InventoryView {
     /**
@@ -8,27 +9,20 @@ class InventoryView {
      * @param {StageObjectGetter} stageObjectGetter
      * @param {Konva.Layer} inventoryBarLayer
      * @param {InventoryItemsView} inventoryItemsView
+     * @param {InventoryArrowsView} inventoryArrowsView
      */
-    constructor(uiEventEmitter, stageObjectGetter, inventoryBarLayer, inventoryItemsView) {
+    constructor(uiEventEmitter, stageObjectGetter, inventoryBarLayer, inventoryItemsView, inventoryArrowsView) {
         this.uiEventEmitter = uiEventEmitter;
         this.stageObjectGetter = stageObjectGetter;
         this.inventoryBarLayer = inventoryBarLayer;
         this.inventoryItemsView = inventoryItemsView;
-
-        this.leftArrow = this.inventoryBarLayer.find('#inventory_left_arrow');
-        this.rightArrow = this.inventoryBarLayer.find('#inventory_right_arrow');
+        this.inventoryArrowsView = inventoryArrowsView;
 
         this.uiEventEmitter.on('inventory_view_model_updated', ({ visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible }) => {
             this.redrawInventory(visibleInventoryItems, isLeftArrowVisible, isRightArrowVisible);
         });
         this.uiEventEmitter.on('arrived_in_room', (roomId) => {
             this.handleArrivedInRoom(roomId);
-        });
-        this.uiEventEmitter.on('inventory_left_arrow_draghovered', () => {
-            this.uiEventEmitter.emit('inventory_left_arrow_engaged');
-        });
-        this.uiEventEmitter.on('inventory_right_arrow_draghovered', () => {
-            this.uiEventEmitter.emit('inventory_right_arrow_engaged');
         });
         this.uiEventEmitter.on('first_sequence_slide_shown', () => {
             this.hideInventory();
@@ -42,13 +36,6 @@ class InventoryView {
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
             this.handleDragMoveHoverOnNothing();
         });
-        // Handle clicks on arrows
-        this.leftArrow.on('click tap', () => {
-            this.uiEventEmitter.emit('inventory_left_arrow_engaged');
-        });
-        this.rightArrow.on('click tap', () => {
-            this.uiEventEmitter.emit('inventory_right_arrow_engaged');
-        });
     }
 
     /**
@@ -59,23 +46,9 @@ class InventoryView {
      * @param {boolean} isInventoryRightArrowVisible
      */
     redrawInventory(visibleInventoryItems, isInventoryLeftArrowVisible, isInventoryRightArrowVisible) {
-        // At first reset all items. Adding or removing items, as well as clicking
-        // arrows, may change which items should be shown.
         this.inventoryItemsView.resetItems();
         this.inventoryItemsView.handleInventoryItemVisibility(visibleInventoryItems);
-
-        if (isInventoryLeftArrowVisible) {
-            this.leftArrow.show();
-        } else {
-            this.leftArrow.hide();
-        }
-
-        if (isInventoryRightArrowVisible) {
-            this.rightArrow.show();
-        } else {
-            this.rightArrow.hide();
-        }
-
+        this.inventoryArrowsView.toggleArrowVisibility(isInventoryLeftArrowVisible, isInventoryRightArrowVisible);
         this.inventoryItemsView.clearInventoryItemBlur();
         this.drawInventoryLayer();
         this.uiEventEmitter.emit('inventory_redrawn');
