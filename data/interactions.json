@@ -808,7 +808,8 @@
                 "command": "add_object",
                 "object": [
                     "oikotie",
-                    "oikotie2"
+                    "oikotie2",
+                    "oikotie3"
                 ]
             }
         ]
@@ -841,6 +842,29 @@
                     "poster_withglue",
                     "airfreshener",
                     "cienibang"
+                ]
+            }
+        ]
+    },
+    "oikotie3": {
+        "click": [
+            {
+                "command": "do_transition",
+                "destination": "object_layer_locker_room_1",
+                "instant": true
+            },
+            {
+                "command": "inventory_add",
+                "item": [
+                    "poster_withoutglue",
+                    "poster_withglue",
+                    "airfreshener",
+                    "cienibang",
+                    "dnaanalyzer",
+                    "tactic_board_wiper",
+                    "teddybear_chewinggum",
+                    "marker",
+                    "teddybear"
                 ]
             }
         ]

@@ -74,6 +74,15 @@
                     "y": 200
                 },
                 "className": "Image"
+            },
+            "oikotie3": {
+                "initiallyVisible": false,
+                "attrs": {
+                    "src": "data/images/shower_door_to_locker_room_1.png",
+                    "x": 500,
+                    "y": 200
+                },
+                "className": "Image"
             }
         }
     },
