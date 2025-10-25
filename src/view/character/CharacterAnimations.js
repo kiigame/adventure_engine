@@ -1,8 +1,8 @@
-import EventEmitter from "../../events/EventEmitter";
+import EventEmitter from "../../events/EventEmitter.js";
 
 class CharacterAnimations {
     /**
-     * @param {object} animations JSON object of player character animations
+     * @param {object} animations a list of character animations (Konva.Tween objects) by name
      * @param {EventEmitter} uiEventEmitter
      * @param {EventEmitter} gameEventEmitter
      */
@@ -16,7 +16,7 @@ class CharacterAnimations {
         this.idleAnimationName = "idle";
 
         this.uiEventEmitter = uiEventEmitter;
-        this.gameEventEmitter = gameEventEmitter;
+        gameEventEmitter = gameEventEmitter;
 
         // Overriding default speaking animation from setMonologue from the same
         // interaction assumes: setMonologue is called first, and that events get
@@ -28,17 +28,42 @@ class CharacterAnimations {
             this.playCharacterAnimation(animationName, duration);
         });
         this.uiEventEmitter.on('clicked_on_stage', () => {
-            this.startCharacterAnimation(this.idleAnimationName);
+            this.resetCharacterAnimations();
         });
         this.uiEventEmitter.on('inventory_drag_start', (_draggedItem) => {
-            this.startCharacterAnimation(this.idleAnimationName);
+            this.resetCharacterAnimations();
         });
-        this.gameEventEmitter.on('set_idle_animation', (animation_id) => {
+        gameEventEmitter.on('set_idle_animation', (animation_id) => {
             this.setIdleAnimation(animation_id);
         });
-        this.gameEventEmitter.on('set_speak_animation', (animation_id) => {
+        gameEventEmitter.on('set_speak_animation', (animation_id) => {
             this.setSpeakAnimation(animation_id);
         });
+    }
+
+    /**
+     * A little helper function for semantic clarity. Reset character animation to the idle animation.
+     */
+    resetCharacterAnimations() {
+        this.startCharacterAnimation(this.idleAnimationName);
+    }
+
+    /**
+     * A helper function to reset a single animation frame; for ease of unit testing.
+     * @param {Konva.Tween} frame
+     */
+    resetAnimationFrame(frame) {
+        frame.node.hide();
+        frame.reset();
+    }
+
+    /**
+     * A helper function to play the first frame of an animation; for ease of unit testing.
+     * @param {Konva.Tween} frame
+     */
+    playAnimationFrame(frame) {
+        frame.node.show();
+        frame.play();
     }
 
     /**
@@ -49,20 +74,18 @@ class CharacterAnimations {
         // Hide and reset all character animations
         Object.values(this.animations).forEach((frames) => {
             frames.forEach((frame) => {
-                frame.node.hide();
-                frame.reset();
+                this.resetAnimationFrame(frame);
             });
         });
         const animation = this.animations[animationName];
-        animation[0].node.show();
-        animation[0].play();
+        this.playAnimationFrame(animation[0]);
         this.uiEventEmitter.emit('character_animation_started');
     }
 
     /**
      * Play a character animation once and reset to idle.
-     * @param {*} animationName The name of the animation to play.
-     * @param {*} duration The time in ms until the character returns to idle animation.
+     * @param {string} animationName The name of the animation to play.
+     * @param {int} duration The time in ms until the character returns to idle animation.
      */
     playCharacterAnimation(animationName, duration) {
         this.startCharacterAnimation(animationName);
