@@ -490,9 +490,9 @@ export class KiiGame {
         this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
             const targetCategory = this.target.getAttr('category');
 
-            const dragResolver = this.dragResolvers.filter(function (dragResolver) {
-                return dragResolver.getTargetCategory() === targetCategory;
-            }).pop();
+            const dragResolver = this.dragResolvers.find((dragResolver) =>
+                dragResolver.getTargetCategory() === targetCategory
+            );
 
             if (dragResolver) {
                 this.commandsHandler.handleCommands(dragResolver.resolveCommands(
