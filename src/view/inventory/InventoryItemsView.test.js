@@ -170,4 +170,20 @@ describe('inventory item view tests', () => {
             }
         });
     });
+    describe('fire inventory_item_drag_end on Konva dragend', () => {
+        it('should fire inventory_item_drag_end event on dragend of an inventory item', () => {
+            new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                inventoryItemsGroupStub,
+                100
+            );
+            const dragendHandler = inventoryItemStub.on.getCalls().find((call) => {
+                return call.args[0] === 'dragend';
+            }).args[1];
+            const eventStub = { target: inventoryItemStub };
+            dragendHandler(eventStub);
+            expect(uiEventEmitterStub.emit).to.have.been.calledWith('inventory_item_drag_end', { draggedItem: inventoryItemStub });
+        });
+    });
 });
