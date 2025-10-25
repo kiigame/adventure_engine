@@ -26,9 +26,6 @@ class InventoryItemsView {
         this.inventoryItems.on('click tap', (event) => {
             this.uiEventEmitter.emit('inventory_click', event.target);
         });
-        this.inventoryItems.on('touchstart mousedown', (event) => {
-            this.uiEventEmitter.emit('inventory_touchstart', event.target);
-        });
     }
 
     resetItems() {
