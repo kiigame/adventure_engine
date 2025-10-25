@@ -47,9 +47,11 @@ class InventoryItemsView {
             let shape = this.inventoryItems.findOne((item) => {
                 return item.attrs.id === visibleItemName;
             });
-            shape.x(this.offsetFromLeft + (index * 100));
-            shape.y(this.offsetFromTop);
-            shape.setAttr('visible', true);
+            if (shape) {
+                shape.x(this.offsetFromLeft + (index * 100));
+                shape.y(this.offsetFromTop);
+                shape.setAttr('visible', true);
+            }
         });
     }
 

@@ -79,6 +79,29 @@ describe('inventory item view tests', () => {
             expect(inventoryItemStubs[1].x).to.have.been.calledWith(150);
             expect(inventoryItemStubs[2].x).to.have.been.calledWith(250);
         });
+        it('should leave a gap in drawn inventory for the currently dragged item', () => {
+            // 'undefined' represents the currently dragged item, which is visible in view model but not present
+            // in the inventory views component
+            inventoryItemStubs = [
+                createStubInstance(Shape),
+                undefined,
+                createStubInstance(Shape),
+            ];
+            inventoryItemStubs.forEach((shapeStub, index) => {
+                inventoryItemsGroupStub.findOne.onCall(index).returns(shapeStub);
+            });
+            inventoryItemsGroupStub.find.returns(inventoryItemStubs[0]);
+
+            const inventoryItemsView = new InventoryItemsView(
+                uiEventEmitterStub,
+                gameEventEmitterStub,
+                inventoryItemsGroupStub,
+                100
+            );
+            inventoryItemsView.handleInventoryItemVisibility(['1', '2', '3']);
+            expect(inventoryItemStubs[0].x).to.have.been.calledWith(50);
+            expect(inventoryItemStubs[2].x).to.have.been.calledWith(250);
+        });
     });
     describe('clear inventory item blur', () => {
         // Don't know how to stub multiple shapes in the collection!
