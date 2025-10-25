@@ -359,9 +359,7 @@ export class KiiGame {
                     return;
                 }
 
-                // Not hovering over room objects or inventory items
-                this.clearInteractionText();
-
+                // Check if we are dragging over inventory arrows
                 if (!this.inventoryScrollDelayEnabled) {
                     const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
                     const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
@@ -428,6 +426,12 @@ export class KiiGame {
             this.showTextOnDragMove(target, draggedItem);
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
+            this.clearInteractionText();
+        });
+        this.uiEventEmitter.on('inventory_left_arrow_draghovered', () => {
+            this.clearInteractionText();
+        });
+        this.uiEventEmitter.on('inventory_right_arrow_draghovered', () => {
             this.clearInteractionText();
         });
         this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
