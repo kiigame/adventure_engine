@@ -54,6 +54,7 @@ import InventoryArrowsViewModel from './view/inventory/InventoryArrowsViewModel.
 import ClickHandler from './controller/ClickHandler.js';
 import DragEndHandler from './controller/DragEngHandler.js';
 import DraggedItemViewModel from './view/draggeditem/DraggedItemViewModel.js';
+import DragTargetFinder from './view/draggeditem/DragTargetFinder.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -337,9 +338,12 @@ export class KiiGame {
         // Dragged item view model
         new DraggedItemViewModel(
             this.uiEventEmitter,
-            intersection,
-            roomView,
-            inventoryView
+            new DragTargetFinder(
+                intersection,
+                roomView,
+                inventoryItemsView,
+                inventoryArrowsView
+            )
         );
         // Inventory & items view end
 
