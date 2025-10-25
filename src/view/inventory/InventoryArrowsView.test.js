@@ -4,17 +4,21 @@ import sinonChai from "sinon-chai";
 import InventoryArrowsView from './InventoryArrowsView.js';
 import EventEmitter from '../../events/EventEmitter.js';
 import pkg from 'konva';
-const { Shape } = pkg;
+const { Shape, Group } = pkg;
 use(sinonChai);
 
 describe('inventory arrows view tests', () => {
     let uiEventEmitterStub;
+    let inventoryArrowsGroupStub;
     let leftArrowStub;
     let rightArrowStub;
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
         leftArrowStub = createStubInstance(Shape);
         rightArrowStub = createStubInstance(Shape);
+        inventoryArrowsGroupStub = createStubInstance(Group);
+        inventoryArrowsGroupStub.find.withArgs('#inventory_left_arrow').returns([leftArrowStub]);
+        inventoryArrowsGroupStub.find.withArgs('#inventory_right_arrow').returns([rightArrowStub]);
     });
     afterEach(() => {
         restore();
@@ -55,8 +59,7 @@ describe('inventory arrows view tests', () => {
             it(`should toggle arrows correctly when ${testName}`, () => {
                 const inventoryArrowsView = new InventoryArrowsView(
                     uiEventEmitterStub,
-                    leftArrowStub,
-                    rightArrowStub
+                    inventoryArrowsGroupStub
                 );
                 inventoryArrowsView.toggleArrowVisibility(...testCase.parameters);
                 testCase.expectedCalls.forEach((expectedCall) => {
@@ -82,8 +85,7 @@ describe('inventory arrows view tests', () => {
             it(`should emit correct kiigame event on ${testName}`, () => {
                 new InventoryArrowsView(
                     uiEventEmitterStub,
-                    leftArrowStub,
-                    rightArrowStub
+                    inventoryArrowsGroupStub
                 );
                 const konvaObject = testCase.konvaObjectStub();
                 const eventHandler = konvaObject.on.getCalls().find((call) => {
@@ -108,8 +110,7 @@ describe('inventory arrows view tests', () => {
             it(`should emit correct kiigame event on ${testName}`, () => {
                 new InventoryArrowsView(
                     uiEventEmitterStub,
-                    leftArrowStub,
-                    rightArrowStub
+                    inventoryArrowsGroupStub
                 );
                 const eventHandler = uiEventEmitterStub.on.getCalls().find((call) => {
                     return call.args[0] === testCase.konvaEvent;

@@ -316,8 +316,7 @@ export class KiiGame {
         // Inventory arrows view componen
         const inventoryArrowsView = new InventoryArrowsView(
             uiEventEmitter,
-            inventoryBarLayer.find('#inventory_left_arrow'),
-            inventoryBarLayer.find('#inventory_right_arrow')
+            inventoryBarLayer.find('#inventory_arrows')[0]
         );
         // Inventory view component
         this.inventoryView = new InventoryView(
@@ -369,13 +368,11 @@ export class KiiGame {
 
                 // Check if we are dragging over inventory arrows
                 if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
-                    const leftArrow = this.stageObjectGetter.getObject("inventory_left_arrow");
-                    const rightArrow = this.stageObjectGetter.getObject("inventory_right_arrow");
-                    if (this.intersection.check(draggedItem, leftArrow)) {
+                    if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.leftArrow)) {
                         this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
                         return;
                     }
-                    if (this.intersection.check(draggedItem, rightArrow)) {
+                    if (this.intersection.check(draggedItem, this.inventoryView.inventoryArrowsView.rightArrow)) {
                         this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
                         return;
                     }

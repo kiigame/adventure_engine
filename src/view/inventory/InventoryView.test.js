@@ -46,6 +46,7 @@ describe('inventory view tests', () => {
             expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
             expect(inventoryItemsViewStub.draw).to.have.been.called;
             expect(inventoryBarLayerStub.draw).to.have.been.called;
+            expect(inventoryArrowsViewStub.draw).to.have.been.called;
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('inventory_redrawn');
         });
         it('should show both arrows if requested', () => {
@@ -84,7 +85,7 @@ describe('inventory view tests', () => {
                 stageObjectGetterStub,
                 inventoryBarLayerStub,
                 inventoryItemsViewStub,
-                                inventoryArrowsViewStub
+                inventoryArrowsViewStub
             );
             const redrawInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_view_model_updated';
@@ -111,6 +112,7 @@ describe('inventory view tests', () => {
             }).args[1];
             handleArrivedInRoomCallback('room-id');
             expect(inventoryItemsViewStub.show).to.have.been.called;
+            expect(inventoryArrowsViewStub.show).to.have.been.called;
             expect(inventoryBarLayerStub.show).to.have.been.called;
         });
         it('shoud not show inventory it the room is full screen', () => {
@@ -129,6 +131,7 @@ describe('inventory view tests', () => {
             }).args[1];
             handleArrivedInRoomCallback('room-id');
             expect(inventoryItemsViewStub.show).to.not.have.been.called;
+            expect(inventoryArrowsViewStub.show).to.not.have.been.called;
             expect(inventoryBarLayerStub.show).to.not.have.been.called;
         });
     });
@@ -150,6 +153,7 @@ describe('inventory view tests', () => {
             expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
             expect(inventoryItemsViewStub.glowInventoryItem).to.have.been.calledWith(targetStub);
             expect(inventoryItemsViewStub.draw).to.have.been.called;
+            expect(inventoryArrowsViewStub.draw).to.have.been.called;
             expect(inventoryBarLayerStub.draw).to.have.been.called;
         });
     });
@@ -168,6 +172,7 @@ describe('inventory view tests', () => {
             handleDragMoveHoverOnNothingCallback();
             expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
             expect(inventoryItemsViewStub.draw).to.have.been.called;
+            expect(inventoryArrowsViewStub.draw).to.have.been.called;
             expect(inventoryBarLayerStub.draw).to.have.been.called;
         });
     });

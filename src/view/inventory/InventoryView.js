@@ -57,16 +57,19 @@ class InventoryView {
     showInventory() {
         this.inventoryBarLayer.show();
         this.inventoryItemsView.show();
+        this.inventoryArrowsView.show();
         this.drawInventoryLayer();
     }
 
     hideInventory() {
         this.inventoryItemsView.hide();
+        this.inventoryArrowsView.hide();
         this.inventoryBarLayer.hide();
     }
 
     drawInventoryLayer() {
         this.inventoryItemsView.draw();
+        this.inventoryArrowsView.draw();
         this.inventoryBarLayer.draw();
     }
 

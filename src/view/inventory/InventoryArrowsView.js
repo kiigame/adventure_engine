@@ -3,13 +3,13 @@ import EventEmitter from "../../events/EventEmitter.js";
 class InventoryArrowsView {
     /**
      * @param {EventEmitter} uiEventEmitter
-     * @param {Konva.Shape} leftArrow
-     * @param {Konva.Shape} rightArrow
+     * @param {Konva.Group} inventoryArrows
      */
-    constructor(uiEventEmitter, leftArrow, rightArrow) {
+    constructor(uiEventEmitter, inventoryArrows) {
         this.uiEventEmitter = uiEventEmitter;
-        this.leftArrow = leftArrow;
-        this.rightArrow = rightArrow;
+        this.inventoryArrows = inventoryArrows;
+        this.leftArrow = this.inventoryArrows.find('#inventory_left_arrow')[0];
+        this.rightArrow = this.inventoryArrows.find('#inventory_right_arrow')[0];
 
         // Handle arrow clicks and hovers
         this.leftArrow.on('click tap', () => {
@@ -42,6 +42,18 @@ class InventoryArrowsView {
         } else {
             this.rightArrow.hide();
         }
+    }
+
+    show() {
+        this.inventoryArrows.show();
+    }
+
+    hide() {
+        this.inventoryArrows.hide();
+    }
+
+    draw() {
+        this.inventoryArrows.draw();
     }
 }
 
