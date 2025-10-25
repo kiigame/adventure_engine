@@ -2,7 +2,6 @@ import EventEmitter from "../../events/EventEmitter.js";
 import Intersection from "./intersection/Intersection.js";
 import RoomView from "../room/RoomView.js";
 import InventoryView from "../inventory/InventoryView.js";
-import InventoryArrowsViewModel from "../inventory/InventoryArrowsViewModel.js";
 
 class DraggedItemViewModel {
     /**
@@ -10,14 +9,12 @@ class DraggedItemViewModel {
      * @param {Intersection} intersection
      * @param {RoomView} roomView
      * @param {InventoryView} inventoryView
-     * @param {InventoryArrowsViewModel} inventoryArrowsViewModel
      */
-    constructor(uiEventEmitter, intersection, roomView, inventoryView, inventoryArrowsViewModel) {
+    constructor(uiEventEmitter, intersection, roomView, inventoryView) {
         this.uiEventEmitter = uiEventEmitter;
         this.intersection = intersection;
         this.roomView = roomView;
         this.inventoryView = inventoryView;
-        this.inventoryArrowsViewModel = inventoryArrowsViewModel;
 
         // For limiting the amount of intersection checks
         this.intersectionDelayEnabled = false;
@@ -52,21 +49,19 @@ class DraggedItemViewModel {
                 return;
             }
 
-            if (this.target.attrs.category === 'invArrow') {
-                if (!this.inventoryArrowsViewModel.getInventoryScrollDelayEnabled()) {
-                    if (this.target.attrs.id === 'inventory_left_arrow') {
-                        this.inventoryArrowsViewModel.handleDragMoveHoverOnLeftArrow();
-                        return;
-                    }
-                    if (this.target.attrs.id === 'inventory_right_arrow') {
-                        this.inventoryArrowsViewModel.handleDragMoveOnRightArrow();
-                        return;
-                    }
-                }
+            if (this.target.attrs.category !== 'invArrow') {
+                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
                 return;
             }
 
-            this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
+            if (this.target.attrs.id === 'inventory_left_arrow') {
+                this.uiEventEmitter.emit('dragmove_hover_on_left_arrow');
+                return;
+            }
+            if (this.target.attrs.id === 'inventory_right_arrow') {
+                this.uiEventEmitter.emit('dragmove_hover_on_right_arrow');
+                return;
+            }
         }
     }
 

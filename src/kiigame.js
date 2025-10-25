@@ -331,7 +331,7 @@ export class KiiGame {
             7 // inventoryMax, TODO make configurable/responsive
         )
         // Inventory arrows view model
-        const inventoryArrowsViewModel = new InventoryArrowsViewModel(
+        new InventoryArrowsViewModel(
             this.uiEventEmitter
         );
         // Dragged item view model
@@ -339,8 +339,7 @@ export class KiiGame {
             this.uiEventEmitter,
             intersection,
             roomView,
-            inventoryView,
-            inventoryArrowsViewModel
+            inventoryView
         );
         // Inventory & items view end
 

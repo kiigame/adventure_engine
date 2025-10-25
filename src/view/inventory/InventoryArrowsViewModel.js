@@ -10,25 +10,29 @@ class InventoryArrowsViewModel {
         // For limiting the speed of inventory browsing when dragging an item
         this.inventoryScrollDelay = 500;
         this.inventoryScrollDelayEnabled = false;
-    }
 
-    /**
-     * @returns {boolean}
-     */
-    getInventoryScrollDelayEnabled() {
-        return this.inventoryScrollDelayEnabled;
+        this.uiEventEmitter.on('dragmove_hover_on_left_arrow', () => {
+            this.handleDragMoveHoverOnLeftArrow();
+        });
+        this.uiEventEmitter.on('dragmove_hover_on_right_arrow', () => {
+            this.handleDragMoveOnRightArrow();
+        });
     }
 
     handleDragMoveHoverOnLeftArrow() {
-        this.inventoryScrollDelayEnabled = true;
-        this.uiEventEmitter.emit('inventory_left_arrow_draghovered');
-        setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+        if (!this.inventoryScrollDelayEnabled) {
+            this.inventoryScrollDelayEnabled = true;
+            this.uiEventEmitter.emit('inventory_left_arrow_draghovered');
+            setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+        }
     }
 
     handleDragMoveOnRightArrow() {
-        this.inventoryScrollDelayEnabled = true;
-        this.uiEventEmitter.emit('inventory_right_arrow_draghovered');
-        setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+        if (!this.inventoryScrollDelayEnabled) {
+            this.inventoryScrollDelayEnabled = true;
+            this.uiEventEmitter.emit('inventory_right_arrow_draghovered');
+            setTimeout(() => this.inventoryScrollDelayEnabled = false, this.inventoryScrollDelay);
+        }
     }
 }
 
