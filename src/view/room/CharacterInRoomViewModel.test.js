@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createStubInstance } from 'sinon';
+import { createStubInstance, restore } from 'sinon';
 import CharacterInRoomViewModel from './CharacterInRoomViewModel.js';
 import EventEmitter from '../../events/EventEmitter.js';
 
@@ -9,6 +9,9 @@ describe('Character in room view model tests', () => {
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
         gameEventEmitterStub = createStubInstance(EventEmitter);
+    });
+    afterEach(() => {
+        restore();
     });
     describe('ready transition', () => {
         it('should go from NOT_IN_ROOM to READY_TO_LEAVE with setting from to null', () => {

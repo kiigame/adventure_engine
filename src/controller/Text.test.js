@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import { spy } from 'sinon';
+import { spy, restore } from 'sinon';
 import Text from './Text.js';
 
 describe('Test Text getName function', function() {
@@ -21,6 +21,9 @@ describe('Test Text getText function', function() {
     let loggerSpy;
     beforeEach(() => {
         loggerSpy = { warn: spy() };
+    });
+    afterEach(() => {
+        restore();
     });
 
     it('getText returns examine text of the object if called without specific key', function() {

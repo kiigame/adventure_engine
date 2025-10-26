@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { stub } from 'sinon';
+import { stub, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import RoomChildrenTypeBuilder from './RoomChildrenTypeBuilder.js';
 use(sinonChai);
@@ -16,6 +16,9 @@ describe('room children type builder tests', () => {
         ).returns(
             ['first_child', 'middle_child', 'last_child']
         );
+    });
+    afterEach(() => {
+        restore();
     });
     it('should add children to empty children', () => {
         const roomBuilder = new RoomChildrenTypeBuilder('type', roomChildrenBuilder);

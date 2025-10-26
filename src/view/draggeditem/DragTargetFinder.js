@@ -1,7 +1,7 @@
 import Intersection from "./intersection/Intersection.js";
 import RoomView from "../room/RoomView.js";
-import InventoryArrowsView from "view/inventory/InventoryArrowsView.js";
-import InventoryItemsView from "view/inventory/InventoryItemsView.js";
+import InventoryArrowsView from "../inventory/InventoryArrowsView.js";
+import InventoryItemsView from "../inventory/InventoryItemsView.js";
 
 class DragTargetFinder {
     /**

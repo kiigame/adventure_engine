@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { createStubInstance } from 'sinon';
+import { createStubInstance, restore } from 'sinon';
 import sinonChai from 'sinon-chai';
 import RoomsBuilder from './RoomsBuilder.js';
 import RoomBuilder from './RoomBuilder.js';
@@ -9,6 +9,9 @@ describe('konva rooms builder tests', () => {
     let roomBuilder;
     beforeEach(() => {
         roomBuilder = createStubInstance(RoomBuilder);
+    });
+    afterEach(() => {
+        restore();
     });
     it('should call RoomBuilder.build with expected values', () => {
         const roomsBuilder = new RoomsBuilder(roomBuilder);

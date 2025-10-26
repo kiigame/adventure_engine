@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createStubInstance } from 'sinon';
+import { createStubInstance, restore } from 'sinon';
 import RoomBuilder from './RoomBuilder.js';
 import RoomChildrenTypeBuilder from './RoomChildrenTypeBuilder.js';
 
@@ -10,6 +10,9 @@ describe('konva room builder tests', () => {
         beforeEach(() => {
             roomChildrenTypeBuilder = createStubInstance(RoomChildrenTypeBuilder);
             roomChildrenTypeBuilder.addChildren.returnsArg(0); // return the roomJson unmodified
+        });
+        afterEach(() => {
+            restore();
         });
         it('should set initial visibility to false, add id by json object key, and set category to room', () => {
             const roomBuilder = new RoomBuilder([roomChildrenTypeBuilder]);
@@ -65,6 +68,9 @@ describe('konva room builder tests', () => {
         beforeEach(() => {
             firstRoomChildrenTypeBuilder = createStubInstance(RoomChildrenTypeBuilder);
             lastRoomChildrenTypeBuilder = createStubInstance(RoomChildrenTypeBuilder);
+        });
+        afterEach(() => {
+            restore();
         });
         it('should insert first children builder result first so that e.g. backgrounds will not cover furniture', () => {
             // Fairly annoying stubbing to mimick RoomChildrenTypeBuilder
