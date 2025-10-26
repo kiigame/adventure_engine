@@ -10,6 +10,8 @@ import EventEmitter from './events/EventEmitter.js';
 import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
 import FurnitureBuilder from './viewbuilder/room/konva/FurnitureBuilder.js';
 import SecretBuilder from './latkazombit/viewbuilder/room/konva/SecretBuilder.js';
+import CommandsHandler from './controller/interactions/CommandsHandler.js';
+import CommandHandler from './controller/interactions/CommandHandler.js';
 
 const jsonGetter = new JSONGetter();
 
@@ -226,7 +228,15 @@ input_layer.on('tap click', function (event) {
         kiigame.text.setText('icehockey_jersey', 'examine', kiigame.text.getText('input_text', 'wikistart') + input_text.getText() + kiigame.text.getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
         input_layer.hide();
 
-        kiigame.commandsHandler.handleCommands(new DefaultInteractionResolver().resolveCommands(
+        new CommandsHandler(
+            new CommandHandler(
+                gameEventEmitter,
+                uiEventEmitter,
+                kiigame.stageObjectGetter,
+                kiigame.text,
+                items_json
+            )
+        ).handleCommands(new DefaultInteractionResolver().resolveCommands(
             kiigame.interactions,
             'start_button_ok'
         ));
