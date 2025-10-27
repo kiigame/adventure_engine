@@ -75,8 +75,6 @@ export class KiiGame {
         uiEventEmitter = new EventEmitter(),
         gameData = {},
     ) {
-        this.uiEventEmitter = uiEventEmitter;
-
         if (itemsBuilder === null) {
             itemsBuilder = new ItemsBuilder(
                 new ItemBuilder()
@@ -99,7 +97,7 @@ export class KiiGame {
         if (hitRegionInitializer === null) {
             hitRegionInitializer = new HitRegionInitializer(
                 new HitRegionFilter([], ['Image']),
-                this.uiEventEmitter
+                uiEventEmitter
             );
         }
         if (intersection === null) {
@@ -121,7 +119,7 @@ export class KiiGame {
         // "Player character in room" model
         new CharacterInRoom(gameEventEmitter);
         // Inventory model
-        this.inventory = new Inventory(gameEventEmitter, this.uiEventEmitter);
+        this.inventory = new Inventory(gameEventEmitter, uiEventEmitter);
         // Text model(?)
         this.text = new Text(gameData.text_json);
         // Model end
@@ -219,52 +217,52 @@ export class KiiGame {
             opacity: 1
         });
         this.stage.on('touchstart mousedown', () => {
-            this.uiEventEmitter.emit('clicked_on_stage');
+            uiEventEmitter.emit('clicked_on_stage');
         });
-        this.uiEventEmitter.on('play_full_fade_out', () => {
+        uiEventEmitter.on('play_full_fade_out', () => {
             this.playFullFadeOut();
         });
-        this.uiEventEmitter.on('play_sequence_started', (_id) => {
+        uiEventEmitter.on('play_sequence_started', (_id) => {
             this.playFullFadeOut();
         });
-        this.uiEventEmitter.on('sequence_hid_previous_slide', () => {
+        uiEventEmitter.on('sequence_hid_previous_slide', () => {
             this.playFullFadeOut();
         });
-        this.uiEventEmitter.on('play_full_fade_in', () => {
+        uiEventEmitter.on('play_full_fade_in', () => {
             // Assumes fade_full has first faded out
             this.fade_full.reverse();
             setTimeout(() => {
                 this.fader_full.hide();
             }, this.fade_full.tween.duration);
         });
-        this.uiEventEmitter.on('sequence_last_slide_fade_out', (finalFadeDuration) => {
+        uiEventEmitter.on('sequence_last_slide_fade_out', (finalFadeDuration) => {
             this.fade_full.tween.duration = finalFadeDuration;
             this.fade_full.play();
 
             setTimeout(() => {
-                this.uiEventEmitter.emit('play_full_fade_in');
+                uiEventEmitter.emit('play_full_fade_in');
                 setTimeout(() => {
                     this.fade_full.tween.duration = 600; // reset to default
                 }, finalFadeDuration);
             }, finalFadeDuration);
         });
-        this.uiEventEmitter.on('sequence_last_slide_immediate', () => {
+        uiEventEmitter.on('sequence_last_slide_immediate', () => {
             this.fader_full.hide();
         });
-        this.uiEventEmitter.on('sequence_show_next_slide_fade', () => {
+        uiEventEmitter.on('sequence_show_next_slide_fade', () => {
             setTimeout(() => {
-                this.uiEventEmitter.emit('play_full_fade_in');
+                uiEventEmitter.emit('play_full_fade_in');
                 this.stage.draw();
             }, this.fade_full.tween.duration);
         });
-        this.uiEventEmitter.on('sequence_show_next_slide_immediate', () => {
+        uiEventEmitter.on('sequence_show_next_slide_immediate', () => {
             this.fade_full.reset();
             this.stage.draw();
         });
-        this.uiEventEmitter.on('room_hit_regions_initialized', () => {
+        uiEventEmitter.on('room_hit_regions_initialized', () => {
             this.stage.draw();
         });
-        this.uiEventEmitter.on('current_room_changed', (_room) => {
+        uiEventEmitter.on('current_room_changed', (_room) => {
             this.stage.draw();
         });
         // Stage view end
@@ -283,7 +281,7 @@ export class KiiGame {
         const roomLayer = this.stageObjectGetter.getObject('room_layer');
         // Room view component
         const roomView = new RoomView(
-            this.uiEventEmitter,
+            uiEventEmitter,
             gameEventEmitter,
             hitRegionInitializer,
             roomLayer,
@@ -294,15 +292,15 @@ export class KiiGame {
             new RoomAnimationBuilder(),
             this.stageObjectGetter
         ).build(roomView.getRooms());
-        new RoomAnimations(gameEventEmitter, this.uiEventEmitter, animatedRoomObjects);
+        new RoomAnimations(gameEventEmitter, uiEventEmitter, animatedRoomObjects);
         // Animation for fading the room portion of the screen
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
             roomFaderNode,
-            this.uiEventEmitter
+            uiEventEmitter
         );
         // Character in room view model
-        new CharacterInRoomViewModel(this.uiEventEmitter, gameEventEmitter);
+        new CharacterInRoomViewModel(uiEventEmitter, gameEventEmitter);
         // Rooms view end
 
         // Inventory & items view start
@@ -320,20 +318,20 @@ export class KiiGame {
         );
         // Inventory view component
         const inventoryView = new InventoryView(
-            this.uiEventEmitter,
+            uiEventEmitter,
             this.stageObjectGetter,
             inventoryBarLayer,
             inventoryItemsView,
             inventoryArrowsView
         );
         new InventoryViewModel(
-            this.uiEventEmitter,
+            uiEventEmitter,
             gameEventEmitter,
             7 // inventoryMax, TODO make configurable/responsive
         )
         // Inventory arrows view model
         new InventoryArrowsViewModel(
-            this.uiEventEmitter
+            uiEventEmitter
         );
         // Dragged item view
         new DraggedItemView(
@@ -343,7 +341,7 @@ export class KiiGame {
         );
         // Dragged item view model
         new DraggedItemViewModel(
-            this.uiEventEmitter,
+            uiEventEmitter,
             new DragTargetFinder(
                 intersection,
                 roomView,
@@ -361,13 +359,13 @@ export class KiiGame {
         ).build(characterAnimationData);
         new CharacterAnimations(
             characterAnimations,
-            this.uiEventEmitter,
+            uiEventEmitter,
             gameEventEmitter
         );
         // Character view component
         new CharacterView(
             characterLayer,
-            this.uiEventEmitter
+            uiEventEmitter
         );
         // Character view end
 
@@ -385,23 +383,23 @@ export class KiiGame {
             this.clearMonologues();
             this.npcMonologue(npc, text);
         });
-        this.uiEventEmitter.on('clicked_on_stage', () => {
+        uiEventEmitter.on('clicked_on_stage', () => {
             this.clearMonologues();
         });
-        this.uiEventEmitter.on('inventory_item_drag_start', (_target) => {
+        uiEventEmitter.on('inventory_item_drag_start', (_target) => {
             this.clearMonologues();
         });
         // TODO: refactor interaction texts from text_layer to something that DraggedItemView manages
-        this.uiEventEmitter.on('interaction_text_cleared', () => {
+        uiEventEmitter.on('interaction_text_cleared', () => {
             this.text_layer.draw();
         });
-        this.uiEventEmitter.on('text_on_drag_move_updated', () => {
+        uiEventEmitter.on('text_on_drag_move_updated', () => {
             this.text_layer.draw();
         });
         // Text view end
 
         // Music view
-        new Music(gameData.music_json, new AudioFactory(), this.uiEventEmitter, gameEventEmitter);
+        new Music(gameData.music_json, new AudioFactory(), uiEventEmitter, gameEventEmitter);
         // Music view end
         // View end
 
@@ -409,7 +407,7 @@ export class KiiGame {
         this.interactions = new Interactions(gameData.interactions_json);
         const commandHandler = new CommandHandler(
             gameEventEmitter,
-            this.uiEventEmitter,
+            uiEventEmitter,
             this.stageObjectGetter,
             this.text,
             gameData.items_json, // TODO: items model?
@@ -418,13 +416,13 @@ export class KiiGame {
             commandHandler
         )
         new ClickHandler(
-            this.uiEventEmitter,
+            uiEventEmitter,
             commandsHandler,
             clickResolvers,
             this.interactions
         );
         new DragEndHandler(
-            this.uiEventEmitter,
+            uiEventEmitter,
             commandsHandler,
             dragResolvers,
             this.interactions
@@ -509,10 +507,6 @@ export class KiiGame {
 
         this.character_speech_bubble.y(this.stage.height() - 100 - 15 - this.monologue.height() / 2);
         this.text_layer.draw();
-        this.uiEventEmitter.emit(
-            'play_character_speak_animation',
-            { duration: 3000 }
-        );
     }
 
     /**

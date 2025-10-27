@@ -21,8 +21,8 @@ class CharacterAnimations {
         // Overriding default speaking animation from setMonologue from the same
         // interaction assumes: setMonologue is called first, and that events get
         // fired and handled in the same order ...
-        this.uiEventEmitter.on('play_character_speak_animation', ({ duration }) => {
-            this.playCharacterAnimation(this.speakAnimationName, duration);
+        gameEventEmitter.on('monologue', (_text) => {
+            this.playCharacterAnimation(this.speakAnimationName, 3000); // hardcoded default
         });
         this.uiEventEmitter.on('play_character_animation', ({ animationName, duration }) => {
             this.playCharacterAnimation(animationName, duration);
