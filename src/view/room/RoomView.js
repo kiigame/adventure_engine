@@ -1,6 +1,6 @@
 import Konva from "konva";
 import EventEmitter from "../../events/EventEmitter.js";
-import HitRegionInitializer from "../stage/HitRegionInitializer.js";
+import HitRegionInitializer from "./HitRegionInitializer.js";
 
 class RoomView {
     /**

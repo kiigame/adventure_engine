@@ -6,8 +6,8 @@ import DefaultInteractionResolver from './controller/interactions/DefaultInterac
 import Interactions from './controller/interactions/Interactions.js';
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
 import CommandHandler from './controller/interactions/CommandHandler.js';
-import HitRegionInitializer from './view/stage/HitRegionInitializer.js';
-import HitRegionFilter from './view/stage/hitregion/HitRegionFilter.js';
+import HitRegionInitializer from './view/room/HitRegionInitializer.js';
+import HitRegionFilter from './view/room/hitregion/HitRegionFilter.js';
 import Intersection from './view/draggeditem/intersection/Intersection.js';
 import VisibilityValidator from './view/draggeditem/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
