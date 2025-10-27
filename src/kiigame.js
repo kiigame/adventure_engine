@@ -13,7 +13,7 @@ import VisibilityValidator from './view/draggeditem/intersection/VisibilityValid
 import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
 import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
-import Text from './controller/Text.js';
+import Text from './model/Text.js';
 import EventEmitter from './events/EventEmitter.js';
 import ItemsBuilder from './viewbuilder/item/konva/ItemsBuilder.js';
 import ItemBuilder from './viewbuilder/item/konva/ItemBuilder.js';
@@ -56,6 +56,7 @@ import DragEndHandler from './controller/DragEngHandler.js';
 import DraggedItemViewModel from './view/draggeditem/DraggedItemViewModel.js';
 import DragTargetFinder from './view/draggeditem/DragTargetFinder.js';
 import SequenceView from './view/sequence/SequenceView.js';
+import DraggedItemView from './view/draggeditem/DraggedItemView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -121,6 +122,8 @@ export class KiiGame {
         new CharacterInRoom(gameEventEmitter);
         // Inventory model
         this.inventory = new Inventory(gameEventEmitter, this.uiEventEmitter);
+        // Text model(?)
+        this.text = new Text(gameData.text_json);
         // Model end
 
         // View builder start
@@ -332,6 +335,12 @@ export class KiiGame {
         new InventoryArrowsViewModel(
             this.uiEventEmitter
         );
+        // Dragged item view
+        new DraggedItemView(
+            uiEventEmitter,
+            this.stageObjectGetter.getObject("interaction_text"),
+            this.text
+        );
         // Dragged item view model
         new DraggedItemViewModel(
             this.uiEventEmitter,
@@ -367,7 +376,6 @@ export class KiiGame {
         this.character_speech_bubble = this.stageObjectGetter.getObject("character_speech_bubble");
         this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
         this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
-        this.interaction_text = this.stageObjectGetter.getObject("interaction_text");
         this.text_layer = this.stageObjectGetter.getObject("text_layer");
         gameEventEmitter.on('monologue', (text) => {
             this.clearMonologues();
@@ -383,20 +391,12 @@ export class KiiGame {
         this.uiEventEmitter.on('inventory_item_drag_start', (_target) => {
             this.clearMonologues();
         });
-        this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, draggedItem }) => {
-            this.showTextOnDragMove(target, draggedItem);
+        // TODO: refactor interaction texts from text_layer to something that DraggedItemView manages
+        this.uiEventEmitter.on('interaction_text_cleared', () => {
+            this.text_layer.draw();
         });
-        this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
-            this.clearInteractionText();
-        });
-        this.uiEventEmitter.on('inventory_left_arrow_draghovered', () => {
-            this.clearInteractionText();
-        });
-        this.uiEventEmitter.on('inventory_right_arrow_draghovered', () => {
-            this.clearInteractionText();
-        });
-        this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
-            this.clearInteractionText();
+        this.uiEventEmitter.on('text_on_drag_move_updated', () => {
+            this.text_layer.draw();
         });
         // Text view end
 
@@ -406,7 +406,6 @@ export class KiiGame {
         // View end
 
         // Controller start
-        this.text = new Text(gameData.text_json);
         this.interactions = new Interactions(gameData.interactions_json);
         const commandHandler = new CommandHandler(
             gameEventEmitter,
@@ -441,29 +440,6 @@ export class KiiGame {
                 'start'
             )
         );
-    }
-
-    /**
-     * TODO: move to text view component (or something)
-     */
-    clearInteractionText() {
-        this.clearText(this.interaction_text);
-    }
-
-    /**
-     * TODO: clean up and move to a view component (but which?)
-     * @param {Konva.Shape} target
-     * @param {Konva.Shape} draggedItem
-     */
-    showTextOnDragMove(target, draggedItem) {
-        this.interaction_text.text(this.text.getName(target.id()));
-        this.interaction_text.x(draggedItem.x() + (draggedItem.width() / 2));
-        this.interaction_text.y(draggedItem.y() - 30);
-        this.interaction_text.offset({
-            x: this.interaction_text.width() / 2
-        });
-
-        this.text_layer.draw();
     }
 
     /**
