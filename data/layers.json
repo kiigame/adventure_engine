@@ -330,8 +330,17 @@
             }
           ],
           "className": "Label"
-        },
-        {
+        }
+      ],
+      "className": "Layer"
+    },
+    {
+      "attrs": {
+        "id": "character_layer",
+        "visible": false
+      },
+      "children": [
+                {
           "attrs": {
             "id": "character_speech_bubble",
             "visible": false,
@@ -367,14 +376,6 @@
           "className": "Label"
         }
       ],
-      "className": "Layer"
-    },
-    {
-      "attrs": {
-        "id": "character_layer",
-        "visible": false
-      },
-      "children": [],
       "className": "Layer"
     },
     {
