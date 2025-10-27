@@ -7,19 +7,24 @@ class CharacterView {
      */
     constructor(characterLayer, uiEventEmitter) {
         this.characterLayer = characterLayer;
-        this.uiEventEmitter = uiEventEmitter;
-        this.uiEventEmitter.on('character_animation_started', () => {
+        uiEventEmitter.on('character_animation_started', () => {
             this.drawCharacterLayer();
         });
-        this.uiEventEmitter.on('first_sequence_slide_shown', () => {
+        uiEventEmitter.on('first_sequence_slide_shown', () => {
             this.hideCharacter();
         });
-        this.uiEventEmitter.on('current_room_changed', (room) => {
+        uiEventEmitter.on('current_room_changed', (room) => {
             // Slightly kludgy way of checking if we want to show character
             if (room.attrs.fullScreen) {
                 return;
             }
             this.showCharacter();
+        });
+        uiEventEmitter.on('character_monologue_cleared', () => {
+            this.drawCharacterLayer();
+        });
+        uiEventEmitter.on('character_monologue_set', () => {
+            this.drawCharacterLayer();
         });
     }
 

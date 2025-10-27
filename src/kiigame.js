@@ -57,6 +57,7 @@ import DraggedItemViewModel from './view/draggeditem/DraggedItemViewModel.js';
 import DragTargetFinder from './view/draggeditem/DragTargetFinder.js';
 import SequenceView from './view/sequence/SequenceView.js';
 import DraggedItemView from './view/draggeditem/DraggedItemView.js';
+import CharacterSpeechView from './view/character/CharacterSpeechView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -367,30 +368,30 @@ export class KiiGame {
             characterLayer,
             uiEventEmitter
         );
+        new CharacterSpeechView(
+            uiEventEmitter,
+            gameEventEmitter,
+            this.stageObjectGetter.getObject("monologue"),
+            this.stageObjectGetter.getObject("character_speech_bubble"),
+            this.stage.height()
+        );
         // Character view end
 
-        // Text view start (not sure what to do with these yet)
-        this.monologue = this.stageObjectGetter.getObject("monologue");
-        this.character_speech_bubble = this.stageObjectGetter.getObject("character_speech_bubble");
+        // Text view start (to refactor)
         this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
         this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
         this.text_layer = this.stageObjectGetter.getObject("text_layer");
-        gameEventEmitter.on('monologue', (text) => {
-            this.clearMonologue();
+        gameEventEmitter.on('monologue', (_text) => {
             this.clearNpcMonologue();
-            this.setMonologue(text);
         });
         gameEventEmitter.on('npc_monologue', ({ npc, text }) => {
-            this.clearMonologue();
             this.clearNpcMonologue();
             this.npcMonologue(npc, text);
         });
         uiEventEmitter.on('clicked_on_stage', () => {
-            this.clearMonologue();
             this.clearNpcMonologue();
         });
         uiEventEmitter.on('inventory_item_drag_start', (_target) => {
-            this.clearMonologue();
             this.clearNpcMonologue();
         });
         // TODO: refactor interaction texts from text_layer to something that DraggedItemView manages
@@ -454,6 +455,7 @@ export class KiiGame {
     }
 
     /**
+     * TODO: move to room view
      * Set NPC monologue text and position the NPC speech bubble to the
      * desired NPC.
      * @param {Konva.Shape} npc  The object in the stage that will
@@ -482,32 +484,6 @@ export class KiiGame {
 
         this.npc_speech_bubble.y(npc.y() + (npc.height() / 3));
 
-        this.text_layer.draw();
-    }
-
-    /**
-     * Set character speech text
-     * @param {string} text The text to be shown in the monologue bubble.
-     */
-    setMonologue(text) {
-        this.monologue.setWidth('auto');
-        this.character_speech_bubble.show();
-        this.monologue.text(text);
-        if (this.monologue.width() > 524) {
-            this.monologue.width(524);
-            this.monologue.text(text);
-        }
-
-        this.character_speech_bubble.y(this.stage.height() - 100 - 15 - this.monologue.height() / 2);
-        this.text_layer.draw();
-    }
-
-    /**
-     * TODO: move to character view
-     */
-    clearMonologue() {
-        this.monologue.text("");
-        this.character_speech_bubble.hide();
         this.text_layer.draw();
     }
 
