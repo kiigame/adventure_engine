@@ -24,7 +24,7 @@ class DraggedItemView {
         this.uiEventEmitter.on('inventory_right_arrow_draghovered', () => {
             this.clearInteractionText();
         });
-        this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_end_wrapped_up', (_draggedItem) => {
             this.clearInteractionText();
         });
     }

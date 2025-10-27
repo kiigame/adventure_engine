@@ -28,7 +28,7 @@ class InventoryViewModel {
         this.uiEventEmitter.on('inventory_right_arrow_engaged', () => {
             this.handleInventoryRightArrowEngaged();
         });
-        this.uiEventEmitter.on('inventory_item_drag_end_handled', (draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_end_wrapped_up', ({ draggedItem }) => {
             this.handleDragEnd(draggedItem);
         });
     }

@@ -145,22 +145,6 @@ describe('inventory item view tests', () => {
             expect(inventoryItemStub.shadowBlur).to.not.have.been.called;
         });
     });
-    describe('fire inventory item drag end event on Konva dragend', () => {
-        it('should fire inventory_item_drag_end event on dragend of an inventory item', () => {
-            new InventoryItemsView(
-                uiEventEmitterStub,
-                gameEventEmitterStub,
-                inventoryItemsGroupStub,
-                100
-            );
-            const dragendHandler = inventoryItemStub.on.getCalls().find((call) => {
-                return call.args[0] === 'dragend';
-            }).args[1];
-            const eventStub = { target: inventoryItemStub };
-            dragendHandler(eventStub);
-            expect(uiEventEmitterStub.emit).to.have.been.calledWith('inventory_item_drag_end', { draggedItem: inventoryItemStub });
-        });
-    });
     describe('move dragged item back to inventory', () => {
         it('should move the dragged item back to inventory after dragging', () => {
             new InventoryItemsView(
@@ -170,11 +154,11 @@ describe('inventory item view tests', () => {
                 100
             );
             const moveDraggedItemBackToInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end_handled';
+                return callback.args[0] === 'inventory_item_drag_end_wrapped_up';
             }).args[1];
-            const targetStub = createStubInstance(Shape);
-            moveDraggedItemBackToInventoryCallback(targetStub);
-            expect(targetStub.moveTo).to.have.been.calledWith(inventoryItemsGroupStub);
+            const draggedItemStub = createStubInstance(Shape);
+            moveDraggedItemBackToInventoryCallback({ draggedItem: draggedItemStub });
+            expect(draggedItemStub.moveTo).to.have.been.calledWith(inventoryItemsGroupStub);
         });
         it('should not try to move a non-existing dragged item back to inventory after dragging (null safety)', () => {
             new InventoryItemsView(
@@ -184,29 +168,13 @@ describe('inventory item view tests', () => {
                 100
             );
             const moveDraggedItemBackToInventoryCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end_handled';
+                return callback.args[0] === 'inventory_item_drag_end_wrapped_up';
             }).args[1];
             try {
-                moveDraggedItemBackToInventoryCallback(null);
+                moveDraggedItemBackToInventoryCallback({ draggedItem: undefined });
             } catch (e) {
                 assert.fail('should not throw error');
             }
-        });
-    });
-    describe('fire inventory_item_drag_end on Konva dragend', () => {
-        it('should fire inventory_item_drag_end event on dragend of an inventory item', () => {
-            new InventoryItemsView(
-                uiEventEmitterStub,
-                gameEventEmitterStub,
-                inventoryItemsGroupStub,
-                100
-            );
-            const dragendHandler = inventoryItemStub.on.getCalls().find((call) => {
-                return call.args[0] === 'dragend';
-            }).args[1];
-            const eventStub = { target: inventoryItemStub };
-            dragendHandler(eventStub);
-            expect(uiEventEmitterStub.emit).to.have.been.calledWith('inventory_item_drag_end', { draggedItem: inventoryItemStub });
         });
     });
 });

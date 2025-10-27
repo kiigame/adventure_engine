@@ -12,29 +12,38 @@ class DraggedItemViewModel {
 
         // For limiting the amount of intersection checks
         this.intersectionDelayEnabled = false;
+        // Currently dragged item
+        this.draggedItem = undefined;
         // Intersection target (object below dragged item)
         this.target = undefined;
 
-        this.uiEventEmitter.on('inventory_item_drag_move', ({ draggedItem }) => {
-            this.handleInventoryItemDragMove(draggedItem);
+        this.uiEventEmitter.on('inventory_item_drag_start', ({ draggedItem }) => {
+            this.handleInventoryItemDragStart(draggedItem);
         });
-        this.uiEventEmitter.on('inventory_item_drag_end', ({ draggedItem }) => {
-            this.handleInventoryItemDragEnd(draggedItem);
-        });
-        this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
-            this.target = undefined;
+        this.uiEventEmitter.on('inventory_item_drag_end_interactions_handled', () => {
+            this.wrapUpDragEnd();
         });
     }
 
     /**
      * @param {Konva.Shape} draggedItem
      */
-    handleInventoryItemDragMove(draggedItem) {
+    handleInventoryItemDragStart(draggedItem) {
+        this.draggedItem = draggedItem;
+        this.draggedItem.on('dragmove', (_event) => {
+            this.handleInventoryItemDragMove();
+        });
+        this.draggedItem.on('dragend', (_event) => {
+            this.handleInventoryItemDragEnd();
+        });
+    }
+
+    handleInventoryItemDragMove() {
         if (!this.intersectionDelayEnabled) {
             // Setting a small delay to not spam intersection check on every moved pixel
             this.setIntersectionDelay(10);
 
-            this.target = this.dragTargetFinder.findDragTarget(draggedItem, this.target);
+            this.target = this.dragTargetFinder.findDragTarget(this.draggedItem, this.target);
 
             if (this.target === undefined) {
                 this.uiEventEmitter.emit('dragmove_hover_on_nothing');
@@ -42,7 +51,7 @@ class DraggedItemViewModel {
             }
 
             if (this.target.attrs.category !== 'invArrow') {
-                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem });
+                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem: this.draggedItem });
                 return;
             }
 
@@ -57,30 +66,27 @@ class DraggedItemViewModel {
         }
     }
 
-    /**
-     * @param {Konva.Shape} draggedItem
-     */
-    handleInventoryItemDragEnd(draggedItem) {
+    handleInventoryItemDragEnd() {
         // Ending the drag on an inventory arrow does nothing
         if (this.target !== undefined && this.target.attrs.category === 'invArrow') {
-            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+            this.wrapUpDragEnd();
             return;
         }
         // If we are already hovering a target, use it
         if (this.target !== undefined) {
-            this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target: this.target, draggedItem });
+            this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target: this.target, draggedItem: this.draggedItem });
             return;
         }
 
         // In case we didn't yet get the target set during hover (for example during intersection delay), check now
-        const target = this.dragTargetFinder.findDragTarget(draggedItem);
+        const target = this.dragTargetFinder.findDragTarget(this.draggedItem);
 
         if (target === undefined || target.attrs.category === 'invArrow') {
-            this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+            this.wrapUpDragEnd();
             return;
         }
 
-        this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem });
+        this.uiEventEmitter.emit('inventory_item_drag_end_on_target', { target, draggedItem: this.draggedItem });
     }
 
     /**
@@ -90,6 +96,18 @@ class DraggedItemViewModel {
     setIntersectionDelay(delay) {
         this.intersectionDelayEnabled = true;
         setTimeout(() => this.intersectionDelayEnabled = false, delay);
+    }
+
+    /**
+     * Unsubscribe listeners, clean up view model.
+     */
+    wrapUpDragEnd() {
+        const draggedItem = this.draggedItem;
+        draggedItem.off('dragmove');
+        draggedItem.off('dragend');
+        this.draggedItem = undefined;
+        this.target = undefined;
+        this.uiEventEmitter.emit('inventory_item_drag_end_wrapped_up', { draggedItem });
     }
 }
 

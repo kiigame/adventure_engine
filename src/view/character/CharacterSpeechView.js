@@ -24,7 +24,7 @@ class CharacterSpeechView {
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.clearMonologue();
         });
-        this.uiEventEmitter.on('inventory_item_drag_start', (_target) => {
+        this.uiEventEmitter.on('inventory_item_drag_start', ({ draggedItem: _draggedItem }) => {
             this.clearMonologue();
         });
     }

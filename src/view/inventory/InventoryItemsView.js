@@ -22,16 +22,10 @@ class InventoryItemsView {
                 this.uiEventEmitter.emit('inventory_click', event.target);
             });
             child.on('dragstart', (event) => {
-                this.uiEventEmitter.emit('inventory_item_drag_start', event.target);
-            });
-            child.on('dragmove', (event) => {
-                this.uiEventEmitter.emit('inventory_item_drag_move', { draggedItem: event.target });
-            });
-            child.on('dragend', (event) => {
-                this.uiEventEmitter.emit('inventory_item_drag_end', { draggedItem: event.target });
+                this.uiEventEmitter.emit('inventory_item_drag_start', { draggedItem: event.target });
             });
         });
-        this.uiEventEmitter.on('inventory_item_drag_end_handled', (draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_end_wrapped_up', ({ draggedItem }) => {
             this.moveDraggedItemBackToInventory(draggedItem);
         });
     }

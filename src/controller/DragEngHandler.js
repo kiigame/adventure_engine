@@ -41,7 +41,7 @@ class DragEndHandler {
             ));
         }
 
-        this.uiEventEmitter.emit('inventory_item_drag_end_handled', draggedItem);
+        this.uiEventEmitter.emit('inventory_item_drag_end_interactions_handled');
     }
 }
 

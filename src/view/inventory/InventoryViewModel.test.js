@@ -70,11 +70,11 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'FOUR', 'five', 'six', 'seven', 'eight'];
             inventoryViewModel.inventoryIndex = 1;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end_handled';
+                return callback.args[0] === 'inventory_item_drag_end_wrapped_up';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'FOUR' };
-            dragendEndedHandler(draggedItemMock);
+            dragendEndedHandler({ draggedItem: draggedItemMock });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {
@@ -89,11 +89,11 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'EIGHT'];
             inventoryViewModel.inventoryIndex = 0;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end_handled';
+                return callback.args[0] === 'inventory_item_drag_end_wrapped_up';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'EIGHT' };
-            dragendEndedHandler(draggedItemMock);
+            dragendEndedHandler({ draggedItem: draggedItemMock });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {
@@ -108,11 +108,11 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
             inventoryViewModel.inventoryIndex = 0;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end_handled';
+                return callback.args[0] === 'inventory_item_drag_end_wrapped_up';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'EIGHT' };
-            dragendEndedHandler(draggedItemMock);
+            dragendEndedHandler({ draggedItem: draggedItemMock });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {
@@ -127,11 +127,11 @@ describe('inventory view model tests', () => {
             inventoryViewModel.inventoryList = ['one', 'two'];
             inventoryViewModel.inventoryIndex = 0;
             const dragendEndedHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end_handled';
+                return callback.args[0] === 'inventory_item_drag_end_wrapped_up';
             }).args[1];
             const draggedItemMock = createStubInstance(Shape);
             draggedItemMock.attrs = { id: 'THREE' };
-            dragendEndedHandler(draggedItemMock);
+            dragendEndedHandler({ draggedItem: draggedItemMock });
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_view_model_updated',
                 {

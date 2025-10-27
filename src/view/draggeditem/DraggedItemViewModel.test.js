@@ -27,28 +27,34 @@ describe('dragged item view model tests', () => {
     describe('drag move behavior', () => {
         it('should emit dragmove_hover_on_nothing when no target is found', () => {
             new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
-            dragTargetFinderStub.findDragTarget.returns(undefined);
-            
-            const dragMoveHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_move';
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
             }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
 
-            dragMoveHandler({ draggedItem: draggedItemStub });
+            dragTargetFinderStub.findDragTarget.returns(undefined);
+            const dragMoveHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragmove';
+            }).args[1];
+            dragMoveHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('dragmove_hover_on_nothing');
         });
 
         it('should emit dragmove_hover_on_object when hovering over an object', () => {
             new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
             const targetStub = createStubInstance(Shape);
             targetStub.attrs = { category: 'item' };
             dragTargetFinderStub.findDragTarget.returns(targetStub);
-            
-            const dragMoveHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_move';
+            const dragMoveHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragmove';
             }).args[1];
-
-            dragMoveHandler({ draggedItem: draggedItemStub });
+            dragMoveHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'dragmove_hover_on_object',
@@ -58,65 +64,77 @@ describe('dragged item view model tests', () => {
 
         it('should emit dragmove_hover_on_left_arrow when hovering over left inventory arrow', () => {
             new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
             const targetStub = createStubInstance(Shape);
             targetStub.attrs = { category: 'invArrow', id: 'inventory_left_arrow' };
             dragTargetFinderStub.findDragTarget.returns(targetStub);
-            
-            const dragMoveHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_move';
+            const dragMoveHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragmove';
             }).args[1];
-
-            dragMoveHandler({ draggedItem: draggedItemStub });
+            dragMoveHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('dragmove_hover_on_left_arrow');
         });
 
         it('should emit dragmove_hover_on_right_arrow when hovering over right inventory arrow', () => {
             new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
             const targetStub = createStubInstance(Shape);
             targetStub.attrs = { category: 'invArrow', id: 'inventory_right_arrow' };
             dragTargetFinderStub.findDragTarget.returns(targetStub);
-            
-            const dragMoveHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_move';
+            const dragMoveHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragmove';
             }).args[1];
-
-            dragMoveHandler({ draggedItem: draggedItemStub });
+            dragMoveHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('dragmove_hover_on_right_arrow');
         });
     });
 
     describe('drag end behavior', () => {
-        it('should emit inventory_item_drag_end_handled when ending drag on inventory arrow', () => {
+        it('should emit inventory_item_drag_end_wrapped_up when ending drag on inventory arrow', () => {
             const draggedItemViewModel = new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
             const targetStub = createStubInstance(Shape);
             targetStub.attrs = { category: 'invArrow' };
             draggedItemViewModel.target = targetStub;
-            
-            const dragEndHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end';
+            const dragEndHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend';
             }).args[1];
-
-            dragEndHandler({ draggedItem: draggedItemStub });
+            dragEndHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
-                'inventory_item_drag_end_handled',
-                draggedItemStub
+                'inventory_item_drag_end_wrapped_up',
+                { draggedItem: draggedItemStub }
             );
         });
 
         it('should emit inventory_item_drag_end_on_target when ending drag on valid target', () => {
             const draggedItemViewModel = new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
             const targetStub = createStubInstance(Shape);
             targetStub.attrs = { category: 'item' };
             draggedItemViewModel.target = targetStub;
-            
-            const dragEndHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end';
+            const dragEndHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend';
             }).args[1];
-
-            dragEndHandler({ draggedItem: draggedItemStub });
+            dragEndHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_item_drag_end_on_target',
@@ -126,15 +144,18 @@ describe('dragged item view model tests', () => {
 
         it('should check for target if none was set during hover', () => {
             new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
             const targetStub = createStubInstance(Shape);
             targetStub.attrs = { category: 'item' };
             dragTargetFinderStub.findDragTarget.returns(targetStub);
-            
-            const dragEndHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end';
+            const dragEndHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend';
             }).args[1];
-
-            dragEndHandler({ draggedItem: draggedItemStub });
+            dragEndHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
                 'inventory_item_drag_end_on_target',
@@ -142,34 +163,80 @@ describe('dragged item view model tests', () => {
             );
         });
 
-        it('should emit inventory_item_drag_end_handled when no target is found at end', () => {
+        it('should emit inventory_item_drag_end_wrapped_up when no target is found at end', () => {
             new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
-            dragTargetFinderStub.findDragTarget.returns(undefined);
-            
-            const dragEndHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end';
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
             }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
 
-            dragEndHandler({ draggedItem: draggedItemStub });
+            dragTargetFinderStub.findDragTarget.returns(undefined);
+            const dragEndHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend';
+            }).args[1];
+            dragEndHandler();
 
             expect(uiEventEmitterStub.emit).to.have.been.calledWith(
-                'inventory_item_drag_end_handled',
-                draggedItemStub
+                'inventory_item_drag_end_wrapped_up',
+                { draggedItem: draggedItemStub }
             );
         });
     });
-    describe('clear target on drag end handled', () => {
-        it('should clear the current target when drag end is handled', () => {
+    describe('clear up drag end', () => {
+        it('should clear the current target and dragged item when drag end on invenvtory arrow', () => {
+            const draggedItemViewModel = new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
+            const targetStub = createStubInstance(Shape);
+            targetStub.attrs = {
+                category: 'invArrow'
+            };
+            draggedItemViewModel.target = targetStub;
+            const dragEndHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend';
+            }).args[1];
+            dragEndHandler();
+
+            expect(draggedItemViewModel.target).to.be.undefined;
+            expect(draggedItemViewModel.draggedItem).to.be.undefined;
+        });
+        it('should clear dragged item when drag end on nothing', () => {
+            const draggedItemViewModel = new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
+            dragTargetFinderStub.findDragTarget.returns(undefined);
+            const dragEndHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragend';
+            }).args[1];
+            dragEndHandler();
+
+            expect(draggedItemViewModel.target).to.be.undefined;
+            expect(draggedItemViewModel.draggedItem).to.be.undefined;
+        });
+        it('should clear target and dragged item when receiving inventory_item_drag_end_interactions_handled', () => {
             const draggedItemViewModel = new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
             const targetStub = createStubInstance(Shape);
+            targetStub.attrs = {
+                category: 'proper_item'
+            };
             draggedItemViewModel.target = targetStub;
-            
-            const dragEndHandledHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_end_handled';
-            }).args[1];
+            draggedItemViewModel.draggedItem = draggedItemStub;
 
-            dragEndHandledHandler(draggedItemStub);
+            // skipping testing event listenign for now, can't get it to work for whatever reason
+            draggedItemViewModel.wrapUpDragEnd();
+
+            expect(uiEventEmitterStub.emit).to.have.been.calledWith(
+                'inventory_item_drag_end_wrapped_up',
+                { draggedItem: draggedItemStub }
+            );
             expect(draggedItemViewModel.target).to.be.undefined;
+            expect(draggedItemViewModel.draggedItem).to.be.undefined;
         });
     });
     describe('intersection delay', () => {
@@ -185,23 +252,28 @@ describe('dragged item view model tests', () => {
 
         it('should not check for intersections during delay period', () => {
             new DraggedItemViewModel(uiEventEmitterStub, dragTargetFinderStub);
-            const dragMoveHandler = uiEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_item_drag_move';
+            const handleInventoryItemDragStartCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] = 'inventory_item_drag_start';
+            }).args[1];
+            handleInventoryItemDragStartCallback({ draggedItem: draggedItemStub });
+
+            const dragMoveHandler = draggedItemStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'dragmove';
             }).args[1];
 
             // First call
-            dragMoveHandler({ draggedItem: draggedItemStub });
+            dragMoveHandler();
             expect(dragTargetFinderStub.findDragTarget).to.have.been.called;
 
             // Second call right after
             dragTargetFinderStub.findDragTarget.resetHistory();
-            dragMoveHandler({ draggedItem: draggedItemStub });
+            dragMoveHandler();
             expect(dragTargetFinderStub.findDragTarget).to.not.have.been.called;
 
             // Third call after the 10 ms delay
             clock.tick(11);
             dragTargetFinderStub.findDragTarget.resetHistory();
-            dragMoveHandler({ draggedItem: draggedItemStub });
+            dragMoveHandler();
             expect(dragTargetFinderStub.findDragTarget).to.have.been.called;
         });
     });

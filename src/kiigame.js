@@ -355,7 +355,7 @@ export class KiiGame {
         uiEventEmitter.on('clicked_on_stage', () => {
             this.clearNpcMonologue();
         });
-        uiEventEmitter.on('inventory_item_drag_start', (_target) => {
+        uiEventEmitter.on('inventory_item_drag_start', ({ draggedItem: _draggedItem }) => {
             this.clearNpcMonologue();
         });
         // TODO: refactor interaction texts from text_layer to something that DraggedItemView manages

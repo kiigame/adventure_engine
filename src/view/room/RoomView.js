@@ -25,7 +25,7 @@ class RoomView {
             this.hitRegionInitializer.initHitRegions(this.roomLayer);
             this.uiEventEmitter.emit('room_hit_regions_initialized');
         };
-        this.uiEventEmitter.on('inventory_item_drag_start', (draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_start', ({ draggedItem }) => {
             this.moveItemToRoomLayer(draggedItem);
         });
         this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, dragged_item: _dragged_item }) => {
@@ -37,7 +37,7 @@ class RoomView {
             this.clearRoomObjectBlur();
             this.drawRoomLayer();
         });
-        this.uiEventEmitter.on('inventory_item_drag_end_handled', (_draggedItem) => {
+        this.uiEventEmitter.on('inventory_item_drag_end_wrapped_up', (_draggedItem) => {
             this.clearRoomObjectBlur();
         });
         this.uiEventEmitter.on('room_fade_in_done', () => {
