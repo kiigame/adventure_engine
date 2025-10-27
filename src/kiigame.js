@@ -55,6 +55,7 @@ import ClickHandler from './controller/ClickHandler.js';
 import DragEndHandler from './controller/DragEngHandler.js';
 import DraggedItemViewModel from './view/draggeditem/DraggedItemViewModel.js';
 import DragTargetFinder from './view/draggeditem/DragTargetFinder.js';
+import SequenceView from './view/sequence/SequenceView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -266,17 +267,13 @@ export class KiiGame {
         // Stage view end
 
         // Sequences view start
-        this.sequences_json = gameData.sequences_json;
-        this.sequenceLayer = this.stageObjectGetter.getObject('sequence_layer');
-        this.uiEventEmitter.on('arrived_in_room', (_roomId) => {
-            this.sequenceLayer.hide();
-        });
-        gameEventEmitter.on('play_sequence', (sequence_id) => {
-            this.play_sequence(sequence_id);
-        });
-        this.uiEventEmitter.on('first_sequence_slide_shown', () => {
-            this.sequenceLayer.show();
-        });
+        new SequenceView(
+            uiEventEmitter,
+            gameEventEmitter,
+            this.stageObjectGetter,
+            gameData.sequences_json,
+            this.stageObjectGetter.getObject('sequence_layer')
+        );
         // Sequences end
 
         // Rooms view start
@@ -476,69 +473,6 @@ export class KiiGame {
         this.fade_full.reset();
         this.fader_full.show();
         this.fade_full.play();
-    }
-
-    /** 
-     * Playes a sequence definied in sequences.json by id. Currently doesn't take the
-     * responsibiilty of hiding the sequence layer after playing.
-     * @param {string} id The Sequence id in sequences.json
-     */
-    play_sequence(id) {
-        let delay = 700;
-
-        this.uiEventEmitter.emit('play_sequence_started', id);
-
-        const currentSequence = this.stageObjectGetter.getObject(id);
-        const sequenceData = this.sequences_json[id];
-        const final_fade_duration = sequenceData.transition_length != null ? sequenceData.transition_length : 0;
-        let currentSlide = null;
-
-        setTimeout(() => {
-            this.uiEventEmitter.emit('first_sequence_slide_shown');
-            currentSequence.show();
-        }, delay);
-
-        for (let i in sequenceData.slides) {
-            let previousSlide = currentSlide;
-            currentSlide = this.stageObjectGetter.getObject(sequenceData.slides[i].id);
-
-            const displaySlide = (i, currentSlide, previousSlide) => {
-                setTimeout(() => {
-                    if (previousSlide) {
-                        previousSlide.hide();
-                        this.uiEventEmitter.emit('sequence_hid_previous_slide');
-                    }
-
-                    // Show current slide (note stage.draw only below)
-                    currentSlide.show();
-
-                    // Fade in?
-                    const slideFade = sequenceData.slides[i].do_fade;
-                    if (slideFade === true) {
-                        this.uiEventEmitter.emit('sequence_show_next_slide_fade');
-                    } else {
-                        this.uiEventEmitter.emit('sequence_show_next_slide_immediate');
-                    }
-                }, delay);
-            }
-            displaySlide(i, currentSlide, previousSlide);
-
-            delay = delay + sequenceData.slides[i].show_time;
-        };
-
-        // After last slide, do the final fade
-        if (final_fade_duration > 0) {
-            setTimeout(() => {
-                this.uiEventEmitter.emit('sequence_last_slide_fade_out', final_fade_duration);
-            }, delay);
-
-            // Doesn't include the fade-in!
-            delay = delay + final_fade_duration;
-        } else {
-            setTimeout(() => {
-                this.uiEventEmitter.emit('sequence_last_slide_immediate');
-            }, delay);
-        }
     }
 
     // Clearing the given text
