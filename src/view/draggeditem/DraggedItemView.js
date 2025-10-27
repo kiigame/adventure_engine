@@ -5,15 +5,13 @@ class DraggedItemView {
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {Konva.Text} interactionText
-     * @param {Text} text
      */
     constructor(uiEventEmitter, interactionText, text) {
         this.uiEventEmitter = uiEventEmitter;
         this.interactionText = interactionText;
-        this.text = text;
 
-        this.uiEventEmitter.on('dragmove_hover_on_object', ({ target, draggedItem }) => {
-            this.showTextOnDragMove(target, draggedItem);
+        this.uiEventEmitter.on('dragmove_hover_on_object', ({ target: _target, draggedItem, targetName }) => {
+            this.showTextOnDragMove(targetName, draggedItem);
         });
         this.uiEventEmitter.on('dragmove_hover_on_nothing', () => {
             this.clearInteractionText();
@@ -36,11 +34,11 @@ class DraggedItemView {
     }
 
     /**
-     * @param {Konva.Shape} target
+     * @param {string} targetName
      * @param {Konva.Shape} draggedItem
      */
-    showTextOnDragMove(target, draggedItem) {
-        this.interactionText.text(this.text.getName(target.id()));
+    showTextOnDragMove(targetName, draggedItem) {
+        this.interactionText.text(targetName);
         this.interactionText.x(draggedItem.x() + (draggedItem.width() / 2));
         this.interactionText.y(draggedItem.y() - 30);
         this.interactionText.offset({

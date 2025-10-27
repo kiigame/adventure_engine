@@ -301,8 +301,7 @@ export class KiiGame {
         // Dragged item view
         new DraggedItemView(
             uiEventEmitter,
-            this.stageObjectGetter.getObject("interaction_text"),
-            this.text
+            this.stageObjectGetter.getObject("interaction_text")
         );
         // Dragged item view model
         new DraggedItemViewModel(
@@ -312,7 +311,8 @@ export class KiiGame {
                 roomView,
                 inventoryItemsView,
                 inventoryArrowsView
-            )
+            ),
+            this.text
         );
         // Inventory & items view end
 

@@ -1,14 +1,17 @@
 import EventEmitter from "../../events/EventEmitter.js";
 import DragTargetFinder from "./DragTargetFinder.js";
+import Text from "../../model/Text.js";
 
 class DraggedItemViewModel {
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {DragTargetFinder} dragTargetFinder
+     * @param {Text} text
      */
-    constructor(uiEventEmitter, dragTargetFinder) {
+    constructor(uiEventEmitter, dragTargetFinder, text) {
         this.uiEventEmitter = uiEventEmitter;
         this.dragTargetFinder = dragTargetFinder;
+        this.text = text;
 
         // For limiting the amount of intersection checks
         this.intersectionDelayEnabled = false;
@@ -44,6 +47,11 @@ class DraggedItemViewModel {
             this.setIntersectionDelay(10);
 
             this.target = this.dragTargetFinder.findDragTarget(this.draggedItem, this.target);
+            if (this.target && this.target.category !== 'invArrow') {
+                this.targetName = this.text.getName(this.target.id());
+            } else {
+                this.targetName = undefined;
+            }
 
             if (this.target === undefined) {
                 this.uiEventEmitter.emit('dragmove_hover_on_nothing');
@@ -51,7 +59,11 @@ class DraggedItemViewModel {
             }
 
             if (this.target.attrs.category !== 'invArrow') {
-                this.uiEventEmitter.emit('dragmove_hover_on_object', { target: this.target, draggedItem: this.draggedItem });
+                this.uiEventEmitter.emit('dragmove_hover_on_object', {
+                    target: this.target,
+                    draggedItem: this.draggedItem,
+                    targetName: this.targetName
+                });
                 return;
             }
 

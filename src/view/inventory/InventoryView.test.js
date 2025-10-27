@@ -149,7 +149,7 @@ describe('inventory view tests', () => {
             }).args[1];
             const targetStub = createStubInstance(Shape);
             const draggedStub = createStubInstance(Shape);
-            handleDragMoveHoverOnObjectCallback({ target: targetStub, dragged_item: draggedStub });
+            handleDragMoveHoverOnObjectCallback({ target: targetStub, draggedItem: draggedStub, targetName: 'bla' });
             expect(inventoryItemsViewStub.clearInventoryItemBlur).to.have.been.called;
             expect(inventoryItemsViewStub.glowInventoryItem).to.have.been.calledWith(targetStub);
             expect(inventoryItemsViewStub.draw).to.have.been.called;
