@@ -58,6 +58,8 @@ import DragTargetFinder from './view/draggeditem/DragTargetFinder.js';
 import SequenceView from './view/sequence/SequenceView.js';
 import DraggedItemView from './view/draggeditem/DraggedItemView.js';
 import CharacterSpeechView from './view/character/CharacterSpeechView.js';
+import StageView from './view/StageView.js';
+import FullFadeView from './view/FullFadeView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -210,63 +212,25 @@ export class KiiGame {
 
         // View start
         // Stage view start
-        this.fader_full = this.stageObjectGetter.getObject("fader_full");
+        new StageView(
+            uiEventEmitter,
+            this.stage
+        );
+        // Stage view end
+
         // Animation for fading the whole screen
-        this.fade_full = new Konva.Tween({
-            node: this.fader_full,
+        const fader_full = this.stageObjectGetter.getObject("fader_full");
+        const fade_full = new Konva.Tween({
+            node: fader_full,
             duration: 0.6,
             opacity: 1
         });
-        this.stage.on('touchstart mousedown', () => {
-            uiEventEmitter.emit('clicked_on_stage');
-        });
-        uiEventEmitter.on('play_full_fade_out', () => {
-            this.playFullFadeOut();
-        });
-        uiEventEmitter.on('play_sequence_started', (_id) => {
-            this.playFullFadeOut();
-        });
-        uiEventEmitter.on('sequence_hid_previous_slide', () => {
-            this.playFullFadeOut();
-        });
-        uiEventEmitter.on('play_full_fade_in', () => {
-            // Assumes fade_full has first faded out
-            this.fade_full.reverse();
-            setTimeout(() => {
-                this.fader_full.hide();
-            }, this.fade_full.tween.duration);
-        });
-        uiEventEmitter.on('sequence_last_slide_fade_out', (finalFadeDuration) => {
-            this.fade_full.tween.duration = finalFadeDuration;
-            this.fade_full.play();
-
-            setTimeout(() => {
-                uiEventEmitter.emit('play_full_fade_in');
-                setTimeout(() => {
-                    this.fade_full.tween.duration = 600; // reset to default
-                }, finalFadeDuration);
-            }, finalFadeDuration);
-        });
-        uiEventEmitter.on('sequence_last_slide_immediate', () => {
-            this.fader_full.hide();
-        });
-        uiEventEmitter.on('sequence_show_next_slide_fade', () => {
-            setTimeout(() => {
-                uiEventEmitter.emit('play_full_fade_in');
-                this.stage.draw();
-            }, this.fade_full.tween.duration);
-        });
-        uiEventEmitter.on('sequence_show_next_slide_immediate', () => {
-            this.fade_full.reset();
-            this.stage.draw();
-        });
-        uiEventEmitter.on('room_hit_regions_initialized', () => {
-            this.stage.draw();
-        });
-        uiEventEmitter.on('current_room_changed', (_room) => {
-            this.stage.draw();
-        });
-        // Stage view end
+        new FullFadeView(
+            uiEventEmitter,
+            fader_full,
+            fade_full
+        );
+        // Full fader view end
 
         // Sequences view start
         new SequenceView(
@@ -443,15 +407,6 @@ export class KiiGame {
                 'start'
             )
         );
-    }
-
-    /**
-     * TODO: move to full fade view component
-     */
-    playFullFadeOut() {
-        this.fade_full.reset();
-        this.fader_full.show();
-        this.fade_full.play();
     }
 
     /**

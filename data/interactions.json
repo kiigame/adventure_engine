@@ -3,7 +3,8 @@
         "start": [
             {
                 "command": "do_transition",
-                "destination": "start_layer"
+                "destination": "start_layer",
+                "instant": true
             }
         ]
     },
