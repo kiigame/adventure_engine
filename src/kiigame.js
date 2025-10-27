@@ -376,18 +376,22 @@ export class KiiGame {
         this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
         this.text_layer = this.stageObjectGetter.getObject("text_layer");
         gameEventEmitter.on('monologue', (text) => {
-            this.clearMonologues();
+            this.clearMonologue();
+            this.clearNpcMonologue();
             this.setMonologue(text);
         });
         gameEventEmitter.on('npc_monologue', ({ npc, text }) => {
-            this.clearMonologues();
+            this.clearMonologue();
+            this.clearNpcMonologue();
             this.npcMonologue(npc, text);
         });
         uiEventEmitter.on('clicked_on_stage', () => {
-            this.clearMonologues();
+            this.clearMonologue();
+            this.clearNpcMonologue();
         });
         uiEventEmitter.on('inventory_item_drag_start', (_target) => {
-            this.clearMonologues();
+            this.clearMonologue();
+            this.clearNpcMonologue();
         });
         // TODO: refactor interaction texts from text_layer to something that DraggedItemView manages
         uiEventEmitter.on('interaction_text_cleared', () => {
@@ -449,25 +453,12 @@ export class KiiGame {
         this.fade_full.play();
     }
 
-    // Clearing the given text
-    clearText(text) {
-        text.text("");
-
-        if (text.id() == 'monologue') {
-            this.character_speech_bubble.hide();
-        } else if (text.id() == 'npc_monologue') {
-            this.npc_speech_bubble.hide();
-        }
-
-        this.text_layer.draw();
-    }
-
     /**
      * Set NPC monologue text and position the NPC speech bubble to the
      * desired NPC.
-     * @param {*} npc  The object in the stage that will
+     * @param {Konva.Shape} npc  The object in the stage that will
      *                 have the speech bubble.
-     * @param {*} text The text to be shown in the speech bubble.
+     * @param {string} text The text to be shown in the speech bubble.
      */
     npcMonologue(npc, text) {
         this.npc_monologue.setWidth('auto');
@@ -494,8 +485,10 @@ export class KiiGame {
         this.text_layer.draw();
     }
 
-    /// Set monologue text.
-    /// @param text The text to be shown in the monologue bubble.
+    /**
+     * Set character speech text
+     * @param {string} text The text to be shown in the monologue bubble.
+     */
     setMonologue(text) {
         this.monologue.setWidth('auto');
         this.character_speech_bubble.show();
@@ -510,10 +503,20 @@ export class KiiGame {
     }
 
     /**
-     * TODO: move to (a) view component(s)
+     * TODO: move to character view
      */
-    clearMonologues() {
-        this.clearText(this.monologue);
-        this.clearText(this.npc_monologue);
+    clearMonologue() {
+        this.monologue.text("");
+        this.character_speech_bubble.hide();
+        this.text_layer.draw();
+    }
+
+    /**
+     * TODO: move to room view
+     */
+    clearNpcMonologue() {
+        this.npc_monologue.text("");
+        this.npc_speech_bubble.hide();
+        this.text_layer.draw();
     }
 }
