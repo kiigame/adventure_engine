@@ -3,13 +3,11 @@ import EventEmitter from "../events/EventEmitter.js";
 class FullFadeView {
     /**
      * @param {EventEmitter} uiEventEmitter
-     * @param {Konva.Layer} fader_full
-     * @param {Konva.Tween} fade_full
+     * @param {Konva.Tween} fadeFull
      */
-    constructor(uiEventEmitter, fader_full, fade_full) {
+    constructor(uiEventEmitter, fadeFull) {
         this.uiEventEmitter = uiEventEmitter;
-        this.fader_full = fader_full;
-        this.fade_full = fade_full;
+        this.fadeFull = fadeFull;
 
         // These can be fired via interactions
         this.uiEventEmitter.on('play_full_fade_out', () => {
@@ -41,45 +39,46 @@ class FullFadeView {
 
     playFullFadeIn() {
         // Assumes fade_full has first faded out
-        this.fade_full.reverse();
+        this.fadeFull.reverse();
         this.uiEventEmitter.emit('fader_total_occultation_ended');
         setTimeout(() => {
-            this.fader_full.hide();
-        }, this.fade_full.tween.duration);
+            this.fadeFull.node.hide();
+            this.fadeFull.reset();
+        }, this.fadeFull.tween.duration);
     }
 
     playFullFadeCycleWithDuration(duration) {
-        this.fade_full.tween.duration = duration;
+        this.fadeFull.tween.duration = duration;
         this.playFullFadeOut();
 
         setTimeout(() => {
             this.playFullFadeIn();
             setTimeout(() => {
-                this.fade_full.tween.duration = 600; // reset to default
+                this.fadeFull.tween.duration = 600; // reset to default
             }, duration);
         }, duration);
     }
 
     handleSequenceShowNextSlideImmediate() {
-        this.fade_full.reset();
+        this.fadeFull.reset();
         this.uiEventEmitter.emit('fader_total_occultation_ended');
     }
 
     playFullFadeOut() {
-        this.fade_full.reset();
-        this.fader_full.show();
-        this.fade_full.play();
+        this.fadeFull.reset();
+        this.fadeFull.node.show();
+        this.fadeFull.play();
     }
 
     handleSequenceLastSlideImmediate() {
-        this.fader_full.hide();
+        this.fadeFull.node.hide();
         this.uiEventEmitter.emit('fader_total_occultation_ended');
     }
 
     handleSequenceShowNextSlideFade() {
         setTimeout(() => {
             this.playFullFadeIn();
-        }, this.fade_full.tween.duration);
+        }, this.fadeFull.tween.duration);
     }
 }
 

@@ -134,7 +134,7 @@ export class KiiGame {
         const imagePreparer = new ImagePreparer(this.stageObjectGetter);
         const konvaObjectContainerPusher = new KonvaObjectContainerPusher();
         // Build stage
-        const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter, imagePreparer);
+        const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter.getObject('full_screen_layer'), imagePreparer);
         if (sequenceLayerBuilder === null) {
             // TODO: Move DI up
             const slideBuilder = container.get(TYPES.SlideBuilder);
@@ -219,16 +219,14 @@ export class KiiGame {
         // Stage view end
 
         // Animation for fading the whole screen
-        const fader_full = this.stageObjectGetter.getObject("fader_full");
-        const fade_full = new Konva.Tween({
-            node: fader_full,
+        const fadeFull = new Konva.Tween({
+            node: this.stageObjectGetter.getObject('black_screen_full'),
             duration: 0.6,
             opacity: 1
         });
         new FullFadeView(
             uiEventEmitter,
-            fader_full,
-            fade_full
+            fadeFull
         );
         // Full fader view end
 

@@ -3,11 +3,11 @@ import ImagePreparer from "../../util/konva/ImagePreparer.js";
 
 class FullFaderPreparer {
     /**
-     * @param {StageObjectGetter} stageObjectGetter
+     * @param {Konva.Layer} fullScreenLayer
      * @param {ImagePreparer} imagePreparer
      */
-    constructor(stageObjectGetter, imagePreparer) {
-        this.stageObjectGetter = stageObjectGetter;
+    constructor(fullScreenLayer, imagePreparer) {
+        this.fullScreenLayer = fullScreenLayer;
         this.imagePreparer = imagePreparer;
     }
 
@@ -16,10 +16,14 @@ class FullFaderPreparer {
      * @param {int} height
      */
     prepare(width, height) {
-        const faderFull = this.stageObjectGetter.getObject('fader_full');
-        this.imagePreparer.prepareImages(faderFull);
-        // Scale full screen fader
-        this.stageObjectGetter.getObject('black_screen_full').size({ width, height });
+        this.imagePreparer.prepareImages(this.fullScreenLayer);
+        // Prepare the full screen fader
+        const fadeShape = this.fullScreenLayer.find('#black_screen_full');
+        // Scale
+        fadeShape.size({ width, height });
+        // Stop blocking clicks through the fader (.hide() in FullFadeView should do this, but seems inconsistent)
+        fadeShape.listening(false);
+        fadeShape.drawHit();
     }
 }
 

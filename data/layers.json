@@ -340,7 +340,7 @@
         "visible": false
       },
       "children": [
-                {
+        {
           "attrs": {
             "id": "character_speech_bubble",
             "visible": false,
@@ -388,9 +388,8 @@
     },
     {
       "attrs": {
-        "id": "fader_full",
-        "opacity": 0,
-        "visible": false
+        "id": "full_screen_layer",
+        "visible": true
       },
       "children": [
         {
@@ -398,7 +397,9 @@
             "height": 543,
             "id": "black_screen_full",
             "src": "data/images/black.png",
-            "width": 1024
+            "width": 1024,
+            "opacity": 0,
+            "visible": false
           },
           "className": "Image"
         }
