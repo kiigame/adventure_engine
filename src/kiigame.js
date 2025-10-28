@@ -299,6 +299,7 @@ export class KiiGame {
         // Dragged item view
         new DraggedItemView(
             uiEventEmitter,
+            this.stageObjectGetter.getObject('full_screen_layer'),
             this.stageObjectGetter.getObject("interaction_text")
         );
         // Dragged item view model
@@ -355,13 +356,6 @@ export class KiiGame {
         });
         uiEventEmitter.on('inventory_item_drag_start', ({ draggedItem: _draggedItem }) => {
             this.clearNpcMonologue();
-        });
-        // TODO: refactor interaction texts from text_layer to something that DraggedItemView manages
-        uiEventEmitter.on('interaction_text_cleared', () => {
-            this.text_layer.draw();
-        });
-        uiEventEmitter.on('text_on_drag_move_updated', () => {
-            this.text_layer.draw();
         });
         // Text view end
 

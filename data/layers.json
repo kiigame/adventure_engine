@@ -282,21 +282,6 @@
       "children": [
         {
           "attrs": {
-            "align": "center",
-            "fill": "white",
-            "fontFamily": "Chalkboard SE",
-            "fontSize": 18,
-            "fontStyle": "bold",
-            "id": "interaction_text",
-            "stroke": "black",
-            "strokeWidth": 1,
-            "x": 512,
-            "y": 430
-          },
-          "className": "Text"
-        },
-        {
-          "attrs": {
             "id": "npc_speech_bubble",
             "visible": false,
             "x": 100,
@@ -392,6 +377,29 @@
         "visible": true
       },
       "children": [
+        {
+          "attrs": {
+            "id": "dragged_item_group"
+          },
+          "children": [
+            {
+              "attrs": {
+                "align": "center",
+                "fill": "white",
+                "fontFamily": "Chalkboard SE",
+                "fontSize": 18,
+                "fontStyle": "bold",
+                "id": "interaction_text",
+                "stroke": "black",
+                "strokeWidth": 1,
+                "x": 512,
+                "y": 430
+              },
+              "className": "Text"
+            }
+          ],
+          "className": "Group"
+        },
         {
           "attrs": {
             "height": 543,
