@@ -42,7 +42,6 @@ const uiEventEmitter = container.get(TYPES.UiEventEmitter);
 
 const kiigame = new KiiGame(
     undefined,
-    undefined,
     [
         new DefaultInteractionResolver('item'),
         new DefaultInteractionResolver('furniture'),

@@ -61,13 +61,11 @@ import StageView from './view/StageView.js';
 import FullFadeView from './view/FullFadeView.js';
 import NpcMonologueView from './view/room/NpcMonologueView.js';
 
-// TODO: Move DI up
 import "reflect-metadata";
 import { container, TYPES } from "./inversify.config.js";
 
 export class KiiGame {
     constructor(
-        sequenceLayerBuilder = null,
         itemsBuilder = null,
         clickResolvers = [],
         dragResolvers = [],
@@ -135,18 +133,14 @@ export class KiiGame {
         const konvaObjectContainerPusher = new KonvaObjectContainerPusher();
         // Build stage
         const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter.getObject('full_screen_layer'), imagePreparer);
-        if (sequenceLayerBuilder === null) {
-            // TODO: Move DI up
-            const slideBuilder = container.get(TYPES.SlideBuilder);
-            sequenceLayerBuilder = new SequenceLayerBuilder(
-                new SequenceBuilder(
-                    slideBuilder
-                ),
-                konvaObjectContainerPusher,
-                gameData.sequences_json,
-                this.stageObjectGetter.getObject("sequence_layer")
-            );
-        }
+        const sequenceLayerBuilder = new SequenceLayerBuilder(
+            new SequenceBuilder(
+                container.get(TYPES.SlideBuilder)
+            ),
+            konvaObjectContainerPusher,
+            gameData.sequences_json,
+            this.stageObjectGetter.getObject("sequence_layer")
+        );
         // Read room children type builders from the config given to the constructor
         const roomObjectCategoryBuilders = [];
         for (const [key, roomObjectCategory] of Object.entries(roomObjectCategories)) {
