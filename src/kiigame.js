@@ -127,9 +127,7 @@ export class KiiGame {
         // Build stage
         const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter.getObject('full_screen_layer'), imagePreparer);
         const sequenceLayerBuilder = new SequenceLayerBuilder(
-            new SequenceBuilder(
-                container.get(TYPES.SlideBuilder)
-            ),
+            container.get(TYPES.SequenceBuilder),
             konvaObjectContainerPusher,
             gameData.sequences_json,
             this.stageObjectGetter.getObject("sequence_layer")
