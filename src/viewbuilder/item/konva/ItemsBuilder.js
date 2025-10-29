@@ -1,4 +1,3 @@
-/** */
 class ItemsBuilder {
 
     constructor(itemBuilder) {

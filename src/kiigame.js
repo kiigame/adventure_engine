@@ -1,7 +1,6 @@
 import Konva from 'konva';
 
 import SequenceLayerBuilder from './viewbuilder/sequence/konva/SequenceLayerBuilder.js';
-import SequenceBuilder from './viewbuilder/sequence/konva/SequenceBuilder.js';
 import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
 import Interactions from './controller/interactions/Interactions.js';
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
@@ -14,8 +13,6 @@ import CategoryValidator from './view/draggeditem/intersection/CategoryValidator
 import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
-import ItemsBuilder from './viewbuilder/item/konva/ItemsBuilder.js';
-import ItemBuilder from './viewbuilder/item/konva/ItemBuilder.js';
 import RoomAnimationBuilder from './viewbuilder/room/konva/RoomAnimationBuilder.js';
 import RoomAnimationsBuilder from './viewbuilder/room/konva/RoomAnimationsBuilder.js';
 import RoomAnimations from './view/room/RoomAnimations.js';
@@ -166,9 +163,7 @@ export class KiiGame {
         );
         stageBuilder.build();
         // Build items and push them to the inventory item cache layer
-        const itemsBuilder = new ItemsBuilder(
-            new ItemBuilder()
-        );
+        const itemsBuilder = container.get(TYPES.ItemsBuilder);
         const items = itemsBuilder.build(gameData.items_json);
         const inventoryItems = this.stageObjectGetter.getObject('inventory_items');
         konvaObjectContainerPusher.execute(items, inventoryItems);
