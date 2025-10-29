@@ -60,6 +60,7 @@ import DraggedItemView from './view/draggeditem/DraggedItemView.js';
 import CharacterSpeechView from './view/character/CharacterSpeechView.js';
 import StageView from './view/StageView.js';
 import FullFadeView from './view/FullFadeView.js';
+import NpcMonologueView from './view/room/NpcMonologueView.js';
 
 // TODO: Move DI up
 import "reflect-metadata";
@@ -256,6 +257,13 @@ export class KiiGame {
             this.stageObjectGetter
         ).build(roomView.getRooms());
         new RoomAnimations(gameEventEmitter, uiEventEmitter, animatedRoomObjects);
+        // NPC Monologue View
+        new NpcMonologueView(
+            uiEventEmitter,
+            gameEventEmitter,
+            this.stageObjectGetter.getObject("npc_speech_bubble"),
+            this.stage.width()
+        );
         // Animation for fading the room portion of the screen
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
@@ -340,25 +348,6 @@ export class KiiGame {
         );
         // Character view end
 
-        // Text view start (to refactor)
-        this.npc_monologue = this.stageObjectGetter.getObject("npc_monologue");
-        this.npc_speech_bubble = this.stageObjectGetter.getObject("npc_speech_bubble");
-        this.text_layer = this.stageObjectGetter.getObject("text_layer");
-        gameEventEmitter.on('monologue', (_text) => {
-            this.clearNpcMonologue();
-        });
-        gameEventEmitter.on('npc_monologue', ({ npc, text }) => {
-            this.clearNpcMonologue();
-            this.npcMonologue(npc, text);
-        });
-        uiEventEmitter.on('clicked_on_stage', () => {
-            this.clearNpcMonologue();
-        });
-        uiEventEmitter.on('inventory_item_drag_start', ({ draggedItem: _draggedItem }) => {
-            this.clearNpcMonologue();
-        });
-        // Text view end
-
         // Music view
         new Music(gameData.music_json, new AudioFactory(), uiEventEmitter, gameEventEmitter);
         // Music view end
@@ -399,47 +388,5 @@ export class KiiGame {
                 'start'
             )
         );
-    }
-
-    /**
-     * TODO: move to room view
-     * Set NPC monologue text and position the NPC speech bubble to the
-     * desired NPC.
-     * @param {Konva.Shape} npc  The object in the stage that will
-     *                 have the speech bubble.
-     * @param {string} text The text to be shown in the speech bubble.
-     */
-    npcMonologue(npc, text) {
-        this.npc_monologue.setWidth('auto');
-        this.npc_speech_bubble.show();
-        this.npc_monologue.text(text);
-
-        const npc_tag = this.stageObjectGetter.getObject("npc_tag");
-        if (npc.x() + npc.width() > (this.stage.width() / 2)) {
-            npc_tag.pointerDirection("right");
-            if (this.npc_monologue.width() > npc.x() - 100) {
-                this.npc_monologue.width(npc.x() - 100);
-            }
-            this.npc_speech_bubble.x(npc.x());
-        } else {
-            npc_tag.pointerDirection("left");
-            if (this.npc_monologue.width() > this.stage.width() - (npc.x() + npc.width() + 100)) {
-                this.npc_monologue.width(this.stage.width() - (npc.x() + npc.width() + 100));
-            }
-            this.npc_speech_bubble.x(npc.x() + npc.width());
-        }
-
-        this.npc_speech_bubble.y(npc.y() + (npc.height() / 3));
-
-        this.text_layer.draw();
-    }
-
-    /**
-     * TODO: move to room view
-     */
-    clearNpcMonologue() {
-        this.npc_monologue.text("");
-        this.npc_speech_bubble.hide();
-        this.text_layer.draw();
     }
 }

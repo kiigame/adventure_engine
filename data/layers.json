@@ -90,7 +90,44 @@
         "id": "room_layer",
         "visible": true
       },
-      "children": [],
+      "children": [
+        {
+          "attrs": {
+            "id": "npc_speech_bubble",
+            "visible": false,
+            "x": 100,
+            "y": 200
+          },
+          "children": [
+            {
+              "attrs": {
+                "cornerRadius": 10,
+                "fill": "#ddd",
+                "id": "npc_tag",
+                "lineJoin": "round",
+                "pointerDirection": "left",
+                "pointerHeight": 15,
+                "pointerWidth": 40,
+                "stroke": "black",
+                "strokeWidth": 1
+              },
+              "className": "Tag"
+            },
+            {
+              "attrs": {
+                "fill": "black",
+                "fontFamily": "Chalkboard SE",
+                "fontSize": 14,
+                "id": "npc_monologue",
+                "padding": 10,
+                "width": "auto"
+              },
+              "className": "Text"
+            }
+          ],
+          "className": "Label"
+        }
+      ],
       "className": "Layer"
     },
     {
@@ -271,50 +308,6 @@
             "y": 363
           },
           "className": "Image"
-        }
-      ],
-      "className": "Layer"
-    },
-    {
-      "attrs": {
-        "id": "text_layer"
-      },
-      "children": [
-        {
-          "attrs": {
-            "id": "npc_speech_bubble",
-            "visible": false,
-            "x": 100,
-            "y": 200
-          },
-          "children": [
-            {
-              "attrs": {
-                "cornerRadius": 10,
-                "fill": "#ddd",
-                "id": "npc_tag",
-                "lineJoin": "round",
-                "pointerDirection": "left",
-                "pointerHeight": 15,
-                "pointerWidth": 40,
-                "stroke": "black",
-                "strokeWidth": 1
-              },
-              "className": "Tag"
-            },
-            {
-              "attrs": {
-                "fill": "black",
-                "fontFamily": "Chalkboard SE",
-                "fontSize": 14,
-                "id": "npc_monologue",
-                "padding": 10,
-                "width": "auto"
-              },
-              "className": "Text"
-            }
-          ],
-          "className": "Label"
         }
       ],
       "className": "Layer"

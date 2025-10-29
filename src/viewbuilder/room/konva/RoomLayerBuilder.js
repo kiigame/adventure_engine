@@ -34,6 +34,8 @@ class RoomLayerBuilder {
         }
         // Scale room fader UI
         this.roomLayer.find('#black_screen_room').size({ width, height: height - 100 });
+        // Move npc speec bubble on top of rooms so it's visible
+        this.roomLayer.find('#npc_speech_bubble').moveToTop();
     }
 }
 

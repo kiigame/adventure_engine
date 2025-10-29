@@ -52,6 +52,12 @@ class RoomView {
         this.uiEventEmitter.on('arrived_in_room', (roomId) => {
             this.showRoom(roomId);
         });
+        this.uiEventEmitter.on('npc_monologue_set', () => {
+            this.drawRoomLayer();
+        });
+        this.uiEventEmitter.on('npc_monologue_cleared', () => {
+            this.drawRoomLayer();
+        });
 
         this.gameEventEmitter.on('removed_objects', ({ objectList: _objectList, objectsRemoved }) => {
             this.removeObject(objectsRemoved);
@@ -232,7 +238,6 @@ class RoomView {
         target.shadowOffset({ x: 0, y: 0 });
         target.shadowBlur(20);
     }
-
 }
 
 export default RoomView;
