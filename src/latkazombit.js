@@ -6,12 +6,12 @@ import Intersection from './view/draggeditem/intersection/Intersection.js';
 import VisibilityValidator from './view/draggeditem/intersection/VisibilityValidator.js';
 import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
 import JSONGetter from './util/JSONGetter.js';
-import EventEmitter from './events/EventEmitter.js';
 import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
 import FurnitureBuilder from './viewbuilder/room/konva/FurnitureBuilder.js';
 import SecretBuilder from './latkazombit/viewbuilder/room/konva/SecretBuilder.js';
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
 import CommandHandler from './controller/interactions/CommandHandler.js';
+import { container, TYPES } from './inversify.config.js';
 
 const jsonGetter = new JSONGetter();
 
@@ -37,8 +37,8 @@ const gameData = {
     startInteraction: 'begin'
 };
 
-const gameEventEmitter = new EventEmitter();
-const uiEventEmitter = new EventEmitter();
+const gameEventEmitter = container.get(TYPES.GameEventEmitter);
+const uiEventEmitter = container.get(TYPES.UiEventEmitter);
 
 const kiigame = new KiiGame(
     undefined,

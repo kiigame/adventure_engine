@@ -14,7 +14,6 @@ import CategoryValidator from './view/draggeditem/intersection/CategoryValidator
 import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import Text from './model/Text.js';
-import EventEmitter from './events/EventEmitter.js';
 import ItemsBuilder from './viewbuilder/item/konva/ItemsBuilder.js';
 import ItemBuilder from './viewbuilder/item/konva/ItemBuilder.js';
 import RoomAnimationBuilder from './viewbuilder/room/konva/RoomAnimationBuilder.js';
@@ -75,8 +74,8 @@ export class KiiGame {
         hitRegionInitializer = null,
         intersection = null,
         roomObjectCategories = { 'furniture': { 'roomChildrenTypeBuilder': new FurnitureBuilder() } },
-        gameEventEmitter = new EventEmitter(),
-        uiEventEmitter = new EventEmitter(),
+        gameEventEmitter = container.get(TYPES.GameEventEmitter),
+        uiEventEmitter = container.get(TYPES.UiEventEmitter),
         gameData = {},
     ) {
         if (itemsBuilder === null) {
