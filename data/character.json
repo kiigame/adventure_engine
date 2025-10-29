@@ -34,7 +34,7 @@
                 {"node": "character_idle_2", "duration": "0.2"}
             ]
         },
-        "panic": {
+        "panic_last": {
             "frames": [
                 {"node": "character_speak_1", "duration": "0.3"},
                 {"node": "character_speak_2", "duration": "0.3"},
@@ -44,6 +44,11 @@
                 {"node": "character_speak_2", "duration": "0.3"},
                 {"node": "character_speak_1", "duration": "0.2"},
                 {"node": "character_panic", "duration": "10"}
+            ]
+        },
+        "panic_first": {
+            "frames": [
+                {"node": "character_panic", "duration": "3"}
             ]
         }
     }

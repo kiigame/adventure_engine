@@ -36,7 +36,7 @@
             },
             {
                 "command": "play_character_animation",
-                "animation": "panic",
+                "animation": "panic_last",
                 "length": 6000
             }
         ]
@@ -268,32 +268,62 @@
     "locker_room_1_door_to_out": {
         "click": [
             {
-                "command": "monologue",
+                "command": "npc_monologue",
+                "npc": "locker_room_1_door_to_out",
                 "textkey": {
                     "object": "locker_room_1_door_to_out",
-                    "string": "examine"
+                    "string": "argl"
                 }
             },
             {
                 "command": "play_character_animation",
-                "animation": "panic",
-                "length": 6000
+                "animation": "panic_first",
+                "length": 3000
+            },
+            {
+                "command": "monologue",
+                "textkey": {
+                    "object": "locker_room_1_door_to_out",
+                    "string": "examine"
+                },
+                "timeout": 3000
+            },
+            {
+                "command": "play_character_animation",
+                "animation": "panic_last",
+                "timeout": 3000,
+                "length": 5000
             }
         ]
     },
     "locker_room_2_door_to_out": {
         "click": [
             {
-                "command": "monologue",
+                "command": "npc_monologue",
+                "npc": "locker_room_2_door_to_out",
                 "textkey": {
                     "object": "locker_room_2_door_to_out",
-                    "string": "examine"
+                    "string": "groar"
                 }
             },
             {
                 "command": "play_character_animation",
-                "animation": "panic",
-                "length": 6000
+                "animation": "panic_first",
+                "length": 3000
+            },
+            {
+            "command": "monologue",
+                "textkey": {
+                    "object": "locker_room_2_door_to_out",
+                    "string": "examine"
+                },
+                "timeout": 3000
+            },
+            {
+                "command": "play_character_animation",
+                "animation": "panic_last",
+                "timeout": 3000,
+                "length": 5000
             }
         ]
     },

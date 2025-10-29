@@ -89,6 +89,7 @@
     },
     "locker_room_1_door_to_out": {
         "name": "Pukukopin ulko-ovi",
+        "argl": "Örrrrr....",
         "examine": "Tuon oven takaa kuuluu ihmeellistä örinää, eikä tuo verilammikkokaan näytä kovin kutsuvalta.. Ehkä on parempi olla avaamatta ovea."
     },
     "locker_room_1_door_to_wc_closed": {
@@ -518,6 +519,7 @@
     },
     "locker_room_2_door_to_out": {
         "name": "Pukukopin ulko-ovi",
+        "groar": "Aeeooäiiiiöööö...",
         "examine": "Tämä ovi johtaa samaan käytävään kuin edellisenkin pukuhuoneen ulko-ovi ja sieltä muuten kuuluu samaa pelottavaa mölinää.. ja oven alla on yhtä huolestuttava verilammikko. En uskalla mennä tästä."
     },
     "locker_room_2_door_to_wc_closed": {
