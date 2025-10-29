@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { createStubInstance } from 'sinon';
+import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import Inventory from './Inventory.js';
 import EventEmitter from '../events/EventEmitter.js';
@@ -11,6 +11,9 @@ describe('Inventory model tests', () => {
     beforeEach(() => {
         gameEventEmitterStub = createStubInstance(EventEmitter);
         uiEventEmitterStub = createStubInstance(EventEmitter);
+    });
+    afterEach(() => {
+        restore();
     });
     describe('add items to inventory', () => {
         it('should add new item to empty inventory and it should be the only item', () => {
@@ -114,6 +117,5 @@ describe('Inventory model tests', () => {
                 }
             );
         });
-
     });
 });
