@@ -66,7 +66,6 @@ import { container, TYPES } from "./inversify.config.js";
 
 export class KiiGame {
     constructor(
-        itemsBuilder = null,
         clickResolvers = [],
         dragResolvers = [],
         hitRegionInitializer = null,
@@ -76,12 +75,6 @@ export class KiiGame {
         uiEventEmitter = container.get(TYPES.UiEventEmitter),
         gameData = {},
     ) {
-        if (itemsBuilder === null) {
-            itemsBuilder = new ItemsBuilder(
-                new ItemBuilder()
-            );
-        }
-
         if (clickResolvers.length == 0) {
             clickResolvers.push(
                 new DefaultInteractionResolver('furniture'),
@@ -175,8 +168,11 @@ export class KiiGame {
         );
         stageBuilder.build();
         // Build items and push them to the inventory item cache layer
-        const inventoryItems = this.stageObjectGetter.getObject('inventory_items');
+        const itemsBuilder = new ItemsBuilder(
+            new ItemBuilder()
+        );
         const items = itemsBuilder.build(gameData.items_json);
+        const inventoryItems = this.stageObjectGetter.getObject('inventory_items');
         konvaObjectContainerPusher.execute(items, inventoryItems);
         // Creating all item image objects from json
         imagePreparer.prepareImages(inventoryItems.toObject());
