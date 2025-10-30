@@ -183,6 +183,7 @@ class RoomView {
         const room = this.getRoom(roomId);
         room.show();
         this.currentRoom = room;
+        this.drawRoomLayer();
         this.uiEventEmitter.emit('current_room_changed', room);
     }
 

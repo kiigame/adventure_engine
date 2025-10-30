@@ -20,6 +20,7 @@ module.exports = {
           'cover',
           'arrange',
           'prioritize',
+          'draw',
         ],
       }
     ]
