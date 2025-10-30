@@ -1,6 +1,8 @@
 {
     "default": {
-        "examine": "Ei pysty, liian hapokasta."
+        "name": "Nomen est omen",
+        "examine": "Ei pysty, liian hapokasta.",
+        "pickup": "Kleptomania kukkii. Laitan tämän taskuun."
     },
     "object_layer_locker_room_1": {
         "name": "Pukuhuone 1"
