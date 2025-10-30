@@ -10,22 +10,50 @@ export const build = [
         output: {
             name: 'kiigame',
             file: pkg.browser,
-            format: 'umd'
+            format: 'umd',
+            globals: {
+                konva: 'Konva',
+                inversify: 'inversify',
+                'reflect-metadata': 'Reflect'
+            }
         },
         plugins: [
-            resolve(),
+            resolve({
+                extensions: ['.js', '.ts']
+            }),
             commonjs(),
-            typescript()
+            typescript({
+                tsconfig: './tsconfig.build.json',
+                outputToFilesystem: true
+            }),
         ]
     },
     {
         input: 'src/kiigame.js',
         external: ['konva', 'reflect-metadata', 'inversify'],
         output: [
-            { file: pkg.main, format: 'cjs' },
-            { file: pkg.module, format: 'es' }
+            {
+                file: pkg.module,
+                format: 'es',
+                sourcemap: true
+            },
+            {
+                file: pkg.main,
+                format: 'cjs',
+                sourcemap: true
+            }
+        ],
+        plugins: [
+            resolve({
+                extensions: ['.ts', '.js']
+            }),
+            commonjs(),
+            typescript({
+                tsconfig: './tsconfig.build.json',
+                outputToFilesystem: true
+            }),
         ]
-    }
+    },
 ];
 
 export const dev = {
@@ -35,14 +63,16 @@ export const dev = {
         file: 'public/src/latkazombit.js',
         format: 'iife',
         sourcemap: true,
-//        sourcemapExcludeSources: true
     },
     plugins: [
-        resolve(),
+        resolve({
+            extensions: ['.js', '.ts']
+        }),
         commonjs(),
         typescript({
-            tsconfig: './tsconfig.json',
-            sourceMap: true
+            tsconfig: './tsconfig.build-dev.json',
+            sourceMap: true,
+            module: 'esnext'
         }),
         copy({
             targets: [
