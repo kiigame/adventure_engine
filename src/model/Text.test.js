@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { spy, restore } from 'sinon';
-import Text from './Text.js';
+import { Text } from './Text.js';
 
 describe('Test Text getName function', function() {
     it('returns the name of the object if it exists', function() {

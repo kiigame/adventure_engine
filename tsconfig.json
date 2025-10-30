@@ -17,7 +17,7 @@
         },
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "types": ["reflect-metadata", "node"],
+        "types": ["reflect-metadata", "node", "mocha"],
         "lib": [
             "es2022",
             "dom"

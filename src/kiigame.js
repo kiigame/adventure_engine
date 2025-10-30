@@ -12,7 +12,7 @@ import VisibilityValidator from './view/draggeditem/intersection/VisibilityValid
 import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
 import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
-import Text from './model/Text.js';
+import { Text } from './model/Text.js';
 import RoomAnimationBuilder from './viewbuilder/room/konva/RoomAnimationBuilder.js';
 import RoomAnimationsBuilder from './viewbuilder/room/konva/RoomAnimationsBuilder.js';
 import RoomAnimations from './view/room/RoomAnimations.js';
