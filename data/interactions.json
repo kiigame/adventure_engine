@@ -54,7 +54,7 @@
                 "command": "do_transition",
                 "destination": "object_layer_locker_room_1",
                 "instant": true,
-                "timeout": 20000
+                "timeout": 20207
             },
             {
                 "command": "monologue",
@@ -62,7 +62,7 @@
                     "object": "intro",
                     "string": "examine"
                 },
-                "timeout": 23000
+                "timeout": 23200
             }
         ]
     },
