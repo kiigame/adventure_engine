@@ -1,7 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import pkg from './package.json' with { type: "json" };
+import typescript from '@rollup/plugin-typescript';
+import commonjs from '@rollup/plugin-commonjs';
 
 export const build = [
     {
@@ -9,21 +10,50 @@ export const build = [
         output: {
             name: 'kiigame',
             file: pkg.browser,
-            format: 'umd'
+            format: 'umd',
+            globals: {
+                konva: 'Konva',
+                inversify: 'inversify',
+                'reflect-metadata': 'Reflect'
+            }
         },
         plugins: [
-            resolve(),
-            commonjs()
+            resolve({
+                extensions: ['.js', '.ts']
+            }),
+            commonjs(),
+            typescript({
+                tsconfig: './tsconfig.build.json',
+                outputToFilesystem: true
+            }),
         ]
     },
     {
         input: 'src/kiigame.js',
         external: ['konva', 'reflect-metadata', 'inversify'],
         output: [
-            { file: pkg.main, format: 'cjs' },
-            { file: pkg.module, format: 'es' }
+            {
+                file: pkg.module,
+                format: 'es',
+                sourcemap: true
+            },
+            {
+                file: pkg.main,
+                format: 'cjs',
+                sourcemap: true
+            }
+        ],
+        plugins: [
+            resolve({
+                extensions: ['.ts', '.js']
+            }),
+            commonjs(),
+            typescript({
+                tsconfig: './tsconfig.build.json',
+                outputToFilesystem: true
+            }),
         ]
-    }
+    },
 ];
 
 export const dev = {
@@ -32,11 +62,18 @@ export const dev = {
         name: 'kiigame',
         file: 'public/src/latkazombit.js',
         format: 'iife',
-        sourcemap: true
+        sourcemap: true,
     },
     plugins: [
-        resolve(),
+        resolve({
+            extensions: ['.js', '.ts']
+        }),
         commonjs(),
+        typescript({
+            tsconfig: './tsconfig.build-dev.json',
+            sourceMap: true,
+            module: 'esnext'
+        }),
         copy({
             targets: [
                 { src: 'index.html', dest: 'public/' },
@@ -49,9 +86,8 @@ export const dev = {
 }
 
 export default cli => {
-  if (cli.configBuild === true) {
-    return build;
-  }
-  return dev;
+    if (cli.configBuild === true) {
+        return build;
+    }
+    return dev;
 }
-

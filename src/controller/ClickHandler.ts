@@ -2,35 +2,45 @@ import EventEmitter from "../events/EventEmitter.js";
 import CommandsHandler from "./interactions/CommandsHandler.js";
 import DefaultInteractionResolver from "./interactions/DefaultInteractionResolver.js";
 import Interactions from "./interactions/Interactions.js";
+import Konva from 'konva';
 
-class ClickHandler {
+export class ClickHandler {
+    private uiEventEmitter: EventEmitter;
+    private commandsHandler: CommandsHandler;
+    private clickResolvers: DefaultInteractionResolver[];
+    private interactions: Interactions;
+
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {CommandsHandler} commandsHandler
-     * @param {DefaultInteractionResolver} clickResolvers
+     * @param {DefaultInteractionResolver[]} clickResolvers
      * @param {Interactions} interactions
      */
-    constructor(uiEventEmitter, commandsHandler, clickResolvers, interactions) {
+    constructor(
+        uiEventEmitter: EventEmitter,
+        commandsHandler: CommandsHandler,
+        clickResolvers: DefaultInteractionResolver[],
+        interactions: Interactions
+    ) {
         this.uiEventEmitter = uiEventEmitter;
         this.commandsHandler = commandsHandler;
         this.clickResolvers = clickResolvers;
         this.interactions = interactions;
 
-        this.uiEventEmitter.on('furniture_clicked', (target) => {
+        this.uiEventEmitter.on('furniture_clicked', (target: Konva.Shape) => {
             this.handleClick(target);
         });
-        this.uiEventEmitter.on('inventory_click', (target) => {
+        this.uiEventEmitter.on('inventory_click', (target: Konva.Shape) => {
             this.handleClick(target);
         });
     }
 
     /**
      * Handle click interactions on room objects, inventory items & any resolver category ...
-     * @param {Konva.Shape} target
      */
-    handleClick(target) {
-        const targetCategory = target.getAttr('category');
-        const clickResolver = this.clickResolvers.find(function (clickResolver) {
+    handleClick(target: Konva.Shape) {
+        const targetCategory: string = target.getAttr('category');
+        const clickResolver: DefaultInteractionResolver|undefined = this.clickResolvers.find((clickResolver) => {
             return clickResolver.getTargetCategory() === targetCategory;
         });
 
@@ -42,5 +52,3 @@ class ClickHandler {
         }
     }
 }
-
-export default ClickHandler;

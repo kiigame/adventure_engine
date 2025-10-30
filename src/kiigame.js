@@ -47,7 +47,7 @@ import ObjectsInRooms from './model/ObjectsInRooms.js';
 import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
 import InventoryArrowsView from './view/inventory/InventoryArrowsView.js';
 import InventoryArrowsViewModel from './view/inventory/InventoryArrowsViewModel.js';
-import ClickHandler from './controller/ClickHandler.js';
+import { ClickHandler } from './controller/ClickHandler.ts';
 import DragEndHandler from './controller/DragEngHandler.js';
 import DraggedItemViewModel from './view/draggeditem/DraggedItemViewModel.js';
 import DragTargetFinder from './view/draggeditem/DragTargetFinder.js';

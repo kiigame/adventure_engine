@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "outDir": "./public",
+        "allowJs": true,
+        "checkJs": true,
+        "target": "es2022",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": "./src",
+        "paths": {
+            "*": ["*"]
+        },
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "types": ["reflect-metadata", "node"],
+        "lib": [
+            "es2022",
+            "dom"
+        ]
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
