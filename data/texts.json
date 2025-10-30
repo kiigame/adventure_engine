@@ -2,9 +2,6 @@
     "default": {
         "examine": "Ei pysty, liian hapokasta."
     },
-    "default.pickable": {
-        "default": "Tätä ei voi käyttää tähän. Voisin kyllä poimia tämän mukaani."
-    },
     "object_layer_locker_room_1": {
         "name": "Pukuhuone 1"
     },
