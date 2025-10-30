@@ -19,6 +19,9 @@ class StageView {
         uiEventEmitter.on('room_hit_regions_initialized', () => {
             this.drawStage();
         });
+        uiEventEmitter.on('first_sequence_slide_shown', () => {
+            this.drawStage();
+        })
     }
 
     drawStage() {

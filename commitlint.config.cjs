@@ -21,6 +21,7 @@ module.exports = {
           'arrange',
           'prioritize',
           'draw',
+          'time',
         ],
       }
     ]

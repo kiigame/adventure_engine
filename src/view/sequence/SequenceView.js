@@ -28,9 +28,9 @@ class SequenceView {
         let currentSlide = null;
 
         setTimeout(() => {
-            this.uiEventEmitter.emit('first_sequence_slide_shown');
             this.sequenceLayer.show();
             currentSequence.show();
+            this.uiEventEmitter.emit('first_sequence_slide_shown');
         }, delay);
 
         for (let i in sequenceData.slides) {
