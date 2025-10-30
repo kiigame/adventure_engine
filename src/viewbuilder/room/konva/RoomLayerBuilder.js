@@ -1,6 +1,6 @@
-import KonvaObjectContainerPusher from "../../util/konva/KonvaObjectContainerPusher";
-import RoomFaderBuilder from "./RoomFaderBuilder";
-import ImagePreparer from "../../util/konva/ImagePreparer";
+import KonvaObjectContainerPusher from "../../util/konva/KonvaObjectContainerPusher.js";
+import RoomFaderBuilder from "./RoomFaderBuilder.js";
+import ImagePreparer from "../../util/konva/ImagePreparer.js";
 import RoomsBuilder from "./RoomsBuilder.js";
 
 class RoomLayerBuilder {
