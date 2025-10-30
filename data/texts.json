@@ -17,9 +17,6 @@
     "object_layer_shower_room": {
         "name": "Suihkuhuone"
     },
-    "object_layer_invisible": {
-    	"name": "Huone esineille jotka eivät ole missään"
-    },
     "start_credits": {
         "name": "start_credits",
         "examine": "Tiesitkö muuten että tämän huikean pelin tekivät:\n- Eino Keskitalo\n- Toni Käkelä\n- Topi Leinonen\n- Eetu Mansikkamäki\n- Martti Similä"
