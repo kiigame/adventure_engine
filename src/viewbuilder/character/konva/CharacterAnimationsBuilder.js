@@ -1,4 +1,4 @@
-import StageObjectGetter from "../../../util/konva/StageObjectGetter.js";
+import { StageObjectGetter } from "../../../util/konva/StageObjectGetter.js";
 
 class CharacterAnimationsBuilder {
     /**

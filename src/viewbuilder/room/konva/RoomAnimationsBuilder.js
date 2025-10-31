@@ -1,4 +1,4 @@
-import StageObjectGetter from "../../../util/konva/StageObjectGetter.js";
+import { StageObjectGetter } from "../../../util/konva/StageObjectGetter.js";
 import RoomAnimationBuilder from "./RoomAnimationBuilder.js";
 
 class RoomAnimationsBuilder {

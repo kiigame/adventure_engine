@@ -19,7 +19,7 @@ import RoomAnimations from './view/room/RoomAnimations.js';
 import RoomFaderBuilder from './viewbuilder/room/konva/RoomFaderBuilder.js';
 import RoomFader from './view/room/RoomFader.js';
 import CharacterInRoom from './model/CharacterInRoom.js';
-import StageObjectGetter from './util/konva/StageObjectGetter.js';
+import { StageObjectGetter } from './util/konva/StageObjectGetter.js';
 import CharacterFramesBuilder from './viewbuilder/character/konva/CharacterFramesBuilder.js';
 import CharacterAnimationsBuilder from './viewbuilder/character/konva/CharacterAnimationsBuilder.js';
 import CharacterAnimations from './view/character/CharacterAnimations.js';

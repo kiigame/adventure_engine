@@ -1,5 +1,9 @@
-class StageObjectGetter {
-    constructor(stage) {
+import Konva from 'konva';
+
+export class StageObjectGetter {
+    private stage: Konva.Stage;
+
+    constructor(stage: Konva.Stage) {
         this.stage = stage;
     }
 
@@ -13,7 +17,7 @@ class StageObjectGetter {
      * @param {string} id name of the object to look up
      * @returns {Konva.Node}
      */
-    getObject(id) {
+    getObject(id: string) {
         const object = this.stage.find('#' + id)[0];
         if (object == null) {
             console.warn("Could not find object from stage with id " + id);
@@ -21,5 +25,3 @@ class StageObjectGetter {
         return object;
     }
 }
-
-export default StageObjectGetter;
