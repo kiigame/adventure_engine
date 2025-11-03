@@ -12,6 +12,9 @@ import SecretBuilder from './latkazombit/viewbuilder/room/konva/SecretBuilder.js
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
 import CommandHandler from './controller/interactions/CommandHandler.js';
 import { container, TYPES } from './inversify.config.js';
+import EventEmitter from './events/EventEmitter.js';
+import { KonvaPointerEvent } from 'konva/types/PointerEvents.js';
+import Konva from 'konva';
 
 const jsonGetter = new JSONGetter();
 
@@ -37,8 +40,8 @@ const gameData = {
     startInteraction: 'begin'
 };
 
-const gameEventEmitter = container.get(TYPES.GameEventEmitter);
-const uiEventEmitter = container.get(TYPES.UiEventEmitter);
+const gameEventEmitter: EventEmitter = container.get(TYPES.GameEventEmitter);
+const uiEventEmitter: EventEmitter = container.get(TYPES.UiEventEmitter);
 
 const kiigame = new KiiGame(
     [
@@ -66,6 +69,7 @@ const kiigame = new KiiGame(
         'furniture': {
             'roomChildrenTypeBuilder': new FurnitureBuilder()
         },
+        // @ts-ignore - TODO: typeify
         'secret': {
             'roomChildrenTypeBuilder': new SecretBuilder()
         }
@@ -107,7 +111,7 @@ stage.find('#start_game')[0].on('tap click', function () {
 });
 
 // Listeners for the input screen buttons
-input_layer.on('tap click', function (event) {
+input_layer.on('tap click', function (event: KonvaPointerEvent) {
     const target = event.target;
 
     const selected = kiigame.text.getName(target.getAttr('id'));
@@ -259,9 +263,9 @@ input_layer.on('tap click', function (event) {
 });
 
 // When arriving to the final room (the final step of the game), count rewards in invetory.
-uiEventEmitter.on('arrived_in_room', function (roomId) {
+uiEventEmitter.on('arrived_in_room', function (roomId: string) {
     if (roomId === 'end_layer') {
-        const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text");
+        const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text") as Konva.Text;
         let rewardsCount = 0;
         for (const inventoryItem of kiigame.inventory.items) {
             if (inventoryItem.category === 'reward') {

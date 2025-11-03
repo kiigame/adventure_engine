@@ -65,8 +65,16 @@ export class KiiGame {
     constructor(
         clickResolvers = [],
         dragResolvers = [],
-        hitRegionInitializer = null,
-        intersection = null,
+        hitRegionInitializer = new HitRegionInitializer(
+            new HitRegionFilter([], ['Image']),
+            uiEventEmitter
+        ),
+        intersection = intersection = new Intersection(
+            [
+                new VisibilityValidator(),
+                new CategoryValidator()
+            ]
+        ),
         roomObjectCategories = { 'furniture': { 'roomChildrenTypeBuilder': new FurnitureBuilder() } },
         gameEventEmitter = container.get(TYPES.GameEventEmitter),
         uiEventEmitter = container.get(TYPES.UiEventEmitter),
@@ -82,21 +90,6 @@ export class KiiGame {
             dragResolvers.push(
                 new DefaultInteractionResolver('furniture'),
                 new DefaultInteractionResolver('item')
-            );
-        }
-
-        if (hitRegionInitializer === null) {
-            hitRegionInitializer = new HitRegionInitializer(
-                new HitRegionFilter([], ['Image']),
-                uiEventEmitter
-            );
-        }
-        if (intersection === null) {
-            intersection = new Intersection(
-                [
-                    new VisibilityValidator(),
-                    new CategoryValidator()
-                ]
             );
         }
 

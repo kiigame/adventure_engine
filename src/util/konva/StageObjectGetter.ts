@@ -15,9 +15,9 @@ export class StageObjectGetter {
      * itself is missing.
      *
      * @param {string} id name of the object to look up
-     * @returns {Konva.Node}
+     * @returns {Konva.Node} @see Konva.Container::find
      */
-    getObject(id: string) {
+    getObject(id: string): Konva.Node {
         const object = this.stage.find('#' + id)[0];
         if (object == null) {
             console.warn("Could not find object from stage with id " + id);

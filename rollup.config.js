@@ -57,7 +57,7 @@ export const build = [
 ];
 
 export const dev = {
-    input: 'src/latkazombit.js',
+    input: 'src/latkazombit.ts',
     output: {
         name: 'kiigame',
         file: 'public/src/latkazombit.js',
