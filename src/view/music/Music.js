@@ -6,7 +6,6 @@ class Music {
      * @param {object} musicJson
      * @param {AudioFactory} audioFactory
      * @param {EventEmitter} uiEventEmitter
-     * @param {EventEmitter} gameEventEmitter
      */
     constructor(musicJson, audioFactory, uiEventEmitter) {
         this.musicJson = musicJson;
