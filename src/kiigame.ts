@@ -39,15 +39,15 @@ import RoomBuilder from './viewbuilder/room/konva/RoomBuilder.js';
 import RoomsBuilder from './viewbuilder/room/konva/RoomsBuilder.js';
 import RoomChildrenTypeBuilder from './viewbuilder/room/konva/RoomChildrenTypeBuilder.js';
 import BackgroundsBuilder from './viewbuilder/room/konva/BackgroundsBuilder.js';
-import FurnitureBuilder from './viewbuilder/room/konva/FurnitureBuilder.js';
-import OtherChildrenBuilder from './viewbuilder/room/konva/OtherChildrenBuilder.js';
+import { FurnitureBuilder } from './viewbuilder/room/konva/FurnitureBuilder.js';
+import { OtherChildrenBuilder } from './viewbuilder/room/konva/OtherChildrenBuilder.js';
 import ObjectsInRoomsBuilder from './modelbuilder/ObjectsInRoomsBuilder.js';
 import ObjectsInRoomBuilder from './modelbuilder/ObjectsInRoomBuilder.js';
 import ObjectsInRooms from './model/ObjectsInRooms.js';
 import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
 import InventoryArrowsView from './view/inventory/InventoryArrowsView.js';
 import InventoryArrowsViewModel from './view/inventory/InventoryArrowsViewModel.js';
-import { ClickHandler } from './controller/ClickHandler.ts';
+import { ClickHandler } from './controller/ClickHandler.js';
 import DragEndHandler from './controller/DragEngHandler.js';
 import DraggedItemViewModel from './view/draggeditem/DraggedItemViewModel.js';
 import DragTargetFinder from './view/draggeditem/DragTargetFinder.js';
@@ -57,28 +57,43 @@ import CharacterSpeechView from './view/character/CharacterSpeechView.js';
 import StageView from './view/StageView.js';
 import FullFadeView from './view/FullFadeView.js';
 import NpcMonologueView from './view/room/NpcMonologueView.js';
+import { RoomChildrenBuilder } from './viewbuilder/room/konva/RoomChildrenBuilder.js';
 
 import "reflect-metadata";
-import { container, TYPES } from "./inversify.config.js";
+import { container, GameEventEmitter, UiEventEmitter } from "./inversify.config.js";
+import ItemsBuilder from 'viewbuilder/item/konva/ItemsBuilder.js';
+import SequenceBuilder from 'viewbuilder/sequence/konva/SequenceBuilder.js';
+
+type RoomObjectCategoryType = {
+    roomChildrenTypeBuilder: RoomChildrenBuilder
+};
+
+export type RoomObjectCategoriesType = Record<string, RoomObjectCategoryType>;
 
 export class KiiGame {
+    private inventory: Inventory;
+    private text: Text;
+    private stage: Konva.Stage;
+    private stageObjectGetter: StageObjectGetter;
+    private interactions: Interactions;
+
     constructor(
-        clickResolvers = [],
-        dragResolvers = [],
-        hitRegionInitializer = new HitRegionInitializer(
+        clickResolvers: DefaultInteractionResolver[] = [],
+        dragResolvers: DefaultInteractionResolver[] = [],
+        hitRegionInitializer: HitRegionInitializer = new HitRegionInitializer(
             new HitRegionFilter([], ['Image']),
-            uiEventEmitter
+            container.get(UiEventEmitter)
         ),
-        intersection = intersection = new Intersection(
+        intersection: Intersection = new Intersection(
             [
                 new VisibilityValidator(),
                 new CategoryValidator()
             ]
         ),
-        roomObjectCategories = { 'furniture': { 'roomChildrenTypeBuilder': new FurnitureBuilder() } },
-        gameEventEmitter = container.get(TYPES.GameEventEmitter),
-        uiEventEmitter = container.get(TYPES.UiEventEmitter),
-        gameData = {},
+        roomObjectCategories: RoomObjectCategoriesType = { furniture: { roomChildrenTypeBuilder: new FurnitureBuilder() } },
+        gameEventEmitter = container.get(GameEventEmitter),
+        uiEventEmitter = container.get(UiEventEmitter),
+        gameData: any = {},
     ) {
         if (clickResolvers.length == 0) {
             clickResolvers.push(
@@ -99,11 +114,11 @@ export class KiiGame {
         const initialObjectsInRoomsState = new ObjectsInRoomsBuilder(
             new ObjectsInRoomBuilder(Object.keys(roomObjectCategories))
         ).build(gameData.rooms_json);
-        new ObjectsInRooms(initialObjectsInRoomsState, gameEventEmitter);
+        new ObjectsInRooms(initialObjectsInRoomsState, container.get(GameEventEmitter));
         // "Player character in room" model
-        new CharacterInRoom(gameEventEmitter);
+        new CharacterInRoom(container.get(GameEventEmitter));
         // Inventory model
-        this.inventory = new Inventory(gameEventEmitter, uiEventEmitter);
+        this.inventory = new Inventory(container.get(GameEventEmitter), container.get(UiEventEmitter));
         // Text model(?)
         this.text = new Text(gameData.text_json);
         // Model end
@@ -117,7 +132,7 @@ export class KiiGame {
         // Build stage
         const fullFadeBuilder = new FullFaderPreparer(this.stageObjectGetter.getObject('full_screen_layer'), imagePreparer);
         const sequenceLayerBuilder = new SequenceLayerBuilder(
-            container.get(TYPES.SequenceBuilder),
+            container.get(SequenceBuilder),
             konvaObjectContainerPusher,
             gameData.sequences_json,
             this.stageObjectGetter.getObject("sequence_layer")
@@ -156,21 +171,15 @@ export class KiiGame {
         );
         stageBuilder.build();
         // Build items and push them to the inventory item cache layer
-        const itemsBuilder = container.get(TYPES.ItemsBuilder);
+        const itemsBuilder: ItemsBuilder = container.get(ItemsBuilder);
         const items = itemsBuilder.build(gameData.items_json);
         const inventoryItems = this.stageObjectGetter.getObject('inventory_items');
         konvaObjectContainerPusher.execute(items, inventoryItems);
         // Creating all item image objects from json
         imagePreparer.prepareImages(inventoryItems.toObject());
-        // Not sure if this is necessary
-        inventoryItems.getChildren((shape) => {
-            if (shape.getClassName === 'Image') {
-                shape.clearCache();
-            }
-        });
         // Build items end
         // Build inventory
-        const inventoryBarLayer = this.stageObjectGetter.getObject('inventory_bar_layer');
+        const inventoryBarLayer = this.stageObjectGetter.getObject('inventory_bar_layer') as Konva.Layer;
         imagePreparer.prepareImages(inventoryBarLayer.toObject());
         // Scale inventory bar to stage
         this.stageObjectGetter.getObject("inventory_bar").y(this.stage.height() - 100);
@@ -189,7 +198,7 @@ export class KiiGame {
         // View start
         // Stage view start
         new StageView(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             this.stage
         );
         // Stage view end
@@ -201,27 +210,27 @@ export class KiiGame {
             opacity: 1
         });
         new FullFadeView(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             fadeFull
         );
         // Full fader view end
 
         // Sequences view start
         new SequenceView(
-            uiEventEmitter,
-            gameEventEmitter,
+            container.get(UiEventEmitter),
+            container.get(GameEventEmitter),
             this.stageObjectGetter,
             gameData.sequences_json,
-            this.stageObjectGetter.getObject('sequence_layer')
+            this.stageObjectGetter.getObject('sequence_layer') as Konva.Layer
         );
         // Sequences end
 
         // Rooms view start
-        const roomLayer = this.stageObjectGetter.getObject('room_layer');
+        const roomLayer = this.stageObjectGetter.getObject('room_layer') as Konva.Layer;
         // Room view component
         const roomView = new RoomView(
-            uiEventEmitter,
-            gameEventEmitter,
+            container.get(UiEventEmitter),
+            container.get(GameEventEmitter),
             hitRegionInitializer,
             roomLayer,
             Object.keys(roomObjectCategories),
@@ -231,11 +240,15 @@ export class KiiGame {
             new RoomAnimationBuilder(),
             this.stageObjectGetter
         ).build(roomView.getRooms());
-        new RoomAnimations(gameEventEmitter, uiEventEmitter, animatedRoomObjects);
+        new RoomAnimations(
+            container.get(GameEventEmitter),
+            container.get(UiEventEmitter),
+            animatedRoomObjects
+        );
         // NPC Monologue View
         new NpcMonologueView(
-            uiEventEmitter,
-            gameEventEmitter,
+            container.get(UiEventEmitter),
+            container.get(GameEventEmitter),
             this.stageObjectGetter.getObject("npc_speech_bubble"),
             this.stage.width()
         );
@@ -252,42 +265,42 @@ export class KiiGame {
         // Inventory & items view start
         // Inventory items view component
         const inventoryItemsView = new InventoryItemsView(
-            uiEventEmitter,
-            gameEventEmitter,
+            container.get(UiEventEmitter),
+            container.get(GameEventEmitter),
             inventoryItems,
             this.stage.height() - 90
         );
         // Inventory arrows view component
         const inventoryArrowsView = new InventoryArrowsView(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             inventoryBarLayer.find('#inventory_arrows')[0]
         );
         // Inventory view component
         const inventoryView = new InventoryView(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             this.stageObjectGetter,
             inventoryBarLayer,
             inventoryItemsView,
             inventoryArrowsView
         );
         new InventoryViewModel(
-            uiEventEmitter,
-            gameEventEmitter,
+            container.get(UiEventEmitter),
+            container.get(GameEventEmitter),
             7 // inventoryMax, TODO make configurable/responsive
         )
         // Inventory arrows view model
         new InventoryArrowsViewModel(
-            uiEventEmitter
+            container.get(UiEventEmitter),
         );
         // Dragged item view
         new DraggedItemView(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             this.stageObjectGetter.getObject('full_screen_layer'),
             this.stageObjectGetter.getObject("interaction_text")
         );
         // Dragged item view model
         new DraggedItemViewModel(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             new DragTargetFinder(
                 intersection,
                 roomView,
@@ -306,17 +319,17 @@ export class KiiGame {
         ).build(characterAnimationData);
         new CharacterAnimations(
             characterAnimations,
-            uiEventEmitter,
-            gameEventEmitter
+            container.get(UiEventEmitter),
+            container.get(GameEventEmitter)
         );
         // Character view component
         new CharacterView(
             characterLayer,
-            uiEventEmitter
+            container.get(UiEventEmitter)
         );
         new CharacterSpeechView(
-            uiEventEmitter,
-            gameEventEmitter,
+            container.get(UiEventEmitter),
+            container.get(GameEventEmitter),
             this.stageObjectGetter.getObject("monologue"),
             this.stageObjectGetter.getObject("character_speech_bubble"),
             this.stage.height()
@@ -324,15 +337,15 @@ export class KiiGame {
         // Character view end
 
         // Music view
-        new Music(gameData.music_json, new AudioFactory(), uiEventEmitter, gameEventEmitter);
+        new Music(gameData.music_json, new AudioFactory(), container.get(UiEventEmitter));
         // Music view end
         // View end
 
         // Controller start
         this.interactions = new Interactions(gameData.interactions_json);
         const commandHandler = new CommandHandler(
-            gameEventEmitter,
-            uiEventEmitter,
+            container.get(GameEventEmitter),
+            container.get(UiEventEmitter),
             this.stageObjectGetter,
             this.text,
             gameData.items_json, // TODO: items model?
@@ -341,13 +354,13 @@ export class KiiGame {
             commandHandler
         )
         new ClickHandler(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             commandsHandler,
             clickResolvers,
             this.interactions
         );
         new DragEndHandler(
-            uiEventEmitter,
+            container.get(UiEventEmitter),
             commandsHandler,
             dragResolvers,
             this.interactions
@@ -363,5 +376,25 @@ export class KiiGame {
                 'start'
             )
         );
+    }
+
+    getStage(): Konva.Stage {
+        return this.stage;
+    }
+
+    getInventory(): Inventory {
+        return this.inventory;
+    }
+
+    getStageObjectGetter(): StageObjectGetter {
+        return this.stageObjectGetter;
+    }
+
+    getText(): Text {
+        return this.text;
+    }
+
+    getInteractions(): Interactions {
+        return this.interactions;
     }
 }

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import FurnitureBuilder from './FurnitureBuilder.js';
+import { FurnitureBuilder } from './FurnitureBuilder.js';
 
 describe('furniture builder tests', () => {
     it('should add furniture as children', () => {

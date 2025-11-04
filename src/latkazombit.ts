@@ -7,14 +7,15 @@ import VisibilityValidator from './view/draggeditem/intersection/VisibilityValid
 import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
 import { JSONGetter } from './util/JSONGetter.js';
 import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
-import FurnitureBuilder from './viewbuilder/room/konva/FurnitureBuilder.js';
-import SecretBuilder from './latkazombit/viewbuilder/room/konva/SecretBuilder.js';
+import { FurnitureBuilder } from './viewbuilder/room/konva/FurnitureBuilder.js';
+import { SecretBuilder } from './latkazombit/viewbuilder/room/konva/SecretBuilder.js';
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
 import CommandHandler from './controller/interactions/CommandHandler.js';
-import { container, TYPES } from './inversify.config.js';
+import { container, GameEventEmitter, UiEventEmitter } from './inversify.config.js';
 import EventEmitter from './events/EventEmitter.js';
 import { KonvaPointerEvent } from 'konva/types/PointerEvents.js';
 import Konva from 'konva';
+import { KonvaEventObject } from 'konva/types/Node.js';
 
 const jsonGetter = new JSONGetter();
 
@@ -40,8 +41,8 @@ const gameData = {
     startInteraction: 'begin'
 };
 
-const gameEventEmitter: EventEmitter = container.get(TYPES.GameEventEmitter);
-const uiEventEmitter: EventEmitter = container.get(TYPES.UiEventEmitter);
+const gameEventEmitter: EventEmitter = container.get(GameEventEmitter);
+const uiEventEmitter: EventEmitter = container.get(UiEventEmitter);
 
 const kiigame = new KiiGame(
     [
@@ -66,19 +67,19 @@ const kiigame = new KiiGame(
         ]
     ),
     {
-        'furniture': {
-            'roomChildrenTypeBuilder': new FurnitureBuilder()
+        furniture: {
+            roomChildrenTypeBuilder: new FurnitureBuilder()
         },
-        // @ts-ignore - TODO: typeify
-        'secret': {
-            'roomChildrenTypeBuilder': new SecretBuilder()
+        secret: {
+            roomChildrenTypeBuilder: new SecretBuilder()
         }
     },
     gameEventEmitter,
     uiEventEmitter,
     gameData,
 );
-const stage = kiigame.stage;
+// TODO: "as any" hacks around "Property 'getWidth' does not exist on type 'Stage'.ts"
+const stage = kiigame.getStage() as any;
 
 const legends_json = JSON.parse(jsonGetter.getJSON('data/legends.json'));
 
@@ -88,13 +89,13 @@ stage.find("#locker_room_2")[0].setSize(stage.getWidth(), stage.getHeight() - 10
 
 const input_text = stage.find('#input_text')[0];
 const input_layer = stage.find('#input_layer')[0];
-new ImagePreparer(kiigame.stageObjectGetter).prepareImages(input_layer);
+new ImagePreparer(kiigame.getStageObjectGetter()).prepareImages(input_layer);
 
 // For checking whether player has selected their jersey number
 let number_selected = false;
 
 // Default player number
-input_text.setText(kiigame.text.getText('input_text', 'text'));
+input_text.setText(kiigame.getText().getText('input_text', 'text'));
 
 // On clicking the start game we open the choosing the jersey number
 stage.find('#start_game')[0].on('tap click', function () {
@@ -111,10 +112,10 @@ stage.find('#start_game')[0].on('tap click', function () {
 });
 
 // Listeners for the input screen buttons
-input_layer.on('tap click', function (event: KonvaPointerEvent) {
+input_layer.on('tap click', (event: KonvaEventObject<KonvaPointerEvent>) => {
     const target = event.target;
 
-    const selected = kiigame.text.getName(target.getAttr('id'));
+    const selected = kiigame.getText().getName(target.getAttr('id'));
     if (!selected) {
         return;
     }
@@ -226,20 +227,20 @@ input_layer.on('tap click', function (event: KonvaPointerEvent) {
     } else if (selected == 'OK' && input_text.getText().length > 0) {
         // OK
         stage.find('#jersey_number')[0].setText(input_text.getText());
-        kiigame.text.setText('jersey_number', 'examine', kiigame.text.getText('input_text', 'wikistart') + input_text.getText() + kiigame.text.getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
-        kiigame.text.setText('icehockey_jersey', 'examine', kiigame.text.getText('input_text', 'wikistart') + input_text.getText() + kiigame.text.getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
+        kiigame.getText().setText('jersey_number', 'examine', kiigame.getText().getText('input_text', 'wikistart') + input_text.getText() + kiigame.getText().getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
+        kiigame.getText().setText('icehockey_jersey', 'examine', kiigame.getText().getText('input_text', 'wikistart') + input_text.getText() + kiigame.getText().getText('input_text', 'wikiend') + legends_json[parseInt(input_text.getText()) - 1].player + ".\n\n" + legends_json[parseInt(input_text.getText()) - 1].wikipedia);
         input_layer.hide();
 
         new CommandsHandler(
             new CommandHandler(
                 gameEventEmitter,
                 uiEventEmitter,
-                kiigame.stageObjectGetter,
-                kiigame.text,
+                kiigame.getStageObjectGetter(),
+                kiigame.getText(),
                 items_json
             )
         ).handleCommands(new DefaultInteractionResolver().resolveCommands(
-            kiigame.interactions,
+            kiigame.getInteractions(),
             'start_button_ok'
         ));
     }
@@ -265,9 +266,9 @@ input_layer.on('tap click', function (event: KonvaPointerEvent) {
 // When arriving to the final room (the final step of the game), count rewards in invetory.
 uiEventEmitter.on('arrived_in_room', function (roomId: string) {
     if (roomId === 'end_layer') {
-        const rewards_text = kiigame.stageObjectGetter.getObject("rewards_text") as Konva.Text;
+        const rewards_text = kiigame.getStageObjectGetter().getObject("rewards_text") as Konva.Text;
         let rewardsCount = 0;
-        for (const inventoryItem of kiigame.inventory.items) {
+        for (const inventoryItem of kiigame.getInventory().items) {
             if (inventoryItem.category === 'reward') {
                 rewardsCount++;
             }

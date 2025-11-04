@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import OtherChildrenBuilder from './OtherChildrenBuilder.js';
+import { OtherChildrenBuilder } from './OtherChildrenBuilder.js';
 
 describe('other room children builder tests', () => {
     it('should add other objects as children', () => {

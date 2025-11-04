@@ -1,9 +1,11 @@
-class SecretBuilder {
+import { RoomChildrenBuilder } from "../../../../viewbuilder/room/konva/RoomChildrenBuilder.js";
+
+export class SecretBuilder implements RoomChildrenBuilder {
     /**
      * @param {object} secretJson secret child objects from room.json
      * @returns {object[]} an array of secret child objects as Konva objects
      */
-    buildRoomChildren(secretJson) {
+    buildRoomChildren(secretJson: any[]): any[] {
         const secretResult = [];
         for (const [key, secret] of Object.entries(secretJson)) {
             if (!secret.attrs) {
@@ -16,5 +18,3 @@ class SecretBuilder {
         return secretResult;
     }
 }
-
-export default SecretBuilder;

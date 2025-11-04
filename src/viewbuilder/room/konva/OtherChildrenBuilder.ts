@@ -1,14 +1,14 @@
+import { RoomChildrenBuilder } from "./RoomChildrenBuilder.js";
+
 /**
  * Allow fairly freely adding "pure" Konva objects as children to the room (very flexible!)
- *
- * Quacks like a "RoomChildrenBuilder" (for RoomChildrenTypeBuilder) - implements a buildRoomChildren method
  */
-class OtherChildrenBuilder {
+export class OtherChildrenBuilder implements RoomChildrenBuilder {
     /**
-     * @param {object} otherJson other child objects from room.json
-     * @returns {object[]} an array of other child objects as Konva objects
+     * @param {any[]} otherJson other child objects from room.json
+     * @returns {any[]} an array of other child objects as Konva objects
      */
-    buildRoomChildren(otherJson) {
+    buildRoomChildren(otherJson: any[]): any[] {
         const otherResult = [];
         for (const [key, other] of Object.entries(otherJson)) {
             if (!other.attrs) {
@@ -20,5 +20,3 @@ class OtherChildrenBuilder {
         return otherResult;
     }
 }
-
-export default OtherChildrenBuilder;

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import SecretBuilder from './SecretBuilder.js';
+import { SecretBuilder } from './SecretBuilder.js';
 
 describe('Lätkäzombit/LZ secret room children builder tests', () => {
     it('should add secret objects as children', () => {
