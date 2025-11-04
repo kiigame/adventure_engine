@@ -5,10 +5,9 @@ class ObjectsInRooms {
      * @param {object} objectsInRoomsData initial state of the objects in rooms as json
      * @param {EventEmitter} gameEventEmitter
      */
-    constructor(objectsInRoomsData, gameEventEmitter, uiEventEmitter) {
+    constructor(objectsInRoomsData, gameEventEmitter) {
         this.objectsInRoomsData = objectsInRoomsData;
         this.gameEventEmitter = gameEventEmitter;
-        this.uiEventEmitter = uiEventEmitter;
 
         this.gameEventEmitter.on('remove_objects', (objectNames) => {
             this.removeObjects(objectNames);
