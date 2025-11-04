@@ -1,4 +1,9 @@
+import EventEmitter from "../events/EventEmitter.js";
+
 class CharacterInRoom {
+    /**
+     * @param {EventEmitter} gameEventEmitter
+     */
     constructor(gameEventEmitter) {
         this.gameEventEmitter = gameEventEmitter;
         this.state = null;
