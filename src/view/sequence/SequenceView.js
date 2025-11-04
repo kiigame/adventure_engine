@@ -1,4 +1,15 @@
+import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
+import EventEmitter from "../../events/EventEmitter.js";
+import Konva from 'konva';
+
 class SequenceView {
+    /**
+     * @param {EventEmitter} uiEventEmitter
+     * @param {EventEmitter} gameEventEmitter
+     * @param {StageObjectGetter} stageObjectGetter
+     * @param {any} sequencesJson
+     * @param {Konva.Layer} sequenceLayer
+     */
     constructor(uiEventEmitter, gameEventEmitter, stageObjectGetter, sequencesJson, sequenceLayer) {
         this.uiEventEmitter = uiEventEmitter;
         this.stageObjectGetter = stageObjectGetter;
