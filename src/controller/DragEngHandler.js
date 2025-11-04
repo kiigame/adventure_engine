@@ -7,7 +7,7 @@ class DragEndHandler {
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {CommandsHandler} commandsHandler
-     * @param {DefaultInteractionResolver} dragResolvers
+     * @param {DefaultInteractionResolver[]} dragResolvers
      * @param {Interactions} interactions
      */
     constructor(uiEventEmitter, commandsHandler, dragResolvers, interactions) {
