@@ -1,20 +1,24 @@
 import { EventEmitter } from "../../events/EventEmitter.js";
 import { HitRegionFilter } from "./hitregion/HitRegionFilter.js";
+import Konva from 'konva';
 
 /**
  * Initialize hit regions in the stage.
  */
-class HitRegionInitializer {
+export class HitRegionInitializer {
+    private hitRegionFilter: HitRegionFilter;
+    private uiEventEmitter: EventEmitter;
+
     /**
      * @param {HitRegionFilter} hitRegionFilter
      * @param {EventEmitter} uiEventEmitter
      */
-    constructor(hitRegionFilter, uiEventEmitter) {
+    constructor(hitRegionFilter: HitRegionFilter, uiEventEmitter: EventEmitter) {
         this.hitRegionFilter = hitRegionFilter;
         this.uiEventEmitter = uiEventEmitter;
     }
 
-    initHitRegions(roomLayer)
+    initHitRegions(roomLayer: Konva.Layer)
     {
         roomLayer.getChildren().each((o) => {
             if (o.getAttr('category') == 'room') {
@@ -37,5 +41,3 @@ class HitRegionInitializer {
         });
     }
 }
-
-export default HitRegionInitializer;
