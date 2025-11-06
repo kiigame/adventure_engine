@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { createStubInstance, restore } from 'sinon';
-import VisibilityValidator from './VisibilityValidator.js';
+import { VisibilityValidator } from './VisibilityValidator.js';
 import pkg from 'konva';
 const { Shape } = pkg;
 

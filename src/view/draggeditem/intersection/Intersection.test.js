@@ -1,7 +1,7 @@
 import { assert, expect } from 'chai';
 import { createStubInstance, restore } from 'sinon';
 import Intersection from './Intersection.js';
-import VisibilityValidator from './VisibilityValidator.js';
+import { VisibilityValidator } from './VisibilityValidator.js';
 import pkg from 'konva';
 const { Shape } = pkg;
 
