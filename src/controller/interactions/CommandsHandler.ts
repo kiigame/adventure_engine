@@ -1,19 +1,21 @@
 import { CommandHandler } from "./CommandHandler.js";
 
-class CommandsHandler {
+export class CommandsHandler {
+    private commandHandler: CommandHandler;
+
     /**
      * @param {CommandHandler} commandHandler 
      */
-    constructor(commandHandler) {
+    constructor(commandHandler: CommandHandler) {
         this.commandHandler = commandHandler;
     }
 
     /**
      * Loop through a list of interaction commands and execute them with CommandHandler,
      * with timeout if specified
-     * @param {object} commands a list of interaction commands list as json
+     * @param {{ [key: string]: any }} commands a list of interaction commands list as json
      */
-    handleCommands(commands) {
+    handleCommands(commands: { [key: string]: any }) {
         for (const i in commands) {
             if (commands[i].timeout != null) {
                 ((commands, i) => {
@@ -28,5 +30,3 @@ class CommandsHandler {
     }
 
 }
-
-export default CommandsHandler;

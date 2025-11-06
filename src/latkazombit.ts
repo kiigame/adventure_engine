@@ -9,7 +9,7 @@ import { JSONGetter } from './util/JSONGetter.js';
 import ImagePreparer from './viewbuilder/util/konva/ImagePreparer.js';
 import { FurnitureBuilder } from './viewbuilder/room/konva/FurnitureBuilder.js';
 import { SecretBuilder } from './latkazombit/viewbuilder/room/konva/SecretBuilder.js';
-import CommandsHandler from './controller/interactions/CommandsHandler.js';
+import { CommandsHandler } from './controller/interactions/CommandsHandler.js';
 import { CommandHandler } from './controller/interactions/CommandHandler.js';
 import { container, GameEventEmitter, UiEventEmitter } from './inversify.config.js';
 import EventEmitter from './events/EventEmitter.js';
