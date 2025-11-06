@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { createStubInstance, useFakeTimers, stub, restore } from 'sinon';
 import Music from './Music.js';
 import AudioFactory from './AudioFactory.js';
-import EventEmitter from '../../events/EventEmitter.js';
+import { EventEmitter } from '../../events/EventEmitter.js';
 
 class AudioStub {
     play() { return; };

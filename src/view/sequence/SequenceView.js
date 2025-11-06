@@ -1,5 +1,5 @@
 import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
-import EventEmitter from "../../events/EventEmitter.js";
+import { EventEmitter } from "../../events/EventEmitter.js";
 import Konva from 'konva';
 
 class SequenceView {

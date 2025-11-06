@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createStubInstance } from 'sinon';
 import CharacterInRoom from './CharacterInRoom.js';
-import EventEmitter from '../events/EventEmitter.js';
+import { EventEmitter } from '../events/EventEmitter.js';
 
 describe('Character in room model tests', () => {
     let gameEventEmitterStub;

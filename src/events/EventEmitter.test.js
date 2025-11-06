@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { spy } from 'sinon';
-import EventEmitter from './EventEmitter.js';
+import { spy, restore } from 'sinon';
+import { EventEmitter } from './EventEmitter.js';
 
 describe('EventEmitter', () => {
     let emitter;
@@ -11,11 +11,22 @@ describe('EventEmitter', () => {
         emitter = new EventEmitter(loggerSpy);
     });
 
+    afterEach(() => {
+        restore();
+    });
+
     it('should call listener when event is emitted', () => {
         const callbackSpy = spy();
         emitter.on('event', callbackSpy);
         emitter.emit('event', 'data');
         expect(callbackSpy.calledOnceWith('data')).to.be.true;
+    });
+
+    it('should call listener without data if data is not provided', () => {
+        const callbackSpy = spy();
+        emitter.on('event', callbackSpy);
+        emitter.emit('event');
+        expect(callbackSpy.calledOnceWith(undefined)).to.be.true;
     });
 
     it('should call all listeners for an event', () => {

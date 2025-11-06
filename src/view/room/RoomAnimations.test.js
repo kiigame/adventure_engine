@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { createStubInstance, stub, restore } from 'sinon';
 import RoomAnimations from './RoomAnimations.js';
-import EventEmitter from '../../events/EventEmitter.js';
+import { EventEmitter } from '../../events/EventEmitter.js';
 import pkg from 'konva';
 const { Container, Node, Animation } = pkg;
 

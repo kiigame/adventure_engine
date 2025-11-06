@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import InventoryView from './InventoryView.js';
-import EventEmitter from '../../events/EventEmitter.js';
+import { EventEmitter } from '../../events/EventEmitter.js';
 import pkg from 'konva';
 import { StageObjectGetter } from '../../util/konva/StageObjectGetter.js';
 import InventoryItemsView from './InventoryItemsView.js';

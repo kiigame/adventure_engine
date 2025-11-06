@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import InventoryArrowsView from './InventoryArrowsView.js';
-import EventEmitter from '../../events/EventEmitter.js';
+import { EventEmitter } from '../../events/EventEmitter.js';
 import pkg from 'konva';
 const { Shape, Group } = pkg;
 use(sinonChai);

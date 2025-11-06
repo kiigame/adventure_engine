@@ -1,4 +1,4 @@
-import EventEmitter from "../../events/EventEmitter.js";
+import { EventEmitter } from "../../events/EventEmitter.js";
 
 class DraggedItemView {
     /**

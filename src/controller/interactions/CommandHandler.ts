@@ -1,5 +1,5 @@
 import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
-import EventEmitter from "../../events/EventEmitter.js";
+import { EventEmitter } from "../../events/EventEmitter.js";
 import { Text } from "../../model/Text.js";
 
 export class CommandHandler {

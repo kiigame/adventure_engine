@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore, useFakeTimers } from 'sinon';
 import sinonChai from "sinon-chai";
 import DraggedItemViewModel from './DraggedItemViewModel.js';
-import EventEmitter from '../../events/EventEmitter.js';
+import { EventEmitter } from '../../events/EventEmitter.js';
 import DragTargetFinder from './DragTargetFinder.js';
 import { Text } from '../../model/Text.js';
 import pkg from 'konva';

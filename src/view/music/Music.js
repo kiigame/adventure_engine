@@ -1,4 +1,4 @@
-import EventEmitter from "../../events/EventEmitter.js";
+import { EventEmitter } from "../../events/EventEmitter.js";
 import AudioFactory from "./AudioFactory.js";
 
 class Music {
