@@ -4,7 +4,7 @@ import SequenceLayerBuilder from './viewbuilder/sequence/konva/SequenceLayerBuil
 import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
 import Interactions from './controller/interactions/Interactions.js';
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
-import CommandHandler from './controller/interactions/CommandHandler.js';
+import { CommandHandler } from './controller/interactions/CommandHandler.js';
 import HitRegionInitializer from './view/room/HitRegionInitializer.js';
 import HitRegionFilter from './view/room/hitregion/HitRegionFilter.js';
 import Intersection from './view/draggeditem/intersection/Intersection.js';

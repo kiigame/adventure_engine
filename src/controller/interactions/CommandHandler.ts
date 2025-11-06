@@ -2,20 +2,32 @@ import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
 import EventEmitter from "../../events/EventEmitter.js";
 import { Text } from "../../model/Text.js";
 
-class CommandHandler {
+export class CommandHandler {
+    private gameEventEmitter: EventEmitter;
+    private uiEventEmitter: EventEmitter;
+    private stageObjectGetter: StageObjectGetter;
+    private text: Text;
+    private itemsJson: { [key: string]: any };
+
     /**
      * @param {EventEmitter} gameEventEmitter
      * @param {EventEmitter} uiEventEmitter
      * @param {StageObjectGetter} stageObjectGetter
      * @param {Text} text
-     * @param {object} items_json
+     * @param {{ [key: string]: any }} itemsJson
      */
-    constructor(gameEventEmitter, uiEventEmitter, stageObjectGetter, text, items_json) {
+    constructor(
+        gameEventEmitter: EventEmitter,
+        uiEventEmitter: EventEmitter,
+        stageObjectGetter: StageObjectGetter,
+        text: Text,
+        itemsJson: { [key: string]: any }
+    ) {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
         this.stageObjectGetter = stageObjectGetter;
         this.text = text;
-        this.items_json = items_json;
+        this.itemsJson = itemsJson;
     }
 
     /**
@@ -26,35 +38,36 @@ class CommandHandler {
      * animation is stopped and the defined animation plays, and not vice versa.
      * @param {object} command the interaction command as json
      */
-    handleCommand(command) {
+    handleCommand(command: any) {
         if (command.command == "monologue") {
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             this.gameEventEmitter.emit('monologue', text);
         } else if (command.command == "inventory_add") {
             const items = Array.isArray(command.item) ? command.item : [command.item];
-            const itemsToAdd = [];
-            items.forEach((name) =>
-                itemsToAdd.push({ name, category: this.items_json[name].category })
+            type itemToAdd = { name: string, category: string };
+            const itemsToAdd: itemToAdd[] = [];
+            items.forEach((name: string) =>
+                itemsToAdd.push({ name, category: this.itemsJson[name].category })
             );
             this.gameEventEmitter.emit('inventory_add', itemsToAdd);
         } else if (command.command == "inventory_remove") {
             const items = Array.isArray(command.item) ? command.item : [command.item];
-            const itemsToRemove = [];
-            items.forEach((name) =>
+            const itemsToRemove: string[] = [];
+            items.forEach((name: string) =>
                 itemsToRemove.push(name)
             );
             this.gameEventEmitter.emit('inventory_remove', itemsToRemove);
         } else if (command.command == "remove_object") {
             const objects = Array.isArray(command.object) ? command.object : [command.object];
-            const objectsToRemove = [];
-            objects.forEach((objectName) => {
+            const objectsToRemove: string[] = [];
+            objects.forEach((objectName: string) => {
                 objectsToRemove.push(objectName)
             });
             this.gameEventEmitter.emit('remove_objects', objectsToRemove);
         } else if (command.command == "add_object") {
             const objects = Array.isArray(command.object) ? command.object : [command.object];
-            const objectsToAdd = [];
-            objects.forEach((objectName) => {
+            const objectsToAdd: string[] = [];
+            objects.forEach((objectName: string) => {
                 objectsToAdd.push(objectName)
             });
             this.gameEventEmitter.emit('add_objects', objectsToAdd);
@@ -96,5 +109,3 @@ class CommandHandler {
         }
     }
 }
-
-export default CommandHandler;
