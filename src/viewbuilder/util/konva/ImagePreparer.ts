@@ -1,10 +1,19 @@
 import { StageObjectGetter } from "../../../util/konva/StageObjectGetter.js";
+import Konva from 'konva';
 
-class ImagePreparer {
+declare global {
+    interface Window {
+        [key: string]: typeof Image | any;
+    }
+}
+
+export class ImagePreparer {
+    private stageObjectGetter: StageObjectGetter;
+
     /**
      * @param {StageObjectGetter} stageObjectGetter
      */
-    constructor(stageObjectGetter) {
+    constructor(stageObjectGetter: StageObjectGetter) {
         this.stageObjectGetter = stageObjectGetter;
     }
 
@@ -12,7 +21,7 @@ class ImagePreparer {
      * Prepare images from a container (layer or group)
      * @param {Konva.Node} container
      */
-    prepareImages(container) {
+    prepareImages(container: Konva.Node) {
         for (const object of container.children) {
             if (object.className == 'Image') {
                 this.loadImageObject(object.attrs.id, object.attrs.src);
@@ -26,13 +35,13 @@ class ImagePreparer {
      * @param {string} id the identifier for the image object
      * @param {string} imageSrc the source URL of the image
      */
-    loadImageObject(id, imageSrc) {
+    loadImageObject(id: string, imageSrc: string) {
         window[id] = new Image();
         window[id].onload = () => {
-            this.stageObjectGetter.getObject(id).image(window[id]);
+            // We trust prepareImages has made sure we are dealing with a Konva.Image
+            const konvaImage: Konva.Image = this.stageObjectGetter.getObject(id) as Konva.Image;
+            konvaImage.image(window[id]);
         };
         window[id].src = imageSrc;
     }
 }
-
-export default ImagePreparer;

@@ -1,7 +1,7 @@
 import RoomLayerBuilder from "../../room/konva/RoomLayerBuilder.js";
 import SequenceLayerBuilder from "../../sequence/konva/SequenceLayerBuilder.js";
 import FullFaderPreparer from "./FullFaderPreparer.js";
-import ImagePreparer from "../../util/konva/ImagePreparer.js";
+import { ImagePreparer } from "../../util/konva/ImagePreparer.js";
 
 class StageBuilder {
     /**

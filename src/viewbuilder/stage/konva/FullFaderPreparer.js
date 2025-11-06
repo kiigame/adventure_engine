@@ -1,5 +1,5 @@
 import { StageObjectGetter } from "../../../util/konva/StageObjectGetter.js";
-import ImagePreparer from "../../util/konva/ImagePreparer.js";
+import { ImagePreparer } from "../../util/konva/ImagePreparer.js";
 
 class FullFaderPreparer {
     /**
