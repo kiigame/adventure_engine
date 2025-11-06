@@ -1,5 +1,5 @@
 import { EventEmitter } from "../../events/EventEmitter.js";
-import HitRegionFilter from "./hitregion/HitRegionFilter.js";
+import { HitRegionFilter } from "./hitregion/HitRegionFilter.js";
 
 /**
  * Initialize hit regions in the stage.

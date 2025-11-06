@@ -1,13 +1,18 @@
+import Konva from 'konva';
+
 /**
  * Filter shapes that should have a hit region by adventure object category and shape class name.
  */
-class HitRegionFilter {
-    constructor(categoriesToExclude, shapeClassesToInclude) {
+export class HitRegionFilter {
+    private categoriesToExclude: string[];
+    private shapeClassesToInclude: string[];
+
+    constructor(categoriesToExclude: string[], shapeClassesToInclude: string[]) {
         this.categoriesToExclude = categoriesToExclude;
         this.shapeClassesToInclude = shapeClassesToInclude;
     }
 
-    filter(shape)
+    filter(shape: Konva.Shape): boolean
     {
         if (this.categoriesToExclude.includes(shape.getAttr('category'))) {
             return false;
@@ -20,5 +25,3 @@ class HitRegionFilter {
         return true;
     }
 }
-
-export default HitRegionFilter;

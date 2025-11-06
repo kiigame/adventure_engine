@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { createStubInstance, restore, stub } from 'sinon';
-import HitRegionFilter from './HitRegionFilter.js';
+import { HitRegionFilter } from './HitRegionFilter.js';
 import pkg from 'konva';
 const { Shape } = pkg;
 
