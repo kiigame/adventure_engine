@@ -1,6 +1,7 @@
 import Konva from 'konva';
+import { IntersectionValidator } from './IntesrsectionValidator.js'
 
-export class CategoryValidator {
+export class CategoryValidator implements IntersectionValidator {
     private categoryToInvalidate: string[];
 
     /**

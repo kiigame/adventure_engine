@@ -7,7 +7,7 @@ import { CommandsHandler } from './controller/interactions/CommandsHandler.js';
 import { CommandHandler } from './controller/interactions/CommandHandler.js';
 import HitRegionInitializer from './view/room/HitRegionInitializer.js';
 import HitRegionFilter from './view/room/hitregion/HitRegionFilter.js';
-import Intersection from './view/draggeditem/intersection/Intersection.js';
+import { Intersection } from './view/draggeditem/intersection/Intersection.js';
 import { VisibilityValidator } from './view/draggeditem/intersection/VisibilityValidator.js';
 import { CategoryValidator } from './view/draggeditem/intersection/CategoryValidator.js';
 import Music from './view/music/Music.js';

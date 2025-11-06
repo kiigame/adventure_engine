@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore, reset, stub } from 'sinon';
 import sinonChai from "sinon-chai";
 import DragTargetFinder from './DragTargetFinder.js';
-import Intersection from './intersection/Intersection.js';
+import { Intersection } from './intersection/Intersection.js';
 import RoomView from '../room/RoomView.js';
 import InventoryArrowsView from '../inventory/InventoryArrowsView.js';
 import InventoryItemsView from '../inventory/InventoryItemsView.js';

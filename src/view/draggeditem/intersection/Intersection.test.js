@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { createStubInstance, restore } from 'sinon';
-import Intersection from './Intersection.js';
+import { Intersection } from './Intersection.js';
 import { VisibilityValidator } from './VisibilityValidator.js';
 import pkg from 'konva';
 const { Shape } = pkg;
@@ -42,13 +42,6 @@ describe('Test Intersection', function() {
         const targetStub = createStubInstance(Shape, { x: 10, y: 10, width: 100, height: 100 });
         const draggedStub = createStubInstance(Shape, { x: 11, y: 11, width: 50, height: 50 });
         const intersection = new Intersection([]);
-        const result = intersection.check(draggedStub, targetStub);
-        assert.deepEqual(result, true);
-    });
-    it('will return true without validators (null) and if the items fully overlap', function() {
-        const targetStub = createStubInstance(Shape, { x: 10, y: 10, width: 100, height: 100 });
-        const draggedStub = createStubInstance(Shape, { x: 11, y: 11, width: 50, height: 50 });
-        const intersection = new Intersection();
         const result = intersection.check(draggedStub, targetStub);
         assert.deepEqual(result, true);
     });

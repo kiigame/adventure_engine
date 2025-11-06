@@ -1,14 +1,14 @@
-/**
- */
-class Intersection {
-    constructor(validators) {
-        if (validators === null || validators === undefined) {
-            validators = [];
-        }
+import { IntersectionValidator } from "./IntesrsectionValidator";
+import Konva from 'konva';
+
+export class Intersection {
+    private validators: IntersectionValidator[];
+
+    constructor(validators: IntersectionValidator[]) {
         this.validators = validators;
     }
 
-    check(draggedItem, target) {
+    check(draggedItem: Konva.Shape, target: Konva.Shape): boolean {
         for (const validator of this.validators) {
             if (!validator.validate(target)) {
                 return false;
@@ -32,5 +32,3 @@ class Intersection {
         return false;
     }
 }
-
-export default Intersection;
