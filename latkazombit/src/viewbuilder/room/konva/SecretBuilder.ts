@@ -1,4 +1,4 @@
-import { RoomChildrenBuilder } from "../../../../viewbuilder/room/konva/RoomChildrenBuilder.js";
+import { RoomChildrenBuilder } from "../../../../../kiigame/src/viewbuilder/room/konva/RoomChildrenBuilder.js";
 
 export class SecretBuilder implements RoomChildrenBuilder {
     /**

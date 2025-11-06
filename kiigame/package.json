@@ -1,0 +1,137 @@
+{
+  "name": "@kiigame/adventure_engine",
+  "version": "0.5.0",
+  "description": "Lightweight point & click adventure game engine",
+  "main": "./dist/kiigame.js",
+  "module": "./dist/kiigame.js",
+  "types": "./dist/types/kiigame.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/types/kiigame.d.ts",
+        "default": "./dist/kiigame.js"
+      }
+    },
+    "./util/JSONGetter": {
+      "import": {
+        "types": "./dist/types/util/JSONGetter.d.ts",
+        "default": "./dist/JSONGetter.js"
+      }
+    },
+    "./controller/interactions/DefaultInteractionResolver": {
+      "import": {
+        "types": "./dist/types/controller/interactions/DefaultInteractionResolver.d.ts",
+        "default": "./dist/DefaultInteractionResolver.js"
+      }
+    },
+    "./view/room/HitRegionInitializer": {
+      "import": {
+        "types": "./dist/types/view/room/HitRegionInitializer.d.ts",
+        "default": "./dist/HitRegionInitializer.js"
+      }
+    },
+    "./view/room/hitregion/HitRegionFilter": {
+      "import": {
+        "types": "./dist/types/view/room/hitregion/HitRegionFilter.d.ts",
+        "default": "./dist/HitRegionFilter.js"
+      }
+    },
+    "./view/draggeditem/intersection/Intersection": {
+      "import": {
+        "types": "./dist/types/view/draggeditem/intersection/Intersection.d.ts",
+        "default": "./dist/Intersection.js"
+      }
+    },
+    "./view/draggeditem/intersection/VisibilityValidator": {
+      "import": {
+        "types": "./dist/types/view/draggeditem/intersection/VisibilityValidator.d.ts",
+        "default": "./dist/VisibilityValidator.js"
+      }
+    },
+    "./view/draggeditem/intersection/CategoryValidator": {
+      "import": {
+        "types": "./dist/types/view/draggeditem/intersection/CategoryValidator.d.ts",
+        "default": "./dist/CategoryValidator.js"
+      }
+    },
+    "./viewbuilder/util/konva/ImagePreparer": {
+      "import": {
+        "types": "./dist/types/viewbuilder/util/konva/ImagePreparer.d.ts",
+        "default": "./dist/ImagePreparer.js"
+      }
+    },
+    "./viewbuilder/room/konva/FurnitureBuilder": {
+      "import": {
+        "types": "./dist/types/viewbuilder/room/konva/FurnitureBuilder.d.ts",
+        "default": "./dist/FurnitureBuilder.js"
+      }
+    },
+    "./controller/interactions/CommandsHandler": {
+      "import": {
+        "types": "./dist/types/controller/interactions/CommandsHandler.d.ts",
+        "default": "./dist/CommandsHandler.js"
+      }
+    },
+    "./controller/interactions/CommandHandler": {
+      "import": {
+        "types": "./dist/types/controller/interactions/CommandHandler.d.ts",
+        "default": "./dist/CommandHandler.js"
+      }
+    },
+    "./inversify.config": {
+      "import": {
+        "types": "./dist/types/inversify.config.d.ts",
+        "default": "./dist/inversify.config.js"
+      }
+    },
+    "./events/EventEmitter": {
+      "import": {
+        "types": "./dist/types/events/EventEmitter.d.ts",
+        "default": "./dist/EventEmitter.js"
+      }
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "mocha --loader=ts-node/esm './{,!(node_modules|public)/**}/*.test.js'",
+    "build": "../node_modules/.bin/rollup --config --configBuild",
+    "pre-commit": "npm run typecheck && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiigame/adventure_engine.git"
+  },
+  "author": "Eino Keskitalo <eino.keskitalo@gmail.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/kiigame/adventure_engine/issues"
+  },
+  "homepage": "https://github.com/kiigame/adventure_engine#readme",
+  "dependencies": {
+    "@kiigame/adventure_engine": "0.5.0",
+    "inversify": "7.10.4",
+    "konva": "7.2.5",
+    "reflect-metadata": "0.2.2",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "29.0.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-typescript": "12.3.0",
+    "@types/mocha": "10.0.10",
+    "@types/sinon-chai": "4.0.0",
+    "chai": "6.2.0",
+    "esm": "3.2.25",
+    "glob": "11.0.3",
+    "mocha": "11.7.4",
+    "rollup": "4.52.5",
+    "rollup-plugin-copy": "3.5.0",
+    "rollup-plugin-dts": "6.2.3",
+    "sinon": "21.0.0",
+    "sinon-chai": "4.0.1",
+    "ts-node": "10.9.2",
+    "tslib": "2.8.1",
+    "typescript": "5.9.3"
+  }
+}

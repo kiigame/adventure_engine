@@ -12,7 +12,7 @@ import { VisibilityValidator } from './view/draggeditem/intersection/VisibilityV
 import { CategoryValidator } from './view/draggeditem/intersection/CategoryValidator.js';
 import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
-import { Text } from './model/Text.js';
+import { TextModel } from './model/TextModel.js';
 import RoomAnimationBuilder from './viewbuilder/room/konva/RoomAnimationBuilder.js';
 import RoomAnimationsBuilder from './viewbuilder/room/konva/RoomAnimationsBuilder.js';
 import RoomAnimations from './view/room/RoomAnimations.js';
@@ -58,11 +58,11 @@ import StageView from './view/StageView.js';
 import FullFadeView from './view/FullFadeView.js';
 import NpcMonologueView from './view/room/NpcMonologueView.js';
 import { RoomChildrenBuilder } from './viewbuilder/room/konva/RoomChildrenBuilder.js';
+import ItemsBuilder from 'viewbuilder/item/konva/ItemsBuilder.js';
+import SequenceBuilder from 'viewbuilder/sequence/konva/SequenceBuilder.js';
 
 import "reflect-metadata";
 import { container, GameEventEmitter, UiEventEmitter } from "./inversify.config.js";
-import ItemsBuilder from 'viewbuilder/item/konva/ItemsBuilder.js';
-import SequenceBuilder from 'viewbuilder/sequence/konva/SequenceBuilder.js';
 
 type RoomObjectCategoryType = {
     roomChildrenTypeBuilder: RoomChildrenBuilder
@@ -72,7 +72,7 @@ export type RoomObjectCategoriesType = Record<string, RoomObjectCategoryType>;
 
 export class KiiGame {
     private inventory: Inventory;
-    private text: Text;
+    private text: TextModel;
     private stage: Konva.Stage;
     private stageObjectGetter: StageObjectGetter;
     private interactions: Interactions;
@@ -80,19 +80,14 @@ export class KiiGame {
     constructor(
         clickResolvers: DefaultInteractionResolver[] = [],
         dragResolvers: DefaultInteractionResolver[] = [],
-        hitRegionInitializer: HitRegionInitializer = new HitRegionInitializer(
-            new HitRegionFilter([], ['Image']),
-            container.get(UiEventEmitter)
-        ),
+        hitRegionFilter: HitRegionFilter = new HitRegionFilter([], ['Image']),
         intersection: Intersection = new Intersection(
             [
                 new VisibilityValidator(),
                 new CategoryValidator([])
             ]
         ),
-        roomObjectCategories: RoomObjectCategoriesType = { furniture: { roomChildrenTypeBuilder: new FurnitureBuilder() } },
-        gameEventEmitter = container.get(GameEventEmitter),
-        uiEventEmitter = container.get(UiEventEmitter),
+        roomObjectCategories?: RoomObjectCategoriesType,
         gameData: any = {},
     ) {
         if (clickResolvers.length == 0) {
@@ -107,7 +102,17 @@ export class KiiGame {
                 new DefaultInteractionResolver('item')
             );
         }
-
+        if (!roomObjectCategories) {
+            roomObjectCategories = {
+                furniture: {
+                    roomChildrenTypeBuilder: new FurnitureBuilder()
+                }
+            } as RoomObjectCategoriesType;
+        };
+        const hitRegionInitializer: HitRegionInitializer = new HitRegionInitializer(
+            new HitRegionFilter([], ['Image']),
+            container.get(UiEventEmitter)
+        );
         // Model start
         // "Objects in rooms" model
         // Build the initial "objects in rooms" state
@@ -120,7 +125,7 @@ export class KiiGame {
         // Inventory model
         this.inventory = new Inventory(container.get(GameEventEmitter), container.get(UiEventEmitter));
         // Text model(?)
-        this.text = new Text(gameData.text_json);
+        this.text = new TextModel(gameData.text_json);
         // Model end
 
         // View builder start
@@ -256,10 +261,10 @@ export class KiiGame {
         const roomFaderNode = this.stageObjectGetter.getObject("fader_room");
         new RoomFader(
             roomFaderNode,
-            uiEventEmitter
+            container.get(UiEventEmitter)
         );
         // Character in room view model
-        new CharacterInRoomViewModel(uiEventEmitter, gameEventEmitter);
+        new CharacterInRoomViewModel(container.get(UiEventEmitter), container.get(GameEventEmitter));
         // Rooms view end
 
         // Inventory & items view start
@@ -390,8 +395,8 @@ export class KiiGame {
         return this.stageObjectGetter;
     }
 
-    getText(): Text {
-        return this.text;
+    getText(): TextModel {
+        return this.text as TextModel;
     }
 
     getInteractions(): Interactions {

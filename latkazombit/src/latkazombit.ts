@@ -1,18 +1,18 @@
-import { KiiGame } from './kiigame.js';
-import { DefaultInteractionResolver } from './controller/interactions/DefaultInteractionResolver.js';
-import { HitRegionInitializer } from './view/room/HitRegionInitializer.js';
-import { HitRegionFilter } from './view/room/hitregion/HitRegionFilter.js';
-import { Intersection } from './view/draggeditem/intersection/Intersection.js';
-import { VisibilityValidator } from './view/draggeditem/intersection/VisibilityValidator.js';
-import { CategoryValidator } from './view/draggeditem/intersection/CategoryValidator.js';
-import { JSONGetter } from './util/JSONGetter.js';
-import { ImagePreparer } from './viewbuilder/util/konva/ImagePreparer.js';
-import { FurnitureBuilder } from './viewbuilder/room/konva/FurnitureBuilder.js';
-import { SecretBuilder } from './latkazombit/viewbuilder/room/konva/SecretBuilder.js';
-import { CommandsHandler } from './controller/interactions/CommandsHandler.js';
-import { CommandHandler } from './controller/interactions/CommandHandler.js';
-import { container, GameEventEmitter, UiEventEmitter } from './inversify.config.js';
-import { EventEmitter } from './events/EventEmitter.js';
+import { KiiGame } from '@kiigame/adventure_engine';
+import { RoomObjectCategoriesType } from '../../kiigame/dist/types/kiigame.js';
+import { DefaultInteractionResolver } from '@kiigame/adventure_engine/controller/interactions/DefaultInteractionResolver';
+import { HitRegionFilter } from '@kiigame/adventure_engine/view/room/hitregion/HitRegionFilter';
+import { Intersection } from '@kiigame/adventure_engine/view/draggeditem/intersection/Intersection';
+import { VisibilityValidator } from '@kiigame/adventure_engine/view/draggeditem/intersection/VisibilityValidator';
+import { CategoryValidator } from '@kiigame/adventure_engine/view/draggeditem/intersection/CategoryValidator';
+import { JSONGetter } from '@kiigame/adventure_engine/util/JSONGetter';
+import { ImagePreparer } from '@kiigame/adventure_engine/viewbuilder/util/konva/ImagePreparer';
+import { FurnitureBuilder } from '@kiigame/adventure_engine/viewbuilder/room/konva/FurnitureBuilder';
+import { SecretBuilder } from './viewbuilder/room/konva/SecretBuilder.js';
+import { CommandsHandler } from '@kiigame/adventure_engine/controller/interactions/CommandsHandler';
+import { CommandHandler } from '@kiigame/adventure_engine/controller/interactions/CommandHandler';
+import { container, GameEventEmitter, UiEventEmitter } from '@kiigame/adventure_engine/inversify.config';
+import { EventEmitter } from '@kiigame/adventure_engine/events/EventEmitter';
 import { KonvaPointerEvent } from 'konva/types/PointerEvents.js';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/types/Node.js';
@@ -41,9 +41,6 @@ const gameData = {
     startInteraction: 'begin'
 };
 
-const gameEventEmitter: EventEmitter = container.get(GameEventEmitter);
-const uiEventEmitter: EventEmitter = container.get(UiEventEmitter);
-
 const kiigame = new KiiGame(
     [
         new DefaultInteractionResolver('item'),
@@ -56,10 +53,7 @@ const kiigame = new KiiGame(
         new DefaultInteractionResolver('furniture'),
         new DefaultInteractionResolver('reward')
     ],
-    new HitRegionInitializer(
-        new HitRegionFilter(['secret'], ['Image']),
-        uiEventEmitter
-    ),
+    new HitRegionFilter(['secret'], ['Image']),
     new Intersection(
         [
             new VisibilityValidator(),
@@ -73,11 +67,13 @@ const kiigame = new KiiGame(
         secret: {
             roomChildrenTypeBuilder: new SecretBuilder()
         }
-    },
-    gameEventEmitter,
-    uiEventEmitter,
+    } as RoomObjectCategoriesType,
     gameData,
 );
+
+const gameEventEmitter: EventEmitter = container.get(GameEventEmitter);
+const uiEventEmitter: EventEmitter = container.get(UiEventEmitter);
+
 // TODO: "as any" hacks around "Property 'getWidth' does not exist on type 'Stage'.ts"
 const stage = kiigame.getStage() as any;
 
