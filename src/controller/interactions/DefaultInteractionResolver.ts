@@ -1,13 +1,16 @@
 import Interactions from "./Interactions.js";
 
-/** */
-class DefaultInteractionResolver {
+export class DefaultInteractionResolver {
+    private targetCategory: string;
 
-    constructor(targetCategory) {
+    /**
+     * @param {string} targetCategory
+     */
+    constructor(targetCategory: string = 'click') {
         this.targetCategory = targetCategory;
     }
 
-    getTargetCategory() {
+    getTargetCategory(): string {
         return this.targetCategory;
     }
 
@@ -17,7 +20,12 @@ class DefaultInteractionResolver {
      * @param {string} action click or target item
      * @param {string} defaultString examine or target item
      */
-    resolveCommands(interactions, entityId, action = 'click', defaultString = 'examine') {
+    resolveCommands(
+        interactions: Interactions,
+        entityId: string,
+        action: string = 'click',
+        defaultString: string = 'examine'
+    ) {
         const commands = interactions.getCommands(entityId, action);
 
         if (commands !== null && commands !== undefined) {
@@ -28,5 +36,3 @@ class DefaultInteractionResolver {
         return [{"command":"monologue", "textkey":{"object": entityId, "string": defaultString}}];
     }
 }
-
-export default DefaultInteractionResolver;

@@ -1,5 +1,5 @@
 import { KiiGame } from './kiigame.js';
-import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
+import { DefaultInteractionResolver } from './controller/interactions/DefaultInteractionResolver.js';
 import HitRegionInitializer from './view/room/HitRegionInitializer.js';
 import HitRegionFilter from './view/room/hitregion/HitRegionFilter.js';
 import Intersection from './view/draggeditem/intersection/Intersection.js';

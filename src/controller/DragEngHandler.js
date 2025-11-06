@@ -1,6 +1,6 @@
 import EventEmitter from "../events/EventEmitter.js";
 import CommandsHandler from "./interactions/CommandsHandler.js";
-import DefaultInteractionResolver from "./interactions/DefaultInteractionResolver.js";
+import { DefaultInteractionResolver } from "./interactions/DefaultInteractionResolver.js";
 import Interactions from "./interactions/Interactions.js";
 
 class DragEndHandler {

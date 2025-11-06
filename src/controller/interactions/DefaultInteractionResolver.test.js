@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { createStubInstance } from 'sinon';
-import DefaultInteractionResolver from './DefaultInteractionResolver.js';
+import { DefaultInteractionResolver } from './DefaultInteractionResolver.js';
 import Interactions from './Interactions.js';
 
 const interactionsStub = createStubInstance(Interactions);

@@ -1,7 +1,7 @@
 import Konva from 'konva';
 
 import SequenceLayerBuilder from './viewbuilder/sequence/konva/SequenceLayerBuilder.js';
-import DefaultInteractionResolver from './controller/interactions/DefaultInteractionResolver.js';
+import { DefaultInteractionResolver } from './controller/interactions/DefaultInteractionResolver.js';
 import Interactions from './controller/interactions/Interactions.js';
 import CommandsHandler from './controller/interactions/CommandsHandler.js';
 import { CommandHandler } from './controller/interactions/CommandHandler.js';
