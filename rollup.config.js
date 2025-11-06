@@ -6,7 +6,7 @@ import commonjs from '@rollup/plugin-commonjs';
 
 export const build = [
     {
-        input: 'src/kiigame.js',
+        input: 'src/kiigame.ts',
         output: {
             name: 'kiigame',
             file: pkg.browser,
@@ -29,7 +29,7 @@ export const build = [
         ]
     },
     {
-        input: 'src/kiigame.js',
+        input: 'src/kiigame.ts',
         external: ['konva', 'reflect-metadata', 'inversify'],
         output: [
             {
