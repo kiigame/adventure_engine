@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { createStubInstance, stub, restore } from 'sinon';
-import CategoryValidator from './CategoryValidator.js';
+import { CategoryValidator } from './CategoryValidator.js';
 import pkg from 'konva';
 const { Shape } = pkg;
 
@@ -39,14 +39,6 @@ describe('Test CategoryValidator', function() {
         const categoryValidator = new CategoryValidator(['excludedCategory']);
         const result = categoryValidator.validate(targetStub);
         assert.deepEqual(result, false);
-    });
-    it('will return true if no excluded categories are set (null) and category is defined', function() {
-        const targetStub = createStubInstance(Shape, {
-            getAttr: stub().withArgs('category').returns('includedCategory')
-        });
-        const categoryValidator = new CategoryValidator();
-        const result = categoryValidator.validate(targetStub);
-        assert.deepEqual(result, true);
     });
     it('will return true if no excluded categories are set (empty array) and category is defined', function() {
         const targetStub = createStubInstance(Shape, {

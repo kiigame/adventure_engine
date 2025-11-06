@@ -9,7 +9,7 @@ import HitRegionInitializer from './view/room/HitRegionInitializer.js';
 import HitRegionFilter from './view/room/hitregion/HitRegionFilter.js';
 import Intersection from './view/draggeditem/intersection/Intersection.js';
 import VisibilityValidator from './view/draggeditem/intersection/VisibilityValidator.js';
-import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
+import { CategoryValidator } from './view/draggeditem/intersection/CategoryValidator.js';
 import Music from './view/music/Music.js';
 import AudioFactory from './view/music/AudioFactory.js';
 import { Text } from './model/Text.js';
@@ -87,7 +87,7 @@ export class KiiGame {
         intersection: Intersection = new Intersection(
             [
                 new VisibilityValidator(),
-                new CategoryValidator()
+                new CategoryValidator([])
             ]
         ),
         roomObjectCategories: RoomObjectCategoriesType = { furniture: { roomChildrenTypeBuilder: new FurnitureBuilder() } },

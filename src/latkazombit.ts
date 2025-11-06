@@ -4,7 +4,7 @@ import HitRegionInitializer from './view/room/HitRegionInitializer.js';
 import HitRegionFilter from './view/room/hitregion/HitRegionFilter.js';
 import Intersection from './view/draggeditem/intersection/Intersection.js';
 import VisibilityValidator from './view/draggeditem/intersection/VisibilityValidator.js';
-import CategoryValidator from './view/draggeditem/intersection/CategoryValidator.js';
+import { CategoryValidator } from './view/draggeditem/intersection/CategoryValidator.js';
 import { JSONGetter } from './util/JSONGetter.js';
 import { ImagePreparer } from './viewbuilder/util/konva/ImagePreparer.js';
 import { FurnitureBuilder } from './viewbuilder/room/konva/FurnitureBuilder.js';
