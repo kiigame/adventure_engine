@@ -1,0 +1,43 @@
+{
+  "name": "@kiigame/latkazombit",
+  "version": "0.1.0",
+  "description": "Lätkäzombit (Hockey Zombies), the reference game for KiiGame Adventure Engine",
+  "type": "module",
+  "dependencies": {
+    "@kiigame/adventure_engine": "0.5.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "29.0.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-typescript": "12.3.0",
+    "@types/mocha": "10.0.10",
+    "@types/sinon-chai": "4.0.0",
+    "chai": "6.2.0",
+    "esm": "3.2.25",
+    "http-server": "14.1.1",
+    "mocha": "11.7.4",
+    "rollup": "4.52.5",
+    "rollup-plugin-copy": "3.5.0",
+    "sinon": "21.0.0",
+    "sinon-chai": "4.0.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "test": "mocha --loader=ts-node/esm './{,!(node_modules|public)/**}/*.test.js'",
+    "typecheck": "tsc --noEmit",
+    "build-dev": "../node_modules/.bin/rollup --config --configDev",
+    "start": "http-server",
+    "pre-commit": "npm run typecheck && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiigame/adventure_engine.git"
+  },
+  "author": "Eino Keskitalo <eino.keskitalo@gmail.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/kiigame/adventure_engine/issues"
+  },
+  "homepage": "https://github.com/kiigame/adventure_engine#readme"
+}

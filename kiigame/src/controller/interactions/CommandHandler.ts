@@ -1,26 +1,26 @@
 import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
 import { EventEmitter } from "../../events/EventEmitter.js";
-import { Text } from "../../model/Text.js";
+import { TextModel } from "../../model/TextModel.js";
 
 export class CommandHandler {
     private gameEventEmitter: EventEmitter;
     private uiEventEmitter: EventEmitter;
     private stageObjectGetter: StageObjectGetter;
-    private text: Text;
+    private text: TextModel;
     private itemsJson: { [key: string]: any };
 
     /**
      * @param {EventEmitter} gameEventEmitter
      * @param {EventEmitter} uiEventEmitter
      * @param {StageObjectGetter} stageObjectGetter
-     * @param {Text} text
+     * @param {TextModel} text
      * @param {{ [key: string]: any }} itemsJson
      */
     constructor(
         gameEventEmitter: EventEmitter,
         uiEventEmitter: EventEmitter,
         stageObjectGetter: StageObjectGetter,
-        text: Text,
+        text: TextModel,
         itemsJson: { [key: string]: any }
     ) {
         this.gameEventEmitter = gameEventEmitter;

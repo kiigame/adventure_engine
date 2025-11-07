@@ -4,7 +4,7 @@ import TextBuilder from "./viewbuilder/sequence/konva/TextBuilder.js";
 import SequenceBuilder from "./viewbuilder/sequence/konva/SequenceBuilder.js";
 import ItemBuilder from "./viewbuilder/item/konva/ItemBuilder.js";
 import ItemsBuilder from "./viewbuilder/item/konva/ItemsBuilder.js";
-import { EventEmitter } from "./events/EventEmitter.js";
+import { EventEmitter } from "./events/EventEmitter.js";
 
 export const GameEventEmitter: symbol = Symbol.for("GameEventEmitter");
 export const UiEventEmitter: symbol = Symbol.for("UIEventEmitter");

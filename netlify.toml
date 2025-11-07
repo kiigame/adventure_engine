@@ -12,7 +12,7 @@
   # This sample publishes the directory located at the absolute 
   # path "root/project/build-output"
 
-  publish = "public/"
+  publish = "latkazombit/public/"
 
   # Default build command.
-  command = "npm install && npm run build-dev"
+  command = "npm install && cd kiigame && npm run build && cd ../latkazombit && npm run build-dev"

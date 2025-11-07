@@ -1,6 +1,6 @@
 import { TextData, textDataSchema } from "./schema/TextModelSchema.js";
 
-export class Text {
+export class TextModel {
     private texts: TextData;
     private logger: Console;
 

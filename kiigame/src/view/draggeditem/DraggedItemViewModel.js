@@ -1,12 +1,12 @@
 import { EventEmitter } from "../../events/EventEmitter.js";
 import DragTargetFinder from "./DragTargetFinder.js";
-import { Text } from "../../model/Text.js";
+import { TextModel } from "../../model/TextModel.js";
 
 class DraggedItemViewModel {
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {DragTargetFinder} dragTargetFinder
-     * @param {Text} text
+     * @param {TextModel} text
      */
     constructor(uiEventEmitter, dragTargetFinder, text) {
         this.uiEventEmitter = uiEventEmitter;

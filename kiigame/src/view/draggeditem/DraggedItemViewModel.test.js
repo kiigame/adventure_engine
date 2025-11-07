@@ -4,7 +4,7 @@ import sinonChai from "sinon-chai";
 import DraggedItemViewModel from './DraggedItemViewModel.js';
 import { EventEmitter } from '../../events/EventEmitter.js';
 import DragTargetFinder from './DragTargetFinder.js';
-import { Text } from '../../model/Text.js';
+import { TextModel } from '../../model/TextModel.js';
 import pkg from 'konva';
 const { Shape } = pkg;
 
@@ -20,7 +20,7 @@ describe('dragged item view model tests', () => {
     beforeEach(() => {
         uiEventEmitterStub = createStubInstance(EventEmitter);
         dragTargetFinderStub = createStubInstance(DragTargetFinder);
-        textStub = createStubInstance(Text, { getName: targetName });
+        textStub = createStubInstance(TextModel, { getName: targetName });
         draggedItemStub = createStubInstance(Shape);
     });
 
