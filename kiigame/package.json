@@ -123,7 +123,7 @@
     "@types/sinon-chai": "4.0.0",
     "chai": "6.2.0",
     "esm": "3.2.25",
-    "glob": "11.0.3",
+    "glob": "11.1.0",
     "mocha": "11.7.4",
     "rollup": "4.52.5",
     "rollup-plugin-copy": "3.5.0",
