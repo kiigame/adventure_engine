@@ -11,7 +11,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "baseUrl": "./src",
-        "types": ["reflect-metadata", "@kiigame/adventure_engine"],
+        "types": ["@kiigame/adventure_engine"],
         "lib": [
             "esnext",
             "dom"
