@@ -122,7 +122,7 @@
     "chai": "6.2.0",
     "mocha": "11.7.5",
     "rollup": "4.52.5",
-    "rollup-plugin-dts": "6.2.3",
+    "rollup-plugin-dts": "6.3.0",
     "sinon": "21.0.0",
     "sinon-chai": "4.0.1",
     "ts-node": "10.9.2",
