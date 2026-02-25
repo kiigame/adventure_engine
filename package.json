@@ -13,7 +13,7 @@
   "homepage": "https://github.com/kiigame/adventure_engine#readme",
   "devDependencies": {
     "@commitlint/cli": "^20.0.0",
-    "@commitlint/config-conventional": "20.0.0",
+    "@commitlint/config-conventional": "20.4.2",
     "commitlint-plugin-tense": "1.0.9",
     "husky": "9.1.7"
   },
