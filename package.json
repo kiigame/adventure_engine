@@ -15,7 +15,8 @@
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "20.4.2",
     "commitlint-plugin-tense": "1.0.9",
-    "husky": "9.1.7"
+    "husky": "9.1.7",
+    "rollup": "4.59.0"
   },
   "scripts": {
     "prepare": "husky",

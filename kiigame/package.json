@@ -121,7 +121,7 @@
     "@types/sinon-chai": "4.0.0",
     "chai": "6.2.1",
     "mocha": "11.7.5",
-    "rollup": "4.54.0",
+    "rollup": "4.59.0",
     "rollup-plugin-dts": "6.3.0",
     "sinon": "21.0.1",
     "sinon-chai": "4.0.1",
