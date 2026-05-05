@@ -57,12 +57,18 @@
                 "timeout": 20207
             },
             {
+                "command": "play_character_animation",
+                "animation": "wake_up",
+                "timeout": 20207,
+                "length": 3000
+            },
+            {
                 "command": "monologue",
                 "textkey": {
                     "object": "intro",
                     "string": "examine"
                 },
-                "timeout": 23200
+                "timeout": 23207
             }
         ]
     },

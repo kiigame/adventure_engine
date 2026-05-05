@@ -50,6 +50,23 @@
             "frames": [
                 {"node": "character_panic", "duration": "3"}
             ]
+        },
+        "wake_up": {
+            "frames": [
+                {"node": "character_idle_eyes_closed", "duration": "1.0"},
+                {"node": "character_idle_eyes_open", "duration": "0.05"},
+                {"node": "character_idle_eyes_closed", "duration": "0.05"},
+                {"node": "character_idle_eyes_open", "duration": "0.05"},
+                {"node": "character_idle_eyes_closed", "duration": "0.05"},
+                {"node": "character_idle_eyes_open", "duration": "0.05"},
+                {"node": "character_idle_eyes_closed", "duration": "0.05"},
+                {"node": "character_idle_eyes_open", "duration": "0.05"},
+                {"node": "character_idle_eyes_closed", "duration": "0.05"},
+                {"node": "character_idle_eyes_open", "duration": "0.05"},
+                {"node": "character_idle_eyes_closed", "duration": "0.05"},
+                {"node": "character_idle_eyes_closed", "duration": "0.5"},
+                {"node": "character_idle_eyes_open", "duration": "1.0"}
+            ]
         }
     }
 }
