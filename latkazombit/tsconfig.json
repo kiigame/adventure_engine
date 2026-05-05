@@ -10,7 +10,6 @@
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "baseUrl": "./src",
         "types": ["@kiigame/adventure_engine"],
         "lib": [
             "esnext",
