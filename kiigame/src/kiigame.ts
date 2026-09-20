@@ -110,7 +110,7 @@ export class KiiGame {
             } as RoomObjectCategoriesType;
         };
         const hitRegionInitializer: HitRegionInitializer = new HitRegionInitializer(
-            new HitRegionFilter([], ['Image']),
+            hitRegionFilter,
             container.get(UiEventEmitter)
         );
         // Model start
