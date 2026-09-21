@@ -11,24 +11,28 @@ describe('Objects in rooms model tests', () => {
     beforeEach(() => {
         gameEventEmitterStub = createStubInstance(EventEmitter);
         initialState = {
-            'room_one': {
-                'object_1': {
+            'room_one': [
+                {
+                    'name': 'object_1',
                     'visible': true,
                     'category': 'furniture'
                 },
-                'object_2': {
+                {
+                    'name': 'object_2',
                     'visible': false,
                     'category': 'furniture'
                 },
-                'object_3': {
+                {
+                    'name': 'object_3',
                     'visible': false,
                     'category': 'other_type'
                 },
-                'object_4': {
+                {
+                    'name': 'object_4',
                     'visible': true,
                     'category': 'other_type'
                 }
-            }
+            ]
         };
     });
     describe('remove objects from room', () => {
@@ -42,12 +46,12 @@ describe('Objects in rooms model tests', () => {
                 'removed_objects',
                 {
                     'objectList': {
-                        'room_one': {
-                            'object_1': { 'visible': false, 'category': 'furniture' },
-                            'object_2': { 'visible': false, 'category': 'furniture' },
-                            'object_3': { 'visible': false, 'category': 'other_type' },
-                            'object_4': { 'visible': true, 'category': 'other_type' }
-                        }
+                        'room_one': [
+                            { 'name': 'object_1', 'visible': false, 'category': 'furniture' },
+                            { 'name': 'object_2', 'visible': false, 'category': 'furniture' },
+                            { 'name': 'object_3', 'visible': false, 'category': 'other_type' },
+                            { 'name': 'object_4', 'visible': true, 'category': 'other_type' }
+                        ]
                     },
                     'objectsRemoved': ['object_1']
                 }
@@ -63,12 +67,12 @@ describe('Objects in rooms model tests', () => {
                 'removed_objects',
                 {
                     'objectList': {
-                        'room_one': {
-                            'object_1': { 'visible': false, 'category': 'furniture' },
-                            'object_2': { 'visible': false, 'category': 'furniture' },
-                            'object_3': { 'visible': false, 'category': 'other_type' },
-                            'object_4': { 'visible': false, 'category': 'other_type' }
-                        }
+                        'room_one': [
+                            { 'name': 'object_1', 'visible': false, 'category': 'furniture' },
+                            { 'name': 'object_2', 'visible': false, 'category': 'furniture' },
+                            { 'name': 'object_3', 'visible': false, 'category': 'other_type' },
+                            { 'name': 'object_4', 'visible': false, 'category': 'other_type' }
+                        ]
                     },
                     'objectsRemoved': ['object_1', 'object_4']
                 }
@@ -86,12 +90,12 @@ describe('Objects in rooms model tests', () => {
                 'added_objects',
                 {
                     'objectList': {
-                        'room_one': {
-                            'object_1': { 'visible': true, 'category': 'furniture' },
-                            'object_2': { 'visible': true, 'category': 'furniture' },
-                            'object_3': { 'visible': false, 'category': 'other_type' },
-                            'object_4': { 'visible': true, 'category': 'other_type' }
-                        }
+                        'room_one': [
+                            { 'name': 'object_1', 'visible': true, 'category': 'furniture' },
+                            { 'name': 'object_2', 'visible': true, 'category': 'furniture' },
+                            { 'name': 'object_3', 'visible': false, 'category': 'other_type' },
+                            { 'name': 'object_4', 'visible': true, 'category': 'other_type' }
+                        ]
                     },
                     'objectsAdded': ['object_2']
                 }
@@ -107,12 +111,12 @@ describe('Objects in rooms model tests', () => {
                 'added_objects',
                 {
                     'objectList': {
-                        'room_one': {
-                            'object_1': { 'visible': true, 'category': 'furniture' },
-                            'object_2': { 'visible': true, 'category': 'furniture' },
-                            'object_3': { 'visible': true, 'category': 'other_type' },
-                            'object_4': { 'visible': true, 'category': 'other_type' }
-                        }
+                        'room_one': [
+                            { 'name': 'object_1', 'visible': true, 'category': 'furniture' },
+                            { 'name': 'object_2', 'visible': true, 'category': 'furniture' },
+                            { 'name': 'object_3', 'visible': true, 'category': 'other_type' },
+                            { 'name': 'object_4', 'visible': true, 'category': 'other_type' }
+                        ]
                     },
                     'objectsAdded': ['object_2', 'object_3']
                 }

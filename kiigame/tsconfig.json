@@ -16,7 +16,7 @@
         "baseUrl": "./src",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "types": ["reflect-metadata"],
+        "types": ["reflect-metadata", "mocha"],
         "lib": ["esnext", "dom"]
     },
     "include": ["src/**/*"],

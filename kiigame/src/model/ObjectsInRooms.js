@@ -25,10 +25,10 @@ class ObjectsInRooms {
         // TODO: I'm sure there's a more elegant way than this!
         objectNames.forEach((objectName) => {
             for (const [room, objects] of Object.entries(this.objectsInRoomsData)) {
-                for (const [name, _values] of Object.entries(objects)) {
-                    if (name === objectName) {
-                        this.objectsInRoomsData[room][name].visible = false;
-                        removedObjectNames.push(name);
+                for (const object of objects) {
+                    if (object.name === objectName) {
+                        object.visible = false;
+                        removedObjectNames.push(object.name);
                     }
                 }
             }
@@ -50,10 +50,10 @@ class ObjectsInRooms {
         // TODO: I'm sure there's a more elegant way than this!
         objectNames.forEach((objectName) => {
             for (const [room, objects] of Object.entries(this.objectsInRoomsData)) {
-                for (const [name, _values] of Object.entries(objects)) {
-                    if (name === objectName) {
-                        this.objectsInRoomsData[room][name].visible = true;
-                        addedObjectNames.push(name);
+                for (const object of objects) {
+                    if (object.name === objectName) {
+                        object.visible = true;
+                        addedObjectNames.push(object.name);
                     }
                 }
             }

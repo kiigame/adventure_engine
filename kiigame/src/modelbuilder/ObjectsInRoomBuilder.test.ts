@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import ObjectsInRoomBuilder from './ObjectsInRoomBuilder.js';
+import { ObjectsInRoomBuilder } from './ObjectsInRoomBuilder.js';
 
 describe('konva room builder tests', () => {
     it('should build a room with objects with given types', () => {
@@ -24,20 +24,23 @@ describe('konva room builder tests', () => {
                 }
             }
         };
-        const expected = {
-            "object_1": {
+        const expected = [
+            {
+                "name": "object_1",
                 "category": "type",
                 "visible": true
             },
-            "object_2": {
+            {
+                "name": "object_2",
                 "category": "type",
                 "visible": false
             },
-            "object_3": {
+            {
+                "name": "object_3",
                 "category": "other_type",
                 "visible": true
             }
-        };
+        ];
         const result = objectsInRoomBuilder.build(roomJson);
         expect(result).to.deep.equal(expected);
     });
@@ -51,12 +54,13 @@ describe('konva room builder tests', () => {
                 },
             },
         };
-        const expected = {
-            "object_1": {
+        const expected = [
+            {
+                "name": "object_1",
                 "category": "type",
                 "visible": true
-            },
-        };
+            }
+        ];
         const result = objectsInRoomBuilder.build(roomJson);
         expect(result).to.deep.equal(expected);
     });
@@ -69,12 +73,13 @@ describe('konva room builder tests', () => {
                 }
             }
         };
-        const expected = {
-            "object_1": {
+        const expected = [
+            {
+                "name": "object_1",
                 "category": "type",
                 "visible": true
             }
-        }
+        ];
         const result = objectsInRoomBuilder.build(roomJson);
         expect(result).to.deep.equal(expected);
     });
