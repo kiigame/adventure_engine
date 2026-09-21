@@ -1,4 +1,4 @@
-import { ObjectModel } from '../model/schema/ObjectModelSchema';
+import { ObjectModel } from '../model/schema/ObjectModelSchema';
 
 export class ObjectsInRoomBuilder {
     private roomObjectCategories: string[];
