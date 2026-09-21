@@ -123,7 +123,7 @@ export class KiiGame {
         // "Player character in room" model
         new CharacterInRoom(container.get(GameEventEmitter));
         // Inventory model
-        this.inventory = new Inventory(container.get(GameEventEmitter), container.get(UiEventEmitter));
+        this.inventory = new Inventory(container.get(GameEventEmitter));
         // Text model(?)
         this.text = new TextModel(gameData.text_json);
         // Model end

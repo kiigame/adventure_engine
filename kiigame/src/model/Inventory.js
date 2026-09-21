@@ -3,11 +3,9 @@ import { EventEmitter } from "../events/EventEmitter.js";
 class Inventory {
     /**
      * @param {EventEmitter} gameEventEmitter
-     * @param {EventEmitter} uiEventEmitter
      */
-    constructor(gameEventEmitter, uiEventEmitter) {
+    constructor(gameEventEmitter) {
         this.gameEventEmitter = gameEventEmitter;
-        this.uiEventEmitter = uiEventEmitter;
         this.items = []; // Object { name, category }[]
         this.gameEventEmitter.on('inventory_add', (items) => {
             this.inventoryAdd(items);

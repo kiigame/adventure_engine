@@ -7,17 +7,15 @@ use(sinonChai);
 
 describe('Inventory model tests', () => {
     let gameEventEmitterStub;
-    let uiEventEmitterStub;
     beforeEach(() => {
         gameEventEmitterStub = createStubInstance(EventEmitter);
-        uiEventEmitterStub = createStubInstance(EventEmitter);
     });
     afterEach(() => {
         restore();
     });
     describe('add items to inventory', () => {
         it('should add new item to empty inventory and it should be the only item', () => {
-            new Inventory(gameEventEmitterStub, uiEventEmitterStub);
+            new Inventory(gameEventEmitterStub);
             const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
@@ -28,7 +26,7 @@ describe('Inventory model tests', () => {
             );
         });
         it('should add new item to existing inventory and it should be at the end', () => {
-            const inventory = new Inventory(gameEventEmitterStub, uiEventEmitterStub);
+            const inventory = new Inventory(gameEventEmitterStub);
             const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
@@ -40,7 +38,7 @@ describe('Inventory model tests', () => {
             );
         });
         it('should add multiple new items to an existing inventory and they should be at the end', () => {
-            const inventory = new Inventory(gameEventEmitterStub, uiEventEmitterStub);
+            const inventory = new Inventory(gameEventEmitterStub);
             const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
@@ -61,7 +59,7 @@ describe('Inventory model tests', () => {
             );
         });
         it('should not duplicate existing items in inventory if they are added again', () => {
-            const inventory = new Inventory(gameEventEmitterStub, uiEventEmitterStub);
+            const inventory = new Inventory(gameEventEmitterStub);
             const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
@@ -75,7 +73,7 @@ describe('Inventory model tests', () => {
     });
     describe('remove items from inventory', () => {
         it('should remove item from inventory and the rest of the inventory should be in same order and have no gaps', () => {
-            const inventory = new Inventory(gameEventEmitterStub, uiEventEmitterStub);
+            const inventory = new Inventory(gameEventEmitterStub);
             const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_remove';
             }).args[1];
@@ -96,7 +94,7 @@ describe('Inventory model tests', () => {
             );
         });
         it('should remove multiple items from inventory and the rest of the inventory should be in same order and have no gaps', () => {
-            const inventory = new Inventory(gameEventEmitterStub, uiEventEmitterStub);
+            const inventory = new Inventory(gameEventEmitterStub);
             const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'inventory_remove';
             }).args[1];
