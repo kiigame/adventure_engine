@@ -18,11 +18,15 @@ class CharacterAnimations {
         this.uiEventEmitter = uiEventEmitter;
         gameEventEmitter = gameEventEmitter;
 
-        // Overriding default speaking animation from setMonologue from the same
-        // interaction assumes: setMonologue is called first, and that events get
-        // fired and handled in the same order ...
-        gameEventEmitter.on('monologue', (_text) => {
-            this.playCharacterAnimation(this.speakAnimationName, 3000); // hardcoded default
+        gameEventEmitter.on('monologue', ({ text: _text, posture }) => {
+            const defaultAnimationLength = 3000; // hardcoded default
+            if (!posture) {
+                this.playCharacterAnimation(this.speakAnimationName, defaultAnimationLength);
+                return;
+            }
+console.log(`Playing character animation for posture: ${posture}`);
+            // TODO: map posture to animation name, for now just use posture as animation name
+            this.playCharacterAnimation(posture, defaultAnimationLength);
         });
         this.uiEventEmitter.on('play_character_animation', ({ animationName, duration }) => {
             this.playCharacterAnimation(animationName, duration);

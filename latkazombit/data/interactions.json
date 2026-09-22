@@ -32,12 +32,8 @@
                 "textkey": {
                     "object": "title_image",
                     "string": "examine"
-                }
-            },
-            {
-                "command": "play_character_animation",
-                "animation": "panic_last",
-                "length": 6000
+                },
+                "posture": "panic_last"
             }
         ]
     },
@@ -298,13 +294,8 @@
                     "object": "locker_room_1_door_to_out",
                     "string": "examine"
                 },
+                "posture": "panic_last",
                 "timeout": 3000
-            },
-            {
-                "command": "play_character_animation",
-                "animation": "panic_last",
-                "timeout": 3000,
-                "length": 5000
             }
         ]
     },
@@ -329,13 +320,8 @@
                     "object": "locker_room_2_door_to_out",
                     "string": "examine"
                 },
+                "posture": "panic_last",
                 "timeout": 3000
-            },
-            {
-                "command": "play_character_animation",
-                "animation": "panic_last",
-                "timeout": 3000,
-                "length": 5000
             }
         ]
     },

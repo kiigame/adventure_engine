@@ -41,7 +41,8 @@ export class CommandHandler {
     handleCommand(command: any) {
         if (command.command == "monologue") {
             const text = this.text.getText(command.textkey.object, command.textkey.string);
-            this.gameEventEmitter.emit('monologue', text);
+            const posture = command.posture || null;
+            this.gameEventEmitter.emit('monologue', { text, posture });
         } else if (command.command == "inventory_add") {
             const items = Array.isArray(command.item) ? command.item : [command.item];
             type itemToAdd = { name: string, category: string };

@@ -15,7 +15,7 @@ class NpcMonologueView {
         this.npcTag = npcSpeechBubble.getTag();
         this.stageWidth = stageWidth;
 
-        gameEventEmitter.on('monologue', (_text) => {
+        gameEventEmitter.on('monologue', ({ text, _posture }) => {
             this.clearNpcMonologue();
         });
         gameEventEmitter.on('npc_monologue', ({ npc, text }) => {

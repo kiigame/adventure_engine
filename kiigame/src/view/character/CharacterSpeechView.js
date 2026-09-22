@@ -14,7 +14,7 @@ class CharacterSpeechView {
         this.characterSpeechBubble = characterSpeechBubble;
         this.stageHeight = stageHeight;
 
-        gameEventEmitter.on('monologue', (text) => {
+        gameEventEmitter.on('monologue', ({ text, _posture }) => {
             this.clearMonologue();
             this.setMonologue(text);
         });
