@@ -18,7 +18,7 @@ class CharacterSpeechView {
             this.clearMonologue();
             this.setMonologue(text);
         });
-        gameEventEmitter.on('npc_monologue', ({ _npc, _text }) => {
+        gameEventEmitter.on('npc_monologue', ({ _npc, _text, _characterPosture }) => {
             this.clearMonologue();
         });
         this.uiEventEmitter.on('clicked_on_stage', () => {

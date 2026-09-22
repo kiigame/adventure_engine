@@ -18,7 +18,7 @@ class NpcMonologueView {
         gameEventEmitter.on('monologue', ({ text, _posture }) => {
             this.clearNpcMonologue();
         });
-        gameEventEmitter.on('npc_monologue', ({ npc, text }) => {
+        gameEventEmitter.on('npc_monologue', ({ npc, text, _characterPosture }) => {
             this.clearNpcMonologue();
             this.npcMonologue(npc, text);
         });

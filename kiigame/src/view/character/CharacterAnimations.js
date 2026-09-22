@@ -27,6 +27,14 @@ class CharacterAnimations {
             // TODO: map posture to animation name, for now just use posture as animation name
             this.playCharacterAnimation(posture, defaultAnimationLength);
         });
+        gameEventEmitter.on('npc_monologue', ({ _npc, _text, characterPosture }) => {
+            if (!characterPosture) {
+                return;
+            }
+            const defaultAnimationLength = 3000; // hardcoded default
+            // TODO: map posture to animation name, for now just use posture as animation name
+            this.playCharacterAnimation(characterPosture, defaultAnimationLength);
+        });
         this.uiEventEmitter.on('play_character_animation', ({ animationName, duration }) => {
             this.playCharacterAnimation(animationName, duration);
         });

@@ -90,7 +90,8 @@ export class CommandHandler {
         } else if (command.command == "npc_monologue") {
             const npc = this.stageObjectGetter.getObject(command.npc);
             const text = this.text.getText(command.textkey.object, command.textkey.string);
-            this.gameEventEmitter.emit('npc_monologue', { npc, text });
+            const characterPosture = command.character_posture || null;
+            this.gameEventEmitter.emit('npc_monologue', { npc, text, characterPosture });
         } else if (command.command == "play_character_animation") {
             const animationName = command.animation;
             const duration = command.length;

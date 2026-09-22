@@ -281,12 +281,8 @@
                 "textkey": {
                     "object": "locker_room_1_door_to_out",
                     "string": "argl"
-                }
-            },
-            {
-                "command": "play_character_animation",
-                "animation": "panic_first",
-                "length": 3000
+                },
+                "character_posture": "panic_first"
             },
             {
                 "command": "monologue",
@@ -307,12 +303,8 @@
                 "textkey": {
                     "object": "locker_room_2_door_to_out",
                     "string": "groar"
-                }
-            },
-            {
-                "command": "play_character_animation",
-                "animation": "panic_first",
-                "length": 3000
+                },
+                "character_posture": "panic_first"
             },
             {
                 "command": "monologue",
