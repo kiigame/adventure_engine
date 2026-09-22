@@ -33,9 +33,7 @@ export class CommandHandler {
     /**
      * Handle each interaction. Check what command is coming in, and do the thing.
      * Timeouts are done in handle_commands. Order of commands in interactions.json
-     * can be important: for instance, monologue plays the speaking animation, so
-     * play_character_animation should come after it, so that the speaking
-     * animation is stopped and the defined animation plays, and not vice versa.
+     * can be important.
      * @param {object} command the interaction command as json
      */
     handleCommand(command: any) {
