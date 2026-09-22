@@ -14,29 +14,25 @@ describe('Objects in rooms model tests', () => {
             'room_one': [
                 {
                     'name': 'object_1',
-                    'visible': true,
                     'category': 'furniture'
                 },
                 {
                     'name': 'object_2',
-                    'visible': false,
                     'category': 'furniture'
                 },
                 {
                     'name': 'object_3',
-                    'visible': false,
                     'category': 'other_type'
                 },
                 {
                     'name': 'object_4',
-                    'visible': true,
                     'category': 'other_type'
                 }
             ]
         };
     });
     describe('remove objects from room', () => {
-        it('should set visible to false for a visible object existing in room', () => {
+        it('should remove an object that exists in a room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
             const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'remove_objects';
@@ -47,17 +43,16 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'visible': false, 'category': 'furniture' },
-                            { 'name': 'object_2', 'visible': false, 'category': 'furniture' },
-                            { 'name': 'object_3', 'visible': false, 'category': 'other_type' },
-                            { 'name': 'object_4', 'visible': true, 'category': 'other_type' }
+                            { 'name': 'object_2', 'category': 'furniture' },
+                            { 'name': 'object_3', 'category': 'other_type' },
+                            { 'name': 'object_4', 'category': 'other_type' }
                         ]
                     },
                     'objectsRemoved': ['object_1']
                 }
             );
         });
-        it('should set visible to false for visible objects of different types existing in room', () => {
+        it('should remove objects of different types that exist in a room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
             const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'remove_objects';
@@ -68,57 +63,100 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'visible': false, 'category': 'furniture' },
-                            { 'name': 'object_2', 'visible': false, 'category': 'furniture' },
-                            { 'name': 'object_3', 'visible': false, 'category': 'other_type' },
-                            { 'name': 'object_4', 'visible': false, 'category': 'other_type' }
+                            { 'name': 'object_2', 'category': 'furniture' },
+                            { 'name': 'object_3', 'category': 'other_type' },
                         ]
                     },
                     'objectsRemoved': ['object_1', 'object_4']
                 }
             );
         });
-    });
-    describe('add objects to room', () => {
-        it('should set visible to true for a non-visible object existing in room', () => {
+        it('should not remove an object that does not exist in a room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
-            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'add_objects';
+            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'remove_objects';
             }).args[1];
-            addObjectsCallback(['object_2']);
-            expect(gameEventEmitterStub.emit, 'added_objects not emitted as expected').to.have.been.calledWith(
-                'added_objects',
+            removeObjectsCallback(['object_5']);
+            expect(gameEventEmitterStub.emit, 'removed_objects not emitted as expected').to.have.been.calledWith(
+                'removed_objects',
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'visible': true, 'category': 'furniture' },
-                            { 'name': 'object_2', 'visible': true, 'category': 'furniture' },
-                            { 'name': 'object_3', 'visible': false, 'category': 'other_type' },
-                            { 'name': 'object_4', 'visible': true, 'category': 'other_type' }
+                            { 'name': 'object_1', 'category': 'furniture' },
+                            { 'name': 'object_2', 'category': 'furniture' },
+                            { 'name': 'object_3', 'category': 'other_type' },
+                            { 'name': 'object_4', 'category': 'other_type' }
                         ]
                     },
-                    'objectsAdded': ['object_2']
+                    'objectsRemoved': []
                 }
             );
         });
-        it('should set visible to true for non-visible objects of different types existing in room', () => {
+    });
+    describe('add objects to room', () => {
+        it('should add an object that did not exist in the room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
             const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'add_objects';
             }).args[1];
-            addObjectsCallback(['object_2', 'object_3']);
+            addObjectsCallback({ 'objectNames': ['object_5'], 'roomId': 'room_one' });
             expect(gameEventEmitterStub.emit, 'added_objects not emitted as expected').to.have.been.calledWith(
                 'added_objects',
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'visible': true, 'category': 'furniture' },
-                            { 'name': 'object_2', 'visible': true, 'category': 'furniture' },
-                            { 'name': 'object_3', 'visible': true, 'category': 'other_type' },
-                            { 'name': 'object_4', 'visible': true, 'category': 'other_type' }
+                            { 'name': 'object_1', 'category': 'furniture' },
+                            { 'name': 'object_2', 'category': 'furniture' },
+                            { 'name': 'object_3', 'category': 'other_type' },
+                            { 'name': 'object_4', 'category': 'other_type' },
+                            { 'name': 'object_5' }
                         ]
                     },
-                    'objectsAdded': ['object_2', 'object_3']
+                    'objectsAdded': ['object_5']
+                }
+            );
+        });
+        it('should add multiple objects that did not exist in the room', () => {
+            new ObjectsInRooms(initialState, gameEventEmitterStub);
+            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'add_objects';
+            }).args[1];
+            addObjectsCallback({ 'objectNames': ['object_5', 'object_6'], 'roomId': 'room_one' });
+            expect(gameEventEmitterStub.emit, 'added_objects not emitted as expected').to.have.been.calledWith(
+                'added_objects',
+                {
+                    'objectList': {
+                        'room_one': [
+                            { 'name': 'object_1', 'category': 'furniture' },
+                            { 'name': 'object_2', 'category': 'furniture' },
+                            { 'name': 'object_3', 'category': 'other_type' },
+                            { 'name': 'object_4', 'category': 'other_type' },
+                            { 'name': 'object_5' },
+                            { 'name': 'object_6' }
+                        ]
+                    },
+                    'objectsAdded': ['object_5', 'object_6']
+                }
+            );
+        });
+        it('should not add an object that already exists in the room', () => {
+            new ObjectsInRooms(initialState, gameEventEmitterStub);
+            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'add_objects';
+            }).args[1];
+            addObjectsCallback({ 'objectNames': ['object_1'], 'roomId': 'room_one' });
+            expect(gameEventEmitterStub.emit, 'added_objects not emitted as expected').to.have.been.calledWith(
+                'added_objects',
+                {
+                    'objectList': {
+                        'room_one': [
+                            { 'name': 'object_1', 'category': 'furniture' },
+                            { 'name': 'object_2', 'category': 'furniture' },
+                            { 'name': 'object_3', 'category': 'other_type' },
+                            { 'name': 'object_4', 'category': 'other_type' }
+                        ]
+                    },
+                    'objectsAdded': []
                 }
             );
         });

@@ -66,11 +66,12 @@ export class CommandHandler {
             this.gameEventEmitter.emit('remove_objects', objectsToRemove);
         } else if (command.command == "add_object") {
             const objects = Array.isArray(command.object) ? command.object : [command.object];
-            const objectsToAdd: string[] = [];
+            const objectNames: string[] = [];
             objects.forEach((objectName: string) => {
-                objectsToAdd.push(objectName)
+                objectNames.push(objectName)
             });
-            this.gameEventEmitter.emit('add_objects', objectsToAdd);
+            const roomId = command.room;
+            this.gameEventEmitter.emit('add_objects', { objectNames, roomId });
         } else if (command.command == "do_transition") {
             this.uiEventEmitter.emit('ready_transition', ({
                 type: command.instant ? 'instant' : 'regular',

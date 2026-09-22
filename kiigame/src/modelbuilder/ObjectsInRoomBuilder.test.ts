@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { ObjectsInRoomBuilder } from './ObjectsInRoomBuilder.js';
+import { ObjectModel } from 'model/schema/ObjectModelSchema.js';
 
 describe('konva room builder tests', () => {
     it('should build a room with objects with given types', () => {
@@ -10,7 +11,7 @@ describe('konva room builder tests', () => {
                     'initiallyVisible': true,
                 },
                 'object_2': {
-                    'initiallyVisible': false,
+                    'initiallyVisible': true,
                 }
             },
             'ignored_type': {
@@ -24,21 +25,18 @@ describe('konva room builder tests', () => {
                 }
             }
         };
-        const expected = [
+        const expected: ObjectModel[] = [
             {
-                "name": "object_1",
-                "category": "type",
-                "visible": true
+                name: "object_1",
+                category: "type",
             },
             {
-                "name": "object_2",
-                "category": "type",
-                "visible": false
+                name: "object_2",
+                category: "type",
             },
             {
-                "name": "object_3",
-                "category": "other_type",
-                "visible": true
+                name: "object_3",
+                category: "other_type",
             }
         ];
         const result = objectsInRoomBuilder.build(roomJson);
@@ -54,30 +52,47 @@ describe('konva room builder tests', () => {
                 },
             },
         };
-        const expected = [
+        const expected: ObjectModel[] = [
             {
-                "name": "object_1",
-                "category": "type",
-                "visible": true
+                name: "object_1",
+                category: "type",
             }
         ];
         const result = objectsInRoomBuilder.build(roomJson);
         expect(result).to.deep.equal(expected);
     });
-    it('should set missing initiallyVisible as true', () => {
+    it('should add object to room if it\'s missing initiallyVisible (treat as true)', () => {
+        const objectsInRoomBuilder = new ObjectsInRoomBuilder(['type']);
+        const roomJson = {
+            'type': {
+                'object_1': {}
+            }
+        };
+        const expected: ObjectModel[] = [
+            {
+                name: "object_1",
+                category: "type",
+            }
+        ];
+        const result = objectsInRoomBuilder.build(roomJson);
+        expect(result).to.deep.equal(expected);
+    });
+    it('should only add objects to room if they are initiallyVisible', () => {
         const objectsInRoomBuilder = new ObjectsInRoomBuilder(['type']);
         const roomJson = {
             'type': {
                 'object_1': {
-                    'field_to_ignore': 'value_to_ignore'
+                    'initiallyVisible': true,
+                },
+                'object_2': {
+                    'initiallyVisible': false,
                 }
             }
         };
-        const expected = [
+        const expected: ObjectModel[] = [
             {
-                "name": "object_1",
-                "category": "type",
-                "visible": true
+                name: "object_1",
+                category: "type",
             }
         ];
         const result = objectsInRoomBuilder.build(roomJson);

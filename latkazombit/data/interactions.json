@@ -87,7 +87,8 @@
             },
             {
                 "command": "add_object",
-                "object": "locker_room_1_door_to_wc_open"
+                "object": "locker_room_1_door_to_wc_open",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -131,7 +132,8 @@
             },
             {
                 "command": "add_object",
-                "object": "shower_door_to_locker_room_2_closed"
+                "object": "shower_door_to_locker_room_2_closed",
+                "room": "object_layer_shower_room"
             }
         ],
         "cieni_eyes": [
@@ -153,7 +155,8 @@
             },
             {
                 "command": "add_object",
-                "object": "shower_door_to_locker_room_2_closed"
+                "object": "shower_door_to_locker_room_2_closed",
+                "room": "object_layer_shower_room"
             }
         ],
         "cieni_mouth": [
@@ -175,7 +178,8 @@
             },
             {
                 "command": "add_object",
-                "object": "shower_door_to_locker_room_2_closed"
+                "object": "shower_door_to_locker_room_2_closed",
+                "room": "object_layer_shower_room"
             }
         ]
     },
@@ -199,7 +203,8 @@
             },
             {
                 "command": "add_object",
-                "object": "garbagecan_empty"
+                "object": "garbagecan_empty",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -265,7 +270,8 @@
             },
             {
                 "command": "add_object",
-                "object": "jacket_empty"
+                "object": "jacket_empty",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -350,7 +356,8 @@
             },
             {
                 "command": "add_object",
-                "object": "locker_room_1_door_to_shower_open"
+                "object": "locker_room_1_door_to_shower_open",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -385,7 +392,8 @@
             },
             {
                 "command": "add_object",
-                "object": "locker_room_1_door_to_wc_stinking"
+                "object": "locker_room_1_door_to_wc_stinking",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -421,7 +429,8 @@
             },
             {
                 "command": "add_object",
-                "object": "locker_room_2_door_to_wc_open"
+                "object": "locker_room_2_door_to_wc_open",
+                "room": "object_layer_locker_room_2"
             }
         ]
     },
@@ -477,7 +486,8 @@
             },
             {
                 "command": "add_object",
-                "object": "locker_empty"
+                "object": "locker_empty",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -497,7 +507,8 @@
             },
             {
                 "command": "add_object",
-                "object": "tactic_board_3"
+                "object": "tactic_board_3",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -554,7 +565,8 @@
             },
             {
                 "command": "add_object",
-                "object": "poster_onthewall"
+                "object": "poster_onthewall",
+                "room": "object_layer_locker_room_2"
             },
             {
                 "command": "inventory_remove",
@@ -623,7 +635,8 @@
             },
             {
                 "command": "add_object",
-                "object": "shower_door_to_locker_room_2_open"
+                "object": "shower_door_to_locker_room_2_open",
+                "room": "object_layer_shower_room"
             }
         ]
     },
@@ -680,7 +693,8 @@
             },
             {
                 "command": "add_object",
-                "object": "tactic_board_2"
+                "object": "tactic_board_2",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -723,7 +737,8 @@
             },
             {
                 "command": "add_object",
-                "object": "garbagecan_teddy"
+                "object": "garbagecan_teddy",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -742,7 +757,8 @@
             },
             {
                 "command": "add_object",
-                "object": "locker_open"
+                "object": "locker_open",
+                "room": "object_layer_locker_room_1"
             }
         ]
     },
@@ -847,7 +863,8 @@
                     "oikotie",
                     "oikotie2",
                     "oikotie3"
-                ]
+                ],
+                "room": "start_layer_menu"
             }
         ]
     },

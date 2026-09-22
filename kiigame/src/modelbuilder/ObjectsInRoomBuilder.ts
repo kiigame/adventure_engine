@@ -12,10 +12,12 @@ export class ObjectsInRoomBuilder {
         for (const [category, objects] of Object.entries(roomJson) as [string, object][]) {
             if (this.roomObjectCategories.includes(category)) {
                 for (const [name, objectData] of Object.entries(objects) as [string, any][]) {
+                    if (objectData.initiallyVisible === false) {
+                        continue;
+                    }
                     const objectResult: ObjectModel = {
                         name,
                         category,
-                        visible: objectData.initiallyVisible !== false,
                     };
                     objectsInRoom.push(objectResult);
                 };
