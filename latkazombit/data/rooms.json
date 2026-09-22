@@ -86,9 +86,9 @@
             }
         }
     },
-    "object_layer_locker_room_2": {
+    "locker_room_2": {
         "backgrounds": {
-            "locker_room_2": {
+            "locker_room_2_bg": {
                 "src": "data/images/locker_room_2.png"
             }
         },
@@ -211,9 +211,9 @@
             }
         }
     },
-    "object_layer_locker_room_1": {
+    "locker_room_1": {
         "backgrounds": {
-            "locker_room_1": {
+            "locker_room_1_bg": {
                 "src": "data/images/locker_room_1.png"
             }
         },
@@ -405,9 +405,9 @@
             }
         }
     },
-    "object_layer_wc_2": {
+    "wc_2": {
         "backgrounds": {
-            "wc_2": {
+            "wc_2_bg": {
                 "src": "data/images/wc_2.png"
             }
         },
@@ -454,9 +454,9 @@
             }
         }
     },
-    "object_layer_shower_room": {
+    "shower_room": {
         "backgrounds": {
-            "shower_room": {
+            "shower_room_bg": {
                 "src": "data/images/shower_room.png"
             }
         },
@@ -575,9 +575,9 @@
             }
         }
     },
-    "object_layer_wc_1": {
+    "wc_1": {
         "backgrounds": {
-            "wc_1": {
+            "wc_1_bg": {
                 "src": "data/images/wc_1.png"
             }
         },

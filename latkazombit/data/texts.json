@@ -4,19 +4,19 @@
         "examine": "Ei pysty, liian hapokasta.",
         "pickup": "Kleptomania kukkii. Laitan tämän taskuun."
     },
-    "object_layer_locker_room_1": {
+    "locker_room_1": {
         "name": "Pukuhuone 1"
     },
-    "object_layer_locker_room_2": {
+    "locker_room_2": {
         "name": "Pukuhuone 2"
     },
-    "object_layer_wc_1": {
+    "wc_1": {
         "name": "Vessa 1"
     },
-    "object_layer_wc_2": {
+    "wc_2": {
         "name": "Vessa 2"
     },
-    "object_layer_shower_room": {
+    "shower_room": {
         "name": "Suihkuhuone"
     },
     "start_credits": {
