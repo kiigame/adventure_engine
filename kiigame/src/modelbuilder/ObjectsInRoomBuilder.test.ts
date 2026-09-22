@@ -28,15 +28,12 @@ describe('konva room builder tests', () => {
         const expected: ObjectModel[] = [
             {
                 name: "object_1",
-                category: "type",
             },
             {
                 name: "object_2",
-                category: "type",
             },
             {
                 name: "object_3",
-                category: "other_type",
             }
         ];
         const result = objectsInRoomBuilder.build(roomJson);
@@ -55,7 +52,6 @@ describe('konva room builder tests', () => {
         const expected: ObjectModel[] = [
             {
                 name: "object_1",
-                category: "type",
             }
         ];
         const result = objectsInRoomBuilder.build(roomJson);
@@ -71,7 +67,6 @@ describe('konva room builder tests', () => {
         const expected: ObjectModel[] = [
             {
                 name: "object_1",
-                category: "type",
             }
         ];
         const result = objectsInRoomBuilder.build(roomJson);
@@ -92,7 +87,6 @@ describe('konva room builder tests', () => {
         const expected: ObjectModel[] = [
             {
                 name: "object_1",
-                category: "type",
             }
         ];
         const result = objectsInRoomBuilder.build(roomJson);

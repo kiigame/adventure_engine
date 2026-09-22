@@ -15,10 +15,7 @@ export class ObjectsInRoomBuilder {
                     if (objectData.initiallyVisible === false) {
                         continue;
                     }
-                    const objectResult: ObjectModel = {
-                        name,
-                        category,
-                    };
+                    const objectResult: ObjectModel = { name };
                     objectsInRoom.push(objectResult);
                 };
             }

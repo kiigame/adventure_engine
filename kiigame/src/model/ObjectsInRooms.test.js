@@ -14,19 +14,15 @@ describe('Objects in rooms model tests', () => {
             'room_one': [
                 {
                     'name': 'object_1',
-                    'category': 'furniture'
                 },
                 {
                     'name': 'object_2',
-                    'category': 'furniture'
                 },
                 {
                     'name': 'object_3',
-                    'category': 'other_type'
                 },
                 {
                     'name': 'object_4',
-                    'category': 'other_type'
                 }
             ]
         };
@@ -43,16 +39,16 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_2', 'category': 'furniture' },
-                            { 'name': 'object_3', 'category': 'other_type' },
-                            { 'name': 'object_4', 'category': 'other_type' }
+                            { 'name': 'object_2' },
+                            { 'name': 'object_3' },
+                            { 'name': 'object_4' }
                         ]
                     },
                     'objectsRemoved': ['object_1']
                 }
             );
         });
-        it('should remove objects of different types that exist in a room', () => {
+        it('should remove multiple objects that exist in a room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
             const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'remove_objects';
@@ -63,8 +59,8 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_2', 'category': 'furniture' },
-                            { 'name': 'object_3', 'category': 'other_type' },
+                            { 'name': 'object_2' },
+                            { 'name': 'object_3' },
                         ]
                     },
                     'objectsRemoved': ['object_1', 'object_4']
@@ -82,10 +78,10 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'category': 'furniture' },
-                            { 'name': 'object_2', 'category': 'furniture' },
-                            { 'name': 'object_3', 'category': 'other_type' },
-                            { 'name': 'object_4', 'category': 'other_type' }
+                            { 'name': 'object_1' },
+                            { 'name': 'object_2' },
+                            { 'name': 'object_3' },
+                            { 'name': 'object_4' }
                         ]
                     },
                     'objectsRemoved': []
@@ -105,10 +101,10 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'category': 'furniture' },
-                            { 'name': 'object_2', 'category': 'furniture' },
-                            { 'name': 'object_3', 'category': 'other_type' },
-                            { 'name': 'object_4', 'category': 'other_type' },
+                            { 'name': 'object_1' },
+                            { 'name': 'object_2' },
+                            { 'name': 'object_3' },
+                            { 'name': 'object_4' },
                             { 'name': 'object_5' }
                         ]
                     },
@@ -127,10 +123,10 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'category': 'furniture' },
-                            { 'name': 'object_2', 'category': 'furniture' },
-                            { 'name': 'object_3', 'category': 'other_type' },
-                            { 'name': 'object_4', 'category': 'other_type' },
+                            { 'name': 'object_1' },
+                            { 'name': 'object_2' },
+                            { 'name': 'object_3' },
+                            { 'name': 'object_4' },
                             { 'name': 'object_5' },
                             { 'name': 'object_6' }
                         ]
@@ -150,10 +146,10 @@ describe('Objects in rooms model tests', () => {
                 {
                     'objectList': {
                         'room_one': [
-                            { 'name': 'object_1', 'category': 'furniture' },
-                            { 'name': 'object_2', 'category': 'furniture' },
-                            { 'name': 'object_3', 'category': 'other_type' },
-                            { 'name': 'object_4', 'category': 'other_type' }
+                            { 'name': 'object_1' },
+                            { 'name': 'object_2' },
+                            { 'name': 'object_3' },
+                            { 'name': 'object_4' }
                         ]
                     },
                     'objectsAdded': []
