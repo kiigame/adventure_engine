@@ -24,7 +24,6 @@ class CharacterAnimations {
                 this.playCharacterAnimation(this.speakAnimationName, defaultAnimationLength);
                 return;
             }
-console.log(`Playing character animation for posture: ${posture}`);
             // TODO: map posture to animation name, for now just use posture as animation name
             this.playCharacterAnimation(posture, defaultAnimationLength);
         });
