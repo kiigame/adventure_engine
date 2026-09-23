@@ -231,7 +231,6 @@ input_layer.on('tap click', (event: KonvaEventObject<KonvaPointerEvent>) => {
             new CommandHandler(
                 gameEventEmitter,
                 uiEventEmitter,
-                kiigame.getStageObjectGetter(),
                 kiigame.getText(),
                 items_json
             )

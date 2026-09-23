@@ -4,12 +4,14 @@ class NpcMonologueView {
     /**
      * @param {EventEmitter} uiEventEmitter
      * @param {EventEmitter} gameEventEmitter
+     * @param {StageObjectGetter} stageObjectGetter
      * @param {Konva.Text} npcMonologueText
      * @param {Konva.Label} npcSpeechBubble
      * @param {int} stageWidth
      */
-    constructor(uiEventEmitter, gameEventEmitter, npcSpeechBubble, stageWidth) {
+    constructor(uiEventEmitter, gameEventEmitter, stageObjectGetter, npcSpeechBubble, stageWidth) {
         this.uiEventEmitter = uiEventEmitter;
+        this.stageObjectGetter = stageObjectGetter;
         this.npcSpeechBubble = npcSpeechBubble;
         this.npcMonologueText = npcSpeechBubble.getText();
         this.npcTag = npcSpeechBubble.getTag();
@@ -20,7 +22,8 @@ class NpcMonologueView {
         });
         gameEventEmitter.on('npc_monologue', ({ npc, text, _characterPosture }) => {
             this.clearNpcMonologue();
-            this.npcMonologue(npc, text);
+            const npcObject = this.stageObjectGetter.getObject(npc);
+            this.npcMonologue(npcObject, text);
         });
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.clearNpcMonologue();

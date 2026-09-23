@@ -257,6 +257,7 @@ export class KiiGame {
         new NpcMonologueView(
             container.get(UiEventEmitter),
             container.get(GameEventEmitter),
+            this.stageObjectGetter,
             this.stageObjectGetter.getObject("npc_speech_bubble"),
             this.stage.width()
         );
@@ -354,7 +355,6 @@ export class KiiGame {
         const commandHandler = new CommandHandler(
             container.get(GameEventEmitter),
             container.get(UiEventEmitter),
-            this.stageObjectGetter,
             this.text,
             gameData.items_json, // TODO: items model?
         );

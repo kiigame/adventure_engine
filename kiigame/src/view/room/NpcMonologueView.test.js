@@ -3,6 +3,7 @@ import { createStubInstance, restore, match } from 'sinon';
 import sinonChai from "sinon-chai";
 import NpcMonologueView from './NpcMonologueView.js';
 import { EventEmitter } from '../../events/EventEmitter.js';
+import { StageObjectGetter } from '../../util/konva/StageObjectGetter.js';
 import pkg from 'konva';
 const { Text, Tag, Label, Shape } = pkg;
 use(sinonChai);
@@ -11,6 +12,7 @@ describe('npc monologue view tests', () => {
     describe('draw npc speech bubble correctly', () => {
         let uiEventEmitterStub;
         let gameEventEmitterStub;
+        let stageObjectGetterStub;
         let npcSpeechBubbleStub;
         let npcMonologueTextStub;
         let npcTagStub;
@@ -18,6 +20,7 @@ describe('npc monologue view tests', () => {
         beforeEach(() => {
             uiEventEmitterStub = createStubInstance(EventEmitter);
             gameEventEmitterStub = createStubInstance(EventEmitter);
+            stageObjectGetterStub = createStubInstance(StageObjectGetter);
             npcMonologueTextStub = createStubInstance(Text);
             npcTagStub = createStubInstance(Tag);
             npcSpeechBubbleStub = createStubInstance(Label, {
@@ -66,6 +69,7 @@ describe('npc monologue view tests', () => {
                 const npcMonologueView = new NpcMonologueView(
                     uiEventEmitterStub,
                     gameEventEmitterStub,
+                    stageObjectGetterStub,
                     npcSpeechBubbleStub,
                     981
                 );

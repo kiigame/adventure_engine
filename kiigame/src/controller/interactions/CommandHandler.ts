@@ -1,31 +1,26 @@
-import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
 import { EventEmitter } from "../../events/EventEmitter.js";
 import { TextModel } from "../../model/TextModel.js";
 
 export class CommandHandler {
     private gameEventEmitter: EventEmitter;
     private uiEventEmitter: EventEmitter;
-    private stageObjectGetter: StageObjectGetter;
     private text: TextModel;
     private itemsJson: { [key: string]: any };
 
     /**
      * @param {EventEmitter} gameEventEmitter
      * @param {EventEmitter} uiEventEmitter
-     * @param {StageObjectGetter} stageObjectGetter
      * @param {TextModel} text
      * @param {{ [key: string]: any }} itemsJson
      */
     constructor(
         gameEventEmitter: EventEmitter,
         uiEventEmitter: EventEmitter,
-        stageObjectGetter: StageObjectGetter,
         text: TextModel,
         itemsJson: { [key: string]: any }
     ) {
         this.gameEventEmitter = gameEventEmitter;
         this.uiEventEmitter = uiEventEmitter;
-        this.stageObjectGetter = stageObjectGetter;
         this.text = text;
         this.itemsJson = itemsJson;
     }
@@ -88,7 +83,7 @@ export class CommandHandler {
         } else if (command.command == "set_speak_animation") {
             this.gameEventEmitter.emit('set_speak_animation', command.animation);
         } else if (command.command == "npc_monologue") {
-            const npc = this.stageObjectGetter.getObject(command.npc);
+            const npc = command.npc;
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             const characterPosture = command.character_posture || null;
             this.gameEventEmitter.emit('npc_monologue', { npc, text, characterPosture });
