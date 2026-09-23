@@ -54,12 +54,6 @@ class CharacterAnimations {
             const speakAnimationName = this.postureMapping[posture].speak || this.speakAnimationName;
             this.setSpeakAnimation(speakAnimationName);
         });
-        gameEventEmitter.on('set_idle_animation', (animation_id) => {
-            this.setIdleAnimation(animation_id);
-        });
-        gameEventEmitter.on('set_speak_animation', (animation_id) => {
-            this.setSpeakAnimation(animation_id);
-        });
     }
 
     /**
