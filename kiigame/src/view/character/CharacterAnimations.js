@@ -3,12 +3,19 @@ import { EventEmitter } from "../../events/EventEmitter.js";
 class CharacterAnimations {
     /**
      * @param {object} animations a list of character animations (Konva.Tween objects) by name
+     * @param {object} postureMapping a mapping of character postures to animation names
+     * @param {object} monologuePostureMapping a mapping of character postures to animation names for monologues
+     * @param {object} npcMonologuePostureMapping a mapping of character postures to animation names for NPC monologues
      * @param {EventEmitter} uiEventEmitter
      * @param {EventEmitter} gameEventEmitter
      */
-    constructor(animations, uiEventEmitter, gameEventEmitter) {
+    constructor(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitter, gameEventEmitter) {
         // List of character animations.
         this.animations = animations;
+        // Posture mapping for character animations
+        this.postureMapping = postureMapping;
+        this.monologuePostureMapping = monologuePostureMapping;
+        this.npcMonologuePostureMapping = npcMonologuePostureMapping;
         // Timeout event for showing character animation for certain duration
         this.timeout;
         // Default character animations
@@ -24,16 +31,16 @@ class CharacterAnimations {
                 this.playCharacterAnimation(this.speakAnimationName, defaultAnimationLength);
                 return;
             }
-            // TODO: map posture to animation name, for now just use posture as animation name
-            this.playCharacterAnimation(posture, defaultAnimationLength);
+            const animationName = this.monologuePostureMapping[posture] || this.speakAnimationName;
+            this.playCharacterAnimation(animationName, defaultAnimationLength);
         });
         gameEventEmitter.on('npc_monologue', ({ _npc, _text, characterPosture }) => {
             if (!characterPosture) {
                 return;
             }
             const defaultAnimationLength = 3000; // hardcoded default
-            // TODO: map posture to animation name, for now just use posture as animation name
-            this.playCharacterAnimation(characterPosture, defaultAnimationLength);
+            const animationName = this.npcMonologuePostureMapping[characterPosture] || this.idleAnimationName;
+            this.playCharacterAnimation(animationName, defaultAnimationLength);
         });
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.resetCharacterAnimations();
@@ -42,9 +49,10 @@ class CharacterAnimations {
             this.resetCharacterAnimations();
         });
         gameEventEmitter.on('character_posture_changed', (posture) => {
-            // TODO: map posture to idle and speak animation names; for now just use posture
-            // as the idle animation name
-            this.setIdleAnimation(posture);
+            const idleAnimationName = this.postureMapping[posture].idle || this.idleAnimationName;
+            this.setIdleAnimation(idleAnimationName);
+            const speakAnimationName = this.postureMapping[posture].speak || this.speakAnimationName;
+            this.setSpeakAnimation(speakAnimationName);
         });
         gameEventEmitter.on('set_idle_animation', (animation_id) => {
             this.setIdleAnimation(animation_id);

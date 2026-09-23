@@ -33,7 +33,7 @@
                     "object": "title_image",
                     "string": "examine"
                 },
-                "posture": "panic_last"
+                "posture": "panic"
             }
         ]
     },
@@ -67,7 +67,7 @@
             },
             {
                 "command": "change_character_posture",
-                "posture": "idle",
+                "posture": "default",
                 "timeout": 26207
             }
         ]
@@ -286,7 +286,7 @@
                     "object": "locker_room_1_door_to_out",
                     "string": "argl"
                 },
-                "character_posture": "panic_first"
+                "character_posture": "panic"
             },
             {
                 "command": "monologue",
@@ -294,7 +294,7 @@
                     "object": "locker_room_1_door_to_out",
                     "string": "examine"
                 },
-                "posture": "panic_last",
+                "posture": "panic",
                 "timeout": 3000
             }
         ]
@@ -308,7 +308,7 @@
                     "object": "locker_room_2_door_to_out",
                     "string": "groar"
                 },
-                "character_posture": "panic_first"
+                "character_posture": "panic"
             },
             {
                 "command": "monologue",
@@ -316,7 +316,7 @@
                     "object": "locker_room_2_door_to_out",
                     "string": "examine"
                 },
-                "posture": "panic_last",
+                "posture": "panic",
                 "timeout": 3000
             }
         ]

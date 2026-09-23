@@ -328,6 +328,9 @@ export class KiiGame {
         ).build(characterAnimationData);
         new CharacterAnimations(
             characterAnimations,
+            gameData.character_json.posture_mapping,
+            gameData.character_json.monologue_posture_mapping,
+            gameData.character_json.npc_monologue_posture_mapping,
             container.get(UiEventEmitter),
             container.get(GameEventEmitter)
         );

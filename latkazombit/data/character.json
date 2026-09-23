@@ -68,5 +68,23 @@
                 {"node": "character_idle_eyes_open", "duration": "1.0"}
             ]
         }
+    },
+    "posture_mapping": {
+        "default": {
+            "idle": "idle",
+            "speak": "speak"
+        },
+        "wake_up": {
+            "idle": "wake_up",
+            "speak": "speak"
+        }
+    },
+    "monologue_posture_mapping": {
+        "default": "speak",
+        "panic": "panic_last"
+    },
+    "npc_monologue_posture_mapping": {
+        "default": "idle",
+        "panic": "panic_first"
     }
 }

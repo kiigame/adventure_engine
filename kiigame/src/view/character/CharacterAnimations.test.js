@@ -9,6 +9,22 @@ use(sinonChai);
 
 describe('character animations tests', () => {
     let animations;
+    let postureMapping = {
+        'default': {
+            'idle': 'idle',
+            'speak': 'speak'
+        },
+        'some_posture': {
+            'idle': 'some_animation',
+            'speak': 'some_animation'
+        }
+    };
+    let monologuePostureMapping = {
+        'some_posture': 'some_animation'
+    };
+    let npcMonologuePostureMapping = {
+        'some_posture': 'some_animation'
+    };
     let uiEventEmitterStub;
     let gameEventEmitterStub;
     beforeEach(() => {
@@ -32,7 +48,7 @@ describe('character animations tests', () => {
     // TODO: cover play character speak animation
     describe('reset character animations', () => {
         it('should reset character animations to idle on clicked_on_stage', () => {
-            const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
             const playAnimationFrameStub = stub(characterAnimations, 'playAnimationFrame');
@@ -53,7 +69,7 @@ describe('character animations tests', () => {
     });
     describe('test resetAnimationFrame helper function separately', () => {
         it('should reset a single animation frame', () => {
-            const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             const parentNodeStub = createStubInstance(Node);
             animations['some_animation'][0].node = parentNodeStub;
             characterAnimations.resetAnimationFrame(animations['some_animation'][0]);
@@ -63,7 +79,7 @@ describe('character animations tests', () => {
     });
     describe('test playAnimationFrame helper function separately', () => {
         it('should play a single animation frame', () => {
-            const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             const parentNodeStub = createStubInstance(Node);
             animations['some_animation'][0].node = parentNodeStub;
             characterAnimations.playAnimationFrame(animations['some_animation'][0]);
@@ -72,15 +88,15 @@ describe('character animations tests', () => {
         });
     });
     describe('test character_posture_changed event', () => {
-        it('should set the posture as the idle animation name', () => {
-            const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
+        it('should set idle animation according to the new posture', () => {
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
             const playAnimationFrameStub = stub(characterAnimations, 'playAnimationFrame');
             const characterPostureChangedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
                 return callback.args[0] === 'character_posture_changed';
             }).args[1];
-            characterPostureChangedCallback('some_animation');
+            characterPostureChangedCallback('some_posture');
 
             Object.values(animations).forEach((frames) => {
                 frames.forEach((frame) => {
@@ -94,7 +110,7 @@ describe('character animations tests', () => {
     });
     describe('test setIdleAnimation', () => {
         it('should set idle animation name', () => {
-            const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
             const playAnimationFrameStub = stub(characterAnimations, 'playAnimationFrame');
@@ -117,7 +133,7 @@ describe('character animations tests', () => {
     });
     describe('test setSpeakAnimation', () => {
         it('should set speak animation name', () => {
-            const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
             const playAnimationFrameStub = stub(characterAnimations, 'playAnimationFrame');
