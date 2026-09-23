@@ -114,10 +114,7 @@ describe('character animations tests', () => {
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
             const playAnimationFrameStub = stub(characterAnimations, 'playAnimationFrame');
-            const setIdleAnimationCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'set_idle_animation';
-            }).args[1];
-            setIdleAnimationCallback('some_animation');
+            characterAnimations.setIdleAnimation('some_animation');
 
             // A little bit silly replication of the code structure in the implementation ...
             Object.values(animations).forEach((frames) => {
@@ -127,7 +124,6 @@ describe('character animations tests', () => {
             });
             expect(playAnimationFrameStub).to.have.been.calledWith(animations['some_animation'][0]);
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('character_animation_started');
-
             expect(characterAnimations.idleAnimationName).to.equal('some_animation');
         });
     });
@@ -137,10 +133,7 @@ describe('character animations tests', () => {
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
             const playAnimationFrameStub = stub(characterAnimations, 'playAnimationFrame');
-            const setSpeakAnimationCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'set_speak_animation';
-            }).args[1];
-            setSpeakAnimationCallback('some_animation');
+            characterAnimations.setSpeakAnimation('some_animation');
 
             // A little bit silly replication of the code structure in the implementation ...
             Object.values(animations).forEach((frames) => {
@@ -150,7 +143,6 @@ describe('character animations tests', () => {
             });
             expect(playAnimationFrameStub).to.have.been.calledWith(animations['idle'][0]);
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('character_animation_started');
-
             expect(characterAnimations.speakAnimationName).to.equal('some_animation');
         });
     });
