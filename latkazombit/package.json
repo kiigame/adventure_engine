@@ -13,14 +13,14 @@
     "http-server": "14.1.1",
     "mocha": "12.0.0",
     "rollup": "4.60.1",
-    "rollup-plugin-copy": "3.5.0",
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
   "scripts": {
     "test": "mocha --loader=ts-node/esm './{,!(node_modules|public)/**}/*.test.js'",
     "typecheck": "tsc --noEmit",
-    "build-dev": "../node_modules/.bin/rollup --config --configDev",
+    "copy-assets": "node scripts/copy-assets.mjs",
+    "build-dev":  "npm run copy-assets && ../node_modules/.bin/rollup --config --configDev",
     "start": "http-server",
     "pre-commit": "npm run typecheck && npm test"
   },
