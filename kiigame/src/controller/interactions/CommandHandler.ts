@@ -92,10 +92,6 @@ export class CommandHandler {
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             const characterPosture = command.character_posture || null;
             this.gameEventEmitter.emit('npc_monologue', { npc, text, characterPosture });
-        } else if (command.command == "play_character_animation") {
-            const animationName = command.animation;
-            const duration = command.length;
-            this.uiEventEmitter.emit('play_character_animation', { animationName, duration });
         } else if (command.command == "play_music") {
             const musicParams = {
                 music: command.music,

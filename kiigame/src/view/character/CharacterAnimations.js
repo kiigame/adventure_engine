@@ -35,9 +35,6 @@ class CharacterAnimations {
             // TODO: map posture to animation name, for now just use posture as animation name
             this.playCharacterAnimation(characterPosture, defaultAnimationLength);
         });
-        this.uiEventEmitter.on('play_character_animation', ({ animationName, duration }) => {
-            this.playCharacterAnimation(animationName, duration);
-        });
         this.uiEventEmitter.on('clicked_on_stage', () => {
             this.resetCharacterAnimations();
         });
