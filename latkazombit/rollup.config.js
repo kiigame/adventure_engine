@@ -1,6 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import copy from 'rollup-plugin-copy';
 
 export const dev = {
     input: 'src/latkazombit.ts',
@@ -19,14 +18,6 @@ export const dev = {
         }),
         resolve({
             extensions: ['.ts', '.js']
-        }),
-        copy({
-            targets: [
-                { src: 'index.html', dest: 'public/' },
-                { src: 'data/*.json', dest: 'public/data/' },
-                { src: 'data/audio/**/*', dest: 'public/data/audio/' },
-                { src: 'data/images/**/*', dest: 'public/data/images/' },
-            ]
         })
     ]
 }
