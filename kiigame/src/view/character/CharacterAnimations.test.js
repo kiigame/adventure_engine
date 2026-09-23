@@ -46,7 +46,7 @@ describe('character animations tests', () => {
     });
     // TODO: cover play character animation
     // TODO: cover play character speak animation
-    describe('reset character animations', () => {
+    describe('test event handling', () => {
         it('should reset character animations to idle on clicked_on_stage', () => {
             const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
@@ -66,28 +66,6 @@ describe('character animations tests', () => {
             expect(playAnimationFrameStub).to.have.been.calledWith(animations['idle'][0]);
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('character_animation_started');
         });
-    });
-    describe('test resetAnimationFrame helper function separately', () => {
-        it('should reset a single animation frame', () => {
-            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
-            const parentNodeStub = createStubInstance(Node);
-            animations['some_animation'][0].node = parentNodeStub;
-            characterAnimations.resetAnimationFrame(animations['some_animation'][0]);
-            expect(parentNodeStub.hide).to.have.been.called;
-            expect(animations['some_animation'][0].reset).to.have.been.called;
-        });
-    });
-    describe('test playAnimationFrame helper function separately', () => {
-        it('should play a single animation frame', () => {
-            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
-            const parentNodeStub = createStubInstance(Node);
-            animations['some_animation'][0].node = parentNodeStub;
-            characterAnimations.playAnimationFrame(animations['some_animation'][0]);
-            expect(parentNodeStub.show).to.have.been.called;
-            expect(animations['some_animation'][0].play).to.have.been.called;
-        });
-    });
-    describe('test character_posture_changed event', () => {
         it('should set idle animation according to the new posture', () => {
             const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
@@ -108,8 +86,8 @@ describe('character animations tests', () => {
             expect(characterAnimations.idleAnimationName).to.equal('some_animation');
         });
     });
-    describe('test setIdleAnimation', () => {
-        it('should set idle animation name', () => {
+    describe('test animation functions', () => {
+        it('should set idle animation name with setIdleAnimation', () => {
             const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
@@ -126,9 +104,7 @@ describe('character animations tests', () => {
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('character_animation_started');
             expect(characterAnimations.idleAnimationName).to.equal('some_animation');
         });
-    });
-    describe('test setSpeakAnimation', () => {
-        it('should set speak animation name', () => {
+        it('should set speak animation name with setSpeakAnimation', () => {
             const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
             // Stub helper functions to make unit testing a little bit easier
             const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
@@ -144,6 +120,22 @@ describe('character animations tests', () => {
             expect(playAnimationFrameStub).to.have.been.calledWith(animations['idle'][0]);
             expect(uiEventEmitterStub.emit).to.have.been.calledWith('character_animation_started');
             expect(characterAnimations.speakAnimationName).to.equal('some_animation');
+        });
+        it('should reset a single animation frame with resetAnimationFrame', () => {
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
+            const parentNodeStub = createStubInstance(Node);
+            animations['some_animation'][0].node = parentNodeStub;
+            characterAnimations.resetAnimationFrame(animations['some_animation'][0]);
+            expect(parentNodeStub.hide).to.have.been.called;
+            expect(animations['some_animation'][0].reset).to.have.been.called;
+        });
+        it('should play a single animation frame with playAnimationFrame', () => {
+            const characterAnimations = new CharacterAnimations(animations, postureMapping, monologuePostureMapping, npcMonologuePostureMapping, uiEventEmitterStub, gameEventEmitterStub);
+            const parentNodeStub = createStubInstance(Node);
+            animations['some_animation'][0].node = parentNodeStub;
+            characterAnimations.playAnimationFrame(animations['some_animation'][0]);
+            expect(parentNodeStub.show).to.have.been.called;
+            expect(animations['some_animation'][0].play).to.have.been.called;
         });
     });
 });
