@@ -74,6 +74,11 @@ describe('npc monologue view tests', () => {
                     981
                 );
                 npcMonologueView.npcMonologue(npcStub, 'blabla');
+                // Check that pointer direction is set before text so that the bubble is
+                // positioned correctly on first click (see bug #263)
+                expect(npcTagStub.pointerDirection).to.have.been.calledBefore(
+                    npcMonologueTextStub.text
+                );
                 expect(npcTagStub.pointerDirection).to.have.been.calledWith(
                     parameters['expectedPointerDirection']
                 );

@@ -40,16 +40,16 @@ class NpcMonologueView {
      * @param {string} text The text to be shown in the speech bubble.
      */
     npcMonologue(npc, text) {
+        const npcIsOnRight = npc.x() + npc.width() > (this.stageWidth / 2);
+        this.npcTag.pointerDirection(npcIsOnRight ? "right" : "left");
         this.npcMonologueText.text(text);
         this.npcMonologueText.width(Math.round(this.npcMonologueText.width()));
-        if (npc.x() + npc.width() > (this.stageWidth / 2)) {
-            this.npcTag.pointerDirection("right");
+        if (npcIsOnRight) {
             if (this.npcMonologueText.width() > npc.x() - 100) {
                 this.npcMonologueText.width(npc.x() - 100);
             }
             this.npcSpeechBubble.x(npc.x());
         } else {
-            this.npcTag.pointerDirection("left");
             if (this.npcMonologueText.width() > this.stageWidth - (npc.x() + npc.width() + 100)) {
                 this.npcMonologueText.width(this.stageWidth - (npc.x() + npc.width() + 100));
             }
