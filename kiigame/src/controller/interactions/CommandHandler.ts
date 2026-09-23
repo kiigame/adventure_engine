@@ -81,6 +81,8 @@ export class CommandHandler {
             });
         } else if (command.command == "play_sequence") {
             this.gameEventEmitter.emit('play_sequence', command.sequence);
+        } else if (command.command == "change_character_posture") {
+            this.gameEventEmitter.emit('change_character_posture', command.posture);
         } else if (command.command == "set_idle_animation") {
             this.gameEventEmitter.emit('set_idle_animation', command.animation);
         } else if (command.command == "set_speak_animation") {

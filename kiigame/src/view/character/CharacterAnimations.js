@@ -44,6 +44,11 @@ class CharacterAnimations {
         this.uiEventEmitter.on('inventory_item_drag_start', ({ draggedItem: _draggedItem }) => {
             this.resetCharacterAnimations();
         });
+        gameEventEmitter.on('character_posture_changed', (posture) => {
+            // TODO: map posture to idle and speak animation names; for now just use posture
+            // as the idle animation name
+            this.setIdleAnimation(posture);
+        });
         gameEventEmitter.on('set_idle_animation', (animation_id) => {
             this.setIdleAnimation(animation_id);
         });

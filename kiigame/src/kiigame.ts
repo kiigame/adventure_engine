@@ -63,6 +63,7 @@ import SequenceBuilder from 'viewbuilder/sequence/konva/SequenceBuilder.js';
 
 import "reflect-metadata";
 import { container, GameEventEmitter, UiEventEmitter } from "./inversify.config.js";
+import { CharacterPosture } from 'model/CharacterPosture.js';
 
 type RoomObjectCategoryType = {
     roomChildrenTypeBuilder: RoomChildrenBuilder
@@ -122,6 +123,8 @@ export class KiiGame {
         new ObjectsInRooms(initialObjectsInRoomsState, container.get(GameEventEmitter));
         // "Player character in room" model
         new CharacterInRoom(container.get(GameEventEmitter));
+        // Character posture model
+        new CharacterPosture('idle', container.get(GameEventEmitter));
         // Inventory model
         this.inventory = new Inventory(container.get(GameEventEmitter));
         // Text model(?)

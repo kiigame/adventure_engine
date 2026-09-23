@@ -53,10 +53,9 @@
                 "timeout": 20207
             },
             {
-                "command": "play_character_animation",
-                "animation": "wake_up",
-                "timeout": 20207,
-                "length": 3000
+                "command": "change_character_posture",
+                "posture": "wake_up",
+                "timeout": 20207
             },
             {
                 "command": "monologue",
@@ -65,6 +64,11 @@
                     "string": "examine"
                 },
                 "timeout": 23207
+            },
+            {
+                "command": "change_character_posture",
+                "posture": "idle",
+                "timeout": 26207
             }
         ]
     },

@@ -71,6 +71,27 @@ describe('character animations tests', () => {
             expect(animations['some_animation'][0].play).to.have.been.called;
         });
     });
+    describe('test character_posture_changed event', () => {
+        it('should set the posture as the idle animation name', () => {
+            const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
+            // Stub helper functions to make unit testing a little bit easier
+            const resetAnimationFrameStub = stub(characterAnimations, 'resetAnimationFrame');
+            const playAnimationFrameStub = stub(characterAnimations, 'playAnimationFrame');
+            const characterPostureChangedCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+                return callback.args[0] === 'character_posture_changed';
+            }).args[1];
+            characterPostureChangedCallback('some_animation');
+
+            Object.values(animations).forEach((frames) => {
+                frames.forEach((frame) => {
+                    expect(resetAnimationFrameStub).to.have.been.calledWith(frame);
+                });
+            });
+            expect(playAnimationFrameStub).to.have.been.calledWith(animations['some_animation'][0]);
+            expect(uiEventEmitterStub.emit).to.have.been.calledWith('character_animation_started');
+            expect(characterAnimations.idleAnimationName).to.equal('some_animation');
+        });
+    });
     describe('test setIdleAnimation', () => {
         it('should set idle animation name', () => {
             const characterAnimations = new CharacterAnimations(animations, uiEventEmitterStub, gameEventEmitterStub);
