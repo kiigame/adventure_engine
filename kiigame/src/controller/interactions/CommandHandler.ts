@@ -83,13 +83,6 @@ export class CommandHandler {
             const text = this.text.getText(command.textkey.object, command.textkey.string);
             const characterPosture = command.character_posture || null;
             this.gameEventEmitter.emit('npc_monologue', { npc, text, characterPosture });
-        } else if (command.command == "play_music") {
-            const musicParams = {
-                music: command.music,
-                loop: command.loop !== undefined ? command.loop : false,
-                fade: command.fade !== undefined ? command.fade : 0
-            };
-            this.uiEventEmitter.emit('play_music', musicParams);
         } else if (command.command === 'play_full_fade_out') {
             this.uiEventEmitter.emit('play_full_fade_out');
         } else if (command.command === 'play_full_fade_in') {

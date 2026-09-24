@@ -13,9 +13,6 @@ class Music {
         this.current_audio = null;
         this.current_audio_source = null;
 
-        uiEventEmitter.on('play_music', (musicParams) => {
-            this.playMusic(musicParams);
-        });
         uiEventEmitter.on('play_sequence_started', (sequenceId) => {
             this.playMusicById(sequenceId);
         });

@@ -183,16 +183,6 @@ describe('test Music event management', function () {
     afterEach(() => {
         restore();
     });
-    it('should handle play_music event by calling playMusic', function () {
-        const playMusicStub = stub(Music.prototype, 'playMusic');
-        new Music({}, audioFactoryStub, uiEventEmitterStub);
-        const musicData = { music: 'test.ogg' };
-        const playMusicCallback = uiEventEmitterStub.on.getCalls().find((callback) => {
-            return callback.args[0] === 'play_music';
-        }).args[1];
-        playMusicCallback(musicData);
-        assert.isTrue(playMusicStub.calledOnceWith(musicData));
-    });
     it('should handle play_sequence_started event by calling playMusicById', function () {
         const playMusicByIdStub = stub(Music.prototype, 'playMusicById');
         new Music({}, audioFactoryStub, uiEventEmitterStub);
