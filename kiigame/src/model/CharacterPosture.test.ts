@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { createStubInstance } from 'sinon';
-import { CharacterPosture } from './CharacterPosture.js';
+import { CharacterPosture } from './CharacterPosture';
 import { EventEmitter } from '../events/EventEmitter.js';
 
 describe('Character posture model tests', () => {
