@@ -7,9 +7,9 @@ export class Inventory {
     /**
      * @param {EventEmitter} gameEventEmitter
      */
-    constructor(gameEventEmitter: EventEmitter) {
+    constructor(gameEventEmitter: EventEmitter, items: { name: string, category: string }[] = []) {
         this.gameEventEmitter = gameEventEmitter;
-        this.items = []; // Object { name, category }[]
+        this.items = items;
         this.gameEventEmitter.on('inventory_add', (items: { name: string, category: string }[]) => {
             this.inventoryAdd(items);
         });
@@ -42,6 +42,13 @@ export class Inventory {
             this.items = this.items.filter((item) => name !== item.name);
         });
         this.gameEventEmitter.emit('inventory_items_removed', { itemList: this.items });
+    }
+
+    /**
+     * @returns { name: string, category: string }[]
+     */
+    getItems(): { name: string, category: string }[] {
+        return this.items;
     }
 }
 
