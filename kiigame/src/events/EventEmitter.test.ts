@@ -3,8 +3,8 @@ import { spy, restore } from 'sinon';
 import { EventEmitter } from './EventEmitter';
 
 describe('EventEmitter', () => {
-    let emitter;
-    let loggerSpy;
+    let emitter: any;
+    let loggerSpy: any;
 
     beforeEach(() => {
         loggerSpy = { debug: spy() };
