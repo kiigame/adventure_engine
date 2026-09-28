@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { spy, restore } from 'sinon';
-import { EventEmitter } from './EventEmitter.js';
+import { EventEmitter } from './EventEmitter';
 
 describe('EventEmitter', () => {
     let emitter;
