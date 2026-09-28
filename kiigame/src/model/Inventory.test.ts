@@ -6,7 +6,7 @@ import { EventEmitter } from '../events/EventEmitter.js';
 use(sinonChai);
 
 describe('Inventory model tests', () => {
-    let gameEventEmitterStub;
+    let gameEventEmitterStub: any;
     beforeEach(() => {
         gameEventEmitterStub = createStubInstance(EventEmitter);
     });
@@ -15,8 +15,8 @@ describe('Inventory model tests', () => {
     });
     describe('add items to inventory', () => {
         it('should add new item to empty inventory and it should be the only item', () => {
-            new Inventory(gameEventEmitterStub);
-            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const inventory = new Inventory(gameEventEmitterStub);
+            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
             inventoryAddCallback([{ name: 'item', category: 'item' }]);
@@ -24,25 +24,31 @@ describe('Inventory model tests', () => {
                 'inventory_items_added',
                 { itemList: [{ name: 'item', category: 'item' }], itemNamesAdded: ['item'] }
             );
+            expect(inventory.getItems()).to.deep.equal(
+                [{ name: 'item', category: 'item' }]
+            );
         });
         it('should add new item to existing inventory and it should be at the end', () => {
-            const inventory = new Inventory(gameEventEmitterStub);
-            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const initialItems = [{ name: 'old_item', category: 'item' }];
+            const inventory = new Inventory(gameEventEmitterStub, initialItems);
+            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
-            inventory.items = [{ name: 'old_item', category: 'item' }];
             inventoryAddCallback([{ name: 'new_item', category: 'item' }]);
             expect(gameEventEmitterStub.emit, 'inventory_items_added not emitted as expected').to.have.been.calledWith(
                 'inventory_items_added',
                 { itemList: [{ name: 'old_item', category: 'item' }, { name: 'new_item', category: 'item' }], itemNamesAdded: ['new_item'] }
             );
+            expect(inventory.getItems()).to.deep.equal(
+                [{ name: 'old_item', category: 'item' }, { name: 'new_item', category: 'item' }]
+            );
         });
         it('should add multiple new items to an existing inventory and they should be at the end', () => {
-            const inventory = new Inventory(gameEventEmitterStub);
-            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const initialItems = [{ name: 'old_item', category: 'item' }];
+            const inventory = new Inventory(gameEventEmitterStub, initialItems);
+            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
-            inventory.items = [{ name: 'old_item', category: 'item' }];
             inventoryAddCallback([{ name: 'new_item', category: 'item' }, { name: 'even_newer_item', category: 'item' }]);
             expect(gameEventEmitterStub.emit, 'inventory_items_added not emitted as expected').to.have.been.calledWith(
                 'inventory_items_added',
@@ -57,31 +63,41 @@ describe('Inventory model tests', () => {
                     ]
                 }
             );
+            expect(inventory.getItems()).to.deep.equal(
+                [
+                    { name: 'old_item', category: 'item' },
+                    { name: 'new_item', category: 'item' },
+                    { name: 'even_newer_item', category: 'item' }
+                ]
+            );
         });
         it('should not duplicate existing items in inventory if they are added again', () => {
-            const inventory = new Inventory(gameEventEmitterStub);
-            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const initialItems = [{ name: 'old_item', category: 'item' }];
+            const inventory = new Inventory(gameEventEmitterStub, initialItems);
+            const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'inventory_add';
             }).args[1];
-            inventory.items = [{ name: 'old_item', category: 'item' }];
             inventoryAddCallback([{ name: 'old_item', category: 'item' }]);
             expect(gameEventEmitterStub.emit, 'inventory_items_added not emitted as expected').to.have.been.calledWith(
                 'inventory_items_added',
                 { itemList: [{ name: 'old_item', category: 'item' }], itemNamesAdded: ['old_item'] }
             );
+            expect(inventory.getItems()).to.deep.equal(
+                [{ name: 'old_item', category: 'item' }]
+            );
         });
     });
     describe('remove items from inventory', () => {
         it('should remove item from inventory and the rest of the inventory should be in same order and have no gaps', () => {
-            const inventory = new Inventory(gameEventEmitterStub);
-            const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_remove';
-            }).args[1];
-            inventory.items = [
+            const initialItems = [
                 { name: 'first_item', category: 'item' },
                 { name: 'item_to_remove', category: 'item' },
                 { name: 'last_item', category: 'item' }
             ];
+            const inventory = new Inventory(gameEventEmitterStub, initialItems);
+            const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+                return callback.args[0] === 'inventory_remove';
+            }).args[1];
             inventoryRemoveCallback(['item_to_remove']);
             expect(gameEventEmitterStub.emit, 'inventory_items_removed not emitted as expected').calledWith(
                 'inventory_items_removed',
@@ -92,18 +108,24 @@ describe('Inventory model tests', () => {
                     ]
                 }
             );
+            expect(inventory.getItems()).to.deep.equal(
+                [
+                    { name: 'first_item', category: 'item' },
+                    { name: 'last_item', category: 'item' }
+                ]
+            );
         });
         it('should remove multiple items from inventory and the rest of the inventory should be in same order and have no gaps', () => {
-            const inventory = new Inventory(gameEventEmitterStub);
-            const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
-                return callback.args[0] === 'inventory_remove';
-            }).args[1];
-            inventory.items = [
+            const initialItems = [
                 { name: 'first_item', category: 'item' },
                 { name: 'item_to_remove_from_the_middle', category: 'item' },
                 { name: 'last_remaining_item', category: 'item' },
                 { name: 'item_to_remove_from_the_end', category: 'item' }
             ];
+            const inventory = new Inventory(gameEventEmitterStub, initialItems);
+            const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+                return callback.args[0] === 'inventory_remove';
+            }).args[1];
             inventoryRemoveCallback(['item_to_remove_from_the_middle', 'item_to_remove_from_the_end']);
             expect(gameEventEmitterStub.emit, 'inventory_items_removed not emitted as expected').calledWith(
                 'inventory_items_removed',
@@ -113,6 +135,12 @@ describe('Inventory model tests', () => {
                         { name: 'last_remaining_item', category: 'item' }
                     ]
                 }
+            );
+            expect(inventory.getItems()).to.deep.equal(
+                [
+                    { name: 'first_item', category: 'item' },
+                    { name: 'last_remaining_item', category: 'item' }
+                ]
             );
         });
     });
