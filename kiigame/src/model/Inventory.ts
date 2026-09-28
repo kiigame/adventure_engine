@@ -51,5 +51,3 @@ export class Inventory {
         return this.items;
     }
 }
-
-export default Inventory;

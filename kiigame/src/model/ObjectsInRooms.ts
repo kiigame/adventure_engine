@@ -69,5 +69,3 @@ export class ObjectsInRooms {
         );
     }
 }
-
-export default ObjectsInRooms;

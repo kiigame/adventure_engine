@@ -1,7 +1,7 @@
 import { expect, use } from 'chai';
 import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
-import Inventory from './Inventory.js';
+import { Inventory } from './Inventory';
 import { EventEmitter } from '../events/EventEmitter.js';
 use(sinonChai);
 
