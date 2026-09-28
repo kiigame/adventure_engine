@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { createStubInstance } from 'sinon';
-import CharacterInRoom from './CharacterInRoom.js';
+import { CharacterInRoom } from './CharacterInRoom';
 import { EventEmitter } from '../events/EventEmitter.js';
 
 describe('Character in room model tests', () => {
