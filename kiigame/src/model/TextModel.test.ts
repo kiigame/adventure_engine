@@ -18,7 +18,7 @@ describe('Test Text getName function', function() {
 });
 
 describe('Test Text getText function', function() {
-    let loggerSpy;
+    let loggerSpy: any;
     beforeEach(() => {
         loggerSpy = { warn: spy() };
     });
