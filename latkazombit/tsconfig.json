@@ -1,20 +1,9 @@
 {
+    "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "allowJs": false,
         "checkJs": false,
-        "target": "esnext",
-        "module": "esnext",
-        "moduleResolution": "bundler",
-        "strict": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "types": ["@kiigame/adventure_engine"],
-        "lib": [
-            "esnext",
-            "dom"
-        ]
+        "types": ["@kiigame/adventure_engine"]
     },
     "include": [
         "./src/**/*.ts"
