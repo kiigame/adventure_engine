@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createStubInstance, match } from 'sinon';
+import { createStubInstance } from 'sinon';
 import { CharacterPosture } from './CharacterPosture.js';
 import { EventEmitter } from '../events/EventEmitter.js';
 
