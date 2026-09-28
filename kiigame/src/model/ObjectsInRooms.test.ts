@@ -6,8 +6,8 @@ import { EventEmitter } from '../events/EventEmitter.js';
 use(sinonChai);
 
 describe('Objects in rooms model tests', () => {
-    let initialState = {};
-    let gameEventEmitterStub;
+    let initialState: Record<string, { name: string }[]> = {};
+    let gameEventEmitterStub: any;
     beforeEach(() => {
         gameEventEmitterStub = createStubInstance(EventEmitter);
         initialState = {
@@ -30,7 +30,7 @@ describe('Objects in rooms model tests', () => {
     describe('remove objects from room', () => {
         it('should remove an object that exists in a room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
-            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'remove_objects';
             }).args[1];
             removeObjectsCallback(['object_1']);
@@ -50,7 +50,7 @@ describe('Objects in rooms model tests', () => {
         });
         it('should remove multiple objects that exist in a room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
-            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'remove_objects';
             }).args[1];
             removeObjectsCallback(['object_1', 'object_4']);
@@ -69,7 +69,7 @@ describe('Objects in rooms model tests', () => {
         });
         it('should not remove an object that does not exist in a room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
-            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const removeObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'remove_objects';
             }).args[1];
             removeObjectsCallback(['object_5']);
@@ -92,7 +92,7 @@ describe('Objects in rooms model tests', () => {
     describe('add objects to room', () => {
         it('should add an object that did not exist in the room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
-            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'add_objects';
             }).args[1];
             addObjectsCallback({ 'objectNames': ['object_5'], 'roomId': 'room_one' });
@@ -114,7 +114,7 @@ describe('Objects in rooms model tests', () => {
         });
         it('should add multiple objects that did not exist in the room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
-            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'add_objects';
             }).args[1];
             addObjectsCallback({ 'objectNames': ['object_5', 'object_6'], 'roomId': 'room_one' });
@@ -137,7 +137,7 @@ describe('Objects in rooms model tests', () => {
         });
         it('should not add an object that already exists in the room', () => {
             new ObjectsInRooms(initialState, gameEventEmitterStub);
-            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback) => {
+            const addObjectsCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
                 return callback.args[0] === 'add_objects';
             }).args[1];
             addObjectsCallback({ 'objectNames': ['object_1'], 'roomId': 'room_one' });
