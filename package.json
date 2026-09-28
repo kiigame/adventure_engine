@@ -19,8 +19,8 @@
   },
   "scripts": {
     "prepare": "husky",
-    "build": "npm run build -w '@kiigame/adventure_engine' && npm run build-dev -w '@kiigame/latkazombit'",
-    "pre-commit": "npm run pre-commit -w '@kiigame/adventure_engine' && npm run pre-commit -w '@kiigame/latkazombit'"
+    "build": "npm run build -w '@kiigame/kgae_ts' && npm run build -w '@kiigame/adventure_engine' && npm run build-dev -w '@kiigame/latkazombit'",
+    "pre-commit": "npm run pre-commit -w '@kiigame/kgae_ts' && npm run pre-commit -w '@kiigame/adventure_engine' && npm run pre-commit -w '@kiigame/latkazombit'"
   },
   "files": [
     "dist"
@@ -30,6 +30,7 @@
     "npm": "11.6.0"
   },
   "workspaces": [
+    "kgae_ts",
     "kiigame",
     "latkazombit"
   ],

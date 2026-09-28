@@ -50,7 +50,7 @@ npm run prepare
 
 ### Committing
 
-Husky runs typecheck and tests for each package. Build the engine and reference game from the repository root first:
+Husky runs typechecks and tests for all packages. Build the workspaces in dependency order before running the reference game.
 
 ```
 npm run build
@@ -58,7 +58,7 @@ npm run build
 
 ### Testing
 
-To bundle and run the reference game:
+To run the reference game, build the workspaces and browser bundle from the repository root:
 
 ```
 npm run build
