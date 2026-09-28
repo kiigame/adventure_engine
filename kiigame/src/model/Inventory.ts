@@ -1,30 +1,33 @@
 import { EventEmitter } from "../events/EventEmitter.js";
 
-class Inventory {
+export class Inventory {
+    private gameEventEmitter: EventEmitter;
+    private items: { name: string, category: string }[];
+
     /**
      * @param {EventEmitter} gameEventEmitter
      */
-    constructor(gameEventEmitter) {
+    constructor(gameEventEmitter: EventEmitter) {
         this.gameEventEmitter = gameEventEmitter;
         this.items = []; // Object { name, category }[]
-        this.gameEventEmitter.on('inventory_add', (items) => {
+        this.gameEventEmitter.on('inventory_add', (items: { name: string, category: string }[]) => {
             this.inventoryAdd(items);
         });
-        this.gameEventEmitter.on('inventory_remove', (names) => {
+        this.gameEventEmitter.on('inventory_remove', (names: string[]) => {
             this.inventoryRemove(names);
         });
     }
 
     /**
-     * @param {object[]} items Object { name: string, category: string }[]
+     * @param {{ name: string, category: string }[]} items
      */
-    inventoryAdd(items) {
+    inventoryAdd(items: { name: string, category: string }[]) {
         items.forEach((item) => {
             if (!this.items.find((existingItem) => existingItem.name === item.name)) {
                 this.items.push(item);
             }
         });
-        const itemNamesAdded = []
+        const itemNamesAdded: string[] = []
         items.forEach((item) => {
             itemNamesAdded.push(item.name);
         });
@@ -34,7 +37,7 @@ class Inventory {
     /**
      * @param {string[]} names
      */
-    inventoryRemove(names) {
+    inventoryRemove(names: string[]) {
         names.forEach((name) => {
             this.items = this.items.filter((item) => name !== item.name);
         });
