@@ -1,1 +1,4 @@
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT" || exit 1
+
 npm run pre-commit
