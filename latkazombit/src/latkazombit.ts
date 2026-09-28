@@ -263,7 +263,7 @@ uiEventEmitter.on('arrived_in_room', function (roomId: string) {
     if (roomId === 'end_layer') {
         const rewards_text = kiigame.getStageObjectGetter().getObject("rewards_text") as Konva.Text;
         let rewardsCount = 0;
-        for (const inventoryItem of kiigame.getInventory().items) {
+        for (const inventoryItem of kiigame.getInventory().getItems()) {
             if (inventoryItem.category === 'reward') {
                 rewardsCount++;
             }
