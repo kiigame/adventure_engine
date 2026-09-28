@@ -50,28 +50,19 @@ npm run prepare
 
 ### Committing
 
-Note that husky runs typecheck and tests for each package, and for those to run, the engine needs to be built first.
+Husky runs typecheck and tests for each package. Build the engine and reference game from the repository root first:
 
 ```
-cd kiigame
 npm run build
 ```
 
 ### Testing
 
-To run the reference game, you need to bundle the engine first:
+To bundle and run the reference game:
 
 ```
-cd kiigame
 npm run build
-```
-
-Then bundle the game itself and launch the local web server:
-
-```
-cd ../latkazombit
-npm run build-dev
-npm start
+npm start --workspace '@kiigame/latkazombit'
 ```
 
 Navigate to `127.0.0.1:8080` in your browser - Lätkäzombit should launch.

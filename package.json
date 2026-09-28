@@ -19,6 +19,7 @@
   },
   "scripts": {
     "prepare": "husky",
+    "build": "npm run build -w '@kiigame/adventure_engine' && npm run build-dev -w '@kiigame/latkazombit'",
     "pre-commit": "npm run pre-commit -w '@kiigame/adventure_engine' && npm run pre-commit -w '@kiigame/latkazombit'"
   },
   "files": [

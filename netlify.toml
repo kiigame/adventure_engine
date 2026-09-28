@@ -15,4 +15,4 @@
   publish = "latkazombit/public/"
 
   # Default build command.
-  command = "npm install && cd kiigame && npm run build && cd ../latkazombit && npm run build-dev"
+  command = "npm install && npm run build"
