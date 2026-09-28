@@ -10,7 +10,7 @@ class ObjectsInRoomsBuilder {
 
     /**
      * @param {object} roomsJson rooms data in json object
-     * @returns {object[]} prepared rooms data
+     * @returns {Record<string, { name: string }[]>} prepared rooms data
      */
     build(roomsJson) {
         const objectsInRoomsData = {};

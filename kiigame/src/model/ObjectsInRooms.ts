@@ -1,27 +1,30 @@
 import { EventEmitter } from "../events/EventEmitter.js";
 
-class ObjectsInRooms {
+export class ObjectsInRooms {
+    private objectsInRoomsData: Record<string, { name: string }[]>;
+    private gameEventEmitter: EventEmitter;
+
     /**
-     * @param {object} objectsInRoomsData initial state of the objects in rooms as json
+     * @param {Record<string, { name: string }[]>} objectsInRoomsData initial state of the objects in rooms as json
      * @param {EventEmitter} gameEventEmitter
      */
-    constructor(objectsInRoomsData, gameEventEmitter) {
+    constructor(objectsInRoomsData: Record<string, { name: string }[]>, gameEventEmitter: EventEmitter) {
         this.objectsInRoomsData = objectsInRoomsData;
         this.gameEventEmitter = gameEventEmitter;
 
-        this.gameEventEmitter.on('remove_objects', (objectNames) => {
+        this.gameEventEmitter.on('remove_objects', (objectNames: string[]) => {
             this.removeObjects(objectNames);
         });
-        this.gameEventEmitter.on('add_objects', ({ objectNames, roomId }) => {
-            this.addObjects(objectNames, roomId);
+        this.gameEventEmitter.on('add_objects', (params: { objectNames: string[], roomId: string }) => {
+            this.addObjects(params.objectNames, params.roomId);
         });
     }
 
     /**
      * @param {string[]} objectNames
      */
-    removeObjects(objectNames) {
-        const removedObjectNames = [];
+    removeObjects(objectNames: string[]) {
+        const removedObjectNames: string[] = [];
         // TODO: I'm sure there's a more elegant way than this!
         objectNames.forEach((objectName) => {
             for (const [room, objects] of Object.entries(this.objectsInRoomsData)) {
@@ -46,8 +49,8 @@ class ObjectsInRooms {
      * @param {string[]} objectNames
      * @param {string} roomId
      */
-    addObjects(objectNames, roomId) {
-        const addedObjectNames = [];
+    addObjects(objectNames: string[], roomId: string) {
+        const addedObjectNames: string[] = [];
         // TODO: I'm sure there's a more elegant way than this!
         objectNames.forEach((objectName) => {
             for (const [room, objects] of Object.entries(this.objectsInRoomsData)) {
