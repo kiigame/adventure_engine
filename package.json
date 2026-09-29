@@ -33,11 +33,5 @@
     "kgae_ts",
     "kiigame",
     "latkazombit"
-  ],
-  "overrides": {
-    "mocha": {
-      "diff": "8.0.4",
-      "serialize-javascript": "7.0.5"
-    }
-  }
+  ]
 }
