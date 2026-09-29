@@ -25,6 +25,7 @@ export const build = [
             format: 'esm',
             sourcemap: true,
         },
+        external: id => /^@kiigame\/kgae_ts(?:\/|$)/.test(id),
         plugins: [
             typescript({
                 tsconfig: './tsconfig.json',

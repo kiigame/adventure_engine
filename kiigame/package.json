@@ -109,6 +109,7 @@
   },
   "homepage": "https://github.com/kiigame/adventure_engine#readme",
   "dependencies": {
+    "@kiigame/kgae_ts": "0.1.0",
     "inversify": "8.1.0",
     "konva": "7.2.5",
     "reflect-metadata": "0.2.2",

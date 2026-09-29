@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore, useFakeTimers } from 'sinon';
 import sinonChai from "sinon-chai";
 import DraggedItemViewModel from './DraggedItemViewModel.js';
-import { EventEmitter } from '../../events/EventEmitter.js';
+import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
 import DragTargetFinder from './DragTargetFinder.js';
 import { TextModel } from '../../model/TextModel.js';
 import pkg from 'konva';

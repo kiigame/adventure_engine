@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createStubInstance } from 'sinon';
 import { CharacterPosture } from './CharacterPosture';
-import { EventEmitter } from '../events/EventEmitter.js';
+import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
 
 describe('Character posture model tests', () => {
     let gameEventEmitterStub: any;
