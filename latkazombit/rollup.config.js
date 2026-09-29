@@ -14,10 +14,10 @@ export const dev = {
             tsconfig: './tsconfig.json',
             sourceMap: true,
             module: 'esnext',
-            exclude: ["**/*.test.js"]
+            exclude: ['**/*.test.ts']
         }),
         resolve({
-            extensions: ['.ts', '.js']
+            extensions: ['.ts']
         })
     ]
 }
