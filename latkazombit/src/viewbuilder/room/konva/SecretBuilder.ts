@@ -2,10 +2,10 @@ import { RoomChildrenBuilder } from "../../../../../kiigame/src/viewbuilder/room
 
 export class SecretBuilder implements RoomChildrenBuilder {
     /**
-     * @param {object} secretJson secret child objects from room.json
-     * @returns {object[]} an array of secret child objects as Konva objects
+     * @param {Record<string, any>} secretJson secret child objects from room.json
+     * @returns {any[]} an array of secret child objects as Konva objects
      */
-    buildRoomChildren(secretJson: any[]): any[] {
+    buildRoomChildren(secretJson: Record<string, any>): any[] {
         const secretResult = [];
         for (const [key, secret] of Object.entries(secretJson)) {
             if (!secret.attrs) {

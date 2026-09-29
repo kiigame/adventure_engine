@@ -3,7 +3,7 @@
     "compilerOptions": {
         "allowJs": false,
         "checkJs": false,
-        "types": ["@kiigame/adventure_engine"]
+        "types": ["@kiigame/adventure_engine", "mocha"]
     },
     "include": [
         "./src/**/*.ts"
