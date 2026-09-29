@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore, match } from 'sinon';
 import sinonChai from "sinon-chai";
 import NpcMonologueView from './NpcMonologueView.js';
-import { EventEmitter } from '../../events/EventEmitter.js';
+import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
 import { StageObjectGetter } from '../../util/konva/StageObjectGetter.js';
 import pkg from 'konva';
 const { Text, Tag, Label, Shape } = pkg;

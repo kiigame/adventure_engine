@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createStubInstance, restore } from 'sinon';
 import CharacterInRoomViewModel from './CharacterInRoomViewModel.js';
-import { EventEmitter } from '../../events/EventEmitter.js';
+import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
 
 describe('Character in room view model tests', () => {
     let uiEventEmitterStub;

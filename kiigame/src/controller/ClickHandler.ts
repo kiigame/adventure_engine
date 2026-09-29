@@ -1,4 +1,4 @@
-import { EventEmitter } from "../events/EventEmitter.js";
+import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
 import { CommandsHandler } from "./interactions/CommandsHandler.js";
 import { DefaultInteractionResolver } from "./interactions/DefaultInteractionResolver.js";
 import Interactions from "./interactions/Interactions.js";

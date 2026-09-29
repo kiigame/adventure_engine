@@ -4,9 +4,9 @@ import TextBuilder from "./viewbuilder/sequence/konva/TextBuilder.js";
 import SequenceBuilder from "./viewbuilder/sequence/konva/SequenceBuilder.js";
 import ItemBuilder from "./viewbuilder/item/konva/ItemBuilder.js";
 import ItemsBuilder from "./viewbuilder/item/konva/ItemsBuilder.js";
-import { EventEmitter } from "./events/EventEmitter";
+import { EventEmitter, gameStateEngineModule } from "@kiigame/kgae_ts";
 
-export const GameEventEmitter: symbol = Symbol.for("GameEventEmitter");
+export { GameEventEmitter } from "@kiigame/kgae_ts";
 export const UiEventEmitter: symbol = Symbol.for("UIEventEmitter");
 
 decorate(injectable(), TextBuilder);
@@ -15,8 +15,6 @@ decorate(injectable(), SequenceBuilder);
 
 decorate(injectable(), ItemBuilder);
 decorate(injectable(), ItemsBuilder);
-
-decorate(injectable(), EventEmitter);
 
 decorate(inject(TextBuilder), SlideBuilder, 0);
 decorate(inject(SlideBuilder), SequenceBuilder, 0);
@@ -29,11 +27,10 @@ export const engineContainerModule = new ContainerModule(({ bind }) => {
   bind<SequenceBuilder>(SequenceBuilder).to(SequenceBuilder);
   bind<ItemBuilder>(ItemBuilder).to(ItemBuilder);
   bind<ItemsBuilder>(ItemsBuilder).to(ItemsBuilder);
-  bind<EventEmitter>(GameEventEmitter).to(EventEmitter).inSingletonScope();
   bind<EventEmitter>(UiEventEmitter).to(EventEmitter).inSingletonScope();
 });
 
 const container = new Container();
-container.load(engineContainerModule);
+container.load(gameStateEngineModule, engineContainerModule);
 
 export { container };

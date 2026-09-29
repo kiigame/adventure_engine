@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { createStubInstance, stub, restore } from 'sinon';
 import RoomAnimations from './RoomAnimations.js';
-import { EventEmitter } from '../../events/EventEmitter.js';
+import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
 import pkg from 'konva';
 const { Container, Node, Animation } = pkg;
 
