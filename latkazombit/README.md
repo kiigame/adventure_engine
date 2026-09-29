@@ -6,14 +6,12 @@ The game is in the Finnish language.
 
 ## Development
 
-To run typecheck and unit tests, the engine needs to be bundled first:
+To run typecheck and unit tests, the engine needs to be bundled first. Run the following from the monorepo root:
 
 ```
-cd kiigame
 npm run build
-cd ../latkazombit
-npm run typecheck
-npm test
+npm run typecheck -w '@kiigame/latkazombit'
+npm test -w '@kiigame/latkazombit'
 ```
 
 ## Game-specific features
@@ -27,4 +25,3 @@ At the start of the game, the player can input a jersey number. This jersey numb
 There are secrets hidden in rooms that do not show up when you drag an inventory item around, instead they need to be (fairly precicely) clicked on to be picked up.
 
 The transition to the final room will remove all inventory items except the secrets, and displays a counter how many the player found.
-
