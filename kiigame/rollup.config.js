@@ -30,7 +30,8 @@ export const build = [
                 tsconfig: './tsconfig.json',
                 sourceMap: true,
                 module: 'esnext',
-                outDir: 'dist'
+                outDir: 'dist',
+                exclude: ['**/*.test.ts'],
             }),
             resolve({
                 extensions: ['.js', '.ts']
