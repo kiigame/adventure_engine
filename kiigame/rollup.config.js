@@ -18,7 +18,6 @@ export const build = [
             'src/controller/interactions/CommandsHandler.ts',
             'src/controller/interactions/CommandHandler.ts',
             'src/inversify.config.ts',
-            'src/events/EventEmitter.ts'
         ],
         output: {
             dir: 'dist',

@@ -70,6 +70,7 @@ type RoomObjectCategoryType = {
 };
 
 export type RoomObjectCategoriesType = Record<string, RoomObjectCategoryType>;
+export { EventEmitter } from "@kiigame/kgae_ts";
 
 export class KiiGame {
     private inventory: Inventory;

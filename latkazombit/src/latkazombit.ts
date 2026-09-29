@@ -1,5 +1,5 @@
 import { KiiGame } from '@kiigame/adventure_engine';
-import { RoomObjectCategoriesType } from '../../kiigame/dist/types/kiigame.js';
+import type { EventEmitter, RoomObjectCategoriesType } from '@kiigame/adventure_engine';
 import { DefaultInteractionResolver } from '@kiigame/adventure_engine/controller/interactions/DefaultInteractionResolver';
 import { HitRegionFilter } from '@kiigame/adventure_engine/view/room/hitregion/HitRegionFilter';
 import { Intersection } from '@kiigame/adventure_engine/view/draggeditem/intersection/Intersection';
@@ -12,7 +12,6 @@ import { SecretBuilder } from './viewbuilder/room/konva/SecretBuilder.js';
 import { CommandsHandler } from '@kiigame/adventure_engine/controller/interactions/CommandsHandler';
 import { CommandHandler } from '@kiigame/adventure_engine/controller/interactions/CommandHandler';
 import { container, GameEventEmitter, UiEventEmitter } from '@kiigame/adventure_engine/inversify.config';
-import { EventEmitter } from '@kiigame/adventure_engine/events/EventEmitter';
 import { KonvaPointerEvent } from 'konva/types/PointerEvents.js';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/types/Node.js';

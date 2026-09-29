@@ -83,12 +83,6 @@
         "types": "./dist/types/inversify.config.d.ts",
         "default": "./dist/inversify.config.js"
       }
-    },
-    "./events/EventEmitter": {
-      "import": {
-        "types": "./dist/types/events/EventEmitter.d.ts",
-        "default": "./dist/EventEmitter.js"
-      }
     }
   },
   "type": "module",
