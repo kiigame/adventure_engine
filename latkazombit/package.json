@@ -16,6 +16,13 @@
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
+  "overrides": {
+    "http-server": {
+      "union": {
+        "qs": "6.16.0"
+      }
+    }
+  },
   "scripts": {
     "test": "mocha --loader=ts-node/esm './{,!(node_modules|public)/**}/*.test.js'",
     "typecheck": "tsc --noEmit",
