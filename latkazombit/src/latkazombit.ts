@@ -74,6 +74,7 @@ const gameEventEmitter: EventEmitter = container.get(GameEventEmitter);
 const uiEventEmitter: EventEmitter = container.get(UiEventEmitter);
 
 // TODO: "as any" hacks around "Property 'getWidth' does not exist on type 'Stage'.ts"
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const stage = kiigame.getStage() as any;
 
 const legends_json = JSON.parse(jsonGetter.getJSON('data/legends.json'));
