@@ -10,7 +10,7 @@ export default defineConfig([
     ignores: ['dist/**'],
   },
   {
-    files: ['**/*.{js,mjs,ts}'],
+    files: ['**/*.{ts,mjs}'],
     languageOptions: {
       globals: {
         ...globals.browser,
