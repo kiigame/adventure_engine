@@ -7,7 +7,8 @@ export const build = [
     input: [
       'src/index.ts',
       'src/inversify.config.ts',
-      'src/events/EventEmitter.ts'
+      'src/events/EventEmitter.ts',
+      'src/model/CharacterPosture.ts',
     ],
     output: {
       dir: 'dist',

@@ -63,7 +63,7 @@ import SequenceBuilder from 'viewbuilder/sequence/konva/SequenceBuilder.js';
 
 import "reflect-metadata";
 import { container, GameEventEmitter, UiEventEmitter } from "./inversify.config.js";
-import { CharacterPosture } from 'model/CharacterPosture.js';
+import { CharacterPosture } from '@kiigame/kgae_ts';
 
 type RoomObjectCategoryType = {
     roomChildrenTypeBuilder: RoomChildrenBuilder

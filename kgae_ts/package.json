@@ -20,6 +20,10 @@
     "./events/EventEmitter": {
       "types": "./dist/types/events/EventEmitter.d.ts",
       "import": "./dist/EventEmitter.js"
+    },
+    "./model/CharacterPosture": {
+      "types": "./dist/types/model/CharacterPosture.d.ts",
+      "import": "./dist/CharacterPosture.js"
     }
   },
   "type": "module",
