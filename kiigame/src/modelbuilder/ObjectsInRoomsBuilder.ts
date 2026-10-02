@@ -1,4 +1,4 @@
-import { ObjectsInRoomsData } from "@kiigame/kgae_ts";
+import { ObjectsInRoomsModel } from "@kiigame/kgae_ts";
 import { ObjectsInRoomBuilder } from "./ObjectsInRoomBuilder";
 
 export class ObjectsInRoomsBuilder {
@@ -9,8 +9,8 @@ export class ObjectsInRoomsBuilder {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    build(roomsJson: any): ObjectsInRoomsData {
-        const objectsInRoomsData: ObjectsInRoomsData = {};
+    build(roomsJson: any): ObjectsInRoomsModel {
+        const objectsInRoomsData: ObjectsInRoomsModel = {};
         for (const [name, room] of Object.entries(roomsJson)) {
             objectsInRoomsData[name] = this.objectsInRoomBuilder.build(room as object);
         };

@@ -18,7 +18,7 @@ import RoomAnimationsBuilder from './viewbuilder/room/konva/RoomAnimationsBuilde
 import RoomAnimations from './view/room/RoomAnimations.js';
 import RoomFaderBuilder from './viewbuilder/room/konva/RoomFaderBuilder.js';
 import RoomFader from './view/room/RoomFader.js';
-import { CharacterInRoom, ObjectsInRoomsData } from '@kiigame/kgae_ts';
+import { CharacterInRoom, ObjectsInRoomsModel } from '@kiigame/kgae_ts';
 import { StageObjectGetter } from './util/konva/StageObjectGetter.js';
 import CharacterFramesBuilder from './viewbuilder/character/konva/CharacterFramesBuilder.js';
 import CharacterAnimationsBuilder from './viewbuilder/character/konva/CharacterAnimationsBuilder.js';
@@ -118,7 +118,7 @@ export class KiiGame {
         // Model start
         // "Objects in rooms" model
         // Build the initial "objects in rooms" state
-        const initialObjectsInRoomsState: ObjectsInRoomsData = new ObjectsInRoomsBuilder(
+        const initialObjectsInRoomsState: ObjectsInRoomsModel = new ObjectsInRoomsBuilder(
             new ObjectsInRoomBuilder(Object.keys(roomObjectCategories))
         ).build(gameData.rooms_json);
         new ObjectsInRooms(initialObjectsInRoomsState, container.get(GameEventEmitter));

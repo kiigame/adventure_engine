@@ -1,12 +1,12 @@
 import { expect, use } from 'chai';
 import { createStubInstance } from 'sinon';
 import sinonChai from "sinon-chai";
-import { ObjectsInRooms, ObjectsInRoomsData } from './ObjectsInRooms';
+import { ObjectsInRooms, ObjectsInRoomsModel } from './ObjectsInRooms';
 import { EventEmitter } from "@kiigame/kgae_ts";
 use(sinonChai);
 
 describe('Objects in rooms model tests', () => {
-  let initialState: ObjectsInRoomsData = {};
+  let initialState: ObjectsInRoomsModel = {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let gameEventEmitterStub: any;
   beforeEach(() => {
