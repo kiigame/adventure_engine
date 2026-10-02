@@ -23,5 +23,3 @@ export class ObjectsInRoomBuilder {
         return objectsInRoom;
     }
 }
-
-export default ObjectsInRoomBuilder;

@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { ObjectsInRoomsBuilder } from './ObjectsInRoomsBuilder';
-import ObjectsInRoomBuilder from './ObjectsInRoomBuilder.js';
+import { ObjectsInRoomBuilder } from './ObjectsInRoomBuilder';
 use(sinonChai);
 
 describe('objects in rooms builder tests', () => {
