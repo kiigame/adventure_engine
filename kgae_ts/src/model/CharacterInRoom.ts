@@ -4,9 +4,6 @@ export class CharacterInRoom {
   private gameEventEmitter: EventEmitter;
   private state: string|null;
 
-  /**
-     * @param {EventEmitter} gameEventEmitter
-     */
   constructor(gameEventEmitter: EventEmitter) {
     this.gameEventEmitter = gameEventEmitter;
     this.state = null;
