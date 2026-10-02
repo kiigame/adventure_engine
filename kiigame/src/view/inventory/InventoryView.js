@@ -1,4 +1,4 @@
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
 import InventoryItemsView from "./InventoryItemsView.js"
 import InventoryArrowsView from "./InventoryArrowsView.js"

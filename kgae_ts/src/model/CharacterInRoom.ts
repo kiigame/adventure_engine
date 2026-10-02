@@ -1,4 +1,4 @@
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 
 export class CharacterInRoom {
   private gameEventEmitter: EventEmitter;

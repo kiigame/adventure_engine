@@ -1,7 +1,7 @@
 import { expect, use } from 'chai';
 import { createStubInstance, restore, stub } from 'sinon';
 import sinonChai from "sinon-chai";
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 import pkg from 'konva';
 import CharacterAnimations from './CharacterAnimations.js';
 const { Tween, Node } = pkg;

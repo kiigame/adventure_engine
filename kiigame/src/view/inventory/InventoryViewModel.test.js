@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import InventoryViewModel from './InventoryViewModel.js';
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 import pkg from 'konva';
 const { Shape } = pkg;
 use(sinonChai);

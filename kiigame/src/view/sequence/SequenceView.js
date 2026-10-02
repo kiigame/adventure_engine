@@ -1,5 +1,5 @@
 import { StageObjectGetter } from "../../util/konva/StageObjectGetter.js";
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 import Konva from 'konva';
 
 class SequenceView {

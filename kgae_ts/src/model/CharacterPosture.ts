@@ -1,4 +1,4 @@
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 
 export class CharacterPosture {
   private posture: string;

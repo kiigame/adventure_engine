@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, restore } from 'sinon';
 import sinonChai from "sinon-chai";
 import { Inventory } from './Inventory';
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 use(sinonChai);
 
 describe('Inventory model tests', () => {

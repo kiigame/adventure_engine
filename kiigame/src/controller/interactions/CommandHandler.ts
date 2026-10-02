@@ -1,4 +1,4 @@
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 import { TextModel } from "../../model/TextModel.js";
 
 export class CommandHandler {

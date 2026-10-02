@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createStubInstance } from 'sinon';
 import { CharacterInRoom } from './CharacterInRoom';
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 
 describe('Character in room model tests', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createStubInstance } from 'sinon';
 import { CharacterPosture } from './CharacterPosture';
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 
 describe('Character posture model tests', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

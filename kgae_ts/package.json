@@ -12,18 +12,6 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./inversify.config": {
-      "types": "./dist/types/inversify.config.d.ts",
-      "import": "./dist/inversify.config.js"
-    },
-    "./events/EventEmitter": {
-      "types": "./dist/types/events/EventEmitter.d.ts",
-      "import": "./dist/EventEmitter.js"
-    },
-    "./model/CharacterPosture": {
-      "types": "./dist/types/model/CharacterPosture.d.ts",
-      "import": "./dist/CharacterPosture.js"
     }
   },
   "type": "module",

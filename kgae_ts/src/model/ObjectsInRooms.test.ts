@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance } from 'sinon';
 import sinonChai from "sinon-chai";
 import { ObjectsInRooms } from './ObjectsInRooms';
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 use(sinonChai);
 
 describe('Objects in rooms model tests', () => {

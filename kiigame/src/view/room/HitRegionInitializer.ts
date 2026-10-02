@@ -1,4 +1,4 @@
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 import { HitRegionFilter } from "./hitregion/HitRegionFilter.js";
 import Konva from 'konva';
 

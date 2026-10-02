@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { createStubInstance, useFakeTimers, stub, restore } from 'sinon';
 import { Music } from './Music';
 import { AudioFactory } from './AudioFactory';
-import { EventEmitter } from "@kiigame/kgae_ts/events/EventEmitter";
+import { EventEmitter } from "@kiigame/kgae_ts";
 
 class AudioStub {
     play() { return; };
