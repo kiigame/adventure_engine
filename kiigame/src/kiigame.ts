@@ -41,7 +41,7 @@ import RoomChildrenTypeBuilder from './viewbuilder/room/konva/RoomChildrenTypeBu
 import BackgroundsBuilder from './viewbuilder/room/konva/BackgroundsBuilder.js';
 import { FurnitureBuilder } from './viewbuilder/room/konva/FurnitureBuilder.js';
 import { OtherChildrenBuilder } from './viewbuilder/room/konva/OtherChildrenBuilder.js';
-import ObjectsInRoomsBuilder from './modelbuilder/ObjectsInRoomsBuilder.js';
+import { ObjectsInRoomsBuilder } from './modelbuilder/ObjectsInRoomsBuilder';
 import ObjectsInRoomBuilder from './modelbuilder/ObjectsInRoomBuilder.js';
 import { ObjectsInRooms } from '@kiigame/kgae_ts';
 import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
