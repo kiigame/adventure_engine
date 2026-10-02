@@ -43,7 +43,7 @@ import { FurnitureBuilder } from './viewbuilder/room/konva/FurnitureBuilder.js';
 import { OtherChildrenBuilder } from './viewbuilder/room/konva/OtherChildrenBuilder.js';
 import ObjectsInRoomsBuilder from './modelbuilder/ObjectsInRoomsBuilder.js';
 import ObjectsInRoomBuilder from './modelbuilder/ObjectsInRoomBuilder.js';
-import { ObjectsInRooms } from './model/ObjectsInRooms';
+import { ObjectsInRooms } from '@kiigame/kgae_ts';
 import CharacterInRoomViewModel from './view/room/CharacterInRoomViewModel.js';
 import InventoryArrowsView from './view/inventory/InventoryArrowsView.js';
 import InventoryArrowsViewModel from './view/inventory/InventoryArrowsViewModel.js';
