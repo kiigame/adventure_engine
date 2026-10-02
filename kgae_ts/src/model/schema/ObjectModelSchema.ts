@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-export const objectModelSchema = z.object({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const objectModelSchema = z.object({
   name: z.string(),
 });
 
