@@ -1,10 +1,10 @@
-import { EventEmitter } from "@kiigame/kgae_ts";
+import { EventEmitter, ObjectModel } from "@kiigame/kgae_ts";
 
 export class ObjectsInRooms {
-  private objectsInRoomsData: Record<string, { name: string }[]>;
+  private objectsInRoomsData: Record<string, ObjectModel[]>;
   private gameEventEmitter: EventEmitter;
 
-  constructor(objectsInRoomsData: Record<string, { name: string }[]>, gameEventEmitter: EventEmitter) {
+  constructor(objectsInRoomsData: Record<string, ObjectModel[]>, gameEventEmitter: EventEmitter) {
     this.objectsInRoomsData = objectsInRoomsData;
     this.gameEventEmitter = gameEventEmitter;
 
