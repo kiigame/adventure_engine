@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ObjectsInRoomBuilder } from './ObjectsInRoomBuilder.js';
-import { ObjectModel } from 'model/schema/ObjectModelSchema.js';
+import { ObjectModel } from '@kiigame/kgae_ts';
 
 describe('konva room builder tests', () => {
     it('should build a room with objects with given types', () => {
