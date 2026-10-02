@@ -18,7 +18,7 @@ import RoomAnimationsBuilder from './viewbuilder/room/konva/RoomAnimationsBuilde
 import RoomAnimations from './view/room/RoomAnimations.js';
 import RoomFaderBuilder from './viewbuilder/room/konva/RoomFaderBuilder.js';
 import RoomFader from './view/room/RoomFader.js';
-import { CharacterInRoom } from './model/CharacterInRoom';
+import { CharacterInRoom } from '@kiigame/kgae_ts';
 import { StageObjectGetter } from './util/konva/StageObjectGetter.js';
 import CharacterFramesBuilder from './viewbuilder/character/konva/CharacterFramesBuilder.js';
 import CharacterAnimationsBuilder from './viewbuilder/character/konva/CharacterAnimationsBuilder.js';
