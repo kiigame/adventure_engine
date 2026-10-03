@@ -1,13 +1,18 @@
 import { EventEmitter } from "@kiigame/kgae_ts";
 
+interface InventoryItem {
+  name: string,
+  category: string,
+};
+
 export class Inventory {
   private gameEventEmitter: EventEmitter;
-  private items: { name: string, category: string }[];
+  private items: InventoryItem[];
 
-  constructor(gameEventEmitter: EventEmitter, items: { name: string, category: string }[] = []) {
+  constructor(gameEventEmitter: EventEmitter, items: InventoryItem[] = []) {
     this.gameEventEmitter = gameEventEmitter;
     this.items = items;
-    this.gameEventEmitter.on('inventory_add', (items: { name: string, category: string }[]) => {
+    this.gameEventEmitter.on('inventory_add', (items: InventoryItem[]) => {
       this.inventoryAdd(items);
     });
     this.gameEventEmitter.on('inventory_remove', (names: string[]) => {
@@ -15,7 +20,7 @@ export class Inventory {
     });
   }
 
-  inventoryAdd(items: { name: string, category: string }[]) {
+  inventoryAdd(items: InventoryItem[]) {
     items.forEach((item) => {
       if (!this.items.find((existingItem) => existingItem.name === item.name)) {
         this.items.push(item);
@@ -35,7 +40,7 @@ export class Inventory {
     this.gameEventEmitter.emit('inventory_items_removed', { itemList: this.items });
   }
 
-  getItems(): { name: string, category: string }[] {
+  getItems(): InventoryItem[] {
     return this.items;
   }
 }
