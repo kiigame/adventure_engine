@@ -26,7 +26,7 @@ import CharacterAnimations from './view/character/CharacterAnimations.js';
 import InventoryView from './view/inventory/InventoryView.js';
 import RoomView from './view/room/RoomView.js';
 import CharacterView from './view/character/CharacterView.js';
-import { Inventory } from './model/Inventory';
+import { Inventory } from '@kiigame/kgae_ts';
 import InventoryViewModel from './view/inventory/InventoryViewModel.js';
 import InventoryItemsView from './view/inventory/InventoryItemsView.js';
 import KonvaObjectContainerPusher from './viewbuilder/util/konva/KonvaObjectContainerPusher.js';

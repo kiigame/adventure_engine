@@ -1,0 +1,154 @@
+import { expect, use } from 'chai';
+import { createStubInstance, restore } from 'sinon';
+import sinonChai from "sinon-chai";
+import { Inventory } from './Inventory';
+import { EventEmitter } from "@kiigame/kgae_ts";
+use(sinonChai);
+
+describe('Inventory model tests', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let gameEventEmitterStub: any;
+  beforeEach(() => {
+    gameEventEmitterStub = createStubInstance(EventEmitter);
+  });
+  afterEach(() => {
+    restore();
+  });
+  describe('add items to inventory', () => {
+    it('should add new item to empty inventory and it should be the only item', () => {
+      const inventory = new Inventory(gameEventEmitterStub);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+        return callback.args[0] === 'inventory_add';
+      }).args[1];
+      inventoryAddCallback([{ name: 'item', category: 'item' }]);
+      expect(gameEventEmitterStub.emit, 'inventory_items_added not emitted as expected').to.have.been.calledWith(
+        'inventory_items_added',
+        { itemList: [{ name: 'item', category: 'item' }], itemNamesAdded: ['item'] }
+      );
+      expect(inventory.getItems()).to.deep.equal(
+        [{ name: 'item', category: 'item' }]
+      );
+    });
+    it('should add new item to existing inventory and it should be at the end', () => {
+      const initialItems = [{ name: 'old_item', category: 'item' }];
+      const inventory = new Inventory(gameEventEmitterStub, initialItems);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+        return callback.args[0] === 'inventory_add';
+      }).args[1];
+      inventoryAddCallback([{ name: 'new_item', category: 'item' }]);
+      expect(gameEventEmitterStub.emit, 'inventory_items_added not emitted as expected').to.have.been.calledWith(
+        'inventory_items_added',
+        { itemList: [{ name: 'old_item', category: 'item' }, { name: 'new_item', category: 'item' }], itemNamesAdded: ['new_item'] }
+      );
+      expect(inventory.getItems()).to.deep.equal(
+        [{ name: 'old_item', category: 'item' }, { name: 'new_item', category: 'item' }]
+      );
+    });
+    it('should add multiple new items to an existing inventory and they should be at the end', () => {
+      const initialItems = [{ name: 'old_item', category: 'item' }];
+      const inventory = new Inventory(gameEventEmitterStub, initialItems);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+        return callback.args[0] === 'inventory_add';
+      }).args[1];
+      inventoryAddCallback([{ name: 'new_item', category: 'item' }, { name: 'even_newer_item', category: 'item' }]);
+      expect(gameEventEmitterStub.emit, 'inventory_items_added not emitted as expected').to.have.been.calledWith(
+        'inventory_items_added',
+        {
+          itemList: [
+            { name: 'old_item', category: 'item' },
+            { name: 'new_item', category: 'item' },
+            { name: 'even_newer_item', category: 'item' }
+          ], itemNamesAdded: [
+            'new_item',
+            'even_newer_item'
+          ]
+        }
+      );
+      expect(inventory.getItems()).to.deep.equal(
+        [
+          { name: 'old_item', category: 'item' },
+          { name: 'new_item', category: 'item' },
+          { name: 'even_newer_item', category: 'item' }
+        ]
+      );
+    });
+    it('should not duplicate existing items in inventory if they are added again', () => {
+      const initialItems = [{ name: 'old_item', category: 'item' }];
+      const inventory = new Inventory(gameEventEmitterStub, initialItems);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const inventoryAddCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+        return callback.args[0] === 'inventory_add';
+      }).args[1];
+      inventoryAddCallback([{ name: 'old_item', category: 'item' }]);
+      expect(gameEventEmitterStub.emit, 'inventory_items_added not emitted as expected').to.have.been.calledWith(
+        'inventory_items_added',
+        { itemList: [{ name: 'old_item', category: 'item' }], itemNamesAdded: ['old_item'] }
+      );
+      expect(inventory.getItems()).to.deep.equal(
+        [{ name: 'old_item', category: 'item' }]
+      );
+    });
+  });
+  describe('remove items from inventory', () => {
+    it('should remove item from inventory and the rest of the inventory should be in same order and have no gaps', () => {
+      const initialItems = [
+        { name: 'first_item', category: 'item' },
+        { name: 'item_to_remove', category: 'item' },
+        { name: 'last_item', category: 'item' }
+      ];
+      const inventory = new Inventory(gameEventEmitterStub, initialItems);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+        return callback.args[0] === 'inventory_remove';
+      }).args[1];
+      inventoryRemoveCallback(['item_to_remove']);
+      expect(gameEventEmitterStub.emit, 'inventory_items_removed not emitted as expected').calledWith(
+        'inventory_items_removed',
+        {
+          itemList: [
+            { name: 'first_item', category: 'item' },
+            { name: 'last_item', category: 'item' }
+          ]
+        }
+      );
+      expect(inventory.getItems()).to.deep.equal(
+        [
+          { name: 'first_item', category: 'item' },
+          { name: 'last_item', category: 'item' }
+        ]
+      );
+    });
+    it('should remove multiple items from inventory and the rest of the inventory should be in same order and have no gaps', () => {
+      const initialItems = [
+        { name: 'first_item', category: 'item' },
+        { name: 'item_to_remove_from_the_middle', category: 'item' },
+        { name: 'last_remaining_item', category: 'item' },
+        { name: 'item_to_remove_from_the_end', category: 'item' }
+      ];
+      const inventory = new Inventory(gameEventEmitterStub, initialItems);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const inventoryRemoveCallback = gameEventEmitterStub.on.getCalls().find((callback: any) => {
+        return callback.args[0] === 'inventory_remove';
+      }).args[1];
+      inventoryRemoveCallback(['item_to_remove_from_the_middle', 'item_to_remove_from_the_end']);
+      expect(gameEventEmitterStub.emit, 'inventory_items_removed not emitted as expected').calledWith(
+        'inventory_items_removed',
+        {
+          itemList: [
+            { name: 'first_item', category: 'item' },
+            { name: 'last_remaining_item', category: 'item' }
+          ]
+        }
+      );
+      expect(inventory.getItems()).to.deep.equal(
+        [
+          { name: 'first_item', category: 'item' },
+          { name: 'last_remaining_item', category: 'item' }
+        ]
+      );
+    });
+  });
+});
