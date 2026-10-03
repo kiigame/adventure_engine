@@ -57,7 +57,7 @@ import CharacterSpeechView from './view/character/CharacterSpeechView.js';
 import StageView from './view/StageView.js';
 import FullFadeView from './view/FullFadeView.js';
 import NpcMonologueView from './view/room/NpcMonologueView.js';
-import { RoomChildrenBuilder } from './viewbuilder/room/konva/RoomChildrenBuilder.js';
+import { RoomChildrenBuilder } from './viewbuilder/room/konva/RoomChildrenBuilder';
 import ItemsBuilder from 'viewbuilder/item/konva/ItemsBuilder.js';
 import SequenceBuilder from 'viewbuilder/sequence/konva/SequenceBuilder.js';
 

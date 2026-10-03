@@ -1,4 +1,4 @@
-import { RoomChildrenBuilder } from './RoomChildrenBuilder.js';
+import { RoomChildrenBuilder } from './RoomChildrenBuilder';
 
 type Furniture = {
     initiallyVisible?: boolean,

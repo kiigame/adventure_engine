@@ -1,4 +1,4 @@
-import { RoomChildrenBuilder } from "./RoomChildrenBuilder.js";
+import { RoomChildrenBuilder } from "./RoomChildrenBuilder";
 
 /**
  * Allow fairly freely adding "pure" Konva objects as children to the room (very flexible!)
