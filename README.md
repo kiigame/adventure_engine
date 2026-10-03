@@ -27,6 +27,12 @@ The monorepo uses the following dependencies:
  * rollup for bundling
  * [Semantic Versioning](https://semver.org/)
 
+### kgae_ts
+
+[kgae_ts](kgae_ts) is a TypeScript implementation of the "core" game state engine for KGAE. It is in the process of being extracted out of `kiigame` into its own standalone module.
+
+`kiigame` uses `kgae_ts` as a dependency.
+
 ### Lätkäzombit
 
 [Lätkäzombit: Pako hallista](latkazombit) serves as the reference/example game for KGAE. [Try Lätkäzombit: Pako hallista here!](https://kgae.netlify.app/) The game is in the Finnish language.
@@ -69,9 +75,9 @@ Navigate to `127.0.0.1:8080` in your browser - Lätkäzombit should launch.
 
 ## Contributing
 
-Contributions are welcome!
-
 Disclaimer: This project is at the moment very much a hobby project with fairly specific but mostly undocumented aims and goals.
+
+Contributions are welcome!
 
 ### Branching strategy
 

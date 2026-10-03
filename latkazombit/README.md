@@ -11,6 +11,7 @@ To run typecheck and unit tests, the engine needs to be bundled first. Run the f
 ```
 npm run build
 npm run typecheck -w '@kiigame/latkazombit'
+npm run lint -w '@kiigame/latkazombit'
 npm test -w '@kiigame/latkazombit'
 ```
 

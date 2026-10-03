@@ -2,14 +2,21 @@
 
 ## Development
 
-Run typecheck and unit tests:
+`kgae_ts` needs to be built first. Run from project root:
+
+```
+npm run build -w '@kiigame/kgae_ts'
+```
+
+Run typecheck and unit tests from `kiigame` directory:
 
 ```
 npm run typecheck
 npm test
 ```
 
-## Releases
+To run build, so that dependees can use it:
 
-* `main` branch is tagged for releases
-* Maintenance branches can be created for old versions
+```
+npm run build
+```
