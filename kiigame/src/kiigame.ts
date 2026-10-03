@@ -12,7 +12,7 @@ import { VisibilityValidator } from './view/draggeditem/intersection/VisibilityV
 import { CategoryValidator } from './view/draggeditem/intersection/CategoryValidator.js';
 import { Music } from './view/music/Music';
 import { AudioFactory } from './view/music/AudioFactory';
-import { TextModel } from './model/TextModel.js';
+import { TextModel } from '@kiigame/kgae_ts';
 import RoomAnimationBuilder from './viewbuilder/room/konva/RoomAnimationBuilder.js';
 import RoomAnimationsBuilder from './viewbuilder/room/konva/RoomAnimationsBuilder.js';
 import RoomAnimations from './view/room/RoomAnimations.js';

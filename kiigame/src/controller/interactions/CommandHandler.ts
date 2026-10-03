@@ -1,5 +1,4 @@
-import { EventEmitter, InventoryItem } from "@kiigame/kgae_ts";
-import { TextModel } from "../../model/TextModel.js";
+import { EventEmitter, InventoryItem, TextModel } from "@kiigame/kgae_ts";
 
 export class CommandHandler {
     private gameEventEmitter: EventEmitter;

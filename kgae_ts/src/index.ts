@@ -4,4 +4,5 @@ export { CharacterPosture } from "./model/CharacterPosture.js";
 export { Inventory, InventoryItem } from "./model/Inventory.js";
 export { ObjectsInRooms, ObjectsInRoomsModel } from "./model/ObjectsInRooms.js";
 export { ObjectModel } from "./model/schema/ObjectModelSchema.js";
+export { TextModel } from "./model/TextModel.js";
 export { GameEventEmitter, gameStateEngineModule } from "./inversify.config.js";

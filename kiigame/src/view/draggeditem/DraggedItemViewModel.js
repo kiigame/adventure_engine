@@ -1,6 +1,5 @@
-import { EventEmitter } from "@kiigame/kgae_ts";
+import { EventEmitter, TextModel } from "@kiigame/kgae_ts";
 import DragTargetFinder from "./DragTargetFinder.js";
-import { TextModel } from "../../model/TextModel.js";
 
 class DraggedItemViewModel {
     /**
