@@ -1,4 +1,4 @@
-import { EventEmitter } from "@kiigame/kgae_ts";
+import { EventEmitter, InventoryItem } from "@kiigame/kgae_ts";
 import { TextModel } from "../../model/TextModel.js";
 
 export class CommandHandler {
@@ -38,8 +38,7 @@ export class CommandHandler {
             this.gameEventEmitter.emit('monologue', { text, posture });
         } else if (command.command == "inventory_add") {
             const items = Array.isArray(command.item) ? command.item : [command.item];
-            type itemToAdd = { name: string, category: string };
-            const itemsToAdd: itemToAdd[] = [];
+            const itemsToAdd: InventoryItem[] = [];
             items.forEach((name: string) =>
                 itemsToAdd.push({ name, category: this.itemsJson[name].category })
             );
