@@ -1,6 +1,6 @@
 import { EventEmitter } from "@kiigame/kgae_ts";
 
-interface InventoryItem {
+export interface InventoryItem {
   name: string,
   category: string,
 };
