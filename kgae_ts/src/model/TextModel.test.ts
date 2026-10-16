@@ -92,4 +92,22 @@ describe('Test Text setText function', function () {
     const result = text.getText('nonExistingObject', 'key2');
     assert.deepEqual(result, 'This text for new object was set');
   });
+  describe('prototype pollution parsing', function () {
+    ['__proto__', 'prototype', 'constructor'].forEach((illegalId) => {
+      it(`should not set text with id ${illegalId}`, function () {
+        const text = new TextModel(JSON.parse('{}'));
+        expect(function() {
+          text.setText(illegalId, 'key', 'text');
+        }).to.throw();
+      });
+    });
+    ['__proto__', 'prototype', 'constructor'].forEach((illegalKey) => {
+      it(`should not set text with key ${illegalKey}`, function () {
+        const text = new TextModel(JSON.parse('{}'));
+        expect(function() {
+          text.setText('id', illegalKey, 'text');
+        }).to.throw();
+      });
+    });
+  });
 });

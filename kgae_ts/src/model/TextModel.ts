@@ -1,4 +1,18 @@
 import { TextData, textDataSchema } from "./schema/TextModelSchema";
+import { z } from 'zod';
+
+const safeTextKeySchema = z.string().refine(
+  (key) =>
+    key !== "__proto__" &&
+    key !== "constructor" &&
+    key !== "prototype"
+);
+
+const setTextInputSchema = z.object({
+  id: safeTextKeySchema,
+  key: safeTextKeySchema,
+  text: z.string(),
+});
 
 export class TextModel {
   private texts: TextData;
@@ -17,11 +31,16 @@ export class TextModel {
    * @param text the text itself
    */
   setText(id: string, key: string, text: string) {
-    if (!this.texts[id]) {
-      this.texts[id] = { [key]: text };
+    const parsedInput = setTextInputSchema.parse({ id, key, text });
+    if (!parsedInput.id || !parsedInput.key) {
       return;
     }
-    this.texts[id][key] = text;
+
+    if (!this.texts[parsedInput.id]) {
+      this.texts[parsedInput.id] = { [parsedInput.key]: parsedInput.text };
+      return;
+    }
+    this.texts[parsedInput.id][parsedInput.key] = parsedInput.text;
   }
 
   getName(id: string): string {
