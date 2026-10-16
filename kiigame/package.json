@@ -116,7 +116,7 @@
     "@types/sinon-chai": "4.0.0",
     "chai": "6.2.2",
     "mocha": "12.0.2",
-    "rollup": "4.60.1",
+    "rollup": "4.64.7",
     "sinon": "22.0.0",
     "sinon-chai": "4.0.1",
     "ts-node": "10.9.2",
