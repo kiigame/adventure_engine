@@ -12,9 +12,9 @@ export class TextModel {
   /**
    * Create or update a text entry for a game entity at runtime.
    *
-   * @param {string} id object id for which to save the text for
-   * @param {string} key key of the text itself
-   * @param {string} text the text itself
+   * @param id object id for which to save the text for
+   * @param key key of the text itself
+   * @param text the text itself
    */
   setText(id: string, key: string, text: string) {
     if (!this.texts[id]) {
@@ -36,11 +36,11 @@ export class TextModel {
    * Find text in object. If a text is not found from the text data with the parameter,
    * return the default text for the object (if it exists), or the master default text.
    *
-   * @param {string} object_id The id of the object which's texts are looked up
-   * @param {string} key The key to look up the text with. If null, set to 'examine' by
-   *                     default. Otherwise usually the name of the other object in
-   *                     item-object interactions.
-   * @return {string} The text found, or the default text.
+   * @param object_id The id of the object which's texts are looked up
+   * @param key The key to look up the text with. If null, set to 'examine' by
+   *            default. Otherwise usually the name of the other object in
+   *            item-object interactions.
+   * @return The text found, or the default text.
    */
   getText(object_id: string, key = 'examine'): string {
     if (!this.texts[object_id]) {
