@@ -11,17 +11,6 @@ module.exports = {
         allowedTenses: ['present-imperative'],
         firstOnly: true,
         allowlist: [
-          'capitalize',
-          'mention',
-          'drive',
-          'play',
-          'model',
-          'divide',
-          'cover',
-          'arrange',
-          'prioritize',
-          'draw',
-          'time',
         ],
       }
     ]
