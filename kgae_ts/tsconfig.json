@@ -1,19 +1,15 @@
 {
     "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "declaration": true,
-        "declarationMap": true,
         "rootDir": "./src",
         "outDir": "dist",
-        "allowJs": true,
-        "checkJs": false,
+        "allowJs": false,
+        "declaration": true,
         "declarationDir": "dist/types",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "baseUrl": "./src",
-        "types": ["reflect-metadata", "mocha"],
-        "lib": ["esnext", "dom"]
+        "types": ["reflect-metadata", "mocha"]
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]
 }

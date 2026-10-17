@@ -2,7 +2,6 @@
     "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "allowJs": false,
-        "checkJs": false,
         "types": ["@kiigame/adventure_engine", "mocha"]
     },
     "include": [
