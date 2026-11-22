@@ -17,6 +17,12 @@
     "commitlint-plugin-tense": "1.0.11",
     "husky": "9.1.7"
   },
+  "overrides": {
+    "mocha": {
+      "glob": "14.0.6",
+      "minimatch": "11.0.9"
+    }
+  },
   "scripts": {
     "prepare": "husky",
     "build": "npm run build -w '@kiigame/kgae_ts' && npm run build -w '@kiigame/adventure_engine' && npm run build-dev -w '@kiigame/latkazombit'",
