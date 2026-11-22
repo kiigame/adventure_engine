@@ -115,7 +115,7 @@
     "@types/mocha": "^10.0.10",
     "@types/sinon-chai": "4.0.0",
     "chai": "6.2.2",
-    "mocha": "12.0.2",
+    "mocha": "12.0.3",
     "rollup": "4.64.7",
     "sinon": "22.0.0",
     "sinon-chai": "4.0.1",
